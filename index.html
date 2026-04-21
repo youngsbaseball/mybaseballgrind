@@ -2257,16 +2257,10 @@ function dismissIosBanner() {
 
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px;">
 
-        <button onclick="shareToSocial('instagram')" style="display:flex; flex-direction:column; align-items:center; gap:8px; background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045); border:none; border-radius:8px; padding:18px 8px; cursor:pointer;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
-          <span style="font-size:30px;">📸</span>
-          <span style="font-family:'Barlow Condensed'; font-size:14px; font-weight:700; letter-spacing:1px; color:white; text-transform:uppercase;">Instagram</span>
-          <span style="font-family:'Barlow'; font-size:11px; color:rgba(255,255,255,0.8);">Caption ready to paste</span>
-        </button>
-
         <button onclick="shareToSocial('facebook')" style="display:flex; flex-direction:column; align-items:center; gap:8px; background:#1877F2; border:none; border-radius:8px; padding:18px 8px; cursor:pointer;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
           <span style="font-size:30px;">👥</span>
           <span style="font-family:'Barlow Condensed'; font-size:14px; font-weight:700; letter-spacing:1px; color:white; text-transform:uppercase;">Facebook</span>
-          <span style="font-family:'Barlow'; font-size:11px; color:rgba(255,255,255,0.8);">Opens share dialog</span>
+          <span style="font-family:'Barlow'; font-size:11px; color:rgba(255,255,255,0.8);">Caption copied — paste to share</span>
         </button>
 
         <button onclick="shareToSocial('twitter')" style="display:flex; flex-direction:column; align-items:center; gap:8px; background:#111; border:1px solid #333; border-radius:8px; padding:18px 8px; cursor:pointer;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
@@ -4718,8 +4712,8 @@ function openShareModal(platform) {
     },
     facebook: {
       text:  SHARE_CAPTIONS.facebook,
-      label: '👥 Facebook — Post will open ready to share',
-      cta:   '👥 Share on Facebook Now',
+      label: '👥 Facebook — Caption copies to clipboard, then paste into your post',
+      cta:   '👥 Copy Caption & Open Facebook',
       bg:    '#1877F2',
       color: '#fff'
     },
@@ -4806,21 +4800,35 @@ function executeShare() {
       break;
 
     case 'facebook':
-      // Facebook dialog — works on both mobile and desktop
-      // On mobile: opens FB app. On desktop: opens popup
-      const fbUrl = 'https://www.facebook.com/dialog/share?' +
-        'app_id=966242223397117' +
-        '&display=popup' +
-        `&href=${urlOnly}` +
-        `&quote=${encodeURIComponent(caption)}` +
-        `&redirect_uri=${urlOnly}`;
-      const isMobileFB = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-      if (isMobileFB) {
-        window.location.href = fbUrl;
-      } else {
-        window.open(fbUrl, '_blank', 'width=620,height=500,toolbar=0,menubar=0,location=0');
-      }
-      closeShareModal();
+      // Facebook kills pre-filled captions via dialog/share — so we
+      // copy the caption to clipboard and open Facebook's create-post page.
+      // User just pastes (Cmd+V / long-press Paste) and hits Post.
+      const fbCaption = caption.includes(SHARE_URL) ? caption : caption + '\n\n' + SHARE_URL;
+      navigator.clipboard?.writeText(fbCaption).then(() => {
+        showShareToast('✅ Caption copied! Paste it into your Facebook post.');
+        const isMobileFB = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+        const isIOSFB    = /iPad|iPhone|iPod/.test(navigator.userAgent);
+        const isAndroidFB = /Android/i.test(navigator.userAgent);
+        setTimeout(() => {
+          if (isIOSFB) {
+            // Try opening the Facebook app first, fallback to web
+            window.location.href = 'fb://composer';
+            setTimeout(() => { window.open('https://m.facebook.com/', '_blank'); }, 500);
+          } else if (isAndroidFB) {
+            window.location.href = 'intent://composer#Intent;package=com.facebook.katana;scheme=fb;end';
+            setTimeout(() => { window.open('https://m.facebook.com/', '_blank'); }, 500);
+          } else {
+            // Desktop — open Facebook in a new tab, user pastes into status box
+            window.open('https://www.facebook.com/', '_blank');
+          }
+          closeShareModal();
+        }, 800);
+      }).catch(() => {
+        // Clipboard blocked — show caption in a prompt so user can copy manually
+        prompt('Copy this caption, then open Facebook to paste:', fbCaption);
+        window.open('https://www.facebook.com/', '_blank');
+        closeShareModal();
+      });
       break;
 
     case 'twitter':
