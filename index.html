@@ -1129,7 +1129,8 @@ function dismissIosBanner() {
         <!-- Divider -->
         <div style="text-align:center; font-family:'Barlow Condensed',sans-serif; font-size:11px; letter-spacing:2px; text-transform:uppercase; color:#333; margin:14px 0;">— or purchase directly —</div>
 
-        <!-- Monthly -->
+        <!-- Monthly + Annual (Individual Player Plans) -->
+        <div style="font-family:'Barlow Condensed',sans-serif; font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#555; margin-bottom:8px; text-align:center;">For Players</div>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:14px;">
           <div style="background:#111; border:1px solid #2A2A2A; border-radius:3px; padding:16px; text-align:center;">
             <div style="font-family:'Barlow Condensed',sans-serif; font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#666; margin-bottom:6px;">Monthly</div>
@@ -1144,6 +1145,32 @@ function dismissIosBanner() {
             <div style="font-family:'Barlow',sans-serif; font-size:11px; color:#555; margin-bottom:12px;">per year · save $6</div>
             <button onclick="goToPurchase('annual')" style="width:100%; background:#C9A84C; color:#080808; font-family:'Barlow Condensed',sans-serif; font-size:12px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; padding:9px; border:none; border-radius:2px; cursor:pointer;" onmouseover="this.style.background='#E8C96A'" onmouseout="this.style.background='#C9A84C'">⚾ Get Annual →</button>
           </div>
+        </div>
+
+        <!-- Team Coach Plan -->
+        <div style="font-family:'Barlow Condensed',sans-serif; font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#555; margin:14px 0 8px; text-align:center;">For Coaches</div>
+        <div style="position:relative; background:linear-gradient(135deg,#12180D,#0D120A); border:1px solid #5A8A3A; border-radius:3px; padding:18px; margin-bottom:14px;">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; flex-wrap:wrap; gap:8px;">
+            <div>
+              <div style="font-family:'Bebas Neue',cursive; font-size:24px; color:#A8D97B; letter-spacing:2px; line-height:1;">🏟️ TEAM COACH</div>
+              <div style="font-family:'Barlow Condensed',sans-serif; font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:#6A8A4A; margin-top:2px;">Roster · Leaderboard · Team Messages</div>
+            </div>
+            <div style="text-align:right;">
+              <div style="font-family:'Bebas Neue',cursive; font-size:28px; color:#A8D97B; line-height:1;">$29.99</div>
+              <div style="font-family:'Barlow',sans-serif; font-size:10px; color:#556;">per year</div>
+            </div>
+          </div>
+          <div style="background:rgba(168,217,123,0.06); border-left:3px solid #5A8A3A; padding:10px 12px; margin-bottom:12px; font-family:'Barlow',sans-serif; font-size:12px; color:#BBBBBB; line-height:1.6;">
+            <strong style="color:#A8D97B;">You pay $29.99/year</strong> for your coach account. <strong style="color:#F4F4F4;">Your players pay their own</strong> $2.99/month or $29.99/year — they use your team code to join your roster.
+          </div>
+          <button onclick="goToCoachPurchase()" style="width:100%; background:#5A8A3A; color:#F4F4F4; font-family:'Barlow Condensed',sans-serif; font-size:14px; font-weight:800; letter-spacing:2px; text-transform:uppercase; padding:13px; border:none; border-radius:2px; cursor:pointer;" onmouseover="this.style.background='#6BA347'" onmouseout="this.style.background='#5A8A3A'">
+            🏟️ &nbsp;Start Team Signup →
+          </button>
+        </div>
+
+        <!-- Join-a-team link for players whose coach already created a team -->
+        <div style="text-align:center; font-family:'Barlow Condensed',sans-serif; font-size:11px; letter-spacing:2px; text-transform:uppercase; color:#666; margin-bottom:10px;">
+          Your coach already on My Grind? <a href="#" onclick="event.preventDefault(); showJoinTeamFromSignup();" style="color:#C9A84C; text-decoration:none; font-weight:700;">Have a team code? →</a>
         </div>
 
         <button onclick="goToPurchase('monthly')" style="width:100%; background:transparent; color:#555; font-family:'Barlow Condensed',sans-serif; font-size:12px; font-weight:700; letter-spacing:2px; text-transform:uppercase; padding:10px; border:1px solid #222; border-radius:2px; cursor:pointer;" onmouseover="this.style.background='rgba(201,168,76,0.05)'" onmouseout="this.style.background='transparent'">
@@ -2656,24 +2683,24 @@ function dismissIosBanner() {
       </div>
     </div>
 
-    <!-- ── TEAM MODE (coaches inquiry) ── -->
-    <div class="card" style="margin-bottom:20px; background:linear-gradient(135deg,#1A1400,#0D0D0D); border:2px solid var(--gold-dark);">
+    <!-- ── TEAM MODE (coach upgrade) ── -->
+    <div class="card" style="margin-bottom:20px; background:linear-gradient(135deg,#12180D,#0D120A); border:2px solid #5A8A3A;">
       <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
-        <span style="background:var(--gold); color:#0D0D0D; font-family:'Barlow Condensed'; font-size:10px; font-weight:800; letter-spacing:2px; text-transform:uppercase; padding:3px 8px; border-radius:2px;">NEW</span>
-        <div class="card-title" style="margin:0;">👥 Team Mode — For Coaches</div>
+        <span style="background:#5A8A3A; color:#F4F4F4; font-family:'Barlow Condensed'; font-size:10px; font-weight:800; letter-spacing:2px; text-transform:uppercase; padding:3px 8px; border-radius:2px;">COACHES</span>
+        <div class="card-title" style="margin:0;">🏟️ Become a Team Coach</div>
       </div>
       <div style="font-family:'Barlow'; font-size:13px; color:var(--light); line-height:1.7; margin-bottom:14px;">
-        Coaching a team? Get <strong style="color:var(--gold);">your entire roster on My Grind</strong> at a team discount. Every player logs their own journal. You see the leaderboard. Pre-game messages go to everyone at once.
+        Run your roster on My Grind. Every player logs their own journal, you see the leaderboard, and pre-game messages go to everyone at once.
       </div>
-      <div style="background:var(--card2); border-left:3px solid var(--gold); padding:12px 14px; margin-bottom:14px; font-family:'Barlow'; font-size:12px; color:var(--grey); line-height:1.6;">
-        <strong style="color:var(--gold); display:block; margin-bottom:4px;">Perfect for:</strong>
-        High school programs · Travel teams · Little League · Private academies
+      <div style="background:rgba(168,217,123,0.06); border-left:3px solid #5A8A3A; padding:12px 14px; margin-bottom:14px; font-family:'Barlow'; font-size:12px; color:var(--grey); line-height:1.6;">
+        <strong style="color:#A8D97B; display:block; margin-bottom:4px;">$29.99/year for your coach account</strong>
+        Players pay their own $2.99/month or $29.99/year and join with your team code. Perfect for high school programs · travel teams · Little League · private academies.
       </div>
-      <a href="mailto:coach@youngsbaseball.com?subject=Team%20Mode%20Inquiry%20—%20MyGrind&body=Hi%2C%0A%0AI%20coach%20a%20team%20and%20I'd%20like%20to%20get%20my%20roster%20set%20up%20on%20My%20Grind.%0A%0ATeam%20Name%3A%20%0ALevel%3A%20(HS%2FTravel%2FLL%2Fetc)%0AApprox%20Roster%20Size%3A%20%0A%0AThanks%2C" style="display:block; text-align:center; background:var(--gold); color:#0D0D0D; font-family:'Barlow Condensed'; font-size:14px; font-weight:800; letter-spacing:2px; text-transform:uppercase; padding:14px; text-decoration:none; border-radius:4px;">
-        📧 Get My Team Set Up
-      </a>
+      <button onclick="goToCoachPurchase()" style="width:100%; background:#5A8A3A; color:#F4F4F4; font-family:'Barlow Condensed'; font-size:14px; font-weight:800; letter-spacing:2px; text-transform:uppercase; padding:14px; border:none; border-radius:4px; cursor:pointer;" onmouseover="this.style.background='#6BA347'" onmouseout="this.style.background='#5A8A3A'">
+        🏟️ Start Team Signup — $29.99/yr
+      </button>
       <div style="font-family:'Barlow'; font-size:11px; color:var(--grey); text-align:center; margin-top:10px;">
-        We will reach out within 24 hours
+        After checkout, you'll be prompted to set up your team name, colors, and code.
       </div>
     </div>
 
@@ -3281,9 +3308,51 @@ function activatePaid(accessEmail, purchaserEmail) {
   const state = getAccessState();
   const fp = getDeviceFingerprint();
   if (state.email && state.email !== norm) { alert('Device registered to: ' + state.email + '\nEmail mismatch.'); return; }
-  saveAccessState({ email: norm, purchaserEmail: purch, fingerprint: fp, trialStart: state.trialStart || Date.now(), paid: true, paidAt: new Date().toISOString(), plan: 'active' });
+
+  // Carry forward any coach-setup or team-join flags set during signup
+  const wasPendingCoachSetup = !!state.pendingCoachSetup;
+  const pendingJoinCode      = state.pendingTeamJoinCode || null;
+
+  saveAccessState({
+    email: norm,
+    purchaserEmail: purch,
+    fingerprint: fp,
+    trialStart: state.trialStart || Date.now(),
+    paid: true,
+    paidAt: new Date().toISOString(),
+    plan: 'active',
+    pendingCoachSetup:   wasPendingCoachSetup,   // preserved until team is created
+    pendingTeamJoinCode: pendingJoinCode         // preserved until team is joined
+  });
   hideOverlay(); removeBanner(); showPaidToast();
   console.log('✅ Access activated:', norm);
+
+  // Post-activation: if the user paid as a coach, auto-open team setup.
+  // If they paid as a player with a pending join code, auto-join the team.
+  setTimeout(function() {
+    try {
+      if (wasPendingCoachSetup && typeof openTeamCreateModal === 'function') {
+        openTeamCreateModal();
+        // Clear the flag so it doesn't re-trigger next session
+        try {
+          const acc = getAccessState();
+          saveAccessState(Object.assign({}, acc, { pendingCoachSetup: false }));
+        } catch(e) {}
+      } else if (pendingJoinCode && typeof getTeamsRegistry === 'function') {
+        const registry = getTeamsRegistry();
+        const team = registry.find(function(t) { return (t.code || '').toUpperCase() === pendingJoinCode; });
+        if (team && typeof setMyTeam === 'function') {
+          setMyTeam(team);
+          try {
+            const acc = getAccessState();
+            saveAccessState(Object.assign({}, acc, { pendingTeamJoinCode: null }));
+          } catch(e) {}
+          if (typeof showShareToast === 'function') showShareToast('✅ Joined ' + team.name + '!');
+          if (typeof refreshTeamPanel === 'function') refreshTeamPanel();
+        }
+      }
+    } catch(e) { console.warn('Post-activation flow error:', e); }
+  }, 600); // small delay so the paid-toast shows first
 }
 
 // ── PAYMENT ──────────────────────────────────────────
@@ -3354,6 +3423,113 @@ function goToPurchase(plan) {
 
   const url = stripeEmail ? base + '?prefilled_email=' + encodeURIComponent(stripeEmail) : base;
   window.open(url, '_blank');
+}
+
+// ── COACH / TEAM PURCHASE ────────────────────────────
+// Coach buys the $29.99/yr annual plan (same Stripe product as individual annual),
+// but we tag their access state with pendingCoachSetup so after payment
+// activation, they're auto-prompted to create their team.
+function goToCoachPurchase() {
+  const base = STRIPE_ANNUAL_URL;
+  const overlay = document.getElementById('trial-overlay');
+  const welcomeVisible = overlay && overlay.style.display === 'flex';
+
+  // If not on welcome screen (e.g., user already has an account), route
+  // through normal annual purchase with the coach flag set.
+  if (!welcomeVisible) {
+    const saved = getAccessState();
+    const email = saved.purchaserEmail || saved.email || '';
+    try {
+      saveAccessState(Object.assign({}, saved, { pendingCoachSetup: true }));
+    } catch(e) {}
+    const url = email ? base + '?prefilled_email=' + encodeURIComponent(email) : base;
+    window.open(url, '_blank');
+    return;
+  }
+
+  // On welcome screen — validate email, then route to Stripe with coach flag
+  const errEl  = document.getElementById('trial-email-error');
+  const isGift = document.getElementById('mode-gift') &&
+                 document.getElementById('mode-gift').style.display !== 'none';
+
+  // Coach purchase uses "self" mode only — a coach buys their own account.
+  // Gift mode doesn't apply here (a coach can't gift themselves a coach account).
+  let stripeEmail = '';
+  let accessEmail = '';
+
+  if (isGift) {
+    const purchaser = normalizeEmail(document.getElementById('purchaser-email-input')?.value || '');
+    const player    = normalizeEmail(document.getElementById('player-email-input')?.value || '');
+    if (!purchaser || !isValidEmail(purchaser)) {
+      if (errEl) { errEl.textContent = 'For Team Coach, enter YOUR email as the buyer.'; errEl.style.display = 'block'; }
+      return;
+    }
+    // In gift mode for coach purchase, the player field is ignored —
+    // the coach's own email gets access.
+    stripeEmail = purchaser;
+    accessEmail = purchaser;
+  } else {
+    const userEmail = normalizeEmail(document.getElementById('user-email-input')?.value || '');
+    if (!userEmail || !isValidEmail(userEmail)) {
+      if (errEl) { errEl.textContent = 'Please enter your coach email address before purchasing.'; errEl.style.display = 'block'; }
+      document.getElementById('user-email-input')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+    stripeEmail = userEmail;
+    accessEmail = userEmail;
+  }
+
+  if (errEl) errEl.style.display = 'none';
+
+  // Save access state with pendingCoachSetup flag
+  try {
+    const fp = getDeviceFingerprint();
+    saveAccessState({
+      email:              accessEmail,
+      purchaserEmail:     stripeEmail,
+      fingerprint:        fp,
+      trialStart:         null,
+      paid:               false,
+      pendingPayment:     true,
+      pendingCoachSetup:  true,
+      registeredAt:       new Date().toISOString()
+    });
+  } catch(e) {}
+
+  const url = base + '?prefilled_email=' + encodeURIComponent(stripeEmail);
+  window.open(url, '_blank');
+}
+
+// ── JOIN TEAM FROM SIGNUP SCREEN ────────────────────
+// Entry point for a player whose coach has already created a team.
+// They still need to pay for their own player subscription, but we collect
+// the team code up-front and save it so after they activate, they're
+// auto-joined to their coach's roster.
+function showJoinTeamFromSignup() {
+  const code = prompt('Enter your coach\'s team code to join their roster.\n\nYou will still need to start your own player subscription ($2.99/month or $29.99/year).\n\nTeam code:');
+  if (!code) return;
+  const cleanCode = code.trim().toUpperCase();
+  if (cleanCode.length < 2) {
+    alert('That doesn\'t look like a valid team code. Ask your coach for it.');
+    return;
+  }
+  // Check if the team exists in the registry
+  try {
+    const registry = (typeof getTeamsRegistry === 'function') ? getTeamsRegistry() : [];
+    const team = registry.find(function(t) { return (t.code || '').toUpperCase() === cleanCode; });
+    if (!team) {
+      alert('Team code "' + cleanCode + '" not found.\n\nDouble-check with your coach — the code is usually their team abbreviation plus the year (e.g., RAVENS26).');
+      return;
+    }
+    // Stash the pending join code so we can complete it after payment activation
+    try {
+      const saved = getAccessState();
+      saveAccessState(Object.assign({}, saved, { pendingTeamJoinCode: cleanCode }));
+    } catch(e) {}
+    alert('✅ Got it! You\'re joining ' + team.name + '.\n\nNext: start your player subscription. Once you activate, you\'ll be added to the roster automatically.');
+  } catch(e) {
+    alert('Could not look up that team code right now. Try again, or ask your coach to send you a direct team share link.');
+  }
 }
 
 // ── COPYRIGHT NOTICE (embedded in code) ──────────────
