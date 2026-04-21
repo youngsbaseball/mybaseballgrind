@@ -3945,9 +3945,13 @@ function renderAll() {
   renderEntries();
   renderPlayers();
   renderGoals();
-  document.getElementById('dash-entries').textContent = state.entries.length;
-  document.getElementById('dash-players').textContent = getHWLog().length;
-  document.getElementById('dash-goals').textContent = state.goals.length;
+  // Null-safe updates — the dashboard cards may not all be on this page
+  const _entriesEl = document.getElementById('dash-entries');
+  const _goalsEl   = document.getElementById('dash-goals');
+  const _streakEl  = document.getElementById('dash-streak');
+  if (_entriesEl) _entriesEl.textContent = state.entries.length;
+  if (_goalsEl)   _goalsEl.textContent   = state.goals.length;
+  // Streak is handled by updateStreakDisplay() in the new features module
   // Auto-populate My Stats from game journal entries
   accumulateGameStats();
 }
