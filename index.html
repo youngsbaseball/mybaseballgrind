@@ -774,6 +774,19 @@ function dismissIosBanner() {
 </head>
 <body>
 
+<!-- ── LOADING SPLASH ── -->
+<div id="ybg-splash" style="position:fixed; inset:0; z-index:99999; background:#0D0D0D; display:flex; flex-direction:column; align-items:center; justify-content:center; transition:opacity 0.5s ease;">
+  <div style="width:88px; height:88px; background:#C9A84C; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'Bebas Neue',sans-serif; font-size:32px; font-weight:900; color:#0D0D0D; letter-spacing:2px; box-shadow:0 0 0 4px #0D0D0D, 0 0 0 5px #C9A84C; animation:ybgPulse 1.2s ease-in-out infinite;">YBG</div>
+  <div style="font-family:'Bebas Neue',sans-serif; font-size:28px; letter-spacing:6px; color:#F4F4F4; margin-top:22px;">MY <span style="color:#C9A84C;">GRIND</span></div>
+  <div style="font-family:'Barlow Condensed',sans-serif; font-size:11px; letter-spacing:3px; color:#666; margin-top:4px; text-transform:uppercase;">Young's Baseball Group</div>
+</div>
+<style>
+  @keyframes ybgPulse {
+    0%, 100% { transform:scale(1); box-shadow:0 0 0 4px #0D0D0D, 0 0 0 5px #C9A84C, 0 0 0 5px rgba(201,168,76,0); }
+    50%      { transform:scale(1.05); box-shadow:0 0 0 4px #0D0D0D, 0 0 0 5px #C9A84C, 0 0 30px 8px rgba(201,168,76,0.4); }
+  }
+</style>
+
 <!-- ══ SHARE MODAL ══════════════════════════════════════ -->
 <div id="share-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.88); z-index:9999; align-items:flex-end; justify-content:center; padding:0; backdrop-filter:blur(8px);" onclick="closeShareModal(event)">
   <div id="share-modal-panel" style="background:linear-gradient(180deg,#181400,#0E0C00); border-top:2px solid #C9A84C; border-radius:16px 16px 0 0; width:100%; max-width:520px; padding:28px 24px 40px; animation:slideUp 0.3s ease;">
@@ -904,6 +917,41 @@ function dismissIosBanner() {
   <div>
     <div style="font-family:'Bebas Neue',cursive; font-size:20px; letter-spacing:2px; color:#27AE60;">FULL ACCESS UNLOCKED</div>
     <div style="font-family:'Barlow Condensed',sans-serif; font-size:12px; letter-spacing:1px; color:#777;">Welcome to YBG My Grind — no limits, all year.</div>
+  </div>
+</div>
+
+<!-- ── GRADE CHECK NAG OVERLAY (weekly) ── -->
+<div id="grade-nag-overlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.93); z-index:1001; align-items:center; justify-content:center; padding:24px; backdrop-filter:blur(12px);">
+  <div style="background:#0D0D0D; border:2px solid #C9A84C; border-radius:6px; max-width:480px; width:100%; padding:28px 24px; max-height:92vh; overflow-y:auto;">
+    <div style="text-align:center; margin-bottom:20px;">
+      <div style="font-size:40px; line-height:1;">📚</div>
+      <div style="font-family:'Bebas Neue'; font-size:28px; letter-spacing:2px; color:#C9A84C; margin-top:6px; line-height:1;">GPA CHECK</div>
+      <div style="font-family:'Barlow'; font-size:13px; color:#F4F4F4; margin-top:8px;">No Grades · No Baseball — That's the rule.</div>
+    </div>
+
+    <div style="background:#1A1400; border-left:3px solid #C9A84C; padding:12px 16px; margin-bottom:18px; font-family:'Barlow'; font-size:13px; color:#AAA; line-height:1.6;">
+      Check in honestly. This stays private on your device — just a weekly reality check so you don't fall behind.
+    </div>
+
+    <label style="display:block; font-family:'Barlow Condensed'; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:#AAA; margin-bottom:6px;">How are your grades this week?</label>
+    <div id="grade-nag-options" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:16px;">
+      <button class="grade-nag-btn" data-val="all-a" onclick="selectGradeNagOption(this)" style="background:#1A1A1A; border:1px solid #2A2A2A; color:#F4F4F4; font-family:'Barlow Condensed'; font-size:13px; font-weight:700; letter-spacing:1px; text-transform:uppercase; padding:14px 10px; border-radius:4px; cursor:pointer;">🏆 All A's</button>
+      <button class="grade-nag-btn" data-val="a-b" onclick="selectGradeNagOption(this)" style="background:#1A1A1A; border:1px solid #2A2A2A; color:#F4F4F4; font-family:'Barlow Condensed'; font-size:13px; font-weight:700; letter-spacing:1px; text-transform:uppercase; padding:14px 10px; border-radius:4px; cursor:pointer;">✅ A's &amp; B's</button>
+      <button class="grade-nag-btn" data-val="slipping" onclick="selectGradeNagOption(this)" style="background:#1A1A1A; border:1px solid #2A2A2A; color:#F4F4F4; font-family:'Barlow Condensed'; font-size:13px; font-weight:700; letter-spacing:1px; text-transform:uppercase; padding:14px 10px; border-radius:4px; cursor:pointer;">⚠️ Slipping</button>
+      <button class="grade-nag-btn" data-val="help" onclick="selectGradeNagOption(this)" style="background:#1A1A1A; border:1px solid #2A2A2A; color:#F4F4F4; font-family:'Barlow Condensed'; font-size:13px; font-weight:700; letter-spacing:1px; text-transform:uppercase; padding:14px 10px; border-radius:4px; cursor:pointer;">🆘 Need Help</button>
+    </div>
+
+    <label style="display:block; font-family:'Barlow Condensed'; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:#AAA; margin-bottom:6px;">Which class needs the most work this week?</label>
+    <input type="text" id="grade-nag-subject" placeholder="e.g. Algebra, History, English..." style="width:100%; background:#1A1A1A; border:1px solid #2A2A2A; color:#F4F4F4; padding:12px; border-radius:4px; font-family:'Barlow'; font-size:14px; margin-bottom:16px; box-sizing:border-box;">
+
+    <div id="grade-nag-message" style="display:none; background:#1A1400; border:1px solid #8B6914; border-radius:4px; padding:12px 14px; margin-bottom:16px; font-family:'Barlow'; font-size:12px; color:#F4F4F4; line-height:1.6;"></div>
+
+    <button id="grade-nag-submit" onclick="submitGradeNag()" disabled style="width:100%; background:#1A1A1A; color:#666; font-family:'Barlow Condensed'; font-size:14px; font-weight:800; letter-spacing:2px; text-transform:uppercase; padding:14px; border:1px solid #2A2A2A; border-radius:4px; cursor:not-allowed; transition:all 0.2s;">
+      Pick an option above
+    </button>
+    <div style="text-align:center; margin-top:12px; font-family:'Barlow'; font-size:11px; color:#555;">
+      📚 No Grades · No Baseball — Coach Young
+    </div>
   </div>
 </div>
 
@@ -1124,18 +1172,39 @@ function dismissIosBanner() {
     </div>
 
     <div class="grid-3" style="margin-bottom:20px;">
-      <div class="stat-card">
-        <div class="stat-num" id="dash-entries">0</div>
-        <div class="stat-label">Journal Entries</div>
+      <div class="stat-card" style="position:relative; overflow:hidden;">
+        <div id="streak-flame" style="position:absolute; top:6px; right:8px; font-size:18px; opacity:0.8;">🔥</div>
+        <div class="stat-num" id="dash-streak">0</div>
+        <div class="stat-label">Day Streak</div>
       </div>
       <div class="stat-card">
-        <div class="stat-num" id="dash-players">0</div>
-        <div class="stat-label">Check-Ins Logged</div>
+        <div class="stat-num" id="dash-entries">0</div>
+        <div class="stat-label">Total Entries</div>
       </div>
       <div class="stat-card">
         <div class="stat-num" id="dash-goals">0</div>
         <div class="stat-label">Goals Active</div>
       </div>
+    </div>
+
+    <!-- ── DAILY QUOTE (rotates each day) ── -->
+    <div id="daily-quote-card" class="card" style="margin-bottom:20px; background:linear-gradient(135deg,#1A1400,#0E0C00); border-left:4px solid var(--gold); padding:18px 20px;">
+      <div style="font-family:'Barlow Condensed'; font-size:10px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:var(--grey); margin-bottom:8px;">🎯 Today's Grind</div>
+      <div id="daily-quote-text" style="font-family:Georgia,serif; font-size:15px; font-style:italic; color:var(--light); line-height:1.6;"></div>
+      <div id="daily-quote-author" style="font-family:'Barlow Condensed'; font-size:11px; letter-spacing:1.5px; color:var(--gold); margin-top:10px; text-align:right; text-transform:uppercase;"></div>
+    </div>
+
+    <!-- ── MILESTONE CELEBRATION (hidden by default, shown when hit) ── -->
+    <div id="milestone-card" class="card" style="display:none; margin-bottom:20px; background:linear-gradient(135deg,#C9A84C 0%,#8B6F2F 100%); border:2px solid #FFD966; padding:20px; text-align:center;">
+      <div id="milestone-emoji" style="font-size:40px; line-height:1; margin-bottom:8px;">🔥</div>
+      <div id="milestone-title" style="font-family:'Bebas Neue',cursive; font-size:26px; letter-spacing:2px; color:#0D0D0D; line-height:1;">STREAK UNLOCKED</div>
+      <div id="milestone-sub" style="font-family:'Barlow'; font-size:13px; color:#2A1F00; margin-top:4px; margin-bottom:14px;">You hit a 7-day streak. Keep grinding.</div>
+      <button onclick="shareMilestone()" style="background:#0D0D0D; color:var(--gold); font-family:'Barlow Condensed'; font-size:13px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; padding:12px 24px; border:1px solid #000; border-radius:4px; cursor:pointer;">
+        📲 Share This Win
+      </button>
+      <button onclick="dismissMilestone()" style="background:transparent; color:#2A1F00; font-family:'Barlow Condensed'; font-size:11px; letter-spacing:1px; text-transform:uppercase; padding:12px 16px; border:none; cursor:pointer; margin-left:6px;">
+        Dismiss
+      </button>
     </div>
 
     <div class="grid-2">
@@ -1178,8 +1247,70 @@ function dismissIosBanner() {
         </div>
       </div>
       <label>What happened? What did I do for my team?</label>
+      <div id="quick-prompt-hint" style="display:none; background:#1A1400; border-left:3px solid #C9A84C; padding:10px 14px; margin-bottom:10px; border-radius:3px; font-family:'Barlow'; font-size:12px; color:#C8C4BC; line-height:1.6;"></div>
       <textarea id="quick-notes" placeholder="Write your post-game or practice entry here..."></textarea>
-      <button class="btn btn-gold" onclick="quickLog()">⚾ &nbsp;Save Entry</button>
+
+      <!-- Practice reps counter (only shows for practice) -->
+      <div id="quick-reps-section" style="display:none; margin-top:14px; padding:14px; background:var(--card2); border:1px solid var(--border); border-radius:4px;">
+        <div style="font-family:'Barlow Condensed'; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--gold); margin-bottom:4px;">🔢 Rep Counter — Today's Practice</div>
+        <div style="font-family:'Barlow'; font-size:11px; color:var(--grey); margin-bottom:12px;">Track your volume. Nobody counts it for you. <strong style="color:var(--light);">You count it.</strong></div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+          <div>
+            <label style="font-size:10px; letter-spacing:1px;">🏏 SWINGS</label>
+            <input type="number" id="quick-reps-swings" min="0" placeholder="0" inputmode="numeric" style="width:100%; padding:10px; font-size:15px; text-align:center;">
+          </div>
+          <div>
+            <label style="font-size:10px; letter-spacing:1px;">🥎 GROUND BALLS</label>
+            <input type="number" id="quick-reps-gb" min="0" placeholder="0" inputmode="numeric" style="width:100%; padding:10px; font-size:15px; text-align:center;">
+          </div>
+          <div>
+            <label style="font-size:10px; letter-spacing:1px;">🎯 THROWS</label>
+            <input type="number" id="quick-reps-throws" min="0" placeholder="0" inputmode="numeric" style="width:100%; padding:10px; font-size:15px; text-align:center;">
+          </div>
+          <div>
+            <label style="font-size:10px; letter-spacing:1px;">⚾ PITCHES</label>
+            <input type="number" id="quick-reps-pitches" min="0" placeholder="0" inputmode="numeric" style="width:100%; padding:10px; font-size:15px; text-align:center;">
+          </div>
+        </div>
+        <div id="quick-reps-total" style="margin-top:10px; text-align:center; font-family:'Barlow Condensed'; font-size:12px; letter-spacing:1.5px; text-transform:uppercase; color:var(--grey);">Total reps: <span id="quick-reps-total-num" style="color:var(--gold); font-weight:800;">0</span></div>
+      </div>
+
+      <button class="btn btn-gold" onclick="quickLog()" style="margin-top:14px;">⚾ &nbsp;Save Entry</button>
+    </div>
+
+    <!-- ── WEEKLY RECAP ── -->
+    <div class="card" style="margin-top:16px;">
+      <div class="card-title">📅 This Week's Grind</div>
+      <div id="weekly-recap-body" style="font-family:'Barlow'; font-size:13px; color:var(--light); line-height:1.8;"></div>
+      <button onclick="shareWeeklyRecap()" style="width:100%; margin-top:14px; background:var(--gold); color:#0D0D0D; font-family:'Barlow Condensed'; font-size:13px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; padding:12px; border:none; border-radius:4px; cursor:pointer;">
+        📲 Text My Week to Mom/Dad
+      </button>
+    </div>
+
+    <!-- ── ARM CARE DAILY CHECKLIST ── -->
+    <div class="card" style="margin-top:16px; border-left:3px solid #C9A84C;">
+      <div class="card-title">💪 Arm Care — Today</div>
+      <div style="font-family:'Barlow'; font-size:12px; color:var(--grey); margin-bottom:12px; line-height:1.5;">
+        Non-negotiable daily. Check each one off as you do it. <strong style="color:var(--gold);">Resets at midnight.</strong>
+      </div>
+      <div id="arm-care-list"></div>
+      <div id="arm-care-progress" style="font-family:'Barlow Condensed'; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--grey); text-align:center; margin-top:10px;"></div>
+    </div>
+
+    <!-- ── PARENTS PORTAL ── -->
+    <div class="card" style="margin-top:16px; border-left:3px solid var(--gold);">
+      <div class="card-title">👨‍👩‍👦 Send to Parents</div>
+      <div style="font-family:'Barlow'; font-size:13px; color:var(--grey); line-height:1.6; margin-bottom:14px;">
+        Let your parents see what you're working on. Send them this week's highlights or your full season journal — right from your phone.
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+        <button onclick="sendParentRecap()" style="background:var(--card2); border:1px solid var(--gold-dark); color:var(--gold); font-family:'Barlow Condensed'; font-size:12px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:12px 10px; border-radius:4px; cursor:pointer;">
+          📧 Email This Week
+        </button>
+        <button onclick="exportJournalPDF()" style="background:var(--card2); border:1px solid var(--gold-dark); color:var(--gold); font-family:'Barlow Condensed'; font-size:12px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:12px 10px; border-radius:4px; cursor:pointer;">
+          📄 Export Full Journal
+        </button>
+      </div>
     </div>
   </div>
 
@@ -2250,29 +2381,19 @@ function dismissIosBanner() {
 
     <!-- ── SHARE ON SOCIAL ── -->
     <div class="card" style="margin-bottom:20px;">
-      <div class="card-title">Share on Social Media</div>
+      <div class="card-title">Send to a Teammate</div>
       <div style="font-family:'Barlow'; font-size:13px; color:var(--grey); margin-bottom:18px; line-height:1.6;">
-        Tap a platform below — a ready-to-post caption opens automatically. Just hit share.
+        The best way to share — a personal text from you to someone you know. We pre-write the message. You just hit send.
       </div>
 
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px;">
+      <div style="margin-bottom:12px;">
 
-        <button onclick="shareToSocial('facebook')" style="display:flex; flex-direction:column; align-items:center; gap:8px; background:#1877F2; border:none; border-radius:8px; padding:18px 8px; cursor:pointer;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
-          <span style="font-size:30px;">👥</span>
-          <span style="font-family:'Barlow Condensed'; font-size:14px; font-weight:700; letter-spacing:1px; color:white; text-transform:uppercase;">Facebook</span>
-          <span style="font-family:'Barlow'; font-size:11px; color:rgba(255,255,255,0.8);">Caption copied — paste to share</span>
-        </button>
-
-        <button onclick="shareToSocial('twitter')" style="display:flex; flex-direction:column; align-items:center; gap:8px; background:#111; border:1px solid #333; border-radius:8px; padding:18px 8px; cursor:pointer;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
-          <span style="font-size:28px; font-family:serif; color:white; font-weight:900; line-height:1.2;">𝕏</span>
-          <span style="font-family:'Barlow Condensed'; font-size:14px; font-weight:700; letter-spacing:1px; color:white; text-transform:uppercase;">X / Twitter</span>
-          <span style="font-family:'Barlow'; font-size:11px; color:rgba(255,255,255,0.6);">Tweet ready to post</span>
-        </button>
-
-        <button onclick="shareToSocial('sms')" style="display:flex; flex-direction:column; align-items:center; gap:8px; background:linear-gradient(135deg,#27AE60,#1E8449); border:none; border-radius:8px; padding:18px 8px; cursor:pointer;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
-          <span style="font-size:30px;">💬</span>
-          <span style="font-family:'Barlow Condensed'; font-size:14px; font-weight:700; letter-spacing:1px; color:white; text-transform:uppercase;">Text / iMessage</span>
-          <span style="font-family:'Barlow'; font-size:11px; color:rgba(255,255,255,0.8);">Message pre-written</span>
+        <button onclick="shareToSocial('sms')" style="display:flex; flex-direction:row; align-items:center; justify-content:center; gap:14px; width:100%; background:linear-gradient(135deg,#27AE60,#1E8449); border:none; border-radius:8px; padding:20px; cursor:pointer;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+          <span style="font-size:34px;">💬</span>
+          <div style="text-align:left;">
+            <div style="font-family:'Barlow Condensed'; font-size:17px; font-weight:800; letter-spacing:1.5px; color:white; text-transform:uppercase; line-height:1;">Text a Teammate</div>
+            <div style="font-family:'Barlow'; font-size:12px; color:rgba(255,255,255,0.85); margin-top:4px;">Opens Messages with a pre-written invite</div>
+          </div>
         </button>
 
       </div>
@@ -2285,6 +2406,27 @@ function dismissIosBanner() {
         <button onclick="shareToSocial('copy')" style="display:flex; align-items:center; justify-content:center; gap:8px; background:var(--card2); border:1px solid var(--border); color:var(--light); font-family:'Barlow Condensed'; font-size:13px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:14px; border-radius:6px; cursor:pointer;">
           📋 Copy Link
         </button>
+      </div>
+    </div>
+
+    <!-- ── TEAM MODE (coaches inquiry) ── -->
+    <div class="card" style="margin-bottom:20px; background:linear-gradient(135deg,#1A1400,#0D0D0D); border:2px solid var(--gold-dark);">
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+        <span style="background:var(--gold); color:#0D0D0D; font-family:'Barlow Condensed'; font-size:10px; font-weight:800; letter-spacing:2px; text-transform:uppercase; padding:3px 8px; border-radius:2px;">NEW</span>
+        <div class="card-title" style="margin:0;">👥 Team Mode — For Coaches</div>
+      </div>
+      <div style="font-family:'Barlow'; font-size:13px; color:var(--light); line-height:1.7; margin-bottom:14px;">
+        Coaching a team? Get <strong style="color:var(--gold);">your entire roster on My Grind</strong> at a team discount. Every player logs their own journal. You see the leaderboard. Pre-game messages go to everyone at once.
+      </div>
+      <div style="background:var(--card2); border-left:3px solid var(--gold); padding:12px 14px; margin-bottom:14px; font-family:'Barlow'; font-size:12px; color:var(--grey); line-height:1.6;">
+        <strong style="color:var(--gold); display:block; margin-bottom:4px;">Perfect for:</strong>
+        High school programs · Travel teams · Little League · Private academies
+      </div>
+      <a href="mailto:coach@youngsbaseball.com?subject=Team%20Mode%20Inquiry%20—%20MyGrind&body=Hi%20Coach%20Young%2C%0A%0AI%20coach%20a%20team%20and%20I'd%20like%20to%20get%20my%20roster%20set%20up%20on%20My%20Grind.%0A%0ATeam%20Name%3A%20%0ALevel%3A%20(HS%2FTravel%2FLL%2Fetc)%0AApprox%20Roster%20Size%3A%20%0A%0AThanks%2C" style="display:block; text-align:center; background:var(--gold); color:#0D0D0D; font-family:'Barlow Condensed'; font-size:14px; font-weight:800; letter-spacing:2px; text-transform:uppercase; padding:14px; text-decoration:none; border-radius:4px;">
+        📧 Get My Team Set Up
+      </a>
+      <div style="font-family:'Barlow'; font-size:11px; color:var(--grey); text-align:center; margin-top:10px;">
+        Coach Young will reach out within 24 hours
       </div>
     </div>
 
@@ -5047,6 +5189,815 @@ function importGCStatsFromStats() {
 
 loadSettings();
 initNotifications();
+
+// ═══════════════════════════════════════════════════════
+// GLOBAL ERROR HANDLER — catch any uncaught issues silently
+// ═══════════════════════════════════════════════════════
+window.addEventListener('error', function(e) {
+  // Log only for debugging — don't crash the app
+  try { console.warn('[YBG caught]', e.message, e.filename, e.lineno); } catch(err) {}
+  return true; // prevent browser default error dialog
+});
+window.addEventListener('unhandledrejection', function(e) {
+  try { console.warn('[YBG promise caught]', e.reason); } catch(err) {}
+  e.preventDefault();
+});
+
+// ═══════════════════════════════════════════════════════
+// NEW FEATURES — v2026.04
+// Streak · Daily Quotes · Milestones · Weekly Recap
+// Parents Portal · PDF Export · Haptic · Splash
+// ═══════════════════════════════════════════════════════
+
+// ─── LOADING SPLASH ──────────────────────────────────────
+window.addEventListener('load', function() {
+  setTimeout(function() {
+    const splash = document.getElementById('ybg-splash');
+    if (!splash) return;
+    splash.style.opacity = '0';
+    setTimeout(function() { splash.style.display = 'none'; }, 500);
+  }, 900);
+});
+
+// ─── HAPTIC FEEDBACK HELPER ──────────────────────────────
+function ybgHaptic(pattern) {
+  if (navigator.vibrate) {
+    try { navigator.vibrate(pattern || 15); } catch(e) {}
+  }
+}
+// Attach haptic to all primary buttons automatically
+document.addEventListener('click', function(e) {
+  const t = e.target.closest('button, .btn, a.btn');
+  if (!t) return;
+  if (t.classList.contains('no-haptic')) return;
+  ybgHaptic(12);
+}, { passive: true });
+
+// ─── STREAK CALCULATION ──────────────────────────────────
+function calculateStreak() {
+  if (!state || !state.entries || state.entries.length === 0) return 0;
+
+  // Get unique log dates (in YYYY-MM-DD format for comparison)
+  const logDates = new Set();
+  state.entries.forEach(function(e) {
+    try {
+      const d = new Date(e.date);
+      if (isNaN(d.getTime())) return;
+      const key = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+      logDates.add(key);
+    } catch(err) {}
+  });
+
+  if (logDates.size === 0) return 0;
+
+  // Walk backwards from today, counting consecutive days
+  let streak = 0;
+  const check = new Date();
+  check.setHours(0, 0, 0, 0);
+
+  // Handle today — if today isn't logged, start checking from yesterday
+  const todayKey = check.getFullYear() + '-' + String(check.getMonth()+1).padStart(2,'0') + '-' + String(check.getDate()).padStart(2,'0');
+  if (!logDates.has(todayKey)) {
+    check.setDate(check.getDate() - 1);
+  }
+
+  // Count backwards
+  for (let i = 0; i < 365; i++) {
+    const key = check.getFullYear() + '-' + String(check.getMonth()+1).padStart(2,'0') + '-' + String(check.getDate()).padStart(2,'0');
+    if (logDates.has(key)) {
+      streak++;
+      check.setDate(check.getDate() - 1);
+    } else {
+      break;
+    }
+  }
+  return streak;
+}
+
+function updateStreakDisplay() {
+  const streak = calculateStreak();
+  const el = document.getElementById('dash-streak');
+  if (el) el.textContent = streak;
+  // Check for milestones
+  checkMilestones(streak);
+}
+
+// ─── DAILY QUOTES (Coach Young's voice, rotates daily) ───
+const YBG_QUOTES = [
+  { q: "The grind is not a moment. It is a decision you make every morning.",                       a: "Coach Young" },
+  { q: "Talent gets you noticed. Preparation gets you paid.",                                       a: "Coach Young" },
+  { q: "There are no off days. There is only the day you chose to get better or the day you didn't.", a: "Coach Young" },
+  { q: "Play for the name on the front of your jersey. Your name on the back takes care of itself.", a: "Coach Young" },
+  { q: "Your teammates remember how you played for them. Your stats do not.",                       a: "Coach Young" },
+  { q: "The best ability is availability. Take care of your arm. Take care of your body.",           a: "Coach Young" },
+  { q: "If you don't journal it, you didn't learn from it.",                                        a: "Coach Young" },
+  { q: "Nobody cares how hard you work when nobody is watching. Work hard anyway.",                 a: "Coach Young" },
+  { q: "One at-bat at a time. One inning at a time. One game at a time. That is the way.",          a: "Coach Young" },
+  { q: "The scoreboard tells you who won. The journal tells you why.",                              a: "Coach Young" },
+  { q: "Respect the game. Respect your opponent. Respect yourself.",                                a: "Coach Young" },
+  { q: "You cannot control the umpire. You cannot control the weather. Control what you can control.", a: "Coach Young" },
+  { q: "Everybody wants to hit. Nobody wants to take ground balls. That is where the game is won.", a: "Coach Young" },
+  { q: "The best hitters I ever coached failed 7 out of 10 times. They kept swinging.",             a: "Coach Young" },
+  { q: "A great teammate is worth more than a great player. Be both.",                              a: "Coach Young" },
+  { q: "Your mental game is your biggest advantage. Protect it. Train it.",                         a: "Coach Young" },
+  { q: "No grades, no baseball. That is not a threat — that is a gift.",                            a: "Coach Young" },
+  { q: "Scouts watch how you run to first base after a groundout. Run hard. Always.",               a: "Coach Young" },
+  { q: "You are not too good for the basics. Nobody is.",                                           a: "Coach Young" },
+  { q: "Sleep is a performance tool. Treat it like one.",                                           a: "Coach Young" },
+  { q: "The dugout is your second classroom. Pay attention there too.",                             a: "Coach Young" },
+  { q: "Losing stings. Learning from it lasts.",                                                    a: "Coach Young" },
+  { q: "You don't rise to the occasion. You fall to your level of preparation.",                    a: "Coach Young" },
+  { q: "If you quit when it's hard, baseball isn't your game.",                                     a: "Coach Young" },
+  { q: "The kid who sprints out every ground ball becomes the man who finishes every job.",         a: "Coach Young" },
+  { q: "Confidence comes from the reps nobody saw you take.",                                       a: "Coach Young" },
+  { q: "Coaches don't remember your best game. They remember your effort on your worst day.",       a: "Coach Young" },
+  { q: "Two things you control: your effort and your attitude. Own them both.",                     a: "Coach Young" },
+  { q: "Hustle is the only stat that never slumps.",                                                a: "Coach Young" },
+  { q: "The game will humble you. Journal it. Learn it. Come back better tomorrow.",                a: "Coach Young" },
+];
+
+function renderDailyQuote() {
+  // Pick a quote based on day of year — stays the same all day, rotates tomorrow
+  const now = new Date();
+  const start = new Date(now.getFullYear(), 0, 0);
+  const diff = now - start;
+  const dayOfYear = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const idx = dayOfYear % YBG_QUOTES.length;
+  const quote = YBG_QUOTES[idx];
+  const qText = document.getElementById('daily-quote-text');
+  const qAuth = document.getElementById('daily-quote-author');
+  if (qText) qText.textContent = '"' + quote.q + '"';
+  if (qAuth) qAuth.textContent = '— ' + quote.a;
+}
+
+// ─── MILESTONE DETECTION + CELEBRATION ───────────────────
+const STREAK_MILESTONES = [3, 7, 14, 30, 50, 100, 200, 365];
+
+function checkMilestones(streak) {
+  if (!streak || streak < 3) return;
+  if (!STREAK_MILESTONES.includes(streak)) return;
+
+  const key = 'ybg_milestone_' + streak;
+  if (localStorage.getItem(key) === '1') return; // already celebrated this one
+
+  // Show celebration
+  showMilestone(streak);
+  localStorage.setItem(key, '1');
+}
+
+function showMilestone(streak) {
+  const card   = document.getElementById('milestone-card');
+  const emoji  = document.getElementById('milestone-emoji');
+  const title  = document.getElementById('milestone-title');
+  const sub    = document.getElementById('milestone-sub');
+  if (!card) return;
+
+  let e = '🔥', t = streak + '-DAY STREAK', s = 'You hit a ' + streak + '-day streak. Keep grinding.';
+  if (streak === 3)   { e = '🎯'; t = '3-DAY START';       s = 'Three days in. The habit is forming.'; }
+  if (streak === 7)   { e = '🔥'; t = 'ONE WEEK STRONG';   s = '7 days locked in. You are building something real.'; }
+  if (streak === 14)  { e = '💪'; t = '2 WEEKS DEEP';      s = 'Two weeks. This is no longer a phase — this is who you are.'; }
+  if (streak === 30)  { e = '⚾'; t = '30-DAY GRINDER';    s = 'A full month. Most players never make it here. You did.'; }
+  if (streak === 50)  { e = '🏆'; t = '50-DAY BEAST';      s = 'You are in the top 1% of players on My Grind.'; }
+  if (streak === 100) { e = '💎'; t = 'CENTURY CLUB';      s = '100 days. This is what separates the great from the good.'; }
+  if (streak === 200) { e = '👑'; t = 'ELITE GRINDER';     s = '200 days. Legendary. Share this with Coach Young.'; }
+  if (streak === 365) { e = '⭐'; t = 'FULL YEAR GRIND';   s = 'A year straight. You are in a league of your own.'; }
+
+  emoji.textContent = e;
+  title.textContent = t;
+  sub.textContent   = s;
+  card.style.display = 'block';
+  card.dataset.streak = streak;
+  ybgHaptic([40, 60, 40]);
+}
+
+function dismissMilestone() {
+  const card = document.getElementById('milestone-card');
+  if (card) card.style.display = 'none';
+}
+
+function shareMilestone() {
+  const card = document.getElementById('milestone-card');
+  const streak = card?.dataset?.streak || calculateStreak();
+  const profile = (function() {
+    try { return JSON.parse(localStorage.getItem('ybg_profile') || '{}'); }
+    catch(e) { return {}; }
+  })();
+  const name = profile.firstName || profile.name || 'I';
+  const says = (name === 'I') ? 'I just hit' : name + ' just hit';
+  const msg =
+    says + ' a ' + streak + '-day streak on MY GRIND ⚾🔥\n\n' +
+    'Journaling every game, tracking every stat. Built by Coach Young.\n\n' +
+    'Get it free for 7 days 👇\n' +
+    'https://youngsbaseball.github.io/mybaseballgrind/?trial=1';
+
+  if (navigator.share) {
+    navigator.share({ title: 'My Grind Streak', text: msg })
+      .catch(function() { fallbackShare(msg); });
+  } else {
+    fallbackShare(msg);
+  }
+}
+
+function fallbackShare(msg) {
+  const ua = navigator.userAgent;
+  const sep = /iPhone|iPad|iPod/i.test(ua) ? '&' : '?';
+  window.location.href = 'sms:' + sep + 'body=' + encodeURIComponent(msg);
+}
+
+// ─── WEEKLY RECAP ────────────────────────────────────────
+function buildWeeklyRecap() {
+  if (!state || !state.entries) return { html: '<em style="color:var(--grey);">No entries yet. Log your first one above.</em>', plain: 'No entries yet this week.' };
+
+  const now = new Date();
+  const weekAgo = new Date();
+  weekAgo.setDate(now.getDate() - 7);
+
+  let games = 0, practices = 0, reflections = 0, total = 0;
+  state.entries.forEach(function(e) {
+    const d = new Date(e.date);
+    if (isNaN(d.getTime())) return;
+    if (d >= weekAgo && d <= now) {
+      total++;
+      if (e.type === 'game') games++;
+      else if (e.type === 'practice') practices++;
+      else if (e.type === 'reflection') reflections++;
+    }
+  });
+
+  const streak = calculateStreak();
+  const goalsActive = (state.goals && state.goals.length) || 0;
+
+  const html =
+    '<div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;">' +
+      '<div style="background:var(--card2); padding:10px 12px; border-radius:4px; border-left:3px solid var(--gold);">' +
+        '<div style="font-family:\'Bebas Neue\'; font-size:22px; color:var(--gold); line-height:1;">' + total + '</div>' +
+        '<div style="font-family:\'Barlow Condensed\'; font-size:10px; letter-spacing:1.5px; text-transform:uppercase; color:var(--grey);">Entries This Week</div>' +
+      '</div>' +
+      '<div style="background:var(--card2); padding:10px 12px; border-radius:4px; border-left:3px solid var(--gold);">' +
+        '<div style="font-family:\'Bebas Neue\'; font-size:22px; color:var(--gold); line-height:1;">🔥 ' + streak + '</div>' +
+        '<div style="font-family:\'Barlow Condensed\'; font-size:10px; letter-spacing:1.5px; text-transform:uppercase; color:var(--grey);">Current Streak</div>' +
+      '</div>' +
+    '</div>' +
+    '<div style="font-size:13px; color:var(--light);">' +
+      '⚾ Games: <strong style="color:var(--gold);">' + games + '</strong> &nbsp;·&nbsp; ' +
+      '🥎 Practices: <strong style="color:var(--gold);">' + practices + '</strong> &nbsp;·&nbsp; ' +
+      '💭 Reflections: <strong style="color:var(--gold);">' + reflections + '</strong>' +
+    '</div>' +
+    '<div style="font-size:13px; color:var(--light); margin-top:6px;">' +
+      '🏆 Active Goals: <strong style="color:var(--gold);">' + goalsActive + '</strong>' +
+    '</div>';
+
+  const profile = (function() {
+    try { return JSON.parse(localStorage.getItem('ybg_profile') || '{}'); }
+    catch(e) { return {}; }
+  })();
+  const name = profile.firstName || profile.name || 'Player';
+
+  const plain =
+    name + "'s Week — MY GRIND Recap ⚾\n\n" +
+    "Entries this week: " + total + "\n" +
+    "Games logged: " + games + "\n" +
+    "Practices logged: " + practices + "\n" +
+    "Reflections: " + reflections + "\n" +
+    "Current streak: " + streak + " days 🔥\n" +
+    "Active goals: " + goalsActive + "\n\n" +
+    "Tracked on MY GRIND — built by Coach Young\n" +
+    "https://youngsbaseball.github.io/mybaseballgrind/";
+
+  return { html: html, plain: plain };
+}
+
+function renderWeeklyRecap() {
+  const el = document.getElementById('weekly-recap-body');
+  if (!el) return;
+  const recap = buildWeeklyRecap();
+  el.innerHTML = recap.html;
+}
+
+function shareWeeklyRecap() {
+  const recap = buildWeeklyRecap();
+  if (navigator.share) {
+    navigator.share({ title: 'My Grind — This Week', text: recap.plain })
+      .catch(function() { fallbackShare(recap.plain); });
+  } else {
+    fallbackShare(recap.plain);
+  }
+}
+
+// ─── PARENT EMAIL (weekly highlights) ────────────────────
+function sendParentRecap() {
+  const recap = buildWeeklyRecap();
+  const profile = (function() {
+    try { return JSON.parse(localStorage.getItem('ybg_profile') || '{}'); }
+    catch(e) { return {}; }
+  })();
+  const name = profile.firstName || profile.name || 'your player';
+  const subject = encodeURIComponent("My Grind — " + name + "'s Week");
+
+  // Build a nicer email body (not just text)
+  let body = "Hi Mom / Dad,\n\n";
+  body += "Here's my week on My Grind ⚾\n\n";
+  body += recap.plain;
+  body += "\n\nLet me know if you want to talk about anything in my journal.\n\n— " + name;
+
+  window.location.href = 'mailto:?subject=' + subject + '&body=' + encodeURIComponent(body);
+}
+
+// ─── PDF / HTML EXPORT OF JOURNAL ────────────────────────
+function exportJournalPDF() {
+  if (!state || !state.entries || state.entries.length === 0) {
+    alert("No journal entries yet to export. Start logging and come back.");
+    return;
+  }
+
+  const profile = (function() {
+    try { return JSON.parse(localStorage.getItem('ybg_profile') || '{}'); }
+    catch(e) { return {}; }
+  })();
+  const name = profile.firstName ? (profile.firstName + (profile.lastName ? ' ' + profile.lastName : '')) : 'Player';
+
+  let stats = null;
+  try { stats = JSON.parse(localStorage.getItem('ybg_player_stats') || 'null'); } catch(e) {}
+
+  const streak = calculateStreak();
+  const totalEntries = state.entries.length;
+  const now = new Date();
+
+  // Build HTML doc (user prints to PDF from browser)
+  let html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>' + name + ' — My Grind Journal</title>';
+  html += '<style>';
+  html += '@page { margin: 0.5in; }';
+  html += 'body { font-family: Georgia, serif; color:#222; line-height:1.6; max-width:760px; margin:30px auto; padding:20px; }';
+  html += 'h1 { font-family: Arial, sans-serif; color:#0D0D0D; border-bottom:3px solid #C9A84C; padding-bottom:10px; }';
+  html += 'h2 { font-family: Arial, sans-serif; color:#8B6F2F; margin-top:30px; border-bottom:1px solid #ccc; padding-bottom:4px; }';
+  html += '.summary { background:#FAF5E3; border-left:4px solid #C9A84C; padding:16px 20px; margin:20px 0; }';
+  html += '.summary strong { color:#0D0D0D; }';
+  html += '.entry { border-left:3px solid #C9A84C; padding:12px 18px; margin:14px 0; background:#FAFAFA; page-break-inside:avoid; }';
+  html += '.entry .meta { font-size:12px; color:#888; font-family:Arial,sans-serif; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }';
+  html += '.entry .title { font-weight:bold; font-size:17px; color:#0D0D0D; margin-bottom:8px; }';
+  html += '.entry p { margin:8px 0; }';
+  html += '.entry .label { font-family:Arial,sans-serif; font-size:11px; color:#888; text-transform:uppercase; letter-spacing:1px; margin-top:8px; }';
+  html += '.footer { text-align:center; color:#888; font-size:12px; margin-top:40px; border-top:1px solid #ccc; padding-top:16px; }';
+  html += '.print-btn { position:fixed; top:10px; right:10px; background:#C9A84C; color:#0D0D0D; font-family:Arial,sans-serif; font-weight:bold; padding:10px 18px; border:none; border-radius:4px; cursor:pointer; font-size:14px; }';
+  html += '@media print { .print-btn { display:none; } }';
+  html += '</style></head><body>';
+  html += '<button class="print-btn" onclick="window.print()">🖨️ Print / Save as PDF</button>';
+  html += '<h1>' + escapeHTMLExport(name) + ' — MY GRIND Journal</h1>';
+  html += '<div class="summary">';
+  html += '<strong>Season Summary</strong><br>';
+  html += 'Total Entries: <strong>' + totalEntries + '</strong><br>';
+  html += 'Current Streak: <strong>' + streak + ' days 🔥</strong><br>';
+  html += 'Exported: <strong>' + now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) + '</strong><br>';
+  if (profile.team)     html += 'Team: <strong>' + escapeHTMLExport(profile.team) + '</strong><br>';
+  if (profile.position) html += 'Position: <strong>' + escapeHTMLExport(profile.position) + '</strong><br>';
+  html += '</div>';
+
+  if (stats && (stats.ab || stats.ip)) {
+    html += '<h2>Season Stats</h2>';
+    html += '<div class="summary">';
+    if (stats.ab)  html += 'At-Bats: <strong>' + stats.ab + '</strong> · Hits: <strong>' + (stats.h||0) + '</strong> · HR: <strong>' + (stats.hr||0) + '</strong> · RBI: <strong>' + (stats.rbi||0) + '</strong><br>';
+    if (stats.ip)  html += 'Innings Pitched: <strong>' + stats.ip + '</strong> · ER: <strong>' + (stats.er||0) + '</strong> · K: <strong>' + (stats.pk||0) + '</strong><br>';
+    html += '</div>';
+  }
+
+  html += '<h2>Journal Entries</h2>';
+  state.entries.forEach(function(e) {
+    html += '<div class="entry">';
+    html += '<div class="meta">' + escapeHTMLExport(e.date) + ' · ' + escapeHTMLExport((e.type||'entry').toUpperCase()) + '</div>';
+    html += '<div class="title">' + escapeHTMLExport(e.title || 'Entry') + '</div>';
+    if (e.what) {
+      html += '<div class="label">What Happened</div>';
+      html += '<p>' + escapeHTMLExport(e.what).replace(/\n/g, '<br>') + '</p>';
+    }
+    if (e.tomorrow) {
+      html += '<div class="label">What I Will Do Tomorrow</div>';
+      html += '<p>' + escapeHTMLExport(e.tomorrow).replace(/\n/g, '<br>') + '</p>';
+    }
+    if (e.prepare) {
+      html += '<div class="label">How I Prepared</div>';
+      html += '<p>' + escapeHTMLExport(e.prepare).replace(/\n/g, '<br>') + '</p>';
+    }
+    if (e.grade)  html += '<div class="label">Self Grade: <strong>' + escapeHTMLExport(e.grade) + '</strong></div>';
+    if (e.result) html += '<div class="label">Result: <strong>' + escapeHTMLExport(e.result) + '</strong></div>';
+    html += '</div>';
+  });
+
+  html += '<div class="footer">MY GRIND · Young\'s Baseball Group · youngsbaseball.com<br>Built by Coach Young — 20+ Years of Player Development</div>';
+  html += '</body></html>';
+
+  // Open in new window — user can print/save as PDF
+  const win = window.open('', '_blank');
+  if (!win) {
+    alert('Please allow popups to export your journal.');
+    return;
+  }
+  win.document.write(html);
+  win.document.close();
+}
+
+function escapeHTMLExport(str) {
+  if (str == null) return '';
+  return String(str)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+// ─── WIRE NEW FEATURES INTO RENDERALL ────────────────────
+const _originalRenderAll = typeof renderAll === 'function' ? renderAll : null;
+if (_originalRenderAll) {
+  window.renderAll = function() {
+    try { _originalRenderAll.apply(this, arguments); } catch(e) { try { console.warn('[renderAll core]', e); } catch(err) {} }
+    try { updateStreakDisplay();  } catch(e) { try { console.warn('[streak]', e); } catch(err) {} }
+    try { renderWeeklyRecap();    } catch(e) { try { console.warn('[recap]', e); } catch(err) {} }
+    try { renderArmCare();        } catch(e) { try { console.warn('[armcare]', e); } catch(err) {} }
+  };
+}
+
+// ─── INITIAL RENDER OF NEW FEATURES ──────────────────────
+setTimeout(function() {
+  try { renderDailyQuote();     } catch(e) {}
+  try { updateStreakDisplay();  } catch(e) {}
+  try { renderWeeklyRecap();    } catch(e) {}
+  try { renderArmCare();        } catch(e) {}
+  try { updateQuickPromptHint();} catch(e) {}
+  try { setupRepsCounter();     } catch(e) {}
+  try { checkGradeNag();        } catch(e) {}
+}, 100);
+
+// ═══════════════════════════════════════════════════════
+// v2026.04 PART 2 — Position Prompts · Arm Care
+// Grade Nag · Practice Rep Counter
+// ═══════════════════════════════════════════════════════
+
+// ─── POSITION-SPECIFIC PROMPTS (#4) ──────────────────────
+function getPlayerPositions() {
+  try {
+    const profile = JSON.parse(localStorage.getItem('ybg_profile') || '{}');
+    const raw = profile.positions || profile.position || '';
+    if (Array.isArray(raw)) return raw;
+    if (typeof raw === 'string') return raw.split(',').map(s => s.trim()).filter(Boolean);
+    return [];
+  } catch(e) { return []; }
+}
+
+function buildPromptForEntry(type, positions) {
+  // Generic fallback
+  if (!type) return '';
+
+  // Game prompts — focus on position-specific self-review
+  if (type === 'game') {
+    const parts = ['<strong style="color:#C9A84C;">Post-Game Prompts:</strong><br>'];
+    const isP  = positions.includes('P');
+    const isC  = positions.includes('C');
+    const isIF = positions.some(p => ['1B','2B','3B','SS'].includes(p));
+    const isOF = positions.some(p => ['LF','CF','RF'].includes(p));
+    const isH  = positions.length === 0 || !(positions.length === 1 && isP); // anyone who hits
+
+    if (isP)  parts.push('⚾ Pitch count? Command? Velo? What worked — what didn\'t?');
+    if (isC)  parts.push('🎯 Pop time? Pitch calling? Blocks & framing?');
+    if (isIF) parts.push('🧤 Defensive reads? Footwork on ground balls? Double plays turned?');
+    if (isOF) parts.push('🏃 Routes taken? Reads off the bat? Throws to cutoff?');
+    if (isH)  parts.push('🏏 Pitches seen? Approach each at-bat? Quality contact?');
+    parts.push('💪 Mental game — stayed composed? Let anything linger?');
+    parts.push('🗣️ Did I lift my teammates up?');
+    return parts.join('<br>');
+  }
+
+  // Practice prompts
+  if (type === 'practice') {
+    return '<strong style="color:#C9A84C;">Practice Prompts:</strong><br>' +
+           '🎯 What was the focus today?<br>' +
+           '💪 Where did I improve?<br>' +
+           '🔁 What rep/drill do I need more of?<br>' +
+           '🧠 What did my coach tell me?';
+  }
+
+  // Reflection
+  if (type === 'reflection') {
+    return '<strong style="color:#C9A84C;">Reflection Prompts:</strong><br>' +
+           '🧠 What\'s on your mind — baseball or otherwise?<br>' +
+           '🎯 What\'s one thing you\'ll work on tomorrow?<br>' +
+           '🙏 One thing you\'re grateful for today?';
+  }
+  return '';
+}
+
+function updateQuickPromptHint() {
+  const typeEl = document.getElementById('quick-type');
+  const hint   = document.getElementById('quick-prompt-hint');
+  if (!typeEl || !hint) return;
+  const type = typeEl.value;
+  const positions = getPlayerPositions();
+  const html = buildPromptForEntry(type, positions);
+  if (html) {
+    hint.innerHTML = html;
+    hint.style.display = 'block';
+  } else {
+    hint.style.display = 'none';
+  }
+}
+
+// Hook into the existing toggleQuickTitle so the hint updates too
+(function() {
+  const origToggle = window.toggleQuickTitle;
+  window.toggleQuickTitle = function() {
+    if (typeof origToggle === 'function') origToggle.apply(this, arguments);
+    updateQuickPromptHint();
+    toggleRepsSection();
+  };
+})();
+
+// ─── ARM CARE DAILY CHECKLIST (#5) ───────────────────────
+const ARM_CARE_ITEMS = [
+  { id: 'bands',    label: 'Band work (10 min)',        icon: '💪' },
+  { id: 'toss',     label: 'Long toss or warm-up catch',icon: '🎯' },
+  { id: 'recovery', label: 'Ice / recovery / stretch',  icon: '🧊' },
+  { id: 'sleep',    label: 'Sleep 8+ hours last night', icon: '😴' },
+];
+
+function armCareKey() {
+  const d = new Date();
+  return 'ybg_armcare_' + d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+
+function getArmCareState() {
+  try { return JSON.parse(localStorage.getItem(armCareKey()) || '{}'); }
+  catch(e) { return {}; }
+}
+
+function setArmCareState(s) {
+  try { localStorage.setItem(armCareKey(), JSON.stringify(s)); } catch(e) {}
+}
+
+function renderArmCare() {
+  try {
+    const list = document.getElementById('arm-care-list');
+    const prog = document.getElementById('arm-care-progress');
+    if (!list) return; // DOM not ready yet — skip silently
+
+    const state = getArmCareState();
+    let done = 0;
+    list.innerHTML = ARM_CARE_ITEMS.map(function(item) {
+      const isDone = !!state[item.id];
+      if (isDone) done++;
+      return '<label onclick="toggleArmCare(\'' + item.id + '\')" style="' +
+             'display:flex; align-items:center; gap:12px; padding:10px 12px; margin-bottom:6px; ' +
+             'background:' + (isDone ? 'rgba(39,174,96,0.12)' : 'var(--card2)') + '; ' +
+             'border:1px solid ' + (isDone ? '#27AE60' : 'var(--border)') + '; ' +
+             'border-radius:4px; cursor:pointer; transition:all 0.15s; user-select:none;">' +
+               '<div style="width:22px; height:22px; border-radius:50%; border:2px solid ' + (isDone ? '#27AE60' : '#444') + '; ' +
+                 'background:' + (isDone ? '#27AE60' : 'transparent') + '; display:flex; align-items:center; justify-content:center; ' +
+                 'color:white; font-size:13px; font-weight:800; flex-shrink:0;">' + (isDone ? '✓' : '') + '</div>' +
+               '<div style="flex:1; font-family:\'Barlow\'; font-size:13px; color:' + (isDone ? 'var(--grey)' : 'var(--light)') + '; ' +
+                 'text-decoration:' + (isDone ? 'line-through' : 'none') + ';">' +
+                 '<span style="margin-right:6px;">' + item.icon + '</span>' + item.label +
+               '</div>' +
+             '</label>';
+    }).join('');
+
+    if (prog) {
+      const total = ARM_CARE_ITEMS.length;
+      if (done === total) {
+        prog.innerHTML = '✅ ALL DONE — ARM CARE COMPLETE';
+        prog.style.color = '#27AE60';
+      } else {
+        prog.innerHTML = done + ' of ' + total + ' complete';
+        prog.style.color = 'var(--grey)';
+      }
+    }
+  } catch(err) {
+    try { console.warn('[renderArmCare]', err); } catch(e) {}
+  }
+}
+
+function toggleArmCare(id) {
+  const state = getArmCareState();
+  state[id] = !state[id];
+  setArmCareState(state);
+  ybgHaptic(15);
+  renderArmCare();
+
+  // Celebrate first full completion of the day
+  const allDone = ARM_CARE_ITEMS.every(function(it) { return state[it.id]; });
+  const celebKey = armCareKey() + '_celebrated';
+  if (allDone && !localStorage.getItem(celebKey)) {
+    localStorage.setItem(celebKey, '1');
+    ybgHaptic([40, 60, 40, 60, 40]);
+    if (typeof showShareToast === 'function') showShareToast('✅ Arm Care Complete — That\'s the standard.');
+  }
+}
+
+// ─── PRACTICE REP COUNTER (#8) ───────────────────────────
+function toggleRepsSection() {
+  const typeEl = document.getElementById('quick-type');
+  const section = document.getElementById('quick-reps-section');
+  if (!typeEl || !section) return;
+  section.style.display = (typeEl.value === 'practice') ? 'block' : 'none';
+  updateRepsTotal();
+}
+
+function updateRepsTotal() {
+  const ids = ['quick-reps-swings','quick-reps-gb','quick-reps-throws','quick-reps-pitches'];
+  let total = 0;
+  ids.forEach(function(id) {
+    const el = document.getElementById(id);
+    if (el) total += parseInt(el.value, 10) || 0;
+  });
+  const out = document.getElementById('quick-reps-total-num');
+  if (out) out.textContent = total.toLocaleString();
+}
+
+function setupRepsCounter() {
+  const ids = ['quick-reps-swings','quick-reps-gb','quick-reps-throws','quick-reps-pitches'];
+  ids.forEach(function(id) {
+    const el = document.getElementById(id);
+    if (el && !el.dataset.bound) {
+      el.addEventListener('input', updateRepsTotal);
+      el.dataset.bound = '1';
+    }
+  });
+  toggleRepsSection();
+}
+
+// Hook into the existing quickLog to capture reps in the entry
+(function() {
+  const origQuickLog = window.quickLog;
+  if (typeof origQuickLog !== 'function') return;
+
+  window.quickLog = function() {
+    try {
+      // Capture rep values BEFORE original function runs (it clears fields)
+      const typeEl = document.getElementById('quick-type');
+      const type = typeEl ? typeEl.value : null;
+      let reps = null;
+      if (type === 'practice') {
+        const swings  = parseInt(document.getElementById('quick-reps-swings')?.value  || '0', 10) || 0;
+        const gb      = parseInt(document.getElementById('quick-reps-gb')?.value      || '0', 10) || 0;
+        const throws_ = parseInt(document.getElementById('quick-reps-throws')?.value  || '0', 10) || 0;
+        const pitches = parseInt(document.getElementById('quick-reps-pitches')?.value || '0', 10) || 0;
+        const total = swings + gb + throws_ + pitches;
+        if (total > 0) reps = { swings: swings, gb: gb, throws: throws_, pitches: pitches, total: total };
+      }
+
+      // Run the original save
+      origQuickLog.apply(this, arguments);
+
+      // Attach reps to the newest entry (safely)
+      if (reps && typeof window.state === 'object' && window.state && Array.isArray(window.state.entries) && window.state.entries[0]) {
+        try {
+          window.state.entries[0].reps = reps;
+          const summary = '\n\n🔢 Reps logged: ' +
+            (reps.swings  ? reps.swings  + ' swings · '  : '') +
+            (reps.gb      ? reps.gb      + ' GBs · '     : '') +
+            (reps.throws  ? reps.throws  + ' throws · '  : '') +
+            (reps.pitches ? reps.pitches + ' pitches · ' : '') +
+            'Total: ' + reps.total;
+          window.state.entries[0].what = (window.state.entries[0].what || '') + summary.replace(/·\s*$/, '');
+          if (typeof saveState === 'function') { try { saveState(); } catch(e) {} }
+        } catch(err) {}
+      }
+
+      // Clear reps fields
+      ['quick-reps-swings','quick-reps-gb','quick-reps-throws','quick-reps-pitches'].forEach(function(id) {
+        try { const el = document.getElementById(id); if (el) el.value = ''; } catch(e) {}
+      });
+      try { updateRepsTotal(); } catch(e) {}
+    } catch(err) {
+      try { console.warn('[YBG quickLog hook]', err); } catch(e) {}
+      // Still run the original so saving never breaks
+      try { origQuickLog.apply(this, arguments); } catch(e) {}
+    }
+  };
+})();
+
+// ─── GRADE CHECK NAG (#6) ────────────────────────────────
+function checkGradeNag() {
+  const LAST_KEY = 'ybg_grade_check_last';
+  const last = parseInt(localStorage.getItem(LAST_KEY) || '0', 10);
+  const now = Date.now();
+  const SEVEN_DAYS = 7 * 24 * 60 * 60 * 1000;
+
+  // First-time users: wait 2 days of app use before first nag (not immediate)
+  const firstUseKey = 'ybg_first_use';
+  let firstUse = parseInt(localStorage.getItem(firstUseKey) || '0', 10);
+  if (!firstUse) {
+    localStorage.setItem(firstUseKey, String(now));
+    firstUse = now;
+  }
+  const TWO_DAYS = 2 * 24 * 60 * 60 * 1000;
+  if (!last && (now - firstUse) < TWO_DAYS) return;
+
+  // Show nag every 7 days
+  if (!last || (now - last) > SEVEN_DAYS) {
+    setTimeout(showGradeNag, 1500); // slight delay so page is rendered first
+  }
+}
+
+function showGradeNag() {
+  const overlay = document.getElementById('grade-nag-overlay');
+  if (!overlay) return;
+  // Reset form state
+  document.querySelectorAll('.grade-nag-btn').forEach(function(b) {
+    b.style.background = '#1A1A1A';
+    b.style.borderColor = '#2A2A2A';
+    b.style.color = '#F4F4F4';
+    b.dataset.selected = '';
+  });
+  const subject = document.getElementById('grade-nag-subject');
+  if (subject) subject.value = '';
+  const msg = document.getElementById('grade-nag-message');
+  if (msg) msg.style.display = 'none';
+  const submit = document.getElementById('grade-nag-submit');
+  if (submit) {
+    submit.disabled = true;
+    submit.style.background = '#1A1A1A';
+    submit.style.color = '#666';
+    submit.style.cursor = 'not-allowed';
+    submit.style.borderColor = '#2A2A2A';
+    submit.textContent = 'Pick an option above';
+  }
+  overlay.style.display = 'flex';
+  ybgHaptic([25, 40, 25]);
+}
+
+function selectGradeNagOption(btn) {
+  // Clear all
+  document.querySelectorAll('.grade-nag-btn').forEach(function(b) {
+    b.style.background = '#1A1A1A';
+    b.style.borderColor = '#2A2A2A';
+    b.style.color = '#F4F4F4';
+    b.dataset.selected = '';
+  });
+  // Set selected
+  btn.style.background = 'rgba(201,168,76,0.15)';
+  btn.style.borderColor = '#C9A84C';
+  btn.style.color = '#C9A84C';
+  btn.dataset.selected = '1';
+
+  // Show contextual message
+  const val = btn.dataset.val;
+  const msg = document.getElementById('grade-nag-message');
+  if (msg) {
+    let text = '';
+    if (val === 'all-a')    text = '🏆 <strong>That\'s it.</strong> The field is where you play. The classroom is where you earn the field. Keep stacking.';
+    if (val === 'a-b')      text = '✅ <strong>Solid.</strong> Don\'t get comfortable — pick one class this week and push it up.';
+    if (val === 'slipping') text = '⚠️ <strong>Catch it now.</strong> Talk to that teacher before Friday. A 15-minute check-in saves a whole semester.';
+    if (val === 'help')     text = '🆘 <strong>Ask for help today.</strong> Not next week. Talk to your teacher, a parent, or Coach Young. No grades, no baseball — but nobody expects you to figure it out alone.';
+    msg.innerHTML = text;
+    msg.style.display = 'block';
+  }
+
+  // Enable submit
+  const submit = document.getElementById('grade-nag-submit');
+  if (submit) {
+    submit.disabled = false;
+    submit.style.background = '#C9A84C';
+    submit.style.color = '#0D0D0D';
+    submit.style.cursor = 'pointer';
+    submit.style.borderColor = '#C9A84C';
+    submit.textContent = '✅ Check In — Stay Eligible';
+  }
+  ybgHaptic(15);
+}
+
+function submitGradeNag() {
+  const selected = document.querySelector('.grade-nag-btn[data-selected="1"]');
+  if (!selected) return;
+  const val = selected.dataset.val;
+  const subject = (document.getElementById('grade-nag-subject')?.value || '').trim();
+
+  // Save entry to history
+  const HIST_KEY = 'ybg_grade_checkins';
+  let hist = [];
+  try { hist = JSON.parse(localStorage.getItem(HIST_KEY) || '[]'); } catch(e) {}
+  hist.unshift({ when: Date.now(), status: val, subject: subject });
+  if (hist.length > 52) hist = hist.slice(0, 52);
+  try { localStorage.setItem(HIST_KEY, JSON.stringify(hist)); } catch(e) {}
+
+  // Update last-check timestamp
+  try { localStorage.setItem('ybg_grade_check_last', String(Date.now())); } catch(e) {}
+
+  // Hide overlay
+  const overlay = document.getElementById('grade-nag-overlay');
+  if (overlay) overlay.style.display = 'none';
+
+  ybgHaptic([30, 50, 30]);
+  if (typeof showShareToast === 'function') {
+    showShareToast('📚 Logged. See you next week.');
+  }
+}
+
+// ─── WIRE UP QUICK-TYPE CHANGE LISTENER ──────────────────
+setTimeout(function() {
+  const typeEl = document.getElementById('quick-type');
+  if (typeEl && !typeEl.dataset.bound) {
+    typeEl.addEventListener('change', function() {
+      updateQuickPromptHint();
+      toggleRepsSection();
+    });
+    typeEl.dataset.bound = '1';
+  }
+}, 300);
 </script>
 </body>
 </html>
