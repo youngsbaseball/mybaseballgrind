@@ -920,6 +920,108 @@ function dismissIosBanner() {
   </div>
 </div>
 
+<!-- ── CREATE/EDIT TEAM MODAL (coaches) ── -->
+<div id="team-create-overlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.93); z-index:1001; align-items:center; justify-content:center; padding:16px; backdrop-filter:blur(12px); overflow-y:auto;">
+  <div style="background:#0D0D0D; border:2px solid #C9A84C; border-radius:6px; max-width:480px; width:100%; padding:24px 20px; max-height:94vh; overflow-y:auto; margin:auto;">
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
+      <div>
+        <div id="team-modal-title" style="font-family:'Bebas Neue'; font-size:24px; letter-spacing:2px; color:#C9A84C; line-height:1;">CREATE YOUR TEAM</div>
+        <div style="font-family:'Barlow'; font-size:12px; color:#888; margin-top:2px;">Set the colors, share the code, build the roster.</div>
+      </div>
+      <button onclick="closeTeamCreateModal()" style="background:transparent; border:none; color:#666; font-size:24px; cursor:pointer; padding:0; line-height:1;">✕</button>
+    </div>
+
+    <div id="tc-preview" style="margin-bottom:16px; padding:20px; text-align:center; background:#181818; border-radius:6px; border:1px solid #2A2A2A; position:relative; overflow:hidden;">
+      <div id="tc-preview-strip" style="position:absolute; top:0; left:0; right:0; height:4px; background:#C9A84C;"></div>
+      <div id="tc-preview-logo" style="width:64px; height:64px; border-radius:50%; margin:0 auto 10px; display:flex; align-items:center; justify-content:center; font-family:'Bebas Neue'; font-size:22px; font-weight:900; background:#C9A84C; color:#0D0D0D; box-shadow:0 0 0 2px #0D0D0D, 0 0 0 4px #C9A84C;">YBG</div>
+      <div id="tc-preview-name" style="font-family:'Bebas Neue'; font-size:22px; letter-spacing:2px; color:#F4F4F4;">TEAM NAME</div>
+      <div id="tc-preview-loc" style="font-family:'Barlow Condensed'; font-size:11px; letter-spacing:2px; color:#888; text-transform:uppercase; margin-top:2px;">City · State</div>
+    </div>
+
+    <label style="display:block; font-family:'Barlow Condensed'; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:#AAA; margin-bottom:6px;">Team Name *</label>
+    <input type="text" id="tc-name" maxlength="40" placeholder="e.g. YBG Travel 14U" oninput="updateTeamPreview()" style="width:100%; background:#1A1A1A; border:1px solid #2A2A2A; color:#F4F4F4; padding:11px 14px; border-radius:4px; font-family:'Barlow'; font-size:14px; margin-bottom:14px; box-sizing:border-box;">
+
+    <label style="display:block; font-family:'Barlow Condensed'; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:#AAA; margin-bottom:6px;">Logo Letters (2-4 chars) *</label>
+    <input type="text" id="tc-abbr" maxlength="4" placeholder="YBG" oninput="this.value=this.value.toUpperCase(); updateTeamPreview()" style="width:100%; background:#1A1A1A; border:1px solid #2A2A2A; color:#F4F4F4; padding:11px 14px; border-radius:4px; font-family:'Barlow'; font-size:14px; margin-bottom:14px; box-sizing:border-box; text-transform:uppercase; letter-spacing:2px;">
+
+    <div style="display:grid; grid-template-columns:2fr 1fr; gap:10px; margin-bottom:14px;">
+      <div>
+        <label style="display:block; font-family:'Barlow Condensed'; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:#AAA; margin-bottom:6px;">City</label>
+        <input type="text" id="tc-city" placeholder="Santa Clarita" oninput="updateTeamPreview()" style="width:100%; background:#1A1A1A; border:1px solid #2A2A2A; color:#F4F4F4; padding:11px 14px; border-radius:4px; font-family:'Barlow'; font-size:14px; box-sizing:border-box;">
+      </div>
+      <div>
+        <label style="display:block; font-family:'Barlow Condensed'; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:#AAA; margin-bottom:6px;">State</label>
+        <input type="text" id="tc-state" maxlength="2" placeholder="CA" oninput="this.value=this.value.toUpperCase(); updateTeamPreview()" style="width:100%; background:#1A1A1A; border:1px solid #2A2A2A; color:#F4F4F4; padding:11px 14px; border-radius:4px; font-family:'Barlow'; font-size:14px; box-sizing:border-box; text-transform:uppercase;">
+      </div>
+    </div>
+
+    <label style="display:block; font-family:'Barlow Condensed'; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:#AAA; margin-bottom:6px;">Team Colors *</label>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;">
+      <div>
+        <div style="font-family:'Barlow'; font-size:11px; color:#888; margin-bottom:4px;">Primary</div>
+        <div style="display:flex; align-items:center; gap:8px; background:#1A1A1A; border:1px solid #2A2A2A; padding:6px 10px; border-radius:4px;">
+          <input type="color" id="tc-primary" value="#C9A84C" oninput="updateTeamPreview()" style="width:36px; height:36px; border:none; background:none; cursor:pointer; padding:0;">
+          <span id="tc-primary-hex" style="font-family:monospace; font-size:12px; color:#F4F4F4;">#C9A84C</span>
+        </div>
+      </div>
+      <div>
+        <div style="font-family:'Barlow'; font-size:11px; color:#888; margin-bottom:4px;">Accent</div>
+        <div style="display:flex; align-items:center; gap:8px; background:#1A1A1A; border:1px solid #2A2A2A; padding:6px 10px; border-radius:4px;">
+          <input type="color" id="tc-accent" value="#0D0D0D" oninput="updateTeamPreview()" style="width:36px; height:36px; border:none; background:none; cursor:pointer; padding:0;">
+          <span id="tc-accent-hex" style="font-family:monospace; font-size:12px; color:#F4F4F4;">#0D0D0D</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:16px;">
+      <div style="font-family:'Barlow'; font-size:11px; color:#888; margin-bottom:6px;">Or pick a preset:</div>
+      <div style="display:flex; gap:6px; flex-wrap:wrap;">
+        <button onclick="setTeamPreset('#C9A84C','#0D0D0D')" title="YBG Gold/Black" style="width:36px; height:24px; background:linear-gradient(90deg,#C9A84C 50%, #0D0D0D 50%); border:1px solid #444; border-radius:3px; cursor:pointer;"></button>
+        <button onclick="setTeamPreset('#CE1126','#FFFFFF')" title="Red/White" style="width:36px; height:24px; background:linear-gradient(90deg,#CE1126 50%, #FFFFFF 50%); border:1px solid #444; border-radius:3px; cursor:pointer;"></button>
+        <button onclick="setTeamPreset('#0D47A1','#FFFFFF')" title="Blue/White" style="width:36px; height:24px; background:linear-gradient(90deg,#0D47A1 50%, #FFFFFF 50%); border:1px solid #444; border-radius:3px; cursor:pointer;"></button>
+        <button onclick="setTeamPreset('#1B5E20','#FFD700')" title="Green/Gold" style="width:36px; height:24px; background:linear-gradient(90deg,#1B5E20 50%, #FFD700 50%); border:1px solid #444; border-radius:3px; cursor:pointer;"></button>
+        <button onclick="setTeamPreset('#4A148C','#FFFFFF')" title="Purple/White" style="width:36px; height:24px; background:linear-gradient(90deg,#4A148C 50%, #FFFFFF 50%); border:1px solid #444; border-radius:3px; cursor:pointer;"></button>
+        <button onclick="setTeamPreset('#F57C00','#0D0D0D')" title="Orange/Black" style="width:36px; height:24px; background:linear-gradient(90deg,#F57C00 50%, #0D0D0D 50%); border:1px solid #444; border-radius:3px; cursor:pointer;"></button>
+        <button onclick="setTeamPreset('#00796B','#FFFFFF')" title="Teal/White" style="width:36px; height:24px; background:linear-gradient(90deg,#00796B 50%, #FFFFFF 50%); border:1px solid #444; border-radius:3px; cursor:pointer;"></button>
+        <button onclick="setTeamPreset('#6D4C41','#FFC107')" title="Brown/Yellow" style="width:36px; height:24px; background:linear-gradient(90deg,#6D4C41 50%, #FFC107 50%); border:1px solid #444; border-radius:3px; cursor:pointer;"></button>
+      </div>
+    </div>
+
+    <div style="border-top:1px solid #2A2A2A; padding-top:16px; margin-bottom:14px;">
+      <div style="font-family:'Barlow Condensed'; font-size:11px; letter-spacing:2px; text-transform:uppercase; color:#C9A84C; margin-bottom:10px;">COACH INFO</div>
+      <label style="display:block; font-family:'Barlow Condensed'; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:#AAA; margin-bottom:6px;">Coach Name *</label>
+      <input type="text" id="tc-coach-name" placeholder="Coach Young" style="width:100%; background:#1A1A1A; border:1px solid #2A2A2A; color:#F4F4F4; padding:11px 14px; border-radius:4px; font-family:'Barlow'; font-size:14px; margin-bottom:12px; box-sizing:border-box;">
+      <label style="display:block; font-family:'Barlow Condensed'; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:#AAA; margin-bottom:6px;">Coach Email * <span style="color:#666; text-transform:none; letter-spacing:0;">(where player messages go)</span></label>
+      <input type="email" id="tc-coach-email" placeholder="coach@youngsbaseball.com" style="width:100%; background:#1A1A1A; border:1px solid #2A2A2A; color:#F4F4F4; padding:11px 14px; border-radius:4px; font-family:'Barlow'; font-size:14px; margin-bottom:0; box-sizing:border-box;">
+    </div>
+
+    <div id="tc-error" style="display:none; background:#3A1A1A; border:1px solid #C0392B; color:#FFB7AC; padding:10px 14px; border-radius:4px; margin-bottom:14px; font-family:'Barlow'; font-size:12px;"></div>
+
+    <button id="tc-submit" onclick="submitTeamCreate()" style="width:100%; background:#C9A84C; color:#0D0D0D; font-family:'Barlow Condensed'; font-size:14px; font-weight:800; letter-spacing:2px; text-transform:uppercase; padding:14px; border:none; border-radius:4px; cursor:pointer;">
+      ✅ Create Team
+    </button>
+  </div>
+</div>
+
+<!-- ── JOIN TEAM CONFIRMATION MODAL ── -->
+<div id="team-join-overlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.93); z-index:1001; align-items:center; justify-content:center; padding:16px; backdrop-filter:blur(12px);">
+  <div style="background:#0D0D0D; border:2px solid #C9A84C; border-radius:6px; max-width:420px; width:100%; padding:24px 20px;">
+    <div style="text-align:center; margin-bottom:16px;">
+      <div id="tj-logo" style="width:72px; height:72px; border-radius:50%; margin:0 auto 12px; display:flex; align-items:center; justify-content:center; font-family:'Bebas Neue'; font-size:24px; font-weight:900;">YBG</div>
+      <div id="tj-name" style="font-family:'Bebas Neue'; font-size:24px; letter-spacing:2px; color:#F4F4F4;">TEAM NAME</div>
+      <div id="tj-loc" style="font-family:'Barlow Condensed'; font-size:11px; letter-spacing:2px; color:#888; text-transform:uppercase; margin-top:2px;"></div>
+      <div id="tj-coach" style="font-family:'Barlow'; font-size:13px; color:#C9A84C; margin-top:10px;"></div>
+    </div>
+    <div style="background:#181400; border-left:3px solid #C9A84C; padding:12px 14px; margin-bottom:18px; font-family:'Barlow'; font-size:12px; color:#AAA; line-height:1.6;">
+      By joining, your weekly journal updates can be sent directly to your coach. You can leave anytime — your profile stays yours.
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+      <button onclick="closeJoinModal()" style="background:transparent; border:1px solid #2A2A2A; color:#AAA; font-family:'Barlow Condensed'; font-size:12px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:12px; border-radius:4px; cursor:pointer;">Cancel</button>
+      <button onclick="confirmJoinTeam()" style="background:#C9A84C; color:#0D0D0D; font-family:'Barlow Condensed'; font-size:12px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; padding:12px; border:none; border-radius:4px; cursor:pointer;">✅ Join Team</button>
+    </div>
+  </div>
+</div>
+
 <!-- ── GRADE CHECK NAG OVERLAY (weekly) ── -->
 <div id="grade-nag-overlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.93); z-index:1001; align-items:center; justify-content:center; padding:24px; backdrop-filter:blur(12px);">
   <div style="background:#0D0D0D; border:2px solid #C9A84C; border-radius:6px; max-width:480px; width:100%; padding:28px 24px; max-height:92vh; overflow-y:auto;">
@@ -1151,6 +1253,7 @@ function dismissIosBanner() {
   <button class="tab-btn" onclick="showPanel('journal')">📓 Daily Journal</button>
   <button class="tab-btn" onclick="showPanel('calendar')">📅 Training Calendar</button>
   <button class="tab-btn" onclick="showPanel('goals')">🏆 Goals & Grades</button>
+  <button class="tab-btn" onclick="showPanel('team')">👥 Team</button>
   <button class="tab-btn" onclick="showPanel('stats')">📊 My Stats</button>
   <button class="tab-btn" onclick="showPanel('share')">📲 Share</button>
   <button class="tab-btn" onclick="showPanel('settings')">⚙️ Settings</button>
@@ -1999,6 +2102,162 @@ function dismissIosBanner() {
   </div>
   </div><!-- END panel-goals -->
 
+  <!-- ══════════════════════════════════════════ TEAM ══ -->
+  <div class="panel" id="panel-team">
+    <div class="section-header">
+      <div class="section-title">MY <span>TEAM</span></div>
+      <div class="section-sub" id="team-panel-sub">Join a team · or create one as a coach</div>
+      <div class="gold-line"></div>
+    </div>
+
+    <!-- ─── VIEW 1: NO TEAM (default — shows join/create options) ─── -->
+    <div id="team-view-none">
+
+      <!-- Hero card -->
+      <div class="card" style="margin-bottom:16px; background:linear-gradient(135deg,#1A1400,#0E0C00); border:2px solid var(--gold-dark); text-align:center; padding:28px 20px;">
+        <div style="font-size:42px; line-height:1; margin-bottom:6px;">🏟️</div>
+        <div style="font-family:'Bebas Neue',cursive; font-size:30px; letter-spacing:2px; color:var(--white); line-height:1; margin-bottom:6px;">PLAY FOR A TEAM</div>
+        <div style="font-family:'Barlow'; font-size:13px; color:var(--grey); line-height:1.6; max-width:320px; margin:0 auto;">
+          Join your coach's team to unlock team colors, direct coach messaging, and shared accountability.
+        </div>
+      </div>
+
+      <!-- Join a team -->
+      <div class="card" style="margin-bottom:16px;">
+        <div class="card-title">🔍 Find Your Team</div>
+        <div style="font-family:'Barlow'; font-size:13px; color:var(--grey); margin-bottom:14px; line-height:1.6;">
+          Tap your team below to join. Don't see it? Your coach may need to create one first.
+        </div>
+
+        <!-- Search -->
+        <input type="text" id="team-search" placeholder="🔎 Search teams..." oninput="renderTeamList()" style="width:100%; background:var(--card2); border:1px solid var(--border); color:var(--light); padding:11px 14px; border-radius:4px; font-family:'Barlow'; font-size:14px; margin-bottom:12px; box-sizing:border-box;">
+
+        <!-- Team list -->
+        <div id="team-list-container"></div>
+
+        <!-- Empty state msg -->
+        <div id="team-list-empty" style="display:none; text-align:center; padding:24px 12px; color:var(--grey); font-family:'Barlow'; font-size:13px; line-height:1.6;">
+          <div style="font-size:36px; line-height:1; margin-bottom:10px; opacity:0.4;">⚾</div>
+          No teams yet. Be the first — create your team as a coach below.
+        </div>
+      </div>
+
+      <!-- OR divider -->
+      <div style="display:flex; align-items:center; gap:14px; margin:22px 4px;">
+        <div style="flex:1; height:1px; background:var(--border);"></div>
+        <div style="font-family:'Barlow Condensed'; font-size:11px; letter-spacing:3px; color:var(--grey); text-transform:uppercase;">or</div>
+        <div style="flex:1; height:1px; background:var(--border);"></div>
+      </div>
+
+      <!-- Create team as coach -->
+      <div class="card" style="margin-bottom:16px; border-left:3px solid var(--gold);">
+        <div class="card-title">👨‍🏫 I'm a Coach</div>
+        <div style="font-family:'Barlow'; font-size:13px; color:var(--grey); margin-bottom:14px; line-height:1.6;">
+          Create your team. Set your colors. Share the code with your players. <strong style="color:var(--gold);">It's free for coaches.</strong>
+        </div>
+        <button onclick="openTeamCreateModal()" style="width:100%; background:var(--gold); color:#0D0D0D; font-family:'Barlow Condensed'; font-size:14px; font-weight:800; letter-spacing:2px; text-transform:uppercase; padding:14px; border:none; border-radius:4px; cursor:pointer;">
+          ➕ Create My Team
+        </button>
+      </div>
+
+    </div>
+
+    <!-- ─── VIEW 2: PLAYER IS ON A TEAM ─── -->
+    <div id="team-view-joined" style="display:none;">
+
+      <!-- Team badge hero -->
+      <div id="team-badge-card" class="card" style="margin-bottom:16px; text-align:center; padding:28px 20px; position:relative; overflow:hidden;">
+        <!-- Decorative color strip top -->
+        <div id="team-color-strip-top" style="position:absolute; top:0; left:0; right:0; height:5px;"></div>
+
+        <!-- Logo circle -->
+        <div id="team-logo-circle" style="width:90px; height:90px; border-radius:50%; margin:0 auto 14px; display:flex; align-items:center; justify-content:center; font-family:'Bebas Neue'; font-size:32px; font-weight:900; box-shadow:0 0 0 3px #0D0D0D, 0 0 0 5px var(--gold);">YBG</div>
+
+        <div id="team-name-display" style="font-family:'Bebas Neue',cursive; font-size:30px; letter-spacing:2px; line-height:1; margin-bottom:6px;">YBG TRAVEL</div>
+        <div id="team-location-display" style="font-family:'Barlow Condensed'; font-size:12px; letter-spacing:2px; color:var(--grey); text-transform:uppercase; margin-bottom:14px;">— · —</div>
+
+        <div style="display:inline-block; background:var(--card2); padding:6px 14px; border-radius:20px; font-family:'Barlow Condensed'; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--gold); border:1px solid var(--gold-dark);">
+          ✅ Active Member
+        </div>
+      </div>
+
+      <!-- Team info cards -->
+      <div class="card" style="margin-bottom:16px;">
+        <div class="card-title">👨‍🏫 Head Coach</div>
+        <div id="team-coach-info" style="font-family:'Barlow'; font-size:14px; color:var(--light); line-height:1.8;"></div>
+        <button id="team-message-coach" onclick="messageCoach()" style="width:100%; margin-top:12px; background:var(--card2); border:1px solid var(--gold-dark); color:var(--gold); font-family:'Barlow Condensed'; font-size:12px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:11px; border-radius:4px; cursor:pointer;">
+          ✉️ Email My Coach
+        </button>
+      </div>
+
+      <!-- Send my journal to coach -->
+      <div class="card" style="margin-bottom:16px; border-left:3px solid var(--gold);">
+        <div class="card-title">📊 Weekly Update to Coach</div>
+        <div style="font-family:'Barlow'; font-size:13px; color:var(--grey); line-height:1.6; margin-bottom:14px;">
+          Send this week's journal summary straight to your coach. Great for showing you're putting in the work.
+        </div>
+        <button onclick="sendJournalToCoach()" style="width:100%; background:var(--gold); color:#0D0D0D; font-family:'Barlow Condensed'; font-size:13px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; padding:12px; border:none; border-radius:4px; cursor:pointer;">
+          📧 Send My Week to Coach
+        </button>
+      </div>
+
+      <!-- Leave team -->
+      <div class="card" style="margin-bottom:16px;">
+        <div class="card-title">Leave Team</div>
+        <div style="font-family:'Barlow'; font-size:13px; color:var(--grey); line-height:1.6; margin-bottom:14px;">
+          Moving teams? Leaving the sport? You'll keep your full journal, stats, goals, and profile. Only the team badge goes.
+        </div>
+        <button onclick="leaveTeam()" style="width:100%; background:transparent; border:1px solid var(--border); color:var(--grey); font-family:'Barlow Condensed'; font-size:12px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:11px; border-radius:4px; cursor:pointer;">
+          🚪 Leave This Team
+        </button>
+      </div>
+
+    </div>
+
+    <!-- ─── VIEW 3: COACH OF A TEAM ─── -->
+    <div id="team-view-coach" style="display:none;">
+
+      <!-- Coach's team hero -->
+      <div class="card" style="margin-bottom:16px; text-align:center; padding:28px 20px; position:relative; overflow:hidden;">
+        <div id="coach-color-strip-top" style="position:absolute; top:0; left:0; right:0; height:5px;"></div>
+        <div id="coach-team-logo" style="width:90px; height:90px; border-radius:50%; margin:0 auto 14px; display:flex; align-items:center; justify-content:center; font-family:'Bebas Neue'; font-size:32px; font-weight:900; box-shadow:0 0 0 3px #0D0D0D, 0 0 0 5px var(--gold);">YBG</div>
+        <div id="coach-team-name" style="font-family:'Bebas Neue',cursive; font-size:30px; letter-spacing:2px; line-height:1; margin-bottom:6px;">YOUR TEAM</div>
+        <div id="coach-team-location" style="font-family:'Barlow Condensed'; font-size:12px; letter-spacing:2px; color:var(--grey); text-transform:uppercase; margin-bottom:14px;">— · —</div>
+        <div style="display:inline-block; background:var(--card2); padding:6px 14px; border-radius:20px; font-family:'Barlow Condensed'; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--gold); border:1px solid var(--gold-dark);">
+          👨‍🏫 Head Coach
+        </div>
+      </div>
+
+      <!-- Share join code -->
+      <div class="card" style="margin-bottom:16px;">
+        <div class="card-title">📣 Invite Players</div>
+        <div style="font-family:'Barlow'; font-size:13px; color:var(--grey); line-height:1.6; margin-bottom:14px;">
+          Share this link with your players. They'll see your team listed when they open the Team tab.
+        </div>
+        <div style="background:var(--card2); border:1px solid var(--gold-dark); padding:14px; border-radius:4px; text-align:center; margin-bottom:12px;">
+          <div style="font-family:'Barlow Condensed'; font-size:10px; letter-spacing:2px; color:var(--grey); text-transform:uppercase; margin-bottom:4px;">Team Code</div>
+          <div id="coach-team-code" style="font-family:'Bebas Neue'; font-size:28px; letter-spacing:3px; color:var(--gold);">—</div>
+        </div>
+        <button onclick="shareTeamInvite()" style="width:100%; background:var(--gold); color:#0D0D0D; font-family:'Barlow Condensed'; font-size:13px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; padding:12px; border:none; border-radius:4px; cursor:pointer;">
+          📲 Share With Players
+        </button>
+      </div>
+
+      <!-- Edit team / disband -->
+      <div class="card" style="margin-bottom:16px;">
+        <div class="card-title">Team Settings</div>
+        <button onclick="openTeamCreateModal(true)" style="width:100%; background:var(--card2); border:1px solid var(--border); color:var(--light); font-family:'Barlow Condensed'; font-size:12px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:11px; border-radius:4px; cursor:pointer; margin-bottom:8px;">
+          ✏️ Edit Team Info
+        </button>
+        <button onclick="disbandTeam()" style="width:100%; background:transparent; border:1px solid var(--border); color:var(--grey); font-family:'Barlow Condensed'; font-size:12px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:11px; border-radius:4px; cursor:pointer;">
+          🗑️ Disband Team
+        </button>
+      </div>
+
+    </div>
+
+  </div><!-- END panel-team -->
+
   <div class="panel" id="panel-stats">
     <div class="section-header">
       <div class="section-title">MY <span>STATS</span></div>
@@ -2601,7 +2860,56 @@ function dismissIosBanner() {
 </div>
 <script>
 // ─── DATA STORE ───────────────────────────────────────────
-let state = {
+// Load saved state from localStorage on startup (if present)
+function loadState() {
+  try {
+    const raw = localStorage.getItem('ybg_state');
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (!parsed || typeof parsed !== 'object') return null;
+    // Ensure all required fields exist (handles older saves)
+    if (!Array.isArray(parsed.entries)) parsed.entries = [];
+    if (!Array.isArray(parsed.players)) parsed.players = [];
+    if (!Array.isArray(parsed.goals))   parsed.goals   = [];
+    if (!parsed.gpa || typeof parsed.gpa !== 'object') parsed.gpa = { current: null, target: null };
+    return parsed;
+  } catch(e) { return null; }
+}
+
+function saveState() {
+  try {
+    // Strip media dataUrls to keep storage under 5MB limit
+    // (photos/videos are huge base64 strings — don't persist them)
+    const toSave = {
+      entries: (state.entries || []).map(function(e) {
+        const copy = Object.assign({}, e);
+        if (Array.isArray(copy.media)) {
+          copy.media = copy.media.map(function(m) {
+            return { type: m.type, name: m.name }; // drop dataUrl
+          });
+        }
+        return copy;
+      }),
+      players: state.players || [],
+      goals:   state.goals   || [],
+      gpa:     state.gpa     || { current: null, target: null }
+    };
+    localStorage.setItem('ybg_state', JSON.stringify(toSave));
+    return true;
+  } catch(e) {
+    console.warn('[YBG] saveState failed:', e);
+    // If quota exceeded, try without entries (keep goals at minimum)
+    try {
+      localStorage.setItem('ybg_state', JSON.stringify({
+        entries: [], players: state.players || [], goals: state.goals || [], gpa: state.gpa || { current: null, target: null }
+      }));
+    } catch(e2) {}
+    return false;
+  }
+}
+
+// Initialize state — load from storage or use defaults
+let state = loadState() || {
   entries: [],
   players: [],
   goals: [],
@@ -5405,7 +5713,18 @@ function shareMilestone() {
 function fallbackShare(msg) {
   const ua = navigator.userAgent;
   const sep = /iPhone|iPad|iPod/i.test(ua) ? '&' : '?';
-  window.location.href = 'sms:' + sep + 'body=' + encodeURIComponent(msg);
+  const url = 'sms:' + sep + 'body=' + encodeURIComponent(msg);
+  // Use a hidden anchor so the app doesn't navigate away
+  try {
+    const a = document.createElement('a');
+    a.href = url;
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function() { try { document.body.removeChild(a); } catch(e) {} }, 200);
+  } catch(err) {
+    window.location.href = url;
+  }
 }
 
 // ─── WEEKLY RECAP ────────────────────────────────────────
@@ -5496,15 +5815,32 @@ function sendParentRecap() {
     catch(e) { return {}; }
   })();
   const name = profile.firstName || profile.name || 'your player';
-  const subject = encodeURIComponent("My Grind — " + name + "'s Week");
+  const subject = "My Grind — " + name + "'s Week";
 
-  // Build a nicer email body (not just text)
+  // Build email body
   let body = "Hi Mom / Dad,\n\n";
   body += "Here's my week on My Grind ⚾\n\n";
   body += recap.plain;
   body += "\n\nLet me know if you want to talk about anything in my journal.\n\n— " + name;
 
-  window.location.href = 'mailto:?subject=' + subject + '&body=' + encodeURIComponent(body);
+  // Use a hidden anchor to open mailto — doesn't navigate the current window
+  // This keeps the app state intact and the user can easily come back
+  try {
+    const a = document.createElement('a');
+    a.href = 'mailto:?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function() {
+      try { document.body.removeChild(a); } catch(e) {}
+    }, 200);
+    if (typeof showShareToast === 'function') {
+      showShareToast('📧 Email opened — come back when you\'ve sent it!');
+    }
+  } catch(err) {
+    // Fallback
+    window.location.href = 'mailto:?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+  }
 }
 
 // ─── PDF / HTML EXPORT OF JOURNAL ────────────────────────
@@ -5614,8 +5950,23 @@ if (_originalRenderAll) {
     try { updateStreakDisplay();  } catch(e) { try { console.warn('[streak]', e); } catch(err) {} }
     try { renderWeeklyRecap();    } catch(e) { try { console.warn('[recap]', e); } catch(err) {} }
     try { renderArmCare();        } catch(e) { try { console.warn('[armcare]', e); } catch(err) {} }
+    // Persist state to localStorage so nothing is lost when the browser closes
+    try { if (typeof saveState === 'function') saveState(); } catch(e) {}
   };
 }
+
+// Save any time the page is hidden or closed (extra safety net)
+document.addEventListener('visibilitychange', function() {
+  if (document.visibilityState === 'hidden') {
+    try { if (typeof saveState === 'function') saveState(); } catch(e) {}
+  }
+});
+window.addEventListener('pagehide', function() {
+  try { if (typeof saveState === 'function') saveState(); } catch(e) {}
+});
+window.addEventListener('beforeunload', function() {
+  try { if (typeof saveState === 'function') saveState(); } catch(e) {}
+});
 
 // ─── INITIAL RENDER OF NEW FEATURES ──────────────────────
 setTimeout(function() {
@@ -6001,6 +6352,535 @@ setTimeout(function() {
     });
     typeEl.dataset.bound = '1';
   }
+}, 300);
+
+// ═══════════════════════════════════════════════════════
+// TEAM FEATURE — v2026.04
+// ═══════════════════════════════════════════════════════
+//
+// Storage model:
+//   ybg_teams_registry    → all teams (array) — shared across users locally
+//   ybg_my_team           → which team I joined (object) — player-side
+//   ybg_my_coached_team   → which team I coach (id string) — coach-side
+//
+// Note: since the app has no backend, the team "registry" is local to
+// this device. A coach creates a team, then generates a share link with
+// the team data encoded so it propagates to players' devices when they
+// tap the share link.
+// ═══════════════════════════════════════════════════════
+
+// ─── STORAGE HELPERS ─────────────────────────────────────
+function getTeamsRegistry() {
+  try { return JSON.parse(localStorage.getItem('ybg_teams_registry') || '[]'); }
+  catch(e) { return []; }
+}
+function saveTeamsRegistry(arr) {
+  try { localStorage.setItem('ybg_teams_registry', JSON.stringify(arr || [])); } catch(e) {}
+}
+function getMyTeam() {
+  try { return JSON.parse(localStorage.getItem('ybg_my_team') || 'null'); }
+  catch(e) { return null; }
+}
+function setMyTeam(team) {
+  try {
+    if (team) localStorage.setItem('ybg_my_team', JSON.stringify(team));
+    else      localStorage.removeItem('ybg_my_team');
+  } catch(e) {}
+}
+function getMyCoachedTeamId() {
+  try { return localStorage.getItem('ybg_my_coached_team') || null; }
+  catch(e) { return null; }
+}
+function setMyCoachedTeamId(id) {
+  try {
+    if (id) localStorage.setItem('ybg_my_coached_team', id);
+    else    localStorage.removeItem('ybg_my_coached_team');
+  } catch(e) {}
+}
+
+// ─── TEAM LOOKUP ─────────────────────────────────────────
+function findTeamById(id) {
+  return getTeamsRegistry().find(function(t) { return t.id === id; }) || null;
+}
+
+// ─── VIEW STATE ──────────────────────────────────────────
+function refreshTeamPanel() {
+  try {
+    const myTeam        = getMyTeam();
+    const coachedTeamId = getMyCoachedTeamId();
+    const noneEl        = document.getElementById('team-view-none');
+    const joinedEl      = document.getElementById('team-view-joined');
+    const coachEl       = document.getElementById('team-view-coach');
+    if (!noneEl || !joinedEl || !coachEl) return;
+
+    if (coachedTeamId) {
+      // Coach view
+      noneEl.style.display = 'none';
+      joinedEl.style.display = 'none';
+      coachEl.style.display = 'block';
+      renderCoachView();
+    } else if (myTeam) {
+      // Player-joined view
+      noneEl.style.display = 'none';
+      joinedEl.style.display = 'block';
+      coachEl.style.display = 'none';
+      renderJoinedView();
+    } else {
+      // No team — show join/create options
+      noneEl.style.display = 'block';
+      joinedEl.style.display = 'none';
+      coachEl.style.display = 'none';
+      renderTeamList();
+    }
+  } catch(err) { try { console.warn('[team panel]', err); } catch(e) {} }
+}
+
+// ─── TEAM LIST (join view) ───────────────────────────────
+function renderTeamList() {
+  const container = document.getElementById('team-list-container');
+  const empty     = document.getElementById('team-list-empty');
+  if (!container || !empty) return;
+
+  const searchEl = document.getElementById('team-search');
+  const query = searchEl ? searchEl.value.toLowerCase().trim() : '';
+  let teams = getTeamsRegistry();
+
+  if (query) {
+    teams = teams.filter(function(t) {
+      return (t.name || '').toLowerCase().includes(query) ||
+             (t.city || '').toLowerCase().includes(query) ||
+             (t.coachName || '').toLowerCase().includes(query);
+    });
+  }
+
+  if (teams.length === 0) {
+    container.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+
+  container.innerHTML = teams.map(function(t) {
+    const primary  = t.primaryColor || '#C9A84C';
+    const accent   = t.accentColor  || '#0D0D0D';
+    const location = [t.city, t.state].filter(Boolean).join(', ');
+    const abbr     = t.abbr || (t.name || 'T').substring(0,3).toUpperCase();
+    return '<div onclick="openJoinModal(\'' + t.id + '\')" style="' +
+           'display:flex; align-items:center; gap:14px; padding:14px; margin-bottom:8px; ' +
+           'background:var(--card2); border:1px solid var(--border); border-radius:6px; ' +
+           'cursor:pointer; transition:border-color 0.15s;' +
+           '" onmouseover="this.style.borderColor=\'' + primary + '\'" onmouseout="this.style.borderColor=\'var(--border)\'">' +
+             '<div style="width:48px; height:48px; border-radius:50%; flex-shrink:0; ' +
+               'display:flex; align-items:center; justify-content:center; font-family:\'Bebas Neue\'; ' +
+               'font-size:16px; font-weight:900; background:' + primary + '; color:' + accent + '; ' +
+               'letter-spacing:1px;">' + escapeHTML(abbr) + '</div>' +
+             '<div style="flex:1; min-width:0;">' +
+               '<div style="font-family:\'Bebas Neue\'; font-size:18px; letter-spacing:1.5px; color:var(--white); line-height:1.1;">' + escapeHTML(t.name || '—') + '</div>' +
+               '<div style="font-family:\'Barlow Condensed\'; font-size:11px; letter-spacing:1.5px; color:var(--grey); text-transform:uppercase; margin-top:3px;">' +
+                 (location ? escapeHTML(location) + ' · ' : '') + 'Coach ' + escapeHTML(t.coachName || '—') +
+               '</div>' +
+             '</div>' +
+             '<div style="color:var(--grey); font-size:18px;">›</div>' +
+           '</div>';
+  }).join('');
+}
+
+function escapeHTML(str) {
+  if (str == null) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+// ─── JOIN MODAL ──────────────────────────────────────────
+let pendingJoinTeamId = null;
+
+function openJoinModal(teamId) {
+  const team = findTeamById(teamId);
+  if (!team) return;
+  pendingJoinTeamId = teamId;
+
+  const logo = document.getElementById('tj-logo');
+  const name = document.getElementById('tj-name');
+  const loc  = document.getElementById('tj-loc');
+  const coach= document.getElementById('tj-coach');
+  if (logo) {
+    logo.style.background = team.primaryColor || '#C9A84C';
+    logo.style.color      = team.accentColor  || '#0D0D0D';
+    logo.style.boxShadow  = '0 0 0 2px #0D0D0D, 0 0 0 4px ' + (team.primaryColor || '#C9A84C');
+    logo.textContent      = team.abbr || 'T';
+  }
+  if (name) name.textContent = team.name || '—';
+  if (loc)  loc.textContent  = [team.city, team.state].filter(Boolean).join(', ');
+  if (coach)coach.textContent = 'Coach ' + (team.coachName || '—');
+
+  const overlay = document.getElementById('team-join-overlay');
+  if (overlay) overlay.style.display = 'flex';
+  ybgHaptic(15);
+}
+
+function closeJoinModal() {
+  const overlay = document.getElementById('team-join-overlay');
+  if (overlay) overlay.style.display = 'none';
+  pendingJoinTeamId = null;
+}
+
+function confirmJoinTeam() {
+  if (!pendingJoinTeamId) return;
+  const team = findTeamById(pendingJoinTeamId);
+  if (!team) return;
+  setMyTeam(team);
+  closeJoinModal();
+  refreshTeamPanel();
+  ybgHaptic([30, 50, 30]);
+  if (typeof showShareToast === 'function') showShareToast('✅ Welcome to ' + (team.name || 'the team') + '!');
+}
+
+// ─── JOINED PLAYER VIEW ──────────────────────────────────
+function renderJoinedView() {
+  const t = getMyTeam();
+  if (!t) return;
+
+  const logo  = document.getElementById('team-logo-circle');
+  const strip = document.getElementById('team-color-strip-top');
+  const name  = document.getElementById('team-name-display');
+  const loc   = document.getElementById('team-location-display');
+  const coach = document.getElementById('team-coach-info');
+  const primary = t.primaryColor || '#C9A84C';
+  const accent  = t.accentColor  || '#0D0D0D';
+
+  if (logo) {
+    logo.style.background = primary;
+    logo.style.color      = accent;
+    logo.style.boxShadow  = '0 0 0 3px #0D0D0D, 0 0 0 5px ' + primary;
+    logo.textContent      = t.abbr || (t.name || 'T').substring(0,3).toUpperCase();
+  }
+  if (strip) strip.style.background = primary;
+  if (name)  {
+    name.style.color = '#F4F4F4';
+    name.textContent = t.name || '—';
+  }
+  if (loc)  loc.textContent = [t.city, t.state].filter(Boolean).join(' · ') || '—';
+  if (coach) {
+    const parts = [];
+    if (t.coachName)  parts.push('<strong style="color:#F4F4F4;">' + escapeHTML(t.coachName) + '</strong>');
+    if (t.coachEmail) parts.push('<span style="color:' + primary + ';">' + escapeHTML(t.coachEmail) + '</span>');
+    coach.innerHTML = parts.join('<br>');
+  }
+
+  // Update the sub-label
+  const sub = document.getElementById('team-panel-sub');
+  if (sub) sub.textContent = "You're on " + (t.name || 'a team') + ' · Keep grinding';
+}
+
+function messageCoach() {
+  const t = getMyTeam();
+  if (!t || !t.coachEmail) {
+    if (typeof showShareToast === 'function') showShareToast('⚠️ No coach email on file.');
+    return;
+  }
+  const profile = (function() { try { return JSON.parse(localStorage.getItem('ybg_profile') || '{}'); } catch(e) { return {}; } })();
+  const name = profile.firstName || profile.name || 'Player';
+  const subject = 'Message from ' + name + ' — ' + (t.name || 'MyGrind');
+  const body = 'Hi Coach ' + (t.coachName ? t.coachName.split(' ')[0] : '') + ',\n\n' +
+               '[Write your message here]\n\n' +
+               '— ' + name;
+  try {
+    const a = document.createElement('a');
+    a.href = 'mailto:' + t.coachEmail + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function() { try { document.body.removeChild(a); } catch(e) {} }, 200);
+  } catch(err) {
+    window.location.href = 'mailto:' + t.coachEmail;
+  }
+}
+
+function sendJournalToCoach() {
+  const t = getMyTeam();
+  if (!t || !t.coachEmail) {
+    if (typeof showShareToast === 'function') showShareToast('⚠️ No coach email on file.');
+    return;
+  }
+  const recap = (typeof buildWeeklyRecap === 'function') ? buildWeeklyRecap() : { plain: 'Weekly recap unavailable.' };
+  const profile = (function() { try { return JSON.parse(localStorage.getItem('ybg_profile') || '{}'); } catch(e) { return {}; } })();
+  const name = profile.firstName || profile.name || 'Player';
+  const subject = name + ' — Weekly Journal Update · ' + (t.name || '');
+  let body = 'Hi Coach ' + (t.coachName ? t.coachName.split(' ')[0] : '') + ',\n\n';
+  body += "Here's my week on My Grind ⚾\n\n";
+  body += recap.plain;
+  body += '\n\nThanks,\n' + name;
+  try {
+    const a = document.createElement('a');
+    a.href = 'mailto:' + t.coachEmail + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function() { try { document.body.removeChild(a); } catch(e) {} }, 200);
+    if (typeof showShareToast === 'function') showShareToast('📧 Email to coach opened!');
+  } catch(err) {
+    window.location.href = 'mailto:' + t.coachEmail;
+  }
+}
+
+function leaveTeam() {
+  const t = getMyTeam();
+  if (!t) return;
+  if (!confirm('Leave ' + (t.name || 'this team') + '?\n\nYour profile, journal, stats, and goals all stay. Only the team badge is removed.')) return;
+  setMyTeam(null);
+  refreshTeamPanel();
+  const sub = document.getElementById('team-panel-sub');
+  if (sub) sub.textContent = 'Join a team · or create one as a coach';
+  if (typeof showShareToast === 'function') showShareToast('👋 Left ' + (t.name || 'team') + '. Your profile is safe.');
+}
+
+// ─── COACH VIEW ──────────────────────────────────────────
+function renderCoachView() {
+  const id = getMyCoachedTeamId();
+  if (!id) return;
+  const t = findTeamById(id);
+  if (!t) {
+    // Team was deleted externally — clear
+    setMyCoachedTeamId(null);
+    refreshTeamPanel();
+    return;
+  }
+
+  const logo  = document.getElementById('coach-team-logo');
+  const strip = document.getElementById('coach-color-strip-top');
+  const name  = document.getElementById('coach-team-name');
+  const loc   = document.getElementById('coach-team-location');
+  const code  = document.getElementById('coach-team-code');
+  const primary = t.primaryColor || '#C9A84C';
+  const accent  = t.accentColor  || '#0D0D0D';
+
+  if (logo) {
+    logo.style.background = primary;
+    logo.style.color      = accent;
+    logo.style.boxShadow  = '0 0 0 3px #0D0D0D, 0 0 0 5px ' + primary;
+    logo.textContent      = t.abbr || 'T';
+  }
+  if (strip) strip.style.background = primary;
+  if (name)  { name.style.color = '#F4F4F4'; name.textContent = t.name || '—'; }
+  if (loc)   loc.textContent  = [t.city, t.state].filter(Boolean).join(' · ') || '—';
+  if (code)  code.textContent = (t.code || t.id || '').toUpperCase();
+
+  const sub = document.getElementById('team-panel-sub');
+  if (sub) sub.textContent = 'Coaching ' + (t.name || 'your team');
+}
+
+function shareTeamInvite() {
+  const id = getMyCoachedTeamId();
+  const t  = id ? findTeamById(id) : null;
+  if (!t) return;
+  const url = window.location.origin + window.location.pathname + '?joinTeam=' + encodeURIComponent(t.id);
+  const msg = 'Join our team on MY GRIND ⚾\n\n' +
+              (t.name || '') + (t.city ? ' · ' + t.city : '') + '\n' +
+              'Coach ' + (t.coachName || '') + '\n\n' +
+              'Tap the link to join — it saves your spot on the roster:\n' + url;
+  if (navigator.share) {
+    navigator.share({ title: 'Join ' + (t.name || 'our team'), text: msg, url: url })
+      .catch(function() { fallbackShare(msg); });
+  } else {
+    fallbackShare(msg);
+  }
+}
+
+function disbandTeam() {
+  const id = getMyCoachedTeamId();
+  if (!id) return;
+  const t = findTeamById(id);
+  const teamName = t ? t.name : 'this team';
+  if (!confirm('Disband ' + teamName + '?\n\nThis removes the team. Players who joined will need to join a different team.')) return;
+  // Remove from registry
+  const registry = getTeamsRegistry().filter(function(x) { return x.id !== id; });
+  saveTeamsRegistry(registry);
+  setMyCoachedTeamId(null);
+  refreshTeamPanel();
+  if (typeof showShareToast === 'function') showShareToast('🗑️ Team disbanded.');
+}
+
+// ─── CREATE / EDIT MODAL ─────────────────────────────────
+let editingTeamId = null; // null = creating new, id = editing existing
+
+function openTeamCreateModal(editMode) {
+  editingTeamId = null;
+  const overlay = document.getElementById('team-create-overlay');
+  const title   = document.getElementById('team-modal-title');
+  const submit  = document.getElementById('tc-submit');
+  if (!overlay) return;
+
+  // Clear fields
+  ['tc-name','tc-abbr','tc-city','tc-state','tc-coach-name','tc-coach-email'].forEach(function(id) {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  document.getElementById('tc-primary').value = '#C9A84C';
+  document.getElementById('tc-accent').value  = '#0D0D0D';
+
+  if (editMode === true && getMyCoachedTeamId()) {
+    // Edit mode — prefill with existing team data
+    const t = findTeamById(getMyCoachedTeamId());
+    if (t) {
+      editingTeamId = t.id;
+      if (title) title.textContent = 'EDIT YOUR TEAM';
+      if (submit) submit.textContent = '💾 Save Changes';
+      document.getElementById('tc-name').value  = t.name       || '';
+      document.getElementById('tc-abbr').value  = t.abbr       || '';
+      document.getElementById('tc-city').value  = t.city       || '';
+      document.getElementById('tc-state').value = t.state      || '';
+      document.getElementById('tc-primary').value = t.primaryColor || '#C9A84C';
+      document.getElementById('tc-accent').value  = t.accentColor  || '#0D0D0D';
+      document.getElementById('tc-coach-name').value  = t.coachName  || '';
+      document.getElementById('tc-coach-email').value = t.coachEmail || '';
+    }
+  } else {
+    if (title) title.textContent = 'CREATE YOUR TEAM';
+    if (submit) submit.textContent = '✅ Create Team';
+  }
+
+  const err = document.getElementById('tc-error');
+  if (err) err.style.display = 'none';
+
+  updateTeamPreview();
+  overlay.style.display = 'flex';
+  ybgHaptic(15);
+}
+
+function closeTeamCreateModal() {
+  const overlay = document.getElementById('team-create-overlay');
+  if (overlay) overlay.style.display = 'none';
+  editingTeamId = null;
+}
+
+function updateTeamPreview() {
+  try {
+    const name    = document.getElementById('tc-name').value.trim();
+    const abbr    = document.getElementById('tc-abbr').value.trim();
+    const city    = document.getElementById('tc-city').value.trim();
+    const stateT  = document.getElementById('tc-state').value.trim();
+    const primary = document.getElementById('tc-primary').value;
+    const accent  = document.getElementById('tc-accent').value;
+
+    document.getElementById('tc-preview-name').textContent = (name || 'TEAM NAME').toUpperCase();
+    document.getElementById('tc-preview-loc').textContent  = [city, stateT].filter(Boolean).join(' · ').toUpperCase() || 'CITY · STATE';
+
+    const logo = document.getElementById('tc-preview-logo');
+    logo.style.background = primary;
+    logo.style.color      = accent;
+    logo.style.boxShadow  = '0 0 0 2px #0D0D0D, 0 0 0 4px ' + primary;
+    logo.textContent      = abbr || 'YBG';
+
+    document.getElementById('tc-preview-strip').style.background = primary;
+    document.getElementById('tc-primary-hex').textContent = primary.toUpperCase();
+    document.getElementById('tc-accent-hex').textContent  = accent.toUpperCase();
+  } catch(e) {}
+}
+
+function setTeamPreset(primary, accent) {
+  document.getElementById('tc-primary').value = primary;
+  document.getElementById('tc-accent').value  = accent;
+  updateTeamPreview();
+  ybgHaptic(10);
+}
+
+function submitTeamCreate() {
+  const err = document.getElementById('tc-error');
+  const show = function(msg) {
+    if (err) { err.textContent = msg; err.style.display = 'block'; }
+    ybgHaptic([40,30,40]);
+  };
+
+  const name       = document.getElementById('tc-name').value.trim();
+  const abbr       = document.getElementById('tc-abbr').value.trim().toUpperCase();
+  const city       = document.getElementById('tc-city').value.trim();
+  const stateT     = document.getElementById('tc-state').value.trim().toUpperCase();
+  const primary    = document.getElementById('tc-primary').value;
+  const accent     = document.getElementById('tc-accent').value;
+  const coachName  = document.getElementById('tc-coach-name').value.trim();
+  const coachEmail = document.getElementById('tc-coach-email').value.trim();
+
+  if (!name) return show('Team name is required.');
+  if (!abbr || abbr.length < 2) return show('Logo letters must be at least 2 characters.');
+  if (!coachName) return show('Coach name is required.');
+  if (!coachEmail || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(coachEmail)) return show('A valid coach email is required.');
+
+  const registry = getTeamsRegistry();
+
+  if (editingTeamId) {
+    // Update existing
+    const idx = registry.findIndex(function(t) { return t.id === editingTeamId; });
+    if (idx === -1) return show('Team not found — try creating a new one.');
+    registry[idx] = Object.assign({}, registry[idx], {
+      name: name, abbr: abbr, city: city, state: stateT,
+      primaryColor: primary, accentColor: accent,
+      coachName: coachName, coachEmail: coachEmail, updatedAt: Date.now()
+    });
+    saveTeamsRegistry(registry);
+    closeTeamCreateModal();
+    refreshTeamPanel();
+    if (typeof showShareToast === 'function') showShareToast('✅ Team updated.');
+    return;
+  }
+
+  // Create new — block duplicate name
+  if (registry.some(function(t) { return (t.name || '').toLowerCase() === name.toLowerCase(); })) {
+    return show('A team with that name already exists. Try a more specific name (e.g., add a year or level).');
+  }
+
+  // Generate unique id + share code
+  const id = 'team_' + Date.now().toString(36) + Math.random().toString(36).substring(2,6);
+  const code = abbr + new Date().getFullYear().toString().slice(-2);
+
+  const newTeam = {
+    id: id, code: code,
+    name: name, abbr: abbr, city: city, state: stateT,
+    primaryColor: primary, accentColor: accent,
+    coachName: coachName, coachEmail: coachEmail,
+    createdAt: Date.now()
+  };
+  registry.push(newTeam);
+  saveTeamsRegistry(registry);
+  setMyCoachedTeamId(id);
+  closeTeamCreateModal();
+  refreshTeamPanel();
+  ybgHaptic([30, 50, 30, 50, 30]);
+  if (typeof showShareToast === 'function') showShareToast('🎉 ' + name + ' is live!');
+}
+
+// ─── AUTO-JOIN FROM SHARE LINK (?joinTeam=...) ───────────
+(function handleJoinLink() {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const joinId = params.get('joinTeam');
+    if (!joinId) return;
+    // Need to wait briefly for registry to be available
+    setTimeout(function() {
+      const team = findTeamById(joinId);
+      if (!team) return;
+      // Only prompt if they aren't already on this team
+      const my = getMyTeam();
+      if (my && my.id === joinId) return;
+      openJoinModal(joinId);
+    }, 800);
+  } catch(e) {}
+})();
+
+// ─── HOOK showPanel to refresh team panel when visited ───
+(function() {
+  const origShowPanel = window.showPanel;
+  if (typeof origShowPanel !== 'function') return;
+  window.showPanel = function(name) {
+    const result = origShowPanel.apply(this, arguments);
+    if (name === 'team') {
+      try { refreshTeamPanel(); } catch(e) {}
+    }
+    return result;
+  };
+})();
+
+// ─── INITIAL RENDER ──────────────────────────────────────
+setTimeout(function() {
+  try { refreshTeamPanel(); } catch(e) {}
 }, 300);
 </script>
 </body>
