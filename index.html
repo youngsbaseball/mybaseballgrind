@@ -1879,6 +1879,59 @@ function dismissIosBanner() {
       <div class="gold-line"></div>
     </div>
 
+    <!-- ═══ ACADEMICS FIRST — Grades lead the Profile page ══════════════ -->
+    <!-- Positioned at the TOP intentionally: "No Grades · No Baseball" is the foundational rule. -->
+    <div class="card" style="margin-bottom:16px; background:linear-gradient(135deg,#141A14,#101410); border:2px solid #5A8A3A; box-shadow:0 0 0 1px rgba(168,217,123,0.08);">
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px; flex-wrap:wrap;">
+        <span style="background:#5A8A3A; color:#F4F4F4; font-family:'Barlow Condensed'; font-size:10px; font-weight:800; letter-spacing:2px; text-transform:uppercase; padding:3px 9px; border-radius:2px;">Priority #1</span>
+        <div class="card-title" style="color:#A8D97B; margin:0;">📚 Academics — No Grades · No Baseball</div>
+      </div>
+
+      <div style="background:rgba(168,217,123,0.06); border:1px solid #1A3A1A; border-radius:2px; padding:12px 14px; margin-bottom:16px; font-size:13px; color:var(--light); line-height:1.7;">
+        "Pull every grade right now. If anything is slipping, handle it today — not next week."
+      </div>
+
+      <!-- GPA row -->
+      <div class="grid-2" style="margin-bottom:18px;">
+        <div style="text-align:center; padding:14px 10px; background:var(--card2); border-radius:3px; border-top:2px solid #2A3A2A;">
+          <div class="gpa-num" id="gpa-display" style="font-size:38px;">—</div>
+          <div class="gpa-label" style="margin-top:4px;">Current GPA · Target: <span id="gpa-target-display">—</span></div>
+        </div>
+        <div>
+          <label>My GPA</label>
+          <input type="number" id="gpa-current" step="0.1" min="0" max="4.0" placeholder="e.g. 3.2">
+          <label>Target GPA</label>
+          <input type="number" id="gpa-target" step="0.1" min="0" max="4.0" placeholder="e.g. 3.5">
+          <button class="btn btn-gold btn-sm" onclick="saveGPA()" style="margin-top:4px;">Save GPA</button>
+        </div>
+      </div>
+
+      <!-- Subject grades -->
+      <div style="font-family:'Barlow Condensed'; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#A8D97B; margin-bottom:10px;">📖 Monthly Grade Check</div>
+      <div id="grade-checks">
+        <div class="grade-row">
+          <div class="grade-label">English / Language Arts</div>
+          <select class="subject-grade" style="width:80px; margin-bottom:0;" onchange="renderGrades()"><option>A</option><option>B</option><option>C</option><option>D</option><option>F</option></select>
+        </div>
+        <div class="grade-row">
+          <div class="grade-label">Math</div>
+          <select class="subject-grade" style="width:80px; margin-bottom:0;" onchange="renderGrades()"><option>A</option><option>B</option><option>C</option><option>D</option><option>F</option></select>
+        </div>
+        <div class="grade-row">
+          <div class="grade-label">Science</div>
+          <select class="subject-grade" style="width:80px; margin-bottom:0;" onchange="renderGrades()"><option>A</option><option>B</option><option>C</option><option>D</option><option>F</option></select>
+        </div>
+        <div class="grade-row">
+          <div class="grade-label">History / Social Studies</div>
+          <select class="subject-grade" style="width:80px; margin-bottom:0;" onchange="renderGrades()"><option>A</option><option>B</option><option>C</option><option>D</option><option>F</option></select>
+        </div>
+        <div class="grade-row">
+          <div class="grade-label">Elective / PE</div>
+          <select class="subject-grade" style="width:80px; margin-bottom:0;" onchange="renderGrades()"><option>A</option><option>B</option><option>C</option><option>D</option><option>F</option></select>
+        </div>
+      </div>
+    </div>
+
     <!-- ── PLAYER INFO ── -->
     <div class="card" style="margin-bottom:16px;">
       <div class="card-title">👤 About Me</div>
@@ -2115,56 +2168,6 @@ function dismissIosBanner() {
       <!-- NEXT CHECK-IN REMINDER -->
       <div id="hw-reminder" style="display:none; margin-top:16px; padding:12px 16px; background:rgba(201,168,76,0.08); border:1px solid var(--gold-dark); border-radius:2px; font-family:'Barlow Condensed'; font-size:13px; letter-spacing:1px; color:var(--gold-light);">
         ⏰ &nbsp;<span id="hw-reminder-text"></span>
-      </div>
-    </div>
-
-    <!-- ═══ GRADES & GPA — moved from Goals tab ════════════════════════ -->
-    <!-- Grades live with identity (who the player IS), not goals (what they aim for) -->
-    <div class="card" style="margin-bottom:16px; background:linear-gradient(135deg,#141A14,#101410); border-color:#2A3A2A;">
-      <div class="card-title" style="color:#A8D97B;">📚 Grades & GPA — No Grades · No Baseball</div>
-
-      <div style="background:rgba(168,217,123,0.06); border:1px solid #1A3A1A; border-radius:2px; padding:12px 14px; margin-bottom:16px; font-size:13px; color:var(--light); line-height:1.7;">
-        "Pull every grade right now. If anything is slipping, handle it today — not next week."
-      </div>
-
-      <!-- GPA row -->
-      <div class="grid-2" style="margin-bottom:18px;">
-        <div style="text-align:center; padding:14px 10px; background:var(--card2); border-radius:3px; border-top:2px solid #2A3A2A;">
-          <div class="gpa-num" id="gpa-display" style="font-size:38px;">—</div>
-          <div class="gpa-label" style="margin-top:4px;">Current GPA · Target: <span id="gpa-target-display">—</span></div>
-        </div>
-        <div>
-          <label>My GPA</label>
-          <input type="number" id="gpa-current" step="0.1" min="0" max="4.0" placeholder="e.g. 3.2">
-          <label>Target GPA</label>
-          <input type="number" id="gpa-target" step="0.1" min="0" max="4.0" placeholder="e.g. 3.5">
-          <button class="btn btn-gold btn-sm" onclick="saveGPA()" style="margin-top:4px;">Save GPA</button>
-        </div>
-      </div>
-
-      <!-- Subject grades -->
-      <div style="font-family:'Barlow Condensed'; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#A8D97B; margin-bottom:10px;">📖 Monthly Grade Check</div>
-      <div id="grade-checks">
-        <div class="grade-row">
-          <div class="grade-label">English / Language Arts</div>
-          <select class="subject-grade" style="width:80px; margin-bottom:0;" onchange="renderGrades()"><option>A</option><option>B</option><option>C</option><option>D</option><option>F</option></select>
-        </div>
-        <div class="grade-row">
-          <div class="grade-label">Math</div>
-          <select class="subject-grade" style="width:80px; margin-bottom:0;" onchange="renderGrades()"><option>A</option><option>B</option><option>C</option><option>D</option><option>F</option></select>
-        </div>
-        <div class="grade-row">
-          <div class="grade-label">Science</div>
-          <select class="subject-grade" style="width:80px; margin-bottom:0;" onchange="renderGrades()"><option>A</option><option>B</option><option>C</option><option>D</option><option>F</option></select>
-        </div>
-        <div class="grade-row">
-          <div class="grade-label">History / Social Studies</div>
-          <select class="subject-grade" style="width:80px; margin-bottom:0;" onchange="renderGrades()"><option>A</option><option>B</option><option>C</option><option>D</option><option>F</option></select>
-        </div>
-        <div class="grade-row">
-          <div class="grade-label">Elective / PE</div>
-          <select class="subject-grade" style="width:80px; margin-bottom:0;" onchange="renderGrades()"><option>A</option><option>B</option><option>C</option><option>D</option><option>F</option></select>
-        </div>
       </div>
     </div>
 
@@ -2690,74 +2693,6 @@ function dismissIosBanner() {
           Every time you log a game entry with stats in the <strong>Daily Journal tab</strong>, your season totals update here automatically — AVG, OBP, SLG, OPS, ERA, and WHIP all calculate on their own. You can also enter or edit any number below manually.
         </div>
       </div>
-    <!-- ── GAMECHANGER IMPORT ── -->
-    <div class="card" style="margin-bottom:16px; border-color:#2471A3;">
-      <div class="card-title" style="color:#5DADE2;">📊 Import from GameChanger</div>
-
-      <!-- Option 1: Screenshot OCR -->
-      <div style="background:rgba(93,173,226,0.06); border:1px solid #2471A3; border-radius:3px; padding:16px; margin-bottom:12px;">
-        <div style="font-family:'Barlow Condensed'; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#5DADE2; margin-bottom:8px;">📸 Option 1 — Screenshot Import (Auto)</div>
-        <div style="font-family:'Barlow'; font-size:13px; color:var(--light); line-height:1.7; margin-bottom:14px;">
-          Take a screenshot of your GameChanger box score. The app reads it automatically and fills your stats in — no typing required.
-        </div>
-
-        <div id="gc-drop-zone-stats" onclick="document.getElementById('gc-screenshot-input-stats').click()" style="border:2px dashed #2471A3; border-radius:4px; padding:24px 16px; text-align:center; cursor:pointer; background:rgba(93,173,226,0.04); margin-bottom:10px;" onmouseover="this.style.borderColor='#5DADE2'; this.style.background='rgba(93,173,226,0.08)'" onmouseout="this.style.borderColor='#2471A3'; this.style.background='rgba(93,173,226,0.04)'">
-          <div style="font-size:28px; margin-bottom:6px;">📱</div>
-          <div style="font-family:'Barlow Condensed'; font-size:13px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#5DADE2; margin-bottom:3px;">Upload Box Score Screenshot</div>
-          <div style="font-family:'Barlow'; font-size:12px; color:var(--grey);">Tap to select your GameChanger screenshot</div>
-          <input type="file" id="gc-screenshot-input-stats" accept="image/*" style="display:none;" onchange="processGCScreenshotStats(event)">
-        </div>
-
-        <div id="gc-preview-stats" style="display:none; margin-bottom:10px;">
-          <img id="gc-preview-img-stats" style="width:100%; border-radius:4px; border:1px solid var(--border); max-height:200px; object-fit:contain;">
-        </div>
-        <div id="gc-status-stats" style="display:none; padding:12px 14px; border-radius:2px; font-family:'Barlow'; font-size:13px; line-height:1.6; margin-bottom:10px;"></div>
-        <div id="gc-stats-grid-stats" style="display:none; margin-bottom:10px;">
-          <div style="font-family:'Barlow Condensed'; font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--grey); margin-bottom:8px;">Stats Found</div>
-          <div id="gc-grid-inner-stats" style="display:grid; grid-template-columns:repeat(4,1fr); gap:4px;"></div>
-          <button onclick="importGCStatsFromStats()" style="width:100%; margin-top:12px; background:#5DADE2; color:#080808; font-family:'Barlow Condensed'; font-size:14px; font-weight:800; letter-spacing:2px; text-transform:uppercase; padding:13px; border:none; border-radius:2px; cursor:pointer;">
-            ⚾ Import These Stats
-          </button>
-        </div>
-      </div>
-
-      <!-- Option 2: Copy & Paste -->
-      <div style="background:rgba(93,173,226,0.04); border:1px solid #1A3A4A; border-radius:3px; padding:16px;">
-        <div style="font-family:'Barlow Condensed'; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#5DADE2; margin-bottom:10px;">📋 Option 2 — Copy & Paste (Manual)</div>
-        <div style="font-family:'Barlow'; font-size:13px; color:var(--light); line-height:1.9;">
-          <strong style="color:#5DADE2;">Step 1</strong> — Open the <strong>GameChanger</strong> app on your phone<br>
-          <strong style="color:#5DADE2;">Step 2</strong> — Tap <strong>My Teams</strong> → select your team<br>
-          <strong style="color:#5DADE2;">Step 3</strong> — Tap <strong>Stats</strong> at the top<br>
-          <strong style="color:#5DADE2;">Step 4</strong> — Find your name in the list<br>
-          <strong style="color:#5DADE2;">Step 5</strong> — Type your numbers into the stat fields below
-        </div>
-      </div>
-    </div>
-
-    <!-- ── MAXPREPS ── -->
-    <div class="card" style="margin-bottom:16px; border-color:var(--gold-dark);">
-      <div class="card-title">🏆 MaxPreps</div>
-      <div style="background:rgba(201,168,76,0.06); border:1px solid var(--gold-dark); border-radius:3px; padding:14px 16px; margin-bottom:14px;">
-        <div style="font-family:'Barlow Condensed'; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--gold); margin-bottom:8px;">📋 Copy & Paste from MaxPreps</div>
-        <div style="font-family:'Barlow'; font-size:13px; color:var(--light); line-height:1.9;">
-          <strong style="color:var(--gold);">Step 1</strong> — Go to <strong>maxpreps.com</strong> on your phone or computer<br>
-          <strong style="color:var(--gold);">Step 2</strong> — Search your <strong>school name</strong><br>
-          <strong style="color:var(--gold);">Step 3</strong> — Tap <strong>Baseball → Stats</strong><br>
-          <strong style="color:var(--gold);">Step 4</strong> — Find your name in the stats table<br>
-          <strong style="color:var(--gold);">Step 5</strong> — Type your numbers into the fields below
-        </div>
-      </div>
-      <div style="background:rgba(201,168,76,0.03); border:1px solid #1E1A00; border-radius:2px; padding:12px 14px;">
-        <div style="font-family:'Barlow'; font-size:12px; color:var(--grey); line-height:1.7;">
-          🔧 <strong style="color:var(--light);">Automatic MaxPreps sync is coming.</strong> We are currently working on API partnership approval with MaxPreps. Once approved, your season stats will import automatically with one tap.
-        </div>
-      </div>
-      <div style="margin-top:14px;">
-        <label style="font-family:'Barlow Condensed'; font-size:12px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--gold); margin-bottom:8px; display:block;">Your MaxPreps Profile URL <span style="color:var(--grey); font-weight:400; font-size:11px; letter-spacing:1px;">(optional — save for when sync launches)</span></label>
-        <input type="url" id="st-mp" placeholder="https://www.maxpreps.com/athlete/..." oninput="calcStats()" style="width:100%; box-sizing:border-box; padding:14px 16px; font-size:15px; font-family:'Barlow',sans-serif; background:var(--card2); border:1px solid var(--gold-dark); color:var(--light); border-radius:4px; letter-spacing:0.3px; transition:border-color 0.15s;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--gold-dark)'">
-        <div style="font-family:'Barlow'; font-size:11px; color:var(--grey); margin-top:6px; line-height:1.5;">Paste the full URL from your MaxPreps athlete page — we'll save it and auto-sync once the API partnership is live.</div>
-      </div>
-    </div>
 
     <!-- ── MY INFO ── -->
     <div class="card" style="margin-bottom:16px;">
@@ -2828,6 +2763,83 @@ function dismissIosBanner() {
     <div id="stats-saved-msg" style="display:none; margin-top:12px; background:rgba(39,174,96,0.1); border:1px solid var(--green); border-radius:2px; padding:14px; font-family:'Barlow Condensed'; font-size:13px; letter-spacing:1px; color:#58D68D; text-align:center;">
       ✅ Stats saved! Scroll up to see your numbers.
     </div>
+
+    <!-- ═══ OPTIONAL IMPORT HELPERS — moved to bottom to keep entry area clean ════ -->
+    <div style="display:flex; align-items:center; gap:10px; margin:28px 0 16px;">
+      <div style="flex:1; height:1px; background:linear-gradient(90deg, transparent, var(--border));"></div>
+      <div style="font-family:'Barlow Condensed'; font-size:10px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:var(--grey); white-space:nowrap;">Optional · Import Helpers</div>
+      <div style="flex:1; height:1px; background:linear-gradient(90deg, var(--border), transparent);"></div>
+    </div>
+
+    <!-- ── GAMECHANGER IMPORT ── -->
+    <div class="card" style="margin-bottom:16px; border-color:#2471A3;">
+      <div class="card-title" style="color:#5DADE2;">📊 Import from GameChanger</div>
+
+      <!-- Option 1: Screenshot OCR -->
+      <div style="background:rgba(93,173,226,0.06); border:1px solid #2471A3; border-radius:3px; padding:16px; margin-bottom:12px;">
+        <div style="font-family:'Barlow Condensed'; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#5DADE2; margin-bottom:8px;">📸 Option 1 — Screenshot Import (Auto)</div>
+        <div style="font-family:'Barlow'; font-size:13px; color:var(--light); line-height:1.7; margin-bottom:14px;">
+          Take a screenshot of your GameChanger box score. The app reads it automatically and fills your stats in — no typing required.
+        </div>
+
+        <div id="gc-drop-zone-stats" onclick="document.getElementById('gc-screenshot-input-stats').click()" style="border:2px dashed #2471A3; border-radius:4px; padding:24px 16px; text-align:center; cursor:pointer; background:rgba(93,173,226,0.04); margin-bottom:10px;" onmouseover="this.style.borderColor='#5DADE2'; this.style.background='rgba(93,173,226,0.08)'" onmouseout="this.style.borderColor='#2471A3'; this.style.background='rgba(93,173,226,0.04)'">
+          <div style="font-size:28px; margin-bottom:6px;">📱</div>
+          <div style="font-family:'Barlow Condensed'; font-size:13px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#5DADE2; margin-bottom:3px;">Upload Box Score Screenshot</div>
+          <div style="font-family:'Barlow'; font-size:12px; color:var(--grey);">Tap to select your GameChanger screenshot</div>
+          <input type="file" id="gc-screenshot-input-stats" accept="image/*" style="display:none;" onchange="processGCScreenshotStats(event)">
+        </div>
+
+        <div id="gc-preview-stats" style="display:none; margin-bottom:10px;">
+          <img id="gc-preview-img-stats" style="width:100%; border-radius:4px; border:1px solid var(--border); max-height:200px; object-fit:contain;">
+        </div>
+        <div id="gc-status-stats" style="display:none; padding:12px 14px; border-radius:2px; font-family:'Barlow'; font-size:13px; line-height:1.6; margin-bottom:10px;"></div>
+        <div id="gc-stats-grid-stats" style="display:none; margin-bottom:10px;">
+          <div style="font-family:'Barlow Condensed'; font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--grey); margin-bottom:8px;">Stats Found</div>
+          <div id="gc-grid-inner-stats" style="display:grid; grid-template-columns:repeat(4,1fr); gap:4px;"></div>
+          <button onclick="importGCStatsFromStats()" style="width:100%; margin-top:12px; background:#5DADE2; color:#080808; font-family:'Barlow Condensed'; font-size:14px; font-weight:800; letter-spacing:2px; text-transform:uppercase; padding:13px; border:none; border-radius:2px; cursor:pointer;">
+            ⚾ Import These Stats
+          </button>
+        </div>
+      </div>
+
+      <!-- Option 2: Copy & Paste -->
+      <div style="background:rgba(93,173,226,0.04); border:1px solid #1A3A4A; border-radius:3px; padding:16px;">
+        <div style="font-family:'Barlow Condensed'; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#5DADE2; margin-bottom:10px;">📋 Option 2 — Copy & Paste (Manual)</div>
+        <div style="font-family:'Barlow'; font-size:13px; color:var(--light); line-height:1.9;">
+          <strong style="color:#5DADE2;">Step 1</strong> — Open the <strong>GameChanger</strong> app on your phone<br>
+          <strong style="color:#5DADE2;">Step 2</strong> — Tap <strong>My Teams</strong> → select your team<br>
+          <strong style="color:#5DADE2;">Step 3</strong> — Tap <strong>Stats</strong> at the top<br>
+          <strong style="color:#5DADE2;">Step 4</strong> — Find your name in the list<br>
+          <strong style="color:#5DADE2;">Step 5</strong> — Type your numbers into the stat fields above
+        </div>
+      </div>
+    </div>
+
+    <!-- ── MAXPREPS ── -->
+    <div class="card" style="margin-bottom:16px; border-color:var(--gold-dark);">
+      <div class="card-title">🏆 MaxPreps</div>
+      <div style="background:rgba(201,168,76,0.06); border:1px solid var(--gold-dark); border-radius:3px; padding:14px 16px; margin-bottom:14px;">
+        <div style="font-family:'Barlow Condensed'; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--gold); margin-bottom:8px;">📋 Copy & Paste from MaxPreps</div>
+        <div style="font-family:'Barlow'; font-size:13px; color:var(--light); line-height:1.9;">
+          <strong style="color:var(--gold);">Step 1</strong> — Go to <strong>maxpreps.com</strong> on your phone or computer<br>
+          <strong style="color:var(--gold);">Step 2</strong> — Search your <strong>school name</strong><br>
+          <strong style="color:var(--gold);">Step 3</strong> — Tap <strong>Baseball → Stats</strong><br>
+          <strong style="color:var(--gold);">Step 4</strong> — Find your name in the stats table<br>
+          <strong style="color:var(--gold);">Step 5</strong> — Type your numbers into the fields above
+        </div>
+      </div>
+      <div style="background:rgba(201,168,76,0.03); border:1px solid #1E1A00; border-radius:2px; padding:12px 14px;">
+        <div style="font-family:'Barlow'; font-size:12px; color:var(--grey); line-height:1.7;">
+          🔧 <strong style="color:var(--light);">Automatic MaxPreps sync is coming.</strong> We are currently working on API partnership approval with MaxPreps. Once approved, your season stats will import automatically with one tap.
+        </div>
+      </div>
+      <div style="margin-top:14px;">
+        <label style="font-family:'Barlow Condensed'; font-size:12px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--gold); margin-bottom:8px; display:block;">Your MaxPreps Profile URL <span style="color:var(--grey); font-weight:400; font-size:11px; letter-spacing:1px;">(optional — save for when sync launches)</span></label>
+        <input type="url" id="st-mp" placeholder="https://www.maxpreps.com/athlete/..." oninput="calcStats()" style="width:100%; box-sizing:border-box; padding:14px 16px; font-size:15px; font-family:'Barlow',sans-serif; background:var(--card2); border:1px solid var(--gold-dark); color:var(--light); border-radius:4px; letter-spacing:0.3px; transition:border-color 0.15s;" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--gold-dark)'">
+        <div style="font-family:'Barlow'; font-size:11px; color:var(--grey); margin-top:6px; line-height:1.5;">Paste the full URL from your MaxPreps athlete page — we'll save it and auto-sync once the API partnership is live.</div>
+      </div>
+    </div>
+
     </div><!-- end stats-entry-section -->
 
   </div>
