@@ -1417,8 +1417,9 @@ function dismissIosBanner() {
 </div>
 
 <div class="nav-tabs">
-  <button class="tab-btn active" onclick="showPanel('players')">👤 My Profile</button>
-  <button class="tab-btn" onclick="showPanel('dashboard')">⚾ Dashboard</button>
+  <button class="tab-btn active" onclick="showPanel('dashboard')">⚾ Dashboard</button>
+  <button class="tab-btn" onclick="showPanel('academics')">📚 Academics</button>
+  <button class="tab-btn" onclick="showPanel('players')">👤 My Profile</button>
   <button class="tab-btn" onclick="showPanel('journal')">📓 Daily Journal</button>
   <button class="tab-btn" onclick="showPanel('calendar')">📅 Training Calendar</button>
   <button class="tab-btn" onclick="showPanel('goals')">🏆 Goals</button>
@@ -1431,7 +1432,7 @@ function dismissIosBanner() {
 <main>
 
   <!-- ══════════════════════════════════════════ DASHBOARD ══ -->
-  <div class="panel" id="panel-dashboard">
+  <div class="panel active" id="panel-dashboard">
     <div class="section-header">
       <div class="section-title">MY <span>GRIND</span></div>
       <div class="section-sub">The Daily Work Starts Here</div>
@@ -1874,7 +1875,7 @@ function dismissIosBanner() {
   </div>
 
   <!-- ══════════════════════════════════════════ PLAYERS ══ -->
-  <div class="panel active" id="panel-players">
+  <div class="panel" id="panel-players">
     <div class="section-header">
       <div class="section-title">MY <span>PROFILE</span></div>
       <div class="section-sub">This is your journal — your info, your season, your grind</div>
@@ -2138,82 +2139,6 @@ function dismissIosBanner() {
       <textarea id="pl-bio" placeholder="Strengths, goals, areas to improve, coach notes..." oninput="saveProfile()"></textarea>
     </div>
 
-    <!-- ═══ 5) ACADEMICS — Grades live below identity & about-me ═══════════════ -->
-    <!-- "No Grades · No Baseball" stays a Priority #1 card via styling, but the natural reading order is: who I am → what I do on the field → my academic reality. -->
-    <div class="card" style="margin-bottom:16px; background:linear-gradient(135deg,#141A14,#101410); border:2px solid #5A8A3A; box-shadow:0 0 0 1px rgba(168,217,123,0.08); padding-top:0; padding-left:0; padding-right:0;">
-      <!-- Priority #1 badge row — full width, sits at top of card -->
-      <div style="background:#5A8A3A; color:#F4F4F4; font-family:'Barlow Condensed',sans-serif; font-size:10px; font-weight:800; letter-spacing:3px; text-transform:uppercase; padding:6px 16px; text-align:center;">
-        ⭐ &nbsp;Priority #1 &nbsp;·&nbsp; Academics &nbsp;⭐
-      </div>
-
-      <!-- THE RULE — Hero banner, unmissable the moment you reach this card -->
-      <div style="position:relative; padding:22px 16px 20px; text-align:center; background:
-            repeating-linear-gradient(
-              135deg,
-              transparent,
-              transparent 18px,
-              rgba(168,217,123,0.04) 18px,
-              rgba(168,217,123,0.04) 19px
-            );
-            border-bottom:1px solid #1A3A1A;">
-        <div style="font-family:'Bebas Neue',cursive; font-size:32px; letter-spacing:3px; line-height:1.15; color:#F4F4F4;">
-          <span style="color:#E57373;">NO</span> GRADES &nbsp;·&nbsp; <span style="color:#E57373;">NO</span> BASEBALL
-        </div>
-        <div style="font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:#6B8A4A; margin-top:8px;">
-          That Is The Rule
-        </div>
-      </div>
-
-      <!-- Card body — padded back in for the usual content -->
-      <div style="padding:18px 16px 2px;">
-        <div class="card-title" style="color:#A8D97B; margin-bottom:12px;">📚 My Academic Check-In</div>
-
-        <div style="background:rgba(168,217,123,0.06); border-left:3px solid #5A8A3A; padding:12px 14px; margin-bottom:16px; font-size:13px; color:var(--light); line-height:1.7; font-style:italic;">
-          "Pull every grade right now. If anything is slipping, handle it today — not next week."
-        </div>
-
-      <!-- GPA row -->
-      <div class="grid-2" style="margin-bottom:18px;">
-        <div style="text-align:center; padding:14px 10px; background:var(--card2); border-radius:3px; border-top:2px solid #2A3A2A;">
-          <div class="gpa-num" id="gpa-display" style="font-size:38px;">—</div>
-          <div class="gpa-label" style="margin-top:4px;">Current GPA · Target: <span id="gpa-target-display">—</span></div>
-        </div>
-        <div>
-          <label>My GPA</label>
-          <input type="number" id="gpa-current" step="0.1" min="0" max="4.0" placeholder="e.g. 3.2">
-          <label>Target GPA</label>
-          <input type="number" id="gpa-target" step="0.1" min="0" max="4.0" placeholder="e.g. 3.5">
-          <button class="btn btn-gold btn-sm" onclick="saveGPA()" style="margin-top:4px;">Save GPA</button>
-        </div>
-      </div>
-
-      <!-- Subject grades -->
-      <div style="font-family:'Barlow Condensed'; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#A8D97B; margin-bottom:10px;">📖 Monthly Grade Check</div>
-      <div id="grade-checks">
-        <div class="grade-row">
-          <div class="grade-label">English / Language Arts</div>
-          <select class="subject-grade" style="width:80px; margin-bottom:0;" onchange="renderGrades()"><option>A</option><option>B</option><option>C</option><option>D</option><option>F</option></select>
-        </div>
-        <div class="grade-row">
-          <div class="grade-label">Math</div>
-          <select class="subject-grade" style="width:80px; margin-bottom:0;" onchange="renderGrades()"><option>A</option><option>B</option><option>C</option><option>D</option><option>F</option></select>
-        </div>
-        <div class="grade-row">
-          <div class="grade-label">Science</div>
-          <select class="subject-grade" style="width:80px; margin-bottom:0;" onchange="renderGrades()"><option>A</option><option>B</option><option>C</option><option>D</option><option>F</option></select>
-        </div>
-        <div class="grade-row">
-          <div class="grade-label">History / Social Studies</div>
-          <select class="subject-grade" style="width:80px; margin-bottom:0;" onchange="renderGrades()"><option>A</option><option>B</option><option>C</option><option>D</option><option>F</option></select>
-        </div>
-        <div class="grade-row">
-          <div class="grade-label">Elective / PE</div>
-          <select class="subject-grade" style="width:80px; margin-bottom:0;" onchange="renderGrades()"><option>A</option><option>B</option><option>C</option><option>D</option><option>F</option></select>
-        </div>
-      </div>
-      </div><!-- /end academics content padding wrapper -->
-    </div>
-
     <!-- ── SAVE CONFIRMATION ── -->
     <div id="profile-saved" style="display:none; background:rgba(39,174,96,0.1); border:1px solid var(--green); border-radius:2px; padding:12px 16px; font-family:'Barlow Condensed'; font-size:13px; letter-spacing:1px; color:#58D68D; margin-bottom:16px;">
       ✅ Profile saved.
@@ -2277,6 +2202,91 @@ function dismissIosBanner() {
 
   </div>
 
+  <!-- ══════════════════════════════════════════ ACADEMICS ══ -->
+  <div class="panel" id="panel-academics">
+    <div class="section-header">
+      <div class="section-title">📚 <span>ACADEMICS</span></div>
+      <div class="section-sub">Grades Come First · Baseball Comes Second</div>
+      <div class="gold-line"></div>
+    </div>
+
+    <!-- ═══ THE RULE — unmissable hero banner at top of the Academics tab ═══ -->
+    <div class="card" style="margin-bottom:16px; background:linear-gradient(135deg,#141A14,#101410); border:2px solid #5A8A3A; box-shadow:0 0 0 1px rgba(168,217,123,0.08); padding:0;">
+      <!-- Priority #1 badge row -->
+      <div style="background:#5A8A3A; color:#F4F4F4; font-family:'Barlow Condensed',sans-serif; font-size:10px; font-weight:800; letter-spacing:3px; text-transform:uppercase; padding:6px 16px; text-align:center;">
+        ⭐ &nbsp;Priority #1 &nbsp;·&nbsp; Academics &nbsp;⭐
+      </div>
+
+      <!-- THE RULE -->
+      <div style="position:relative; padding:28px 16px 24px; text-align:center; background:
+            repeating-linear-gradient(
+              135deg,
+              transparent,
+              transparent 18px,
+              rgba(168,217,123,0.04) 18px,
+              rgba(168,217,123,0.04) 19px
+            );
+            border-bottom:1px solid #1A3A1A;">
+        <div style="font-family:'Bebas Neue',cursive; font-size:36px; letter-spacing:3px; line-height:1.15; color:#F4F4F4;">
+          <span style="color:#E57373;">NO</span> GRADES &nbsp;·&nbsp; <span style="color:#E57373;">NO</span> BASEBALL
+        </div>
+        <div style="font-family:'Barlow Condensed',sans-serif; font-size:12px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:#6B8A4A; margin-top:10px;">
+          That Is The Rule
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ GPA + Grade Check card ═══ -->
+    <div class="card" style="margin-bottom:16px; background:linear-gradient(135deg,#141A14,#101410); border-color:#2A3A2A;">
+      <div class="card-title" style="color:#A8D97B;">📚 My Academic Check-In</div>
+
+      <div style="background:rgba(168,217,123,0.06); border-left:3px solid #5A8A3A; padding:12px 14px; margin-bottom:16px; font-size:13px; color:var(--light); line-height:1.7; font-style:italic;">
+        "Pull every grade right now. If anything is slipping, handle it today — not next week."
+      </div>
+
+      <!-- GPA row -->
+      <div class="grid-2" style="margin-bottom:18px;">
+        <div style="text-align:center; padding:14px 10px; background:var(--card2); border-radius:3px; border-top:2px solid #2A3A2A;">
+          <div class="gpa-num" id="gpa-display" style="font-size:38px;">—</div>
+          <div class="gpa-label" style="margin-top:4px;">Current GPA · Target: <span id="gpa-target-display">—</span></div>
+        </div>
+        <div>
+          <label>My GPA</label>
+          <input type="number" id="gpa-current" step="0.1" min="0" max="4.0" placeholder="e.g. 3.2">
+          <label>Target GPA</label>
+          <input type="number" id="gpa-target" step="0.1" min="0" max="4.0" placeholder="e.g. 3.5">
+          <button class="btn btn-gold btn-sm" onclick="saveGPA()" style="margin-top:4px;">Save GPA</button>
+        </div>
+      </div>
+
+      <!-- Subject grades -->
+      <div style="font-family:'Barlow Condensed'; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#A8D97B; margin-bottom:10px;">📖 Monthly Grade Check</div>
+      <div id="grade-checks">
+        <div class="grade-row">
+          <div class="grade-label">English / Language Arts</div>
+          <select class="subject-grade" style="width:80px; margin-bottom:0;" onchange="renderGrades()"><option>A</option><option>B</option><option>C</option><option>D</option><option>F</option></select>
+        </div>
+        <div class="grade-row">
+          <div class="grade-label">Math</div>
+          <select class="subject-grade" style="width:80px; margin-bottom:0;" onchange="renderGrades()"><option>A</option><option>B</option><option>C</option><option>D</option><option>F</option></select>
+        </div>
+        <div class="grade-row">
+          <div class="grade-label">Science</div>
+          <select class="subject-grade" style="width:80px; margin-bottom:0;" onchange="renderGrades()"><option>A</option><option>B</option><option>C</option><option>D</option><option>F</option></select>
+        </div>
+        <div class="grade-row">
+          <div class="grade-label">History / Social Studies</div>
+          <select class="subject-grade" style="width:80px; margin-bottom:0;" onchange="renderGrades()"><option>A</option><option>B</option><option>C</option><option>D</option><option>F</option></select>
+        </div>
+        <div class="grade-row">
+          <div class="grade-label">Elective / PE</div>
+          <select class="subject-grade" style="width:80px; margin-bottom:0;" onchange="renderGrades()"><option>A</option><option>B</option><option>C</option><option>D</option><option>F</option></select>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
   <!-- ══════════════════════════════════════════ GOALS ══ -->
   <div class="panel" id="panel-goals">
     <div class="section-header">
@@ -2312,7 +2322,7 @@ function dismissIosBanner() {
     <!-- Friendly pointer to the new Grades home -->
     <div class="card" style="margin-top:12px; background:rgba(201,168,76,0.04); border-left:3px solid var(--gold-dark);">
       <div style="font-family:'Barlow'; font-size:13px; color:var(--grey); line-height:1.7;">
-        📚 <strong style="color:var(--gold);">Looking for Grades?</strong> They moved to your <a href="#" onclick="event.preventDefault(); showPanel('players');" style="color:var(--gold); font-weight:700; text-decoration:none;">Profile tab</a> — grades are part of who you are, not a separate goal.
+        📚 <strong style="color:var(--gold);">Looking for Grades?</strong> They live in the <a href="#" onclick="event.preventDefault(); showPanel('academics');" style="color:var(--gold); font-weight:700; text-decoration:none;">Academics tab</a> — academics are Priority #1, not just another goal.
       </div>
     </div>
 
