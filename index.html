@@ -6516,17 +6516,18 @@ function applyInviteLanding() {
       }
     }
 
-    // Scroll the trial CTA into view and focus the email input
+    // Keep the user at the top of the welcome screen so they can see the full signup flow.
+    // Previously we called scrollIntoView({block:'center'}) on the trial CTA which pushed the
+    // email input ABOVE the viewport and the pay buttons BELOW — making it look like the email
+    // field was unresponsive and the buttons were broken. The gold "✨ You've Been Invited"
+    // banner at the top is enough attention-grab.
     setTimeout(function() {
-      const trialCta = document.getElementById('trial-primary-cta');
-      const emailInput = document.getElementById('user-email-input');
-      if (trialCta && trialCta.scrollIntoView) {
-        try { trialCta.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch(e) {}
-      }
-      if (emailInput) {
-        try { emailInput.focus({ preventScroll: true }); } catch(e) { try { emailInput.focus(); } catch(_) {} }
-      }
-    }, 250);
+      try {
+        const overlay = document.getElementById('trial-overlay');
+        if (overlay && overlay.scrollTo) overlay.scrollTo(0, 0);
+        else if (window.scrollTo) window.scrollTo(0, 0);
+      } catch(e) {}
+    }, 100);
 
     // Clear the flag so the banner doesn't re-insert if they navigate around
     sessionStorage.removeItem('ybg_invite_pending');
