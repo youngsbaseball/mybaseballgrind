@@ -3559,6 +3559,8 @@ function showTrialWelcome() {
   document.getElementById('trial-screen-expired').style.display = 'none';
   document.getElementById('trial-screen-blocked').style.display = 'none';
   document.getElementById('trial-overlay').style.display = 'flex';
+  // If landed via ?invite=trial (social share), add the invite banner + auto-focus email
+  try { if (typeof applyInviteLanding === 'function') applyInviteLanding(); } catch(e) {}
 }
 
 function showPaywall() {
@@ -3598,23 +3600,155 @@ function startFreshSignup() {
   }, 100);
 }
 
-function showTrialBanner() {
-  const state = getAccessState();
-  const elapsed = (Date.now() - (state.trialStart || Date.now())) / (1000 * 60 * 60 * 24);
-  const days = Math.max(0, Math.ceil(TRIAL_DAYS - elapsed));
-  const banner = document.getElementById('trial-banner');
-  if (banner) {
-    banner.style.display = 'flex';
-    document.getElementById('trial-days-count').textContent = days;
-    document.getElementById('trial-days-word').textContent  = days === 1 ? 'day' : 'days';
-    const emailEl = document.getElementById('trial-banner-email');
-    if (emailEl && state.email) emailEl.textContent = state.email;
+// ── LIVE TRIAL COUNTDOWN ─────────────────────────────
+// The trial banner shows a progressively more detailed countdown as the deadline approaches:
+//   Days 7 - 2: "5 days left"  (updates every 5 min — no urgency needed)
+//   Day 1:      "18h 42m left" (updates every 60 sec — mild urgency)
+//   Final hour: "42m 18s left" (updates every 1 sec — real urgency)
+// A single interval is kept so it can be cleared/reset when the banner is hidden.
+let _trialCountdownInterval = null;
+
+function _clearTrialCountdown() {
+  if (_trialCountdownInterval) {
+    clearInterval(_trialCountdownInterval);
+    _trialCountdownInterval = null;
   }
 }
+
+// Compute the label + the ideal tick interval for the current countdown phase.
+// Returns { label, tickMs, urgency } where urgency is 'calm' | 'warn' | 'alarm'.
+function _computeTrialCountdown(trialStart) {
+  const trialEnd = trialStart + (TRIAL_DAYS * 24 * 60 * 60 * 1000);
+  const msLeft = trialEnd - Date.now();
+
+  if (msLeft <= 0) {
+    return { label: '0 days', tickMs: 60000, urgency: 'expired', msLeft: 0 };
+  }
+
+  const totalSec = Math.floor(msLeft / 1000);
+  const days  = Math.floor(totalSec / 86400);
+  const hours = Math.floor((totalSec % 86400) / 3600);
+  const mins  = Math.floor((totalSec % 3600) / 60);
+  const secs  = totalSec % 60;
+
+  // Phase 1: More than 24 hours left → show days
+  if (msLeft > 24 * 60 * 60 * 1000) {
+    // Round UP so "6.5 days" shows as "7" not "6" — users feel like they got a fresh trial
+    const dayCount = Math.ceil(msLeft / (24 * 60 * 60 * 1000));
+    return {
+      label: dayCount + ' ' + (dayCount === 1 ? 'day' : 'days'),
+      tickMs: 5 * 60 * 1000,  // every 5 min is enough at this resolution
+      urgency: 'calm',
+      msLeft: msLeft
+    };
+  }
+
+  // Phase 2: Final day (24 → 1 hour) → show hours and minutes
+  if (msLeft > 60 * 60 * 1000) {
+    return {
+      label: hours + 'h ' + String(mins).padStart(2, '0') + 'm',
+      tickMs: 60 * 1000,
+      urgency: 'warn',
+      msLeft: msLeft
+    };
+  }
+
+  // Phase 3: Final hour → show minutes and seconds, tick every second
+  return {
+    label: mins + 'm ' + String(secs).padStart(2, '0') + 's',
+    tickMs: 1000,
+    urgency: 'alarm',
+    msLeft: msLeft
+  };
+}
+
+// Paint the current countdown into the banner. Called on interval + on state change.
+function _paintTrialCountdown() {
+  const state = getAccessState();
+  if (!state.trialStart) { _clearTrialCountdown(); return; }
+
+  const info = _computeTrialCountdown(state.trialStart);
+
+  // If the trial has expired, stop the clock and trigger the paywall flow
+  if (info.urgency === 'expired') {
+    _clearTrialCountdown();
+    try { if (typeof showPaywall === 'function') showPaywall(); } catch(e) {}
+    return;
+  }
+
+  const countEl = document.getElementById('trial-days-count');
+  const wordEl  = document.getElementById('trial-days-word');
+  const banner  = document.getElementById('trial-banner');
+  if (!countEl || !wordEl) return;
+
+  // Split "7 days" into count + word. The count element gets the bigger font, the word element the smaller.
+  // For "18h 42m" style labels we put the whole thing in the count element and blank the word.
+  if (info.urgency === 'calm') {
+    const parts = info.label.split(' ');
+    countEl.textContent = parts[0];
+    wordEl.textContent  = ' ' + (parts[1] || 'days');
+  } else {
+    // In warn/alarm phases we show the whole compact label in the big slot
+    countEl.textContent = info.label;
+    wordEl.textContent  = '';
+  }
+
+  // Subtle color escalation based on urgency
+  if (banner) {
+    if (info.urgency === 'alarm') {
+      // Final hour — red urgency
+      countEl.style.color = '#E57373';
+      banner.style.borderBottomColor = '#5A1010';
+    } else if (info.urgency === 'warn') {
+      // Final day — brighter gold pulse
+      countEl.style.color = '#E8C96A';
+      banner.style.borderBottomColor = '#5A4500';
+    } else {
+      // Calm phase — standard gold
+      countEl.style.color = '#C9A84C';
+      banner.style.borderBottomColor = '#3A2E00';
+    }
+  }
+}
+
+function showTrialBanner() {
+  const state = getAccessState();
+  const banner = document.getElementById('trial-banner');
+  if (!banner) return;
+  banner.style.display = 'flex';
+  const emailEl = document.getElementById('trial-banner-email');
+  if (emailEl && state.email) emailEl.textContent = state.email;
+
+  // Paint immediately
+  _paintTrialCountdown();
+
+  // Start (or restart) the ticker. The tick interval adapts based on the current phase.
+  _clearTrialCountdown();
+  function scheduleNextTick() {
+    if (!state.trialStart) return;
+    const info = _computeTrialCountdown(state.trialStart);
+    _trialCountdownInterval = setTimeout(function() {
+      _paintTrialCountdown();
+      scheduleNextTick();  // re-schedule with potentially a new tickMs (e.g. when we transition from days→hours)
+    }, info.tickMs);
+  }
+  scheduleNextTick();
+}
+
+// Also re-paint when the tab becomes visible again (user may have left the app running for hours)
+document.addEventListener('visibilitychange', function() {
+  if (!document.hidden) {
+    try {
+      const banner = document.getElementById('trial-banner');
+      if (banner && banner.style.display !== 'none') _paintTrialCountdown();
+    } catch(e) {}
+  }
+});
 
 function removeBanner() {
   const b = document.getElementById('trial-banner');
   if (b) b.style.display = 'none';
+  _clearTrialCountdown();  // stop the ticker — no need to keep computing when banner is hidden
 }
 
 function showPaidToast() {
@@ -5888,10 +6022,13 @@ if (_sf) _sf.style.display = 'block';
 // Once you upload to Netlify or your website, replace this
 // Live URL: 'https://youngsbaseball.github.io/mybaseballgrind'
 const APP_URL     = 'https://youngsbaseball.github.io/mybaseballgrind';
-const TRIAL_URL   = APP_URL + '?trial=1';  // QR scan → auto-starts 7-day trial
-const REFERRAL_URL = TRIAL_URL;
+const TRIAL_URL   = APP_URL + '?trial=1';         // QR scan → auto-starts 7-day trial (no email needed; physical flyers only)
+const TRIAL_INVITE_URL = APP_URL + '?invite=trial'; // Social share → shows welcome screen with trial card highlighted + email opt-in
+const REFERRAL_URL = TRIAL_INVITE_URL;             // Referral links use the social-share behavior (collect email)
 
 // ── AUTO-START TRIAL IF SCANNED FROM QR ────────────────
+// Only fires for the QR-code flow (?trial=1). The social-share flow uses ?invite=trial and
+// lands on the welcome screen with a banner + highlighted trial card (no auto-start, requires email).
 (function() {
   const params = new URLSearchParams(window.location.search);
   if (params.get('trial') === '1') {
@@ -5913,6 +6050,81 @@ const REFERRAL_URL = TRIAL_URL;
     localStorage.setItem('ybg_qr_scan', '1');
   }
 })();
+
+// ── SOCIAL-SHARE TRIAL INVITE HANDLER ─────────────────
+// When a user lands via ?invite=trial (from text, Instagram, Facebook, etc.), we land them
+// on the welcome screen with:
+//   1. A friendly "You've been invited by Coach Young" banner at the top
+//   2. The trial card in self mode with the email input pre-focused
+//   3. An auto-scroll to the trial CTA so they see it without hunting
+// This is the high-conversion landing for referral traffic — sets intent for trial, not paid.
+(function() {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('invite') !== 'trial') return;
+
+    // Stash flag for the welcome screen to pick up once it renders.
+    // We use sessionStorage (not localStorage) so refreshing doesn't repeat the banner.
+    sessionStorage.setItem('ybg_invite_pending', '1');
+  } catch(e) {}
+})();
+
+// Apply the invite-landing treatment once the welcome screen is visible.
+// Called from showTrialWelcome() after DOM is painted.
+function applyInviteLanding() {
+  try {
+    if (sessionStorage.getItem('ybg_invite_pending') !== '1') return;
+
+    // Auto-select self mode (gift mode doesn't make sense for an invited player)
+    if (typeof setRegistrationMode === 'function') {
+      try { setRegistrationMode('self'); } catch(e) {}
+    }
+
+    // Insert the invite banner at the top of the welcome screen (just under the header).
+    // Only insert once; if user switches between screens and comes back, don't duplicate.
+    const welcomeScreen = document.getElementById('trial-screen-welcome');
+    if (welcomeScreen && !document.getElementById('invite-banner')) {
+      const banner = document.createElement('div');
+      banner.id = 'invite-banner';
+      banner.style.cssText = 'background:linear-gradient(135deg,#1E1800,#1A1500); border-bottom:2px solid #C9A84C; padding:14px 28px; text-align:center; animation:fadeIn 0.5s ease;';
+      banner.innerHTML =
+        '<div style="font-family:\'Barlow Condensed\',sans-serif; font-size:11px; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:#C9A84C; margin-bottom:4px;">✨ You\'ve Been Invited</div>' +
+        '<div style="font-family:\'Barlow\',sans-serif; font-size:13px; color:#F4F4F4; line-height:1.5;">Start your <strong style="color:#C9A84C;">free 7-day trial</strong> below — no credit card needed.</div>';
+      // Insert right after the trust signal (which is the 2nd child of welcomeScreen, after the header)
+      // Find the trust-signal block by text and insert after it, with a graceful fallback.
+      const children = welcomeScreen.children;
+      let insertAfterIdx = 1; // Default: after the header
+      for (let i = 0; i < children.length; i++) {
+        if (children[i].textContent && children[i].textContent.indexOf('Reggie Smith') !== -1) {
+          insertAfterIdx = i;
+          break;
+        }
+      }
+      if (children[insertAfterIdx] && children[insertAfterIdx].nextSibling) {
+        welcomeScreen.insertBefore(banner, children[insertAfterIdx].nextSibling);
+      } else {
+        welcomeScreen.appendChild(banner);
+      }
+    }
+
+    // Scroll the trial CTA into view and focus the email input
+    setTimeout(function() {
+      const trialCta = document.getElementById('trial-primary-cta');
+      const emailInput = document.getElementById('user-email-input');
+      if (trialCta && trialCta.scrollIntoView) {
+        try { trialCta.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch(e) {}
+      }
+      if (emailInput) {
+        try { emailInput.focus({ preventScroll: true }); } catch(e) { try { emailInput.focus(); } catch(_) {} }
+      }
+    }, 250);
+
+    // Clear the flag so the banner doesn't re-insert if they navigate around
+    sessionStorage.removeItem('ybg_invite_pending');
+  } catch(e) {
+    try { console.warn('[MG] applyInviteLanding failed:', e); } catch(_) {}
+  }
+}
 
 // ── GENERATE QR CODE ──
 let qrGenerated = false;
@@ -6169,7 +6381,11 @@ function formatTime(t) {
 // ═══════════════════════════════════════════════════════
 
 // ── SHARE MODAL ──────────────────────────────────────
-const SHARE_URL  = 'https://youngsbaseball.github.io/mybaseballgrind/?trial=1';
+// SHARE_URL uses the ?invite=trial pattern — landing page shows welcome screen with
+// trial card highlighted + email opt-in. The old ?trial=1 auto-started a trial with a
+// fake placeholder email, which broke access for real users who clicked their friend's
+// share link. Physical QR flyers still use TRIAL_URL (?trial=1) for that instant-access UX.
+const SHARE_URL  = 'https://youngsbaseball.github.io/mybaseballgrind/?invite=trial';
 
 const SHARE_CAPTIONS = {
   instagram: `Bro this app is different ⚾️
@@ -6179,7 +6395,7 @@ Been using MY GRIND to log my games and track my stats. Not just a notes app —
 Actually changed how I approach every game. I log everything now.
 
 7 days free, no card. Download and try it 👇
-https://youngsbaseball.github.io/mybaseballgrind/?trial=1
+https://youngsbaseball.github.io/mybaseballgrind/?invite=trial
 
 Who needs this? Tag 'em 👇
 
@@ -6193,7 +6409,7 @@ The app has everything a serious player needs — a daily journal, automatic sta
 
 7-day free trial. No credit card. Just let them try it.
 
-👉 https://youngsbaseball.github.io/mybaseballgrind/?trial=1
+👉 https://youngsbaseball.github.io/mybaseballgrind/?invite=trial
 
 Tag a baseball family who'd use this 👇
 
@@ -6204,7 +6420,7 @@ Tag a baseball family who'd use this 👇
 MY GRIND — auto stats, daily journal, 12-month training plan. Everything a serious player needs in one app.
 
 7 days free 👇
-https://youngsbaseball.github.io/mybaseballgrind/?trial=1
+https://youngsbaseball.github.io/mybaseballgrind/?invite=trial
 
 #MyGrind #BaseballGrind`,
 
@@ -6213,7 +6429,7 @@ https://youngsbaseball.github.io/mybaseballgrind/?trial=1
 Been logging every game with it. Download it and let's keep each other accountable this season 💯
 
 7 days free 👇
-https://youngsbaseball.github.io/mybaseballgrind/?trial=1`
+https://youngsbaseball.github.io/mybaseballgrind/?invite=trial`
 };
 
 let currentSharePlatform = null;
@@ -6715,7 +6931,7 @@ function shareMilestone() {
     says + ' a ' + streak + '-day streak on MY GRIND ⚾🔥\n\n' +
     'Journaling every game, tracking every stat. Built for the grind.\n\n' +
     'Get it free for 7 days 👇\n' +
-    'https://youngsbaseball.github.io/mybaseballgrind/?trial=1';
+    'https://youngsbaseball.github.io/mybaseballgrind/?invite=trial';
 
   if (navigator.share) {
     navigator.share({ title: 'My Grind Streak', text: msg })
