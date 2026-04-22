@@ -1578,6 +1578,33 @@ function dismissIosBanner() {
         <label>How do I need to prepare for next week?</label>
         <textarea id="j-prepare" placeholder="What do I need to work on? What is my focus going into next practice or game?"></textarea>
       </div>
+
+      <!-- ══ PRACTICE REP COUNTER — shows when type = Practice ══ -->
+      <!-- Ported from the removed Dashboard Quick Log. Reps persist on the entry so the Journal displays them historically. -->
+      <div id="j-reps-section" style="display:none; margin-top:4px; margin-bottom:20px; padding:14px 16px; background:rgba(201,168,76,0.06); border:1px solid var(--gold-dark); border-radius:3px;">
+        <div style="font-family:'Barlow Condensed'; font-size:12px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--gold); margin-bottom:4px;">🔢 Rep Counter — Today's Practice</div>
+        <div style="font-family:'Barlow'; font-size:12px; color:var(--grey); margin-bottom:14px; line-height:1.5;">Track your volume. Nobody counts it for you. <strong style="color:var(--light);">You count it.</strong></div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+          <div>
+            <label style="font-size:10px; letter-spacing:1px;">🏏 SWINGS</label>
+            <input type="number" id="jr-swings" min="0" placeholder="0" inputmode="numeric" oninput="calcReps()" style="width:100%; padding:10px; font-size:15px; text-align:center; font-family:'Bebas Neue'; letter-spacing:1px;">
+          </div>
+          <div>
+            <label style="font-size:10px; letter-spacing:1px;">🥎 GROUND BALLS</label>
+            <input type="number" id="jr-gb" min="0" placeholder="0" inputmode="numeric" oninput="calcReps()" style="width:100%; padding:10px; font-size:15px; text-align:center; font-family:'Bebas Neue'; letter-spacing:1px;">
+          </div>
+          <div>
+            <label style="font-size:10px; letter-spacing:1px;">🎯 THROWS</label>
+            <input type="number" id="jr-throws" min="0" placeholder="0" inputmode="numeric" oninput="calcReps()" style="width:100%; padding:10px; font-size:15px; text-align:center; font-family:'Bebas Neue'; letter-spacing:1px;">
+          </div>
+          <div>
+            <label style="font-size:10px; letter-spacing:1px;">⚾ PITCHES</label>
+            <input type="number" id="jr-pitches" min="0" placeholder="0" inputmode="numeric" oninput="calcReps()" style="width:100%; padding:10px; font-size:15px; text-align:center; font-family:'Bebas Neue'; letter-spacing:1px;">
+          </div>
+        </div>
+        <div style="margin-top:12px; text-align:center; font-family:'Barlow Condensed'; font-size:12px; letter-spacing:1.5px; text-transform:uppercase; color:var(--grey);">Total reps: <span id="jr-total-num" style="color:var(--gold); font-weight:800; font-family:'Bebas Neue'; font-size:18px; letter-spacing:1px;">0</span></div>
+      </div>
+
       <div class="form-row">
         <div>
           <label>Performance Grade (A–F)</label>
@@ -4565,11 +4592,25 @@ function saveEntry() {
     }
   }
 
+  // Practice reps (only if type = practice)
+  let reps = null;
+  if (type === 'practice') {
+    const rSwings  = parseInt(document.getElementById('jr-swings')?.value)  || 0;
+    const rGb      = parseInt(document.getElementById('jr-gb')?.value)      || 0;
+    const rThrows  = parseInt(document.getElementById('jr-throws')?.value)  || 0;
+    const rPitches = parseInt(document.getElementById('jr-pitches')?.value) || 0;
+    const rTotal   = rSwings + rGb + rThrows + rPitches;
+    if (rTotal > 0) {
+      reps = { swings: rSwings, gb: rGb, throws: rThrows, pitches: rPitches, total: rTotal };
+    }
+  }
+
   const entry = {
     id:        Date.now(),
     date:      date ? new Date(date + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Today',
     type, title, what, tomorrow, prepare, grade, result,
     gameStats,
+    reps,
     media:     [...pendingMedia],
     comments:  []
   };
@@ -4603,6 +4644,13 @@ function saveEntry() {
     const el = document.getElementById(id);
     if (el) el.value = '';
   });
+  // Reset practice reps
+  ['jr-swings','jr-gb','jr-throws','jr-pitches'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  const repsTotalEl = document.getElementById('jr-total-num');
+  if (repsTotalEl) repsTotalEl.textContent = '0';
   const avgDisp = document.getElementById('game-avg-display');
   if (avgDisp) avgDisp.style.display = 'none';
   const seasonDisp = document.getElementById('season-totals-display');
@@ -4689,6 +4737,10 @@ function toggleGameStats() {
   // Reflection extra field
   if (extraEl) extraEl.style.display = isReflect ? 'block' : 'none';
 
+  // Practice rep counter — only for practice entries
+  const repsSec = document.getElementById('j-reps-section');
+  if (repsSec) repsSec.style.display = isPrac ? 'block' : 'none';
+
   if (isGame) {
     if (titleLb) titleLb.textContent = 'Title / Opponent';
     if (titleEl) titleEl.placeholder = 'e.g. vs Valencia HS – W 6-4';
@@ -4719,6 +4771,20 @@ function toggleGameStats() {
     const resultEl = document.getElementById('j-result');
     if (resultEl) resultEl.value = '';
   }
+}
+
+// Sum the four rep-counter inputs and update the "Total reps" display.
+// Called from each input's oninput handler.
+function calcReps() {
+  const ids = ['jr-swings','jr-gb','jr-throws','jr-pitches'];
+  let total = 0;
+  ids.forEach(function(id) {
+    const v = parseInt(document.getElementById(id)?.value) || 0;
+    if (v > 0) total += v;
+  });
+  const out = document.getElementById('jr-total-num');
+  if (out) out.textContent = total;
+  return total;
 }
 
 function calcGameStats() {
@@ -4802,6 +4868,29 @@ function renderEntries() {
 
       <!-- TITLE -->
       <div class="entry-title">${e.title || (e.type === 'practice' ? 'Practice' : 'Entry')}</div>
+
+      <!-- PRACTICE REPS BOX — shows when a practice entry has reps logged -->
+      ${e.reps && e.reps.total > 0 ? `
+        <div style="margin:12px 0; background:linear-gradient(135deg,#1A1500,#141400); border:1px solid var(--gold-dark); border-radius:3px; padding:14px 16px;">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; flex-wrap:wrap; gap:8px;">
+            <div style="font-family:'Barlow Condensed'; font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--gold);">🔢 Today's Reps</div>
+            <div style="font-family:'Barlow Condensed'; font-size:11px; letter-spacing:1px; color:var(--grey);">Total: <span style="font-family:'Bebas Neue'; font-size:18px; color:var(--gold); letter-spacing:1px;">${e.reps.total}</span></div>
+          </div>
+          <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:3px;">
+            ${[
+              ['🏏 Swings',     e.reps.swings],
+              ['🥎 Gnd Balls',  e.reps.gb],
+              ['🎯 Throws',     e.reps.throws],
+              ['⚾ Pitches',    e.reps.pitches]
+            ].map(([label, val]) => `
+              <div style="background:var(--card2); padding:8px 4px; text-align:center; border-radius:2px;">
+                <div style="font-family:'Bebas Neue'; font-size:22px; color:${val > 0 ? 'var(--white)' : 'var(--border)'}; line-height:1;">${val || '-'}</div>
+                <div style="font-family:'Barlow Condensed'; font-size:9px; font-weight:700; letter-spacing:0.5px; text-transform:uppercase; color:var(--grey); margin-top:3px;">${label}</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      ` : ''}
 
       <!-- GAME STATS BOX -->
       ${e.gameStats ? `
