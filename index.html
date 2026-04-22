@@ -1395,21 +1395,34 @@ function dismissIosBanner() {
   </div>
 
   <!-- BLOCKED SCREEN -->
+  <!-- Shown when a user has already registered this account on MAX_DEVICES (currently 2).
+       Copy is softened so paying customers who switched phones don't feel accused. -->
   <div id="trial-screen-blocked" style="display:none; max-width:460px; width:100%; background:#181818; border:1px solid #3A1010; border-radius:4px; overflow:hidden; animation:fadeIn 0.4s ease;">
     <div style="background:linear-gradient(135deg,#1A0808,#100505); border-bottom:1px solid #3A1010; padding:28px; text-align:center;">
-      <div style="font-size:48px; margin-bottom:8px;">🚫</div>
-      <div style="font-family:'Bebas Neue',cursive; font-size:32px; letter-spacing:3px; color:#E57373;">ACCESS BLOCKED</div>
-      <div style="font-family:'Barlow Condensed',sans-serif; font-size:12px; letter-spacing:2px; text-transform:uppercase; color:#555; margin-top:4px;">Unauthorized Access Attempt</div>
+      <div style="font-size:48px; margin-bottom:8px;">📱</div>
+      <div style="font-family:'Bebas Neue',cursive; font-size:32px; letter-spacing:3px; color:#E8C96A;">NEW DEVICE?</div>
+      <div style="font-family:'Barlow Condensed',sans-serif; font-size:12px; letter-spacing:2px; text-transform:uppercase; color:#555; margin-top:4px;">Device Limit Reached</div>
     </div>
     <div style="padding:28px; text-align:center;">
-      <div id="blocked-msg" style="font-size:14px; color:#BBBBBB; line-height:1.8; margin-bottom:24px; background:rgba(192,57,43,0.08); border:1px solid rgba(192,57,43,0.3); border-radius:2px; padding:16px;">Access denied.</div>
-      <div style="font-family:'Barlow Condensed',sans-serif; font-size:13px; letter-spacing:1px; color:#555; line-height:1.8;">
-        This app is tied to the email and device used at registration.<br>
-        It cannot be shared, transferred, or used on another device.<br><br>
-        Need help? <a href="mailto:coach@youngsbaseball.com" style="color:#C9A84C;">coach@youngsbaseball.com</a>
+      <div id="blocked-msg" style="font-size:14px; color:#BBBBBB; line-height:1.8; margin-bottom:20px; background:rgba(232,201,106,0.06); border:1px solid rgba(232,201,106,0.2); border-radius:2px; padding:16px;">Access denied.</div>
+
+      <div style="font-family:'Barlow',sans-serif; font-size:13px; color:#888; line-height:1.7; margin-bottom:22px;">
+        Your account is already active on 2 devices. If you got a new phone or switched browsers, tap <strong style="color:#E8C96A;">Reset Device List</strong> below — your journal, stats, and subscription are all safe.
       </div>
-      <div style="margin-top:20px;">
-        <a href="https://youngsbaseball.github.io/mybaseballgrind" style="font-family:'Barlow Condensed',sans-serif; font-size:12px; letter-spacing:1.5px; text-transform:uppercase; color:#C9A84C; text-decoration:none;">Purchase Your Own Access → youngsbaseball.github.io/mybaseballgrind</a>
+
+      <!-- Self-serve reset — the pressure valve. Paying users who switched phones never have to email support. -->
+      <button onclick="resetDeviceLock()" style="width:100%; background:#C9A84C; color:#080808; font-family:'Barlow Condensed',sans-serif; font-size:13px; font-weight:800; letter-spacing:2px; text-transform:uppercase; padding:13px; border:none; border-radius:3px; cursor:pointer; margin-bottom:14px;" onmouseover="this.style.background='#E8C96A'" onmouseout="this.style.background='#C9A84C'">
+        🔄 &nbsp;Reset Device List — Use This Device
+      </button>
+
+      <div style="font-family:'Barlow Condensed',sans-serif; font-size:11px; letter-spacing:1.5px; color:#666; line-height:1.7; margin-bottom:14px;">
+        Still stuck? <a href="mailto:coach@youngsbaseball.com" style="color:#C9A84C; text-decoration:none;">coach@youngsbaseball.com</a>
+      </div>
+
+      <div style="height:1px; background:#222; margin:18px 0;"></div>
+
+      <div style="margin-top:8px;">
+        <a href="#" onclick="event.preventDefault(); startFreshSignup();" style="font-family:'Barlow Condensed',sans-serif; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:#666; text-decoration:none;">Not your account? Start fresh signup →</a>
       </div>
       <div style="margin-top:16px;">
         <span onclick="unlockCreator()" style="color:#1A1A1A; cursor:pointer; font-size:10px; user-select:none;" title="Creator Access">⚾</span>
@@ -3371,13 +3384,68 @@ function getDeviceFingerprint() {
 function getAccessState() { return retrieve('access') || {}; }
 function saveAccessState(s) { store('access', s); }
 
+// ── DEVICE FINGERPRINT MULTI-DEVICE SUPPORT ──────────
+// Each account may be used on up to MAX_DEVICES different browsers/phones.
+// This avoids locking out paying users who: get a new phone, clear their cookies,
+// switch browsers, or show the app to a friend on a different device.
+// Anti-abuse: still capped. A 3rd device attempt triggers the Blocked screen with
+// a self-serve "Reset device list" option.
+const MAX_DEVICES = 2;
+
+// Read all fingerprints ever registered for this account.
+// Handles backward compat: old saves have a string `fingerprint`; new saves use `fingerprints` array.
+function getRegisteredFingerprints(state) {
+  if (!state) return [];
+  const list = [];
+  if (Array.isArray(state.fingerprints)) {
+    state.fingerprints.forEach(function(f) { if (f && list.indexOf(f) === -1) list.push(f); });
+  }
+  if (state.fingerprint && list.indexOf(state.fingerprint) === -1) {
+    list.push(state.fingerprint);
+  }
+  return list;
+}
+
+// Check if this device is known OR has room to be added.
+// Returns: 'known' | 'addable' | 'too_many'
+function evaluateDeviceAccess(state, fp) {
+  const registered = getRegisteredFingerprints(state);
+  if (registered.indexOf(fp) !== -1) return 'known';
+  if (registered.length < MAX_DEVICES) return 'addable';
+  return 'too_many';
+}
+
+// Silently add a new fingerprint to the stored list (used when 'addable').
+// Preserves the legacy `fingerprint` field so older code paths don't break.
+function registerAdditionalDevice(state, fp) {
+  const registered = getRegisteredFingerprints(state);
+  if (registered.indexOf(fp) === -1) registered.push(fp);
+  // Write the full array AND keep the primary fingerprint pointing at something valid
+  saveAccessState(Object.assign({}, state, {
+    fingerprints: registered,
+    fingerprint: state.fingerprint || fp
+  }));
+}
+
 // ── VALIDATE ─────────────────────────────────────────
 function validateSession() {
   if (isCreator()) return 'creator';
   const state = getAccessState();
   if (!state.email) return 'no_email';
   const fp = getDeviceFingerprint();
-  if (state.fingerprint && state.fingerprint !== fp) return 'wrong_device';
+
+  // Only enforce the device check if we have any registered fingerprints
+  const registered = getRegisteredFingerprints(state);
+  if (registered.length > 0) {
+    const decision = evaluateDeviceAccess(state, fp);
+    if (decision === 'too_many') return 'wrong_device';
+    if (decision === 'addable') {
+      // Silently register this device — up to MAX_DEVICES allowed
+      registerAdditionalDevice(state, fp);
+    }
+    // 'known' — proceed normally
+  }
+
   if (state.paid) return 'paid';
   if (state.trialStart) {
     const elapsed = (Date.now() - state.trialStart) / (1000 * 60 * 60 * 24);
@@ -3385,6 +3453,34 @@ function validateSession() {
     return 'trial';
   }
   return 'no_trial';
+}
+
+// Called from the Blocked screen to let the user reset their device list.
+// This is the self-serve pressure valve: rather than emailing support, they can
+// clear the registered fingerprints and register this device as fresh.
+// The email and subscription state is preserved — only the device list resets.
+function resetDeviceLock() {
+  const confirmed = confirm(
+    'This will reset the device list on your account. You\'ll stay logged in on this device, ' +
+    'but if you need to switch devices again, you\'ll have to reset once more.\n\n' +
+    'Your journal, stats, and subscription are safe. Continue?'
+  );
+  if (!confirmed) return;
+  try {
+    const state = getAccessState();
+    const fp = getDeviceFingerprint();
+    saveAccessState(Object.assign({}, state, {
+      fingerprint: fp,
+      fingerprints: [fp],  // reset to just this one
+      deviceResetAt: new Date().toISOString()
+    }));
+    // Refresh the UI — hide Blocked screen, re-run access check
+    const overlay = document.getElementById('trial-overlay');
+    if (overlay) overlay.style.display = 'none';
+    setTimeout(function() { try { checkAccess(); } catch(e) {} }, 100);
+  } catch(e) {
+    alert('Could not reset device list. Please contact coach@youngsbaseball.com');
+  }
 }
 
 // ── CHECK ACCESS ─────────────────────────────────────
@@ -3421,7 +3517,7 @@ function checkAccess() {
   if (status === 'paid')         { removeBanner(); return; }
   if (status === 'trial')        { showTrialBanner(); return; }
   if (status === 'expired')      { showPaywall(); return; }
-  if (status === 'wrong_device') { showBlocked('This app is registered to a different device.\n\nContact coach@youngsbaseball.com'); return; }
+  if (status === 'wrong_device') { showBlocked('Your account is already active on 2 devices. Tap "Reset Device List" below to use this one — your data is safe.'); return; }
   showTrialWelcome();
 }
 
@@ -3451,6 +3547,28 @@ function showBlocked(msg) {
   document.getElementById('trial-screen-blocked').style.display = 'block';
   document.getElementById('blocked-msg').textContent = msg || 'Access denied.';
   document.getElementById('trial-overlay').style.display = 'flex';
+}
+
+// Called from the Blocked screen's "Purchase Your Own Access" link.
+// Swaps the Blocked screen back to the Welcome screen (which has the full signup/purchase flow)
+// without needing an external URL. Works on any domain — the app is self-contained.
+function startFreshSignup() {
+  const confirmed = confirm('This will let you register a new account on this device. Any blocked session data will be cleared.\n\nContinue?');
+  if (!confirmed) return;
+  try {
+    localStorage.removeItem('ybg_access');
+    sessionStorage.removeItem('ybg_access');
+  } catch(e) {}
+  // Show the welcome screen
+  document.getElementById('trial-screen-blocked').style.display = 'none';
+  document.getElementById('trial-screen-expired').style.display = 'none';
+  document.getElementById('trial-screen-welcome').style.display = 'block';
+  document.getElementById('trial-overlay').style.display = 'flex';
+  // Focus the first email input so they can start typing immediately
+  setTimeout(function() {
+    const input = document.getElementById('user-email-input');
+    if (input) input.focus();
+  }, 100);
 }
 
 function showTrialBanner() {
@@ -4188,7 +4306,7 @@ function startCountdown() {
     if (isCreator()) return;
     const status = validateSession();
     if (status === 'expired')           showPaywall();
-    else if (status === 'wrong_device') showBlocked('Device mismatch detected.');
+    else if (status === 'wrong_device') showBlocked('Your account is already active on 2 devices. Tap "Reset Device List" below to use this one — your data is safe.');
     else if (status === 'trial')        showTrialBanner();
   }, 1000 * 60 * 60);
 }
@@ -4437,51 +4555,6 @@ function buildFocusBullets(m) {
   const seen = {};
   const deduped = combined.filter(function(b){ if (seen[b]) return false; seen[b] = true; return true; });
   return deduped.slice(0, 6);
-}
-
-// ─── JOURNAL ──────────────────────────────────────────────
-function toggleQuickTitle() {
-  const type    = document.getElementById('quick-type')?.value;
-  const wrapper = document.getElementById('quick-title-wrapper');
-  if (wrapper) wrapper.style.display = type === 'practice' ? 'none' : 'block';
-}
-
-function quickLog() {
-  const type  = document.getElementById('quick-type').value;
-  const title = document.getElementById('quick-title').value.trim();
-  const notes = document.getElementById('quick-notes').value.trim();
-
-  if (type !== 'practice' && !title) { alert('Please add a title or opponent.'); return; }
-  if (!notes) { alert('Please add some notes.'); return; }
-
-  state.entries.unshift({
-    id:        Date.now(),
-    date:      new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-    type,
-    title:     title || (type === 'practice' ? 'Practice' : 'Quick Log'),
-    what:      notes,
-    tomorrow:  '',
-    prepare:   '',
-    grade:     '',
-    result:    '',
-    gameStats: null,
-    media:     [],
-    comments:  []
-  });
-
-  document.getElementById('quick-title').value = '';
-  document.getElementById('quick-notes').value = '';
-  renderAll();
-
-  const btn = event.target;
-  btn.innerHTML = '✅ &nbsp;Saved to Daily Journal!';
-  btn.style.background = '#27AE60';
-  btn.style.borderColor = '#27AE60';
-  setTimeout(() => {
-    btn.innerHTML = '⚾ &nbsp;Save Entry';
-    btn.style.background = '';
-    btn.style.borderColor = '';
-  }, 2500);
 }
 
 // ── MEDIA HANDLING ────────────────────────────────────
@@ -5019,12 +5092,6 @@ function savePlayer() {
   saveProfile();
 }
 
-function deletePlayer(id) {
-  if (!confirm('Remove this player?')) return;
-  state.players = state.players.filter(p => p.id !== id);
-  renderAll();
-}
-
 function renderPlayers() {
   // Players list is now the personal profile — no separate list to render
   // Safe no-op to prevent errors from renderAll() calls
@@ -5184,19 +5251,6 @@ function loadGradesUI() {
       }
     } catch(e) {}
   } catch(e) { try { console.warn('[YBG] loadGradesUI failed:', e); } catch(_) {} }
-}
-
-// ─── CHECKLIST ────────────────────────────────────────────
-function toggleCheck(el) {
-  const item = el.parentElement;
-  item.classList.toggle('checked', el.checked);
-}
-
-function resetChecklist() {
-  document.querySelectorAll('#arm-care input[type="checkbox"]').forEach(cb => {
-    cb.checked = false;
-    cb.parentElement.classList.remove('checked');
-  });
 }
 
 // ─── RENDER ALL ───────────────────────────────────────────
@@ -5872,19 +5926,6 @@ function copyReferralLink() {
   }
 }
 
-// ── NATIVE SHARE ──
-function shareNative() {
-  const shareData = {
-    title: 'My Grind — Baseball Journal App',
-    text: '7-Day Free Trial — Baseball journal app for player development. Track stats, log games, and hold yourself accountable every day.',
-    url: TRIAL_URL
-  };
-  if (navigator.share) {
-    navigator.share(shareData);
-  } else {
-    copyReferralLink();
-  }
-}
 </script>
 <script>
 // ═══════════════════════════════════════════════════════
@@ -6353,92 +6394,6 @@ function showShareToast(msg) {
 // GAMECHANGER OCR — SCREENSHOT STAT IMPORT
 // Uses Claude Vision API to read box score stats
 // ═══════════════════════════════════════════════════════
-
-let gcExtractedStats = null;
-
-
-function displayGCStats(parsed, status, errEl, statsGrid, grid) {
-  if (!parsed || (!parsed.batting && !parsed.pitching)) {
-    if (status) status.style.display = 'none';
-    if (errEl)  { errEl.style.display = 'block'; errEl.textContent = '⚠️ No stats found in this screenshot. Make sure the box score is clearly visible.'; }
-    return;
-  }
-
-  if (status) { status.style.display = 'block'; status.style.color = '#58D68D'; status.style.borderColor = '#27AE60'; status.style.background = 'rgba(39,174,96,0.08)'; status.textContent = `✅ Stats read successfully${parsed.playerName ? ' for ' + parsed.playerName : ''}! Review below and tap Import to save.`; }
-  if (errEl)  errEl.style.display = 'none';
-
-  // Build stats grid
-  if (grid) {
-    grid.innerHTML = '';
-    const allStats = [];
-
-    if (parsed.batting) {
-      const b = parsed.batting;
-      if (b.ab  !== null) allStats.push(['AB',  b.ab]);
-      if (b.h   !== null) allStats.push(['H',   b.h]);
-      if (b.hr  !== null) allStats.push(['HR',  b.hr]);
-      if (b.rbi !== null) allStats.push(['RBI', b.rbi]);
-      if (b.r   !== null) allStats.push(['R',   b.r]);
-      if (b.bb  !== null) allStats.push(['BB',  b.bb]);
-      if (b.k   !== null) allStats.push(['K',   b.k]);
-      if (b.sb  !== null) allStats.push(['SB',  b.sb]);
-      if (b.avg !== null) allStats.push(['AVG', b.avg]);
-    }
-    if (parsed.pitching) {
-      const p = parsed.pitching;
-      if (p.ip  !== null) allStats.push(['IP',  p.ip]);
-      if (p.er  !== null) allStats.push(['ER',  p.er]);
-      if (p.k   !== null) allStats.push(['P-K', p.k]);
-      if (p.bb  !== null) allStats.push(['P-BB',p.bb]);
-      if (p.era !== null) allStats.push(['ERA', p.era]);
-    }
-
-    allStats.forEach(([label, val]) => {
-      const cell = document.createElement('div');
-      cell.style.cssText = 'background:var(--card2); padding:10px 4px; text-align:center; border-radius:2px; border:1px solid var(--border);';
-      cell.innerHTML = `<div style="font-family:'Bebas Neue',cursive; font-size:22px; color:var(--gold); line-height:1;">${val}</div><div style="font-family:'Barlow Condensed',sans-serif; font-size:10px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--grey);">${label}</div>`;
-      grid.appendChild(cell);
-    });
-  }
-
-  if (statsGrid) statsGrid.style.display = 'block';
-}
-
-function importGCStats() {
-  if (!gcExtractedStats) return;
-  const b = gcExtractedStats.batting   || {};
-  const p = gcExtractedStats.pitching  || {};
-
-  const setVal = (id, val) => { if (val !== null && val !== undefined) { const el = document.getElementById(id); if (el) { el.value = val; } } };
-
-  // Batting
-  setVal('st-ab',  b.ab);
-  setVal('st-h',   b.h);
-  setVal('st-hr',  b.hr);
-  setVal('st-rbi', b.rbi);
-  setVal('st-r',   b.r);
-  setVal('st-bb',  b.bb);
-  setVal('st-k',   b.k);
-  setVal('st-sb',  b.sb);
-
-  // Pitching
-  setVal('st-ip',  p.ip);
-  setVal('st-er',  p.er);
-  setVal('st-pk',  p.k);
-  setVal('st-pbb', p.bb);
-
-  // Recalculate
-  if (typeof calcStats === 'function') calcStats();
-
-  // Navigate to My Stats
-  showPanel('stats');
-  showShareToast('✅ Stats imported to My Stats!');
-
-  // Reset GC upload
-  const input = document.getElementById('gc-screenshot-input');
-  if (input) input.value = '';
-  gcExtractedStats = null;
-}
 
 // ═══════════════════════════════════════════════════════
 // INIT ALL NEW FEATURES
@@ -6999,8 +6954,6 @@ setTimeout(function() {
   try { updateStreakDisplay();  } catch(e) {}
   try { renderWeeklyRecap();    } catch(e) {}
   try { renderArmCare();        } catch(e) {}
-  try { updateQuickPromptHint();} catch(e) {}
-  try { setupRepsCounter();     } catch(e) {}
   try { checkGradeNag();        } catch(e) {}
 }, 100);
 
@@ -7008,84 +6961,6 @@ setTimeout(function() {
 // v2026.04 PART 2 — Position Prompts · Arm Care
 // Grade Nag · Practice Rep Counter
 // ═══════════════════════════════════════════════════════
-
-// ─── POSITION-SPECIFIC PROMPTS (#4) ──────────────────────
-function getPlayerPositions() {
-  try {
-    const profile = JSON.parse(localStorage.getItem('ybg_profile') || '{}');
-    const raw = profile.positions || profile.position || '';
-    if (Array.isArray(raw)) return raw;
-    if (typeof raw === 'string') return raw.split(',').map(s => s.trim()).filter(Boolean);
-    return [];
-  } catch(e) { return []; }
-}
-
-function buildPromptForEntry(type, positions) {
-  // Generic fallback
-  if (!type) return '';
-
-  // Game prompts — focus on position-specific self-review
-  if (type === 'game') {
-    const parts = ['<strong style="color:#C9A84C;">Post-Game Prompts:</strong><br>'];
-    const isP  = positions.includes('P');
-    const isC  = positions.includes('C');
-    const isIF = positions.some(p => ['1B','2B','3B','SS'].includes(p));
-    const isOF = positions.some(p => ['LF','CF','RF'].includes(p));
-    const isH  = positions.length === 0 || !(positions.length === 1 && isP); // anyone who hits
-
-    if (isP)  parts.push('⚾ Pitch count? Command? Velo? What worked — what didn\'t?');
-    if (isC)  parts.push('🎯 Pop time? Pitch calling? Blocks & framing?');
-    if (isIF) parts.push('🧤 Defensive reads? Footwork on ground balls? Double plays turned?');
-    if (isOF) parts.push('🏃 Routes taken? Reads off the bat? Throws to cutoff?');
-    if (isH)  parts.push('🏏 Pitches seen? Approach each at-bat? Quality contact?');
-    parts.push('💪 Mental game — stayed composed? Let anything linger?');
-    parts.push('🗣️ Did I lift my teammates up?');
-    return parts.join('<br>');
-  }
-
-  // Practice prompts
-  if (type === 'practice') {
-    return '<strong style="color:#C9A84C;">Practice Prompts:</strong><br>' +
-           '🎯 What was the focus today?<br>' +
-           '💪 Where did I improve?<br>' +
-           '🔁 What rep/drill do I need more of?<br>' +
-           '🧠 What did my coach tell me?';
-  }
-
-  // Reflection
-  if (type === 'reflection') {
-    return '<strong style="color:#C9A84C;">Reflection Prompts:</strong><br>' +
-           '🧠 What\'s on your mind — baseball or otherwise?<br>' +
-           '🎯 What\'s one thing you\'ll work on tomorrow?<br>' +
-           '🙏 One thing you\'re grateful for today?';
-  }
-  return '';
-}
-
-function updateQuickPromptHint() {
-  const typeEl = document.getElementById('quick-type');
-  const hint   = document.getElementById('quick-prompt-hint');
-  if (!typeEl || !hint) return;
-  const type = typeEl.value;
-  const positions = getPlayerPositions();
-  const html = buildPromptForEntry(type, positions);
-  if (html) {
-    hint.innerHTML = html;
-    hint.style.display = 'block';
-  } else {
-    hint.style.display = 'none';
-  }
-}
-
-// Hook into the existing toggleQuickTitle so the hint updates too
-(function() {
-  const origToggle = window.toggleQuickTitle;
-  window.toggleQuickTitle = function() {
-    if (typeof origToggle === 'function') origToggle.apply(this, arguments);
-    updateQuickPromptHint();
-    toggleRepsSection();
-  };
-})();
 
 // ─── ARM CARE DAILY CHECKLIST (#5) ───────────────────────
 const ARM_CARE_ITEMS = [
@@ -7166,89 +7041,6 @@ function toggleArmCare(id) {
     if (typeof showShareToast === 'function') showShareToast('✅ Arm Care Complete — That\'s the standard.');
   }
 }
-
-// ─── PRACTICE REP COUNTER (#8) ───────────────────────────
-function toggleRepsSection() {
-  const typeEl = document.getElementById('quick-type');
-  const section = document.getElementById('quick-reps-section');
-  if (!typeEl || !section) return;
-  section.style.display = (typeEl.value === 'practice') ? 'block' : 'none';
-  updateRepsTotal();
-}
-
-function updateRepsTotal() {
-  const ids = ['quick-reps-swings','quick-reps-gb','quick-reps-throws','quick-reps-pitches'];
-  let total = 0;
-  ids.forEach(function(id) {
-    const el = document.getElementById(id);
-    if (el) total += parseInt(el.value, 10) || 0;
-  });
-  const out = document.getElementById('quick-reps-total-num');
-  if (out) out.textContent = total.toLocaleString();
-}
-
-function setupRepsCounter() {
-  const ids = ['quick-reps-swings','quick-reps-gb','quick-reps-throws','quick-reps-pitches'];
-  ids.forEach(function(id) {
-    const el = document.getElementById(id);
-    if (el && !el.dataset.bound) {
-      el.addEventListener('input', updateRepsTotal);
-      el.dataset.bound = '1';
-    }
-  });
-  toggleRepsSection();
-}
-
-// Hook into the existing quickLog to capture reps in the entry
-(function() {
-  const origQuickLog = window.quickLog;
-  if (typeof origQuickLog !== 'function') return;
-
-  window.quickLog = function() {
-    try {
-      // Capture rep values BEFORE original function runs (it clears fields)
-      const typeEl = document.getElementById('quick-type');
-      const type = typeEl ? typeEl.value : null;
-      let reps = null;
-      if (type === 'practice') {
-        const swings  = parseInt(document.getElementById('quick-reps-swings')?.value  || '0', 10) || 0;
-        const gb      = parseInt(document.getElementById('quick-reps-gb')?.value      || '0', 10) || 0;
-        const throws_ = parseInt(document.getElementById('quick-reps-throws')?.value  || '0', 10) || 0;
-        const pitches = parseInt(document.getElementById('quick-reps-pitches')?.value || '0', 10) || 0;
-        const total = swings + gb + throws_ + pitches;
-        if (total > 0) reps = { swings: swings, gb: gb, throws: throws_, pitches: pitches, total: total };
-      }
-
-      // Run the original save
-      origQuickLog.apply(this, arguments);
-
-      // Attach reps to the newest entry (safely)
-      if (reps && typeof window.state === 'object' && window.state && Array.isArray(window.state.entries) && window.state.entries[0]) {
-        try {
-          window.state.entries[0].reps = reps;
-          const summary = '\n\n🔢 Reps logged: ' +
-            (reps.swings  ? reps.swings  + ' swings · '  : '') +
-            (reps.gb      ? reps.gb      + ' GBs · '     : '') +
-            (reps.throws  ? reps.throws  + ' throws · '  : '') +
-            (reps.pitches ? reps.pitches + ' pitches · ' : '') +
-            'Total: ' + reps.total;
-          window.state.entries[0].what = (window.state.entries[0].what || '') + summary.replace(/·\s*$/, '');
-          if (typeof saveState === 'function') { try { saveState(); } catch(e) {} }
-        } catch(err) {}
-      }
-
-      // Clear reps fields
-      ['quick-reps-swings','quick-reps-gb','quick-reps-throws','quick-reps-pitches'].forEach(function(id) {
-        try { const el = document.getElementById(id); if (el) el.value = ''; } catch(e) {}
-      });
-      try { updateRepsTotal(); } catch(e) {}
-    } catch(err) {
-      try { console.warn('[YBG quickLog hook]', err); } catch(e) {}
-      // Still run the original so saving never breaks
-      try { origQuickLog.apply(this, arguments); } catch(e) {}
-    }
-  };
-})();
 
 // ─── GRADE CHECK NAG (#6) ────────────────────────────────
 function checkGradeNag() {
@@ -7367,18 +7159,6 @@ function submitGradeNag() {
   }
 }
 
-// ─── WIRE UP QUICK-TYPE CHANGE LISTENER ──────────────────
-setTimeout(function() {
-  const typeEl = document.getElementById('quick-type');
-  if (typeEl && !typeEl.dataset.bound) {
-    typeEl.addEventListener('change', function() {
-      updateQuickPromptHint();
-      toggleRepsSection();
-    });
-    typeEl.dataset.bound = '1';
-  }
-}, 300);
-
 // ═══════════════════════════════════════════════════════
 // TEAM FEATURE — v2026.04
 // ═══════════════════════════════════════════════════════
@@ -7426,6 +7206,94 @@ function setMyCoachedTeamId(id) {
 // ─── TEAM LOOKUP ─────────────────────────────────────────
 function findTeamById(id) {
   return getTeamsRegistry().find(function(t) { return t.id === id; }) || null;
+}
+
+// ─── CROSS-DEVICE TEAM SHARING ───────────────────────────
+// Team data lives in each device's localStorage. When a coach creates a team on their phone
+// and shares the join link to a player on a different device, the player's browser has
+// never seen the team. To make the join work across devices, we encode the team's public-facing
+// fields into the URL itself (base64-encoded JSON). The receiving device decodes it, adds the
+// team to their local registry if needed, then proceeds with the normal join flow.
+//
+// SECURITY: Only include fields that are already public to roster members. Never include
+// sponsor.purchaserEmail, roster emails, or any billing/private data. The URL travels over
+// SMS/email — assume it can be seen by anyone the link is forwarded to.
+function encodeTeamForShare(team) {
+  try {
+    if (!team || !team.id) return '';
+    // Pick ONLY safe, public-facing fields
+    const safe = {
+      id:           team.id,
+      code:         team.code || '',
+      name:         team.name || '',
+      abbr:         team.abbr || '',
+      city:         team.city || '',
+      state:        team.state || '',
+      primaryColor: team.primaryColor || '#C9A84C',
+      accentColor:  team.accentColor  || '#0D0D0D',
+      coachName:    team.coachName || '',
+      // Sponsor flag is public (players need to know seats are being covered) but not the purchaser email
+      sponsorActive: !!(team.sponsor && team.sponsor.active)
+    };
+    const json = JSON.stringify(safe);
+    // btoa needs Latin-1; encodeURIComponent handles any UTF-8 team names first
+    return btoa(unescape(encodeURIComponent(json)));
+  } catch(e) {
+    try { console.warn('[MG] encodeTeamForShare failed:', e); } catch(_) {}
+    return '';
+  }
+}
+
+function decodeTeamFromShare(encoded) {
+  try {
+    if (!encoded) return null;
+    const json = decodeURIComponent(escape(atob(encoded)));
+    const obj = JSON.parse(json);
+    // Validate shape — must at least have id and name
+    if (!obj || typeof obj !== 'object' || !obj.id || !obj.name) return null;
+    return obj;
+  } catch(e) {
+    try { console.warn('[MG] decodeTeamFromShare failed:', e); } catch(_) {}
+    return null;
+  }
+}
+
+// If a shared team arrives via URL and we don't have it locally, materialize it into the registry
+// so findTeamById() will work. Preserves any existing local copy (don't overwrite sponsor roster etc).
+function ensureTeamInRegistry(safeTeam) {
+  try {
+    if (!safeTeam || !safeTeam.id) return null;
+    const registry = getTeamsRegistry();
+    const existing = registry.find(function(t) { return t.id === safeTeam.id; });
+    if (existing) return existing;  // Keep local version — it may have sponsor roster, etc.
+    // Create a minimal local record from the shared data.
+    // If the team is sponsored, set sponsor.active based on the flag in the URL, but roster stays empty
+    // (the join flow below will add this player). purchaserEmail is unknown to this device — that's fine,
+    // the coach's device is the source of truth for payment status.
+    const newTeam = {
+      id:            safeTeam.id,
+      code:          safeTeam.code || '',
+      name:          safeTeam.name,
+      abbr:          safeTeam.abbr || '',
+      city:          safeTeam.city || '',
+      state:         safeTeam.state || '',
+      primaryColor:  safeTeam.primaryColor || '#C9A84C',
+      accentColor:   safeTeam.accentColor  || '#0D0D0D',
+      coachName:     safeTeam.coachName || '',
+      coachEmail:    '',  // not shared via URL
+      createdAt:     Date.now(),
+      fromShareLink: true  // flag so we know this team's data came from a URL, not first-party creation
+    };
+    if (safeTeam.sponsorActive) {
+      newTeam.sponsor = { active: true, roster: [] };
+    }
+    registry.push(newTeam);
+    saveTeamsRegistry(registry);
+    return newTeam;
+  } catch(e) {
+    try { console.warn('[MG] ensureTeamInRegistry failed:', e); } catch(_) {}
+    return null;
+  }
 }
 
 // ─── VIEW STATE ──────────────────────────────────────────
@@ -7697,7 +7565,11 @@ function shareTeamInvite() {
   const id = getMyCoachedTeamId();
   const t  = id ? findTeamById(id) : null;
   if (!t) return;
-  const url = window.location.origin + window.location.pathname + '?joinTeam=' + encodeURIComponent(t.id);
+  // Encode team data into URL so players on different devices can resolve the team locally
+  const td = encodeTeamForShare(t);
+  const url = window.location.origin + window.location.pathname +
+              '?joinTeam=' + encodeURIComponent(t.id) +
+              (td ? '&td=' + encodeURIComponent(td) : '');
   const msg = 'Join our team on MY GRIND ⚾\n\n' +
               (t.name || '') + (t.city ? ' · ' + t.city : '') + '\n' +
               'Coach ' + (t.coachName || '') + '\n\n' +
@@ -7873,6 +7745,10 @@ function submitTeamCreate() {
 }
 
 // ─── AUTO-JOIN FROM SHARE LINK (?joinTeam=...) ───────────
+// Handles cross-device team joining. The share URL carries the team's public data
+// in the `td` param (base64-encoded JSON). If the recipient's localStorage has never
+// seen this team (different device than the coach), we materialize a local record
+// from the URL data before prompting to join.
 (function handleJoinLink() {
   try {
     const params = new URLSearchParams(window.location.search);
@@ -7880,8 +7756,25 @@ function submitTeamCreate() {
     if (!joinId) return;
     // Need to wait briefly for registry to be available
     setTimeout(function() {
-      const team = findTeamById(joinId);
-      if (!team) return;
+      let team = findTeamById(joinId);
+
+      // Not in local registry — try to materialize from URL-encoded team data
+      if (!team) {
+        const encoded = params.get('td');
+        const safeTeam = encoded ? decodeTeamFromShare(encoded) : null;
+        // Sanity check: URL's team ID must match the td data's ID, otherwise someone
+        // tampered with the link or it got truncated
+        if (safeTeam && safeTeam.id === joinId) {
+          team = ensureTeamInRegistry(safeTeam);
+        }
+      }
+
+      // Still no team? Old-format link from a different device — can't resolve, show friendly error
+      if (!team) {
+        try { console.warn('[MG] Join link could not be resolved. Team may need to be re-shared.'); } catch(e) {}
+        return;
+      }
+
       // Only prompt if they aren't already on this team
       const my = getMyTeam();
       if (my && my.id === joinId) return;
@@ -8178,7 +8071,10 @@ function sendSponsorInvite() {
     alert('Your roster is full — all 15 sponsored seats are in use.\n\nRemove a player first to free a seat, or run a Season-End Review.');
     return;
   }
-  const url = window.location.origin + window.location.pathname + '?joinTeam=' + encodeURIComponent(t.id) + '&sponsor=1';
+  const url = window.location.origin + window.location.pathname +
+              '?joinTeam=' + encodeURIComponent(t.id) +
+              '&sponsor=1' +
+              (encodeTeamForShare(t) ? '&td=' + encodeURIComponent(encodeTeamForShare(t)) : '');
   const msg = 'Join ' + (t.name || 'our team') + ' on MY GRIND ⚾\n\n' +
               'Coach ' + (t.coachName || '') + ' is sponsoring your full access — ' +
               'no payment needed on your end.\n\n' +
