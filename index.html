@@ -893,6 +893,45 @@ function dismissIosBanner() {
   <div class="header-date" id="headerDate"></div>
 </header>
 
+<!-- ── PARENT EMAIL PREVIEW MODAL ── -->
+<!-- Shown before opening the mail client so the player sees exactly what will be sent. -->
+<!-- They can edit the body inline or cancel if it looks wrong. Previously, tapping "Email This Week" -->
+<!-- jumped straight to the mail client with no preview — risky for a 14yo who wrote something personal. -->
+<div id="parent-email-preview-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.92); z-index:9998; align-items:center; justify-content:center; padding:20px; backdrop-filter:blur(8px);" onclick="closeParentEmailPreview(event)">
+  <div style="max-width:520px; width:100%; background:#181818; border:1px solid #272727; border-radius:4px; max-height:90vh; display:flex; flex-direction:column; overflow:hidden;" onclick="event.stopPropagation()">
+
+    <!-- Header -->
+    <div style="background:linear-gradient(135deg,#1A1500,#141400); border-bottom:1px solid #2A2200; padding:18px 22px;">
+      <div style="font-family:'Bebas Neue',cursive; font-size:22px; letter-spacing:2px; color:#F4F4F4; line-height:1;">📧 REVIEW YOUR <span style="color:#C9A84C;">EMAIL</span></div>
+      <div style="font-family:'Barlow Condensed',sans-serif; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:#777; margin-top:4px;">Edit if needed · Then open your mail app to send</div>
+    </div>
+
+    <!-- Scrollable body -->
+    <div style="padding:18px 22px; overflow-y:auto; flex:1;">
+      <div style="font-family:'Barlow Condensed',sans-serif; font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#555; margin-bottom:6px;">Subject</div>
+      <input type="text" id="parent-email-subject" style="width:100%; background:#111; border:1px solid #2E2E2E; color:#F4F4F4; font-family:'Barlow',sans-serif; font-size:14px; padding:10px 12px; border-radius:2px; outline:none; margin-bottom:14px; box-sizing:border-box;" onfocus="this.style.borderColor='#C9A84C'" onblur="this.style.borderColor='#2E2E2E'">
+
+      <div style="font-family:'Barlow Condensed',sans-serif; font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#555; margin-bottom:6px;">Message</div>
+      <textarea id="parent-email-body" rows="12" style="width:100%; background:#111; border:1px solid #2E2E2E; color:#F4F4F4; font-family:'Barlow',sans-serif; font-size:13px; line-height:1.6; padding:12px; border-radius:2px; outline:none; resize:vertical; box-sizing:border-box; min-height:200px;" onfocus="this.style.borderColor='#C9A84C'" onblur="this.style.borderColor='#2E2E2E'"></textarea>
+
+      <div style="font-family:'Barlow',sans-serif; font-size:11px; color:#555; line-height:1.5; margin-top:10px;">
+        ℹ️ When you tap <strong style="color:#F4F4F4;">Open Mail</strong>, your device's mail app will open with this already typed in. You still need to add your parents' email and hit send.
+      </div>
+    </div>
+
+    <!-- Footer buttons -->
+    <div style="border-top:1px solid #2A2200; padding:14px 22px; display:flex; gap:10px; background:#0E0E0E;">
+      <button onclick="closeParentEmailPreview()" style="flex:1; background:transparent; color:#999; font-family:'Barlow Condensed',sans-serif; font-size:12px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:12px; border:1px solid #2E2E2E; border-radius:2px; cursor:pointer;">
+        Cancel
+      </button>
+      <button onclick="confirmParentEmailSend()" style="flex:2; background:#C9A84C; color:#080808; font-family:'Barlow Condensed',sans-serif; font-size:12px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; padding:12px; border:none; border-radius:2px; cursor:pointer;" onmouseover="this.style.background='#E8C96A'" onmouseout="this.style.background='#C9A84C'">
+        📧 Open Mail App →
+      </button>
+    </div>
+
+  </div>
+</div>
+
 <!-- ── TRIAL COUNTDOWN BANNER ── -->
 <div id="trial-banner" style="display:none; background:linear-gradient(90deg,#1A1400,#1E1800,#1A1400); border-bottom:1px solid #3A2E00; padding:10px 24px; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; z-index:99; position:relative;">
   <div style="display:flex; align-items:center; gap:10px;">
@@ -901,9 +940,7 @@ function dismissIosBanner() {
       <span style="font-family:'Barlow Condensed',sans-serif; font-size:13px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:#F4F4F4;">Free Trial — </span>
       <span style="font-family:'Bebas Neue',cursive; font-size:20px; color:#C9A84C;" id="trial-days-count">7</span>
       <span style="font-family:'Barlow Condensed',sans-serif; font-size:13px; color:#C9A84C;" id="trial-days-word"> days</span>
-      <span style="font-family:'Barlow Condensed',sans-serif; font-size:13px; color:#777;"> remaining · </span>
-      <span style="font-family:'Barlow Condensed',sans-serif; font-size:12px; color:#555;" id="trial-banner-email"></span>
-      <span style="font-family:'Barlow Condensed',sans-serif; font-size:11px; color:#333;"> 🔒 locked</span>
+      <span style="font-family:'Barlow Condensed',sans-serif; font-size:13px; color:#777;"> remaining</span>
     </div>
   </div>
   <div style="display:flex; gap:8px; flex-wrap:wrap;">
@@ -1284,7 +1321,7 @@ function dismissIosBanner() {
             <div style="position:absolute; top:-10px; left:50%; transform:translateX(-50%); background:#C9A84C; color:#080808; font-family:'Barlow Condensed',sans-serif; font-size:10px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; padding:3px 10px; border-radius:1px; white-space:nowrap;">Best Value</div>
             <div style="font-family:'Barlow Condensed',sans-serif; font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#C9A84C; margin-bottom:6px;">Annual</div>
             <div style="font-family:'Bebas Neue',cursive; font-size:36px; color:#C9A84C; line-height:1;">$29.99</div>
-            <div style="font-family:'Barlow',sans-serif; font-size:11px; color:#555; margin-bottom:12px;">per year · save $6</div>
+            <div style="font-family:'Barlow',sans-serif; font-size:11px; color:#555; margin-bottom:12px;">per year · 2 months free</div>
             <button onclick="goToPurchase('annual')" style="width:100%; background:#C9A84C; color:#080808; font-family:'Barlow Condensed',sans-serif; font-size:12px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; padding:9px; border:none; border-radius:2px; cursor:pointer;" onmouseover="this.style.background='#E8C96A'" onmouseout="this.style.background='#C9A84C'">⚾ Get Annual →</button>
           </div>
         </div>
@@ -1405,12 +1442,26 @@ function dismissIosBanner() {
           <div style="position:absolute; top:-10px; left:50%; transform:translateX(-50%); background:#C9A84C; color:#080808; font-family:'Barlow Condensed',sans-serif; font-size:10px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; padding:3px 10px; border-radius:1px; white-space:nowrap;">Best Value</div>
           <div style="font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#777; margin-bottom:8px;">Annual</div>
           <div style="font-family:'Bebas Neue',cursive; font-size:44px; color:#C9A84C; line-height:1;">$29<span style="font-size:22px;">.99</span></div>
-          <div style="font-family:'Barlow Condensed',sans-serif; font-size:11px; color:#555; margin-bottom:14px;">per year · save $6</div>
+          <div style="font-family:'Barlow Condensed',sans-serif; font-size:11px; color:#555; margin-bottom:14px;">per year · 2 months free</div>
           <button onclick="goToPurchase('annual')" style="width:100%; background:#C9A84C; color:#080808; font-family:'Barlow Condensed',sans-serif; font-size:12px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; padding:10px; border:none; border-radius:2px; cursor:pointer;" onmouseover="this.style.background='#E8C96A'" onmouseout="this.style.background='#C9A84C'">
             ⚾ Get Annual →
           </button>
         </div>
 
+      </div>
+
+      <!-- Coach/team alternative — for users whose trial expired but who coach a team. -->
+      <!-- Without this, a coach who lets their trial lapse has no path to buy Team Sponsor without re-registering. -->
+      <div style="margin:14px 0 18px; background:rgba(201,168,76,0.04); border:1px solid #2A2200; border-radius:3px; padding:14px 16px;">
+        <div style="font-family:'Barlow Condensed',sans-serif; font-size:10px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; color:#C9A84C; margin-bottom:6px;">
+          🏆 Coaching a Team?
+        </div>
+        <div style="font-family:'Barlow',sans-serif; font-size:12px; color:#BBBBBB; line-height:1.6; margin-bottom:10px;">
+          Cover up to <strong style="color:#E8C96A;">15 players</strong> for <strong style="color:#E8C96A;">$300/year</strong> with Team Sponsor — about $20 per seat.
+        </div>
+        <button onclick="goToTeamSponsorFromExpired()" style="width:100%; background:transparent; color:#C9A84C; font-family:'Barlow Condensed',sans-serif; font-size:12px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; padding:10px; border:1px solid #C9A84C; border-radius:2px; cursor:pointer;" onmouseover="this.style.background='rgba(201,168,76,0.1)'" onmouseout="this.style.background='transparent'">
+          🏆 &nbsp;View Team Sponsor →
+        </button>
       </div>
 
       <div style="text-align:center; font-family:'Barlow Condensed',sans-serif; font-size:12px; letter-spacing:1px; color:#444; line-height:1.8;">
@@ -1693,6 +1744,14 @@ function dismissIosBanner() {
 
           <!-- BATTING GAME STATS -->
           <div style="font-family:'Barlow Condensed'; font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--grey); margin-bottom:8px;">Batting</div>
+
+          <!-- Sanity warning — shows only when inputs are mathematically impossible (H>AB, K>AB, etc) -->
+          <div id="gs-sanity-warning" style="display:none; background:rgba(230,126,34,0.08); border:1px solid #A8601A; border-radius:3px; padding:10px 12px; margin-bottom:10px;">
+            <div style="display:flex; align-items:flex-start; gap:8px;">
+              <span style="font-size:14px; flex-shrink:0; line-height:1.5;">⚠️</span>
+              <div id="gs-sanity-msg" style="font-family:'Barlow'; font-size:12px; color:#E67E22; line-height:1.5;"></div>
+            </div>
+          </div>
           <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:6px; margin-bottom:14px;">
             <div>
               <label style="font-size:10px; letter-spacing:1px;">AB</label>
@@ -2203,7 +2262,7 @@ function dismissIosBanner() {
         </div>
         <div style="background:rgba(201,168,76,0.04); border:1px solid #1E1A00; border-radius:2px; padding:12px 14px;">
           <div style="font-family:'Barlow'; font-size:12px; color:var(--grey); line-height:1.7;">
-            <strong style="color:var(--light);">Cancel anytime</strong> — no penalties, no fees. If you cancel during your billing period you keep access until the end of that period. Questions? Email <a href="mailto:coach@youngsbaseball.com" style="color:var(--gold); word-break:break-all;">coach@youngsbaseball.com</a>
+            <strong style="color:var(--light);">Cancel anytime</strong> — no penalties, no fees. If you cancel during your billing period you keep access until the end of that period. Questions? <a href="#" onclick="event.preventDefault(); scrollToContactCard();" style="color:var(--gold);">Contact us →</a>
           </div>
         </div>
       </div>
@@ -3125,9 +3184,49 @@ function dismissIosBanner() {
         <a href="https://billing.stripe.com/p/login/aFa6oJ7LY2Vv0umeDn4gg00" target="_blank" style="flex:1; display:flex; align-items:center; justify-content:center; background:var(--card2); border:1px solid var(--border); color:var(--light); font-family:'Barlow Condensed'; font-size:12px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:12px 8px; border-radius:2px; text-decoration:none;">
           💳 Manage Billing
         </a>
-        <a href="mailto:coach@youngsbaseball.com?subject=Cancel%20My%20Subscription" style="flex:1; display:flex; align-items:center; justify-content:center; background:var(--card2); border:1px solid var(--border); color:var(--light); font-family:'Barlow Condensed'; font-size:12px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:12px 8px; border-radius:2px; text-decoration:none;">
-          ✉️ Email Support
+        <button onclick="scrollToContactCard()" style="flex:1; display:flex; align-items:center; justify-content:center; background:var(--card2); border:1px solid var(--border); color:var(--light); font-family:'Barlow Condensed'; font-size:12px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:12px 8px; border-radius:2px; cursor:pointer;">
+          💬 Get Support
+        </button>
+      </div>
+    </div>
+
+    <!-- ── CONTACT US — central hub for all contact channels ── -->
+    <!-- Previously, contact info was scattered across multiple cards and screens. -->
+    <!-- This card is the single source of truth inside the app. -->
+    <div class="card" id="contact-us-card" style="margin-bottom:16px; border-left:3px solid var(--gold);">
+      <div class="card-title">💬 Contact Us</div>
+      <div style="font-family:'Barlow'; font-size:13px; color:var(--grey); line-height:1.7; margin-bottom:14px;">
+        Questions, feedback, bug reports, or need help with your account? Coach Young responds personally to every message.
+      </div>
+
+      <!-- Primary email -->
+      <div style="background:var(--card2); border:1px solid var(--border); border-radius:3px; padding:14px; margin-bottom:10px;">
+        <div style="font-family:'Barlow Condensed',sans-serif; font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--grey); margin-bottom:6px;">📧 Email</div>
+        <a href="mailto:coach@youngsbaseball.com" style="font-family:'Barlow',sans-serif; font-size:14px; color:var(--gold); text-decoration:none; word-break:break-all;">coach@youngsbaseball.com</a>
+      </div>
+
+      <!-- Common topics — quick-link emails with pre-filled subject -->
+      <div style="font-family:'Barlow Condensed',sans-serif; font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--grey); margin:14px 0 8px;">Common Topics</div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:10px;">
+        <a href="mailto:coach@youngsbaseball.com?subject=My%20Grind%20%E2%80%94%20Bug%20Report&body=Describe%20the%20issue%3A%0A%0AWhat%20device%20and%20browser%3A%0A%0AWhat%20were%20you%20trying%20to%20do%3A" style="display:flex; align-items:center; justify-content:center; background:var(--card2); border:1px solid var(--border); color:var(--light); font-family:'Barlow Condensed'; font-size:11px; font-weight:700; letter-spacing:1px; text-transform:uppercase; padding:10px 6px; border-radius:2px; text-decoration:none; text-align:center;">
+          🐛 Bug Report
         </a>
+        <a href="mailto:coach@youngsbaseball.com?subject=My%20Grind%20%E2%80%94%20Feature%20Request&body=What%20feature%20would%20help%20you%3A%0A%0AWhy%20would%20it%20help%3A" style="display:flex; align-items:center; justify-content:center; background:var(--card2); border:1px solid var(--border); color:var(--light); font-family:'Barlow Condensed'; font-size:11px; font-weight:700; letter-spacing:1px; text-transform:uppercase; padding:10px 6px; border-radius:2px; text-decoration:none; text-align:center;">
+          💡 Feature Idea
+        </a>
+        <a href="mailto:coach@youngsbaseball.com?subject=My%20Grind%20%E2%80%94%20Billing%20Question" style="display:flex; align-items:center; justify-content:center; background:var(--card2); border:1px solid var(--border); color:var(--light); font-family:'Barlow Condensed'; font-size:11px; font-weight:700; letter-spacing:1px; text-transform:uppercase; padding:10px 6px; border-radius:2px; text-decoration:none; text-align:center;">
+          💳 Billing
+        </a>
+        <a href="mailto:coach@youngsbaseball.com?subject=My%20Grind%20%E2%80%94%20Coaching%20Question" style="display:flex; align-items:center; justify-content:center; background:var(--card2); border:1px solid var(--border); color:var(--light); font-family:'Barlow Condensed'; font-size:11px; font-weight:700; letter-spacing:1px; text-transform:uppercase; padding:10px 6px; border-radius:2px; text-decoration:none; text-align:center;">
+          ⚾ Coaching
+        </a>
+      </div>
+
+      <!-- Website + response time -->
+      <div style="background:rgba(201,168,76,0.05); border:1px solid rgba(201,168,76,0.2); border-radius:3px; padding:12px 14px; font-family:'Barlow',sans-serif; font-size:12px; color:var(--grey); line-height:1.6;">
+        🌐 <strong style="color:var(--light);">Website:</strong> <a href="https://youngsbaseball.com" target="_blank" rel="noopener" style="color:var(--gold); text-decoration:none;">youngsbaseball.com</a><br>
+        ⏱️ <strong style="color:var(--light);">Response time:</strong> Usually within 24 hours<br>
+        📍 <strong style="color:var(--light);">Based in:</strong> Santa Clarita Valley, California
       </div>
     </div>
 
@@ -3144,7 +3243,9 @@ function dismissIosBanner() {
 <div id="social-share-footer" style="background:#080804; border-top:1px solid #1A1800; padding:24px; text-align:center; position:relative; z-index:1;">
   <div style="max-width:480px; margin:0 auto;">
     <div style="font-family:'Barlow Condensed',sans-serif; font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#333; margin-bottom:10px;">© 2026 My Grind · All Rights Reserved</div>
-    <div style="font-family:'Barlow',sans-serif; font-size:11px; color:#2A2800;">coach@youngsbaseball.com</div>
+    <div style="font-family:'Barlow Condensed',sans-serif; font-size:10px; letter-spacing:1.5px; text-transform:uppercase;">
+      <a href="#" onclick="event.preventDefault(); scrollToContactCard();" style="color:#2A2800; text-decoration:none;">Need help? Contact Us →</a>
+    </div>
   </div>
 </div>
 <script>
@@ -3716,8 +3817,6 @@ function showTrialBanner() {
   const banner = document.getElementById('trial-banner');
   if (!banner) return;
   banner.style.display = 'flex';
-  const emailEl = document.getElementById('trial-banner-email');
-  if (emailEl && state.email) emailEl.textContent = state.email;
 
   // Paint immediately
   _paintTrialCountdown();
@@ -4030,6 +4129,57 @@ function scrollToSponsorCard() {
   if (sponsorBtn) {
     sponsorBtn.closest('div[style*="border:2px solid #C9A84C"]')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
+}
+
+// Fast-path for expired-trial users who want to buy Team Sponsor.
+// The welcome-screen flow requires a policy-acknowledgment checkbox, but the expired
+// screen has no such UI — and forcing them back to the welcome screen just to re-do
+// signup creates friction. Instead we show the policy inline via confirm() and route
+// them straight to Stripe.
+function goToTeamSponsorFromExpired() {
+  const ok = confirm(
+    '🏆 TEAM SPONSOR — $300/year\n\n' +
+    'Covers up to 15 player seats for 12 months. Auto-renews annually.\n\n' +
+    'Important:\n' +
+    '• $300 is non-refundable\n' +
+    '• Removed players get 7 days of read-only grace before access ends\n' +
+    '• Existing paid players who join your team keep their own plan\n\n' +
+    'Continue to Stripe checkout?'
+  );
+  if (!ok) return;
+
+  const saved = getAccessState();
+  const email = saved.purchaserEmail || saved.email || '';
+  const url = email
+    ? STRIPE_TEAM_SPONSOR_URL + '?prefilled_email=' + encodeURIComponent(email)
+    : STRIPE_TEAM_SPONSOR_URL;
+  window.open(url, '_blank');
+}
+
+// Navigate the user to the Contact Us card in Settings.
+// If they're on another tab, switch to Settings first, then scroll.
+// This is the single entry point — any "Need help?" or "Contact us" link anywhere
+// in the main app routes through here instead of opening a mailto directly.
+function scrollToContactCard() {
+  const card = document.getElementById('contact-us-card');
+  const settingsPanel = document.getElementById('panel-settings');
+  // If Settings is not the active panel, switch to it first
+  if (settingsPanel && !settingsPanel.classList.contains('active') && typeof showPanel === 'function') {
+    showPanel('settings');
+  }
+  // Delay scroll slightly so the panel-switch transition finishes
+  setTimeout(function() {
+    if (card && card.scrollIntoView) {
+      try { card.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch(e) { card.scrollIntoView(); }
+      // Brief highlight pulse so the user can see where they landed
+      const originalBorder = card.style.borderLeft;
+      card.style.transition = 'box-shadow 0.4s ease';
+      card.style.boxShadow = '0 0 0 2px rgba(201,168,76,0.4)';
+      setTimeout(function() {
+        card.style.boxShadow = '';
+      }, 1400);
+    }
+  }, 120);
 }
 
 // Sequential Stripe checkout flow for gift-mode multi-player purchases.
@@ -5037,6 +5187,8 @@ function calcGameStats() {
   const h   = parseInt(document.getElementById('gs-h').value)   || 0;
   const hr  = parseInt(document.getElementById('gs-hr').value)  || 0;
   const bb  = parseInt(document.getElementById('gs-bb').value)  || 0;
+  const k   = parseInt(document.getElementById('gs-k')?.value)  || 0;
+  const rbi = parseInt(document.getElementById('gs-rbi')?.value) || 0;
   const tb  = h + (hr * 2);
   const pa  = ab + bb;
 
@@ -5053,6 +5205,27 @@ function calcGameStats() {
   if (dispObp) dispObp.textContent = obp || '---';
   if (dispSlg) dispSlg.textContent = slg || '---';
   if (dispBox) dispBox.style.display = ab > 0 ? 'block' : 'none';
+
+  // ── SANITY CHECK ──
+  // Catch mathematically impossible entries. Don't block save — just warn the player
+  // so they can fix typos (5 hits in 3 at-bats, etc.) before the bad data poisons their season totals.
+  const issues = [];
+  if (h > ab)       issues.push('Hits (' + h + ') can\'t be more than At-Bats (' + ab + ')');
+  if (hr > h)       issues.push('Home Runs (' + hr + ') can\'t be more than Hits (' + h + ')');
+  if (k > ab)       issues.push('Strikeouts (' + k + ') can\'t be more than At-Bats (' + ab + ')');
+  // RBI can exceed H in theory (grand slam with bases loaded from walks = 4 RBI on 1 hit),
+  // so no check on RBI vs H.
+
+  const warnEl = document.getElementById('gs-sanity-warning');
+  const msgEl  = document.getElementById('gs-sanity-msg');
+  if (warnEl && msgEl) {
+    if (issues.length > 0) {
+      msgEl.innerHTML = '<strong>Check your numbers:</strong><br>' + issues.map(function(i) { return '• ' + i; }).join('<br>');
+      warnEl.style.display = 'block';
+    } else {
+      warnEl.style.display = 'none';
+    }
+  }
 }
 
 function pullSeasonStats() {
@@ -7039,6 +7212,11 @@ function shareWeeklyRecap() {
 }
 
 // ─── PARENT EMAIL (weekly highlights) ────────────────────
+// ─── PARENT EMAIL RECAP — NOW WITH PREVIEW MODAL ────────
+// Flow: sendParentRecap → opens preview modal → user reviews/edits → confirmParentEmailSend → mail client opens
+// The preview is important: a player may have written something personal in their journal,
+// and the recap inlines their reflections. Showing the composed email first lets them edit
+// or cancel before their mail app opens.
 function sendParentRecap() {
   const recap = buildWeeklyRecap();
   const profile = (function() {
@@ -7048,14 +7226,39 @@ function sendParentRecap() {
   const name = profile.firstName || profile.name || 'your player';
   const subject = "My Grind — " + name + "'s Week";
 
-  // Build email body
   let body = "Hi Mom / Dad,\n\n";
   body += "Here's my week on My Grind ⚾\n\n";
   body += recap.plain;
   body += "\n\nLet me know if you want to talk about anything in my journal.\n\n— " + name;
 
-  // Use a hidden anchor to open mailto — doesn't navigate the current window
-  // This keeps the app state intact and the user can easily come back
+  // Populate the preview modal with the composed email, then show it
+  const subjEl = document.getElementById('parent-email-subject');
+  const bodyEl = document.getElementById('parent-email-body');
+  const modal  = document.getElementById('parent-email-preview-modal');
+  if (subjEl) subjEl.value = subject;
+  if (bodyEl) bodyEl.value = body;
+  if (modal)  modal.style.display = 'flex';
+}
+
+// Close the preview modal. Called from:
+//   - Cancel button
+//   - Clicking the modal backdrop (event.target === the overlay div)
+//   - Programmatically after send (event === undefined)
+function closeParentEmailPreview(event) {
+  // If called from backdrop click, only close when the click was on the backdrop itself
+  if (event && event.currentTarget && event.target !== event.currentTarget) return;
+  const modal = document.getElementById('parent-email-preview-modal');
+  if (modal) modal.style.display = 'none';
+}
+
+// Called when the user confirms the preview. Reads the (possibly edited) subject + body
+// and opens the mail client via a hidden anchor so the app state stays intact.
+function confirmParentEmailSend() {
+  const subjEl = document.getElementById('parent-email-subject');
+  const bodyEl = document.getElementById('parent-email-body');
+  const subject = (subjEl && subjEl.value) || "My Grind — My Week";
+  const body    = (bodyEl && bodyEl.value) || '';
+
   try {
     const a = document.createElement('a');
     a.href = 'mailto:?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
@@ -7069,9 +7272,11 @@ function sendParentRecap() {
       showShareToast('📧 Email opened — come back when you\'ve sent it!');
     }
   } catch(err) {
-    // Fallback
     window.location.href = 'mailto:?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
   }
+
+  // Close the preview modal now that the mail client is handing off
+  closeParentEmailPreview();
 }
 
 // ─── PDF / HTML EXPORT OF JOURNAL ────────────────────────
