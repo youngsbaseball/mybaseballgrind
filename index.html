@@ -85,9 +85,6 @@
 
   /* Standalone (installed) mode tweaks */
   @media (display-mode: standalone) {
-    .app-header {
-      padding-top: calc(20px + env(safe-area-inset-top, 0px));
-    }
     #install-banner, #ios-install-banner { display: none !important; }
   }
 
@@ -116,10 +113,14 @@
     backdrop-filter: blur(10px);
     border-bottom: 1px solid var(--border);
     padding: 0 24px;
+    /* Top safe-area inset handles the iPhone notch in Safari and the Claude preview top-bar */
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-left: calc(24px + env(safe-area-inset-left, 0px));
+    padding-right: calc(24px + env(safe-area-inset-right, 0px));
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 64px;
+    min-height: 64px;
   }
 
   .logo {
@@ -197,7 +198,8 @@
     z-index: 1;
     max-width: 1100px;
     margin: 0 auto;
-    padding: 32px 24px 80px;
+    /* Extra bottom padding so last card clears iPhone home indicator + browser chrome + Claude preview bottom bar */
+    padding: 24px 24px calc(100px + env(safe-area-inset-bottom, 0px));
   }
 
   /* ── PANEL ── */
@@ -1879,93 +1881,38 @@ function dismissIosBanner() {
       <div class="gold-line"></div>
     </div>
 
-    <!-- ═══ ACADEMICS FIRST — Grades lead the Profile page ══════════════ -->
-    <!-- Positioned at the TOP intentionally: "No Grades · No Baseball" is the foundational rule. -->
-    <div class="card" style="margin-bottom:16px; background:linear-gradient(135deg,#141A14,#101410); border:2px solid #5A8A3A; box-shadow:0 0 0 1px rgba(168,217,123,0.08);">
-      <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px; flex-wrap:wrap;">
-        <span style="background:#5A8A3A; color:#F4F4F4; font-family:'Barlow Condensed'; font-size:10px; font-weight:800; letter-spacing:2px; text-transform:uppercase; padding:3px 9px; border-radius:2px;">Priority #1</span>
-        <div class="card-title" style="color:#A8D97B; margin:0;">📚 Academics — No Grades · No Baseball</div>
-      </div>
-
-      <div style="background:rgba(168,217,123,0.06); border:1px solid #1A3A1A; border-radius:2px; padding:12px 14px; margin-bottom:16px; font-size:13px; color:var(--light); line-height:1.7;">
-        "Pull every grade right now. If anything is slipping, handle it today — not next week."
-      </div>
-
-      <!-- GPA row -->
-      <div class="grid-2" style="margin-bottom:18px;">
-        <div style="text-align:center; padding:14px 10px; background:var(--card2); border-radius:3px; border-top:2px solid #2A3A2A;">
-          <div class="gpa-num" id="gpa-display" style="font-size:38px;">—</div>
-          <div class="gpa-label" style="margin-top:4px;">Current GPA · Target: <span id="gpa-target-display">—</span></div>
-        </div>
-        <div>
-          <label>My GPA</label>
-          <input type="number" id="gpa-current" step="0.1" min="0" max="4.0" placeholder="e.g. 3.2">
-          <label>Target GPA</label>
-          <input type="number" id="gpa-target" step="0.1" min="0" max="4.0" placeholder="e.g. 3.5">
-          <button class="btn btn-gold btn-sm" onclick="saveGPA()" style="margin-top:4px;">Save GPA</button>
-        </div>
-      </div>
-
-      <!-- Subject grades -->
-      <div style="font-family:'Barlow Condensed'; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#A8D97B; margin-bottom:10px;">📖 Monthly Grade Check</div>
-      <div id="grade-checks">
-        <div class="grade-row">
-          <div class="grade-label">English / Language Arts</div>
-          <select class="subject-grade" style="width:80px; margin-bottom:0;" onchange="renderGrades()"><option>A</option><option>B</option><option>C</option><option>D</option><option>F</option></select>
-        </div>
-        <div class="grade-row">
-          <div class="grade-label">Math</div>
-          <select class="subject-grade" style="width:80px; margin-bottom:0;" onchange="renderGrades()"><option>A</option><option>B</option><option>C</option><option>D</option><option>F</option></select>
-        </div>
-        <div class="grade-row">
-          <div class="grade-label">Science</div>
-          <select class="subject-grade" style="width:80px; margin-bottom:0;" onchange="renderGrades()"><option>A</option><option>B</option><option>C</option><option>D</option><option>F</option></select>
-        </div>
-        <div class="grade-row">
-          <div class="grade-label">History / Social Studies</div>
-          <select class="subject-grade" style="width:80px; margin-bottom:0;" onchange="renderGrades()"><option>A</option><option>B</option><option>C</option><option>D</option><option>F</option></select>
-        </div>
-        <div class="grade-row">
-          <div class="grade-label">Elective / PE</div>
-          <select class="subject-grade" style="width:80px; margin-bottom:0;" onchange="renderGrades()"><option>A</option><option>B</option><option>C</option><option>D</option><option>F</option></select>
-        </div>
-      </div>
-    </div>
-
-    <!-- ── PLAYER INFO ── -->
+    <!-- ═══ 1) PLAYER HERO CARD — photo + name + position display ═══════ -->
+    <!-- The very first thing a player sees. No form fields here — just identity. -->
     <div class="card" style="margin-bottom:16px;">
-      <div class="card-title">👤 About Me</div>
-
-      <!-- PROFILE PICTURE -->
-      <div style="display:flex; align-items:center; gap:20px; margin-bottom:20px; padding-bottom:20px; border-bottom:1px solid var(--border);">
+      <div style="display:flex; align-items:center; gap:20px;">
         <!-- Avatar Circle -->
         <div style="position:relative; flex-shrink:0;">
           <div id="profile-avatar" style="
-            width:90px; height:90px; border-radius:50%;
+            width:100px; height:100px; border-radius:50%;
             background:var(--card2); border:2px solid var(--gold-dark);
             display:flex; align-items:center; justify-content:center;
             overflow:hidden; cursor:pointer;
           " onclick="document.getElementById('profile-pic-input').click()">
             <img id="profile-pic-img" src="" alt="" style="width:100%; height:100%; object-fit:cover; display:none;">
             <div id="profile-pic-placeholder" style="text-align:center;">
-              <div style="font-size:28px; line-height:1;">⚾</div>
+              <div style="font-size:32px; line-height:1;">⚾</div>
               <div style="font-family:'Barlow Condensed'; font-size:9px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--grey); margin-top:4px;">Add Photo</div>
             </div>
           </div>
           <!-- Edit badge -->
           <div onclick="document.getElementById('profile-pic-input').click()" style="
             position:absolute; bottom:0; right:0;
-            width:26px; height:26px; border-radius:50%;
+            width:28px; height:28px; border-radius:50%;
             background:var(--gold); border:2px solid var(--dark);
             display:flex; align-items:center; justify-content:center;
-            cursor:pointer; font-size:12px;
+            cursor:pointer; font-size:13px;
           ">✏️</div>
           <input type="file" id="profile-pic-input" accept="image/*" style="display:none;" onchange="handleProfilePic(event)">
         </div>
-        <!-- Name preview & upload prompt -->
+        <!-- Name + position display -->
         <div style="flex:1; min-width:0;">
-          <div id="profile-name-display" style="font-family:'Bebas Neue'; font-size:26px; letter-spacing:2px; color:var(--white); line-height:1; margin-bottom:4px;">—</div>
-          <div id="profile-pos-display" style="font-family:'Barlow Condensed'; font-size:12px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--grey); margin-bottom:10px;">Position · Team</div>
+          <div id="profile-name-display" style="font-family:'Bebas Neue'; font-size:30px; letter-spacing:2px; color:var(--white); line-height:1; margin-bottom:6px;">—</div>
+          <div id="profile-pos-display" style="font-family:'Barlow Condensed'; font-size:12px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--grey); margin-bottom:12px;">Position · Team</div>
           <div style="display:flex; gap:8px; flex-wrap:wrap;">
             <button onclick="document.getElementById('profile-pic-input').click()" style="background:transparent; border:1px solid var(--border); color:var(--grey); font-family:'Barlow Condensed'; font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:6px 12px; border-radius:2px; cursor:pointer;">
               📸 Upload Photo
@@ -1976,51 +1923,17 @@ function dismissIosBanner() {
           </div>
         </div>
       </div>
-
-      <div class="form-row">
-        <div>
-          <label>My Name</label>
-          <input type="text" id="pl-name" placeholder="First Last" oninput="saveProfile()">
-        </div>
-        <div>
-          <label>My Position(s) <span style="font-weight:400; color:var(--grey); font-size:11px;">(select all that apply)</span></label>
-          <div id="pl-pos-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-top:6px;">
-            <label style="display:flex; align-items:center; gap:8px; background:var(--card2); border:1px solid var(--border); border-radius:2px; padding:8px 10px; cursor:pointer;">
-              <input type="checkbox" value="P"  onchange="savePositions()" style="accent-color:var(--gold); width:16px; height:16px;"> <span style="font-size:13px;">Pitcher</span>
-            </label>
-            <label style="display:flex; align-items:center; gap:8px; background:var(--card2); border:1px solid var(--border); border-radius:2px; padding:8px 10px; cursor:pointer;">
-              <input type="checkbox" value="C"  onchange="savePositions()" style="accent-color:var(--gold); width:16px; height:16px;"> <span style="font-size:13px;">Catcher</span>
-            </label>
-            <label style="display:flex; align-items:center; gap:8px; background:var(--card2); border:1px solid var(--border); border-radius:2px; padding:8px 10px; cursor:pointer;">
-              <input type="checkbox" value="1B" onchange="savePositions()" style="accent-color:var(--gold); width:16px; height:16px;"> <span style="font-size:13px;">First Base</span>
-            </label>
-            <label style="display:flex; align-items:center; gap:8px; background:var(--card2); border:1px solid var(--border); border-radius:2px; padding:8px 10px; cursor:pointer;">
-              <input type="checkbox" value="2B" onchange="savePositions()" style="accent-color:var(--gold); width:16px; height:16px;"> <span style="font-size:13px;">Second Base</span>
-            </label>
-            <label style="display:flex; align-items:center; gap:8px; background:var(--card2); border:1px solid var(--border); border-radius:2px; padding:8px 10px; cursor:pointer;">
-              <input type="checkbox" value="3B" onchange="savePositions()" style="accent-color:var(--gold); width:16px; height:16px;"> <span style="font-size:13px;">Third Base</span>
-            </label>
-            <label style="display:flex; align-items:center; gap:8px; background:var(--card2); border:1px solid var(--border); border-radius:2px; padding:8px 10px; cursor:pointer;">
-              <input type="checkbox" value="SS" onchange="savePositions()" style="accent-color:var(--gold); width:16px; height:16px;"> <span style="font-size:13px;">Shortstop</span>
-            </label>
-            <label style="display:flex; align-items:center; gap:8px; background:var(--card2); border:1px solid var(--border); border-radius:2px; padding:8px 10px; cursor:pointer;">
-              <input type="checkbox" value="LF" onchange="savePositions()" style="accent-color:var(--gold); width:16px; height:16px;"> <span style="font-size:13px;">Left Field</span>
-            </label>
-            <label style="display:flex; align-items:center; gap:8px; background:var(--card2); border:1px solid var(--border); border-radius:2px; padding:8px 10px; cursor:pointer;">
-              <input type="checkbox" value="CF" onchange="savePositions()" style="accent-color:var(--gold); width:16px; height:16px;"> <span style="font-size:13px;">Center Field</span>
-            </label>
-            <label style="display:flex; align-items:center; gap:8px; background:var(--card2); border:1px solid var(--border); border-radius:2px; padding:8px 10px; cursor:pointer;">
-              <input type="checkbox" value="RF" onchange="savePositions()" style="accent-color:var(--gold); width:16px; height:16px;"> <span style="font-size:13px;">Right Field</span>
-            </label>
-            <label style="display:flex; align-items:center; gap:8px; background:var(--card2); border:1px solid var(--border); border-radius:2px; padding:8px 10px; cursor:pointer;">
-              <input type="checkbox" value="DH" onchange="savePositions()" style="accent-color:var(--gold); width:16px; height:16px;"> <span style="font-size:13px;">DH</span>
-            </label>
-          </div>
-          <!-- Hidden field to store combined value for saveProfile() -->
-          <input type="hidden" id="pl-pos">
-          <div id="pl-pos-display" style="font-family:'Barlow Condensed'; font-size:12px; letter-spacing:1px; color:var(--gold); margin-top:8px; min-height:18px;"></div>
-        </div>
+      <!-- Name input below the hero, since the display above shows whatever they type here -->
+      <div style="margin-top:18px; padding-top:18px; border-top:1px solid var(--border);">
+        <label>My Name</label>
+        <input type="text" id="pl-name" placeholder="First Last" oninput="saveProfile()">
       </div>
+    </div>
+
+    <!-- ═══ 2) BASICS — Age, Grade, High School ═══════════════════════════ -->
+    <!-- Surfaced above Academics so a coach/recruiter sees WHO the player is immediately. -->
+    <div class="card" style="margin-bottom:16px;">
+      <div class="card-title">🎒 The Basics</div>
       <div class="form-row">
         <div>
           <label>My Age</label>
@@ -2042,49 +1955,12 @@ function dismissIosBanner() {
           </select>
         </div>
       </div>
-      <div class="form-row">
-        <div>
-          <label>My School / Team</label>
-          <input type="text" id="pl-school" placeholder="e.g. Canyon High School" oninput="saveProfile()">
-        </div>
-        <div>
-          <label>Bats / Throws</label>
-          <select id="pl-bats" onchange="saveProfile()">
-            <option value="">-- Select --</option>
-            <option value="R/R">Right / Right</option>
-            <option value="L/L">Left / Left</option>
-            <option value="L/R">Left / Right (Switch)</option>
-            <option value="S/R">Switch / Right</option>
-          </select>
-        </div>
-      </div>
-      <div class="form-row">
-        <div>
-          <label>My GPA</label>
-          <input type="number" id="pl-gpa" placeholder="e.g. 3.2" step="0.1" min="0" max="4.0" oninput="saveProfile()">
-        </div>
-        <div>
-          <label>Current Season</label>
-          <input type="text" id="pl-season" placeholder="e.g. Spring 2026" oninput="saveProfile()">
-        </div>
-      </div>
-      <div class="form-row">
-        <div>
-          <label>60-Yard Dash Time</label>
-          <input type="text" id="pl-sixty" placeholder="e.g. 6.8" oninput="saveProfile()" style="font-family:'Bebas Neue'; font-size:22px; letter-spacing:2px; text-align:center;">
-          <div style="font-family:'Barlow'; font-size:11px; color:var(--grey); margin-top:4px;">Seconds — update each time you get timed</div>
-        </div>
-        <div>
-          <label>Velocity / Arm Speed</label>
-          <input type="text" id="pl-velo" placeholder="e.g. 78 mph" oninput="saveProfile()" style="font-family:'Bebas Neue'; font-size:22px; letter-spacing:2px; text-align:center;">
-          <div style="font-family:'Barlow'; font-size:11px; color:var(--grey); margin-top:4px;">MPH — fastball or throw velocity</div>
-        </div>
-      </div>
-      <label>My Goals & Notes</label>
-      <textarea id="pl-bio" placeholder="Strengths, goals, areas to improve, coach notes..." oninput="saveProfile()"></textarea>
+      <label>My High School / Team</label>
+      <input type="text" id="pl-school" placeholder="e.g. Canyon High School" oninput="saveProfile()">
     </div>
 
-    <!-- ── HEIGHT & WEIGHT TRACKER ── -->
+    <!-- ═══ 3) PHYSICAL — Height & Weight tracker ═══════════════════════════ -->
+    <!-- Placed next to the identity cluster (photo, name, basics) — physical development IS identity. -->
     <div class="card" style="margin-bottom:16px; background:linear-gradient(135deg,#141A14,#101410); border-color:#2A3A2A;">
       <div class="card-title" style="color:#27AE60;">📏 My Height & Weight — Physical Development</div>
 
@@ -2171,6 +2047,133 @@ function dismissIosBanner() {
       </div>
     </div>
 
+    <!-- ═══ 4) ACADEMICS — Grades lead the substantive content ═══════════════ -->
+    <!-- Positioned above the rest of the player detail intentionally: "No Grades · No Baseball" is the foundational rule. -->
+    <div class="card" style="margin-bottom:16px; background:linear-gradient(135deg,#141A14,#101410); border:2px solid #5A8A3A; box-shadow:0 0 0 1px rgba(168,217,123,0.08);">
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px; flex-wrap:wrap;">
+        <span style="background:#5A8A3A; color:#F4F4F4; font-family:'Barlow Condensed'; font-size:10px; font-weight:800; letter-spacing:2px; text-transform:uppercase; padding:3px 9px; border-radius:2px;">Priority #1</span>
+        <div class="card-title" style="color:#A8D97B; margin:0;">📚 Academics — No Grades · No Baseball</div>
+      </div>
+
+      <div style="background:rgba(168,217,123,0.06); border:1px solid #1A3A1A; border-radius:2px; padding:12px 14px; margin-bottom:16px; font-size:13px; color:var(--light); line-height:1.7;">
+        "Pull every grade right now. If anything is slipping, handle it today — not next week."
+      </div>
+
+      <!-- GPA row -->
+      <div class="grid-2" style="margin-bottom:18px;">
+        <div style="text-align:center; padding:14px 10px; background:var(--card2); border-radius:3px; border-top:2px solid #2A3A2A;">
+          <div class="gpa-num" id="gpa-display" style="font-size:38px;">—</div>
+          <div class="gpa-label" style="margin-top:4px;">Current GPA · Target: <span id="gpa-target-display">—</span></div>
+        </div>
+        <div>
+          <label>My GPA</label>
+          <input type="number" id="gpa-current" step="0.1" min="0" max="4.0" placeholder="e.g. 3.2">
+          <label>Target GPA</label>
+          <input type="number" id="gpa-target" step="0.1" min="0" max="4.0" placeholder="e.g. 3.5">
+          <button class="btn btn-gold btn-sm" onclick="saveGPA()" style="margin-top:4px;">Save GPA</button>
+        </div>
+      </div>
+
+      <!-- Subject grades -->
+      <div style="font-family:'Barlow Condensed'; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#A8D97B; margin-bottom:10px;">📖 Monthly Grade Check</div>
+      <div id="grade-checks">
+        <div class="grade-row">
+          <div class="grade-label">English / Language Arts</div>
+          <select class="subject-grade" style="width:80px; margin-bottom:0;" onchange="renderGrades()"><option>A</option><option>B</option><option>C</option><option>D</option><option>F</option></select>
+        </div>
+        <div class="grade-row">
+          <div class="grade-label">Math</div>
+          <select class="subject-grade" style="width:80px; margin-bottom:0;" onchange="renderGrades()"><option>A</option><option>B</option><option>C</option><option>D</option><option>F</option></select>
+        </div>
+        <div class="grade-row">
+          <div class="grade-label">Science</div>
+          <select class="subject-grade" style="width:80px; margin-bottom:0;" onchange="renderGrades()"><option>A</option><option>B</option><option>C</option><option>D</option><option>F</option></select>
+        </div>
+        <div class="grade-row">
+          <div class="grade-label">History / Social Studies</div>
+          <select class="subject-grade" style="width:80px; margin-bottom:0;" onchange="renderGrades()"><option>A</option><option>B</option><option>C</option><option>D</option><option>F</option></select>
+        </div>
+        <div class="grade-row">
+          <div class="grade-label">Elective / PE</div>
+          <select class="subject-grade" style="width:80px; margin-bottom:0;" onchange="renderGrades()"><option>A</option><option>B</option><option>C</option><option>D</option><option>F</option></select>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ 5) PLAYER DETAIL — positions, bats/throws, 60-yd, velo, bio ════ -->
+    <div class="card" style="margin-bottom:16px;">
+      <div class="card-title">⚾ Player Detail</div>
+
+      <div class="form-row">
+        <div>
+          <label>My Position(s) <span style="font-weight:400; color:var(--grey); font-size:11px;">(select all that apply)</span></label>
+          <div id="pl-pos-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-top:6px;">
+            <label style="display:flex; align-items:center; gap:8px; background:var(--card2); border:1px solid var(--border); border-radius:2px; padding:8px 10px; cursor:pointer;">
+              <input type="checkbox" value="P"  onchange="savePositions()" style="accent-color:var(--gold); width:16px; height:16px;"> <span style="font-size:13px;">Pitcher</span>
+            </label>
+            <label style="display:flex; align-items:center; gap:8px; background:var(--card2); border:1px solid var(--border); border-radius:2px; padding:8px 10px; cursor:pointer;">
+              <input type="checkbox" value="C"  onchange="savePositions()" style="accent-color:var(--gold); width:16px; height:16px;"> <span style="font-size:13px;">Catcher</span>
+            </label>
+            <label style="display:flex; align-items:center; gap:8px; background:var(--card2); border:1px solid var(--border); border-radius:2px; padding:8px 10px; cursor:pointer;">
+              <input type="checkbox" value="1B" onchange="savePositions()" style="accent-color:var(--gold); width:16px; height:16px;"> <span style="font-size:13px;">First Base</span>
+            </label>
+            <label style="display:flex; align-items:center; gap:8px; background:var(--card2); border:1px solid var(--border); border-radius:2px; padding:8px 10px; cursor:pointer;">
+              <input type="checkbox" value="2B" onchange="savePositions()" style="accent-color:var(--gold); width:16px; height:16px;"> <span style="font-size:13px;">Second Base</span>
+            </label>
+            <label style="display:flex; align-items:center; gap:8px; background:var(--card2); border:1px solid var(--border); border-radius:2px; padding:8px 10px; cursor:pointer;">
+              <input type="checkbox" value="3B" onchange="savePositions()" style="accent-color:var(--gold); width:16px; height:16px;"> <span style="font-size:13px;">Third Base</span>
+            </label>
+            <label style="display:flex; align-items:center; gap:8px; background:var(--card2); border:1px solid var(--border); border-radius:2px; padding:8px 10px; cursor:pointer;">
+              <input type="checkbox" value="SS" onchange="savePositions()" style="accent-color:var(--gold); width:16px; height:16px;"> <span style="font-size:13px;">Shortstop</span>
+            </label>
+            <label style="display:flex; align-items:center; gap:8px; background:var(--card2); border:1px solid var(--border); border-radius:2px; padding:8px 10px; cursor:pointer;">
+              <input type="checkbox" value="LF" onchange="savePositions()" style="accent-color:var(--gold); width:16px; height:16px;"> <span style="font-size:13px;">Left Field</span>
+            </label>
+            <label style="display:flex; align-items:center; gap:8px; background:var(--card2); border:1px solid var(--border); border-radius:2px; padding:8px 10px; cursor:pointer;">
+              <input type="checkbox" value="CF" onchange="savePositions()" style="accent-color:var(--gold); width:16px; height:16px;"> <span style="font-size:13px;">Center Field</span>
+            </label>
+            <label style="display:flex; align-items:center; gap:8px; background:var(--card2); border:1px solid var(--border); border-radius:2px; padding:8px 10px; cursor:pointer;">
+              <input type="checkbox" value="RF" onchange="savePositions()" style="accent-color:var(--gold); width:16px; height:16px;"> <span style="font-size:13px;">Right Field</span>
+            </label>
+            <label style="display:flex; align-items:center; gap:8px; background:var(--card2); border:1px solid var(--border); border-radius:2px; padding:8px 10px; cursor:pointer;">
+              <input type="checkbox" value="DH" onchange="savePositions()" style="accent-color:var(--gold); width:16px; height:16px;"> <span style="font-size:13px;">DH</span>
+            </label>
+          </div>
+          <!-- Hidden field to store combined value for saveProfile() -->
+          <input type="hidden" id="pl-pos">
+          <div id="pl-pos-display" style="font-family:'Barlow Condensed'; font-size:12px; letter-spacing:1px; color:var(--gold); margin-top:8px; min-height:18px;"></div>
+        </div>
+        <div>
+          <label>Bats / Throws</label>
+          <select id="pl-bats" onchange="saveProfile()">
+            <option value="">-- Select --</option>
+            <option value="R/R">Right / Right</option>
+            <option value="L/L">Left / Left</option>
+            <option value="L/R">Left / Right (Switch)</option>
+            <option value="S/R">Switch / Right</option>
+          </select>
+          <label style="margin-top:14px;">Current Season</label>
+          <input type="text" id="pl-season" placeholder="e.g. Spring 2026" oninput="saveProfile()">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div>
+          <label>60-Yard Dash Time</label>
+          <input type="text" id="pl-sixty" placeholder="e.g. 6.8" oninput="saveProfile()" style="font-family:'Bebas Neue'; font-size:22px; letter-spacing:2px; text-align:center;">
+          <div style="font-family:'Barlow'; font-size:11px; color:var(--grey); margin-top:4px;">Seconds — update each time you get timed</div>
+        </div>
+        <div>
+          <label>Velocity / Arm Speed</label>
+          <input type="text" id="pl-velo" placeholder="e.g. 78 mph" oninput="saveProfile()" style="font-family:'Bebas Neue'; font-size:22px; letter-spacing:2px; text-align:center;">
+          <div style="font-family:'Barlow'; font-size:11px; color:var(--grey); margin-top:4px;">MPH — fastball or throw velocity</div>
+        </div>
+      </div>
+
+      <label>My Goals & Notes</label>
+      <textarea id="pl-bio" placeholder="Strengths, goals, areas to improve, coach notes..." oninput="saveProfile()"></textarea>
+    </div>
+
     <!-- ── SAVE CONFIRMATION ── -->
     <div id="profile-saved" style="display:none; background:rgba(39,174,96,0.1); border:1px solid var(--green); border-radius:2px; padding:12px 16px; font-family:'Barlow Condensed'; font-size:13px; letter-spacing:1px; color:#58D68D; margin-bottom:16px;">
       ✅ Profile saved.
@@ -2182,15 +2185,13 @@ function dismissIosBanner() {
 
       <!-- Trial status — shown during trial -->
       <div id="sub-trial-info" style="display:none; background:rgba(201,168,76,0.06); border:1px solid var(--gold-dark); border-radius:2px; padding:14px 16px; margin-bottom:16px;">
-        <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
-          <div>
-            <div style="font-family:'Barlow Condensed'; font-size:13px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--gold); margin-bottom:2px;">⏳ Free Trial Active</div>
-            <div id="sub-trial-days" style="font-family:'Barlow'; font-size:13px; color:var(--light); line-height:1.5;"></div>
-          </div>
-          <div style="display:flex; gap:8px; flex-wrap:wrap;">
-            <button onclick="goToPurchase('monthly')" style="background:transparent; border:1px solid var(--gold-dark); color:var(--gold); font-family:'Barlow Condensed'; font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:8px 14px; border-radius:2px; cursor:pointer;">$2.99 / mo</button>
-            <button onclick="goToPurchase('annual')" style="background:var(--gold); border:none; color:#080808; font-family:'Barlow Condensed'; font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:8px 14px; border-radius:2px; cursor:pointer;">⚾ $29.99 / yr</button>
-          </div>
+        <!-- Stack label + buttons vertically so they never overflow a narrow card -->
+        <div style="font-family:'Barlow Condensed'; font-size:13px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--gold); margin-bottom:4px;">⏳ Free Trial Active</div>
+        <div id="sub-trial-days" style="font-family:'Barlow'; font-size:13px; color:var(--light); line-height:1.5; margin-bottom:12px;"></div>
+        <!-- Buttons in a grid so they're always side-by-side at equal width, never push out of card -->
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+          <button onclick="goToPurchase('monthly')" style="background:transparent; border:1px solid var(--gold-dark); color:var(--gold); font-family:'Barlow Condensed'; font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:10px 8px; border-radius:2px; cursor:pointer; white-space:nowrap;">$2.99 / mo</button>
+          <button onclick="goToPurchase('annual')" style="background:var(--gold); border:none; color:#080808; font-family:'Barlow Condensed'; font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:10px 8px; border-radius:2px; cursor:pointer; white-space:nowrap;">⚾ $29.99 / yr</button>
         </div>
       </div>
 
@@ -2204,26 +2205,32 @@ function dismissIosBanner() {
       <div style="margin-bottom:16px;">
         <div style="font-family:'Barlow Condensed'; font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--grey); margin-bottom:10px;">Manage Billing</div>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:10px;">
-          <a href="https://billing.stripe.com/p/login/aFa6oJ7LY2Vv0umeDn4gg00" id="stripe-portal-btn" target="_blank" style="display:flex; align-items:center; justify-content:center; gap:6px; background:var(--card2); border:1px solid var(--border); color:var(--light); font-family:'Barlow Condensed'; font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:12px 8px; border-radius:2px; text-decoration:none; text-align:center;">
+          <a href="https://billing.stripe.com/p/login/aFa6oJ7LY2Vv0umeDn4gg00" id="stripe-portal-btn" target="_blank" style="display:flex; align-items:center; justify-content:center; gap:6px; background:var(--card2); border:1px solid var(--border); color:var(--light); font-family:'Barlow Condensed'; font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:12px 6px; border-radius:2px; text-decoration:none; text-align:center; min-width:0;">
             💳 Manage Billing
           </a>
-          <a href="mailto:coach@youngsbaseball.com?subject=Cancel%20My%20Subscription&body=Please%20cancel%20my%20My%20Grind%20subscription.%0A%0AEmail%20used%20to%20register%3A%20" style="display:flex; align-items:center; justify-content:center; gap:6px; background:var(--card2); border:1px solid var(--border); color:var(--light); font-family:'Barlow Condensed'; font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:12px 8px; border-radius:2px; text-decoration:none; text-align:center;">
+          <a href="mailto:coach@youngsbaseball.com?subject=Cancel%20My%20Subscription&body=Please%20cancel%20my%20My%20Grind%20subscription.%0A%0AEmail%20used%20to%20register%3A%20" style="display:flex; align-items:center; justify-content:center; gap:6px; background:var(--card2); border:1px solid var(--border); color:var(--light); font-family:'Barlow Condensed'; font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:12px 6px; border-radius:2px; text-decoration:none; text-align:center; min-width:0;">
             ✉️ Email to Cancel
           </a>
         </div>
         <div style="background:rgba(201,168,76,0.04); border:1px solid #1E1A00; border-radius:2px; padding:12px 14px;">
           <div style="font-family:'Barlow'; font-size:12px; color:var(--grey); line-height:1.7;">
-            <strong style="color:var(--light);">Cancel anytime</strong> — no penalties, no fees. If you cancel during your billing period you keep access until the end of that period. Questions? Email <a href="mailto:coach@youngsbaseball.com" style="color:var(--gold);">coach@youngsbaseball.com</a>
+            <strong style="color:var(--light);">Cancel anytime</strong> — no penalties, no fees. If you cancel during your billing period you keep access until the end of that period. Questions? Email <a href="mailto:coach@youngsbaseball.com" style="color:var(--gold); word-break:break-all;">coach@youngsbaseball.com</a>
           </div>
         </div>
       </div>
 
       <!-- Account info -->
+      <!-- Labels on their own line so long emails never push the card wider than its container -->
       <div style="border-top:1px solid var(--border); padding-top:14px;">
         <div style="font-family:'Barlow Condensed'; font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--grey); margin-bottom:8px;">Account Info</div>
         <div style="font-family:'Barlow'; font-size:12px; color:var(--grey); line-height:1.8;">
-          Registered email: <span id="sub-email-display" style="color:var(--gold); font-family:'Barlow Condensed'; letter-spacing:1px;">—</span><br>
-          Access type: <span id="sub-plan-display" style="color:var(--light);">—</span>
+          <div style="margin-bottom:4px;">
+            Registered email:<br>
+            <span id="sub-email-display" style="display:inline-block; color:var(--gold); font-family:'Barlow Condensed'; letter-spacing:0.5px; word-break:break-all; overflow-wrap:anywhere; max-width:100%;">—</span>
+          </div>
+          <div>
+            Access type: <span id="sub-plan-display" style="color:var(--light);">—</span>
+          </div>
         </div>
       </div>
     </div>
@@ -4939,6 +4946,48 @@ function saveGPA() {
   state.gpa.target = tgt;
   document.getElementById('gpa-display').textContent = cur || '—';
   document.getElementById('gpa-target-display').textContent = tgt || '—';
+  // Persist to localStorage so it survives reloads
+  try { saveState(); } catch(e) {}
+  // Visual confirmation
+  const btn = document.querySelector('button[onclick="saveGPA()"]');
+  if (btn) {
+    const original = btn.textContent;
+    btn.textContent = '✅ Saved';
+    btn.disabled = true;
+    setTimeout(function() {
+      btn.textContent = original;
+      btn.disabled = false;
+    }, 1400);
+  }
+}
+
+// Populate GPA + Monthly Grade Check UI from saved state on page load
+function loadGradesUI() {
+  try {
+    if (!state || !state.gpa) return;
+    const curInput = document.getElementById('gpa-current');
+    const tgtInput = document.getElementById('gpa-target');
+    const curDisplay = document.getElementById('gpa-display');
+    const tgtDisplay = document.getElementById('gpa-target-display');
+    if (curInput && state.gpa.current != null && state.gpa.current !== '') curInput.value = state.gpa.current;
+    if (tgtInput && state.gpa.target != null && state.gpa.target !== '') tgtInput.value = state.gpa.target;
+    if (curDisplay) curDisplay.textContent = state.gpa.current || '—';
+    if (tgtDisplay) tgtDisplay.textContent = state.gpa.target || '—';
+
+    // Restore subject grade selections if saved
+    try {
+      const saved = localStorage.getItem('ybg_subject_grades');
+      if (saved) {
+        const arr = JSON.parse(saved);
+        if (Array.isArray(arr)) {
+          const selects = document.querySelectorAll('.subject-grade');
+          selects.forEach(function(sel, i) {
+            if (arr[i]) sel.value = arr[i];
+          });
+        }
+      }
+    } catch(e) {}
+  } catch(e) { try { console.warn('[YBG] loadGradesUI failed:', e); } catch(_) {} }
 }
 
 // ─── CHECKLIST ────────────────────────────────────────────
@@ -5310,7 +5359,8 @@ function loadProfile() {
     if (!saved) return;
     const p = JSON.parse(saved);
     // Load simple text/number fields
-    const fields = ['name','age','grade','school','bats','gpa','season','sixty','velo','bio'];
+    // Note: 'gpa' removed — the Academics card's gpa-current field is now the sole GPA source (see loadGradesUI)
+    const fields = ['name','age','grade','school','bats','season','sixty','velo','bio'];
     fields.forEach(f => {
       const el = document.getElementById('pl-' + f);
       if (el && p[f]) el.value = p[f];
@@ -5472,6 +5522,7 @@ init();
 initStats();
 loadProfile();
 loadProfilePic();
+loadGradesUI();
 loadGrades();
 renderHWTracker();
 updateSubscriptionCard();
