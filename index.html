@@ -3190,6 +3190,43 @@ function dismissIosBanner() {
       </div>
     </div>
 
+    <!-- ── BACKUP & RESTORE ── -->
+    <!-- Lets users download a JSON file of their entire app data and restore it on another device -->
+    <!-- or after clearing their browser. Protects against data loss without requiring a cloud account. -->
+    <!-- Cloud sync is planned post-beta; this is the reliable interim solution. -->
+    <div class="card" style="margin-bottom:16px; border-left:3px solid #5DADE2;">
+      <div class="card-title">💾 Backup & Restore</div>
+      <div style="font-family:'Barlow'; font-size:13px; color:var(--grey); line-height:1.7; margin-bottom:14px;">
+        Save all your journal entries, stats, goals, and profile to a file on your phone. Keep it safe — if you switch devices or clear your browser, you can restore everything.
+      </div>
+
+      <!-- Last backup status -->
+      <div id="backup-status-row" style="background:var(--card2); border:1px solid var(--border); border-radius:3px; padding:10px 14px; margin-bottom:12px;">
+        <div style="font-family:'Barlow Condensed',sans-serif; font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--grey); margin-bottom:4px;">Last Backup</div>
+        <div id="backup-last-display" style="font-family:'Barlow',sans-serif; font-size:13px; color:var(--light);">Never — tap Backup below to create your first one</div>
+      </div>
+
+      <!-- Action buttons -->
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:12px;">
+        <button onclick="downloadBackup()" style="background:#5DADE2; color:#080808; font-family:'Barlow Condensed',sans-serif; font-size:12px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; padding:13px 8px; border:none; border-radius:2px; cursor:pointer;" onmouseover="this.style.background='#7FC4E8'" onmouseout="this.style.background='#5DADE2'">
+          📥 Backup Now
+        </button>
+        <button onclick="triggerRestoreFilePicker()" style="background:transparent; color:#5DADE2; font-family:'Barlow Condensed',sans-serif; font-size:12px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; padding:13px 8px; border:1px solid #5DADE2; border-radius:2px; cursor:pointer;" onmouseover="this.style.background='rgba(93,173,226,0.08)'" onmouseout="this.style.background='transparent'">
+          📤 Restore
+        </button>
+      </div>
+
+      <!-- Hidden file input — triggered by the Restore button via triggerRestoreFilePicker() -->
+      <input type="file" id="restore-file-input" accept="application/json,.json" style="display:none;" onchange="handleRestoreFile(event)">
+
+      <!-- Explanation box -->
+      <div style="background:rgba(93,173,226,0.05); border:1px solid rgba(93,173,226,0.2); border-radius:3px; padding:11px 13px; font-family:'Barlow',sans-serif; font-size:12px; color:var(--grey); line-height:1.6;">
+        <strong style="color:var(--light);">📥 Backup:</strong> Downloads a .json file to your phone. Keep it in a safe place (email it to yourself, save to cloud drive, etc.)<br>
+        <strong style="color:var(--light); margin-top:4px; display:inline-block;">📤 Restore:</strong> Loads a backup file — replaces current data on this device. Use when switching phones or recovering lost data.<br>
+        <em style="color:#888; display:inline-block; margin-top:4px;">Tip: Back up once a week. Takes 5 seconds.</em>
+      </div>
+    </div>
+
     <!-- ── CONTACT US — central hub for all contact channels ── -->
     <!-- Previously, contact info was scattered across multiple cards and screens. -->
     <!-- This card is the single source of truth inside the app. -->
@@ -4182,6 +4219,201 @@ function scrollToContactCard() {
   }, 120);
 }
 
+// ═══════════════════════════════════════════════════════════════════════
+// BACKUP & RESTORE SYSTEM
+// Local-file-based backup. Lets users download a JSON file of all their
+// data and restore it on another device or after clearing browser data.
+// NOT a cloud sync — the user is responsible for keeping the file safe.
+// Cloud sync is planned post-beta; this is the reliable interim solution.
+// ═══════════════════════════════════════════════════════════════════════
+
+// Current backup schema version. Bump when breaking changes happen.
+// When restoring, we check this and can migrate old backups if needed.
+const BACKUP_SCHEMA_VERSION = 1;
+
+// Keys that go in the backup. Everything needed to make the user's app feel "whole"
+// when restored on a new device. NOTE: ybg_access is deliberately excluded — if a user
+// restores on a new device, they'd inherit the old device's fingerprint and trigger a
+// wrong_device block. They'll re-authenticate normally, then restore their data.
+const BACKUP_KEYS = [
+  'ybg_state',              // journal entries, goals, players, gpa
+  'ybg_profile',            // name, height, weight, positions, bio, photo
+  'ybg_player_stats',       // manual season stats entered in My Stats tab
+  'ybg_teams_registry',     // all teams user has created or joined
+  'ybg_my_team',            // which team the user plays on
+  'ybg_my_coached_team',    // which team the user coaches (if any)
+  'ybg_subject_grades',     // academic subject grade selections
+  'ybg_arm_care',           // today's arm care checklist state
+  'ybg_arm_care_date',      // date of last arm care reset
+  'ybg_milestone_shown',    // which streak milestones have been celebrated
+  'ybg_notes',              // any misc notes
+  'ybg_training_events',    // training calendar custom events
+];
+
+// Bundle everything up into a structured backup object, then trigger a download.
+function downloadBackup() {
+  try {
+    const data = {};
+    BACKUP_KEYS.forEach(function(key) {
+      const raw = localStorage.getItem(key);
+      if (raw !== null) data[key] = raw;  // Store as raw string — JSON parses each on restore
+    });
+
+    // Try to pull the player's name for a friendlier filename
+    let playerName = 'player';
+    try {
+      const profile = JSON.parse(localStorage.getItem('ybg_profile') || '{}');
+      const first = (profile.firstName || profile.name || '').trim();
+      if (first) {
+        // sanitize to filesystem-safe chars only
+        playerName = first.replace(/[^A-Za-z0-9-]/g, '').toLowerCase() || 'player';
+      }
+    } catch(e) {}
+
+    const now = new Date();
+    const dateStamp = now.getFullYear() + '-' +
+                      String(now.getMonth() + 1).padStart(2, '0') + '-' +
+                      String(now.getDate()).padStart(2, '0');
+
+    const backup = {
+      schemaVersion: BACKUP_SCHEMA_VERSION,
+      appVersion: '2026.1',
+      exportedAt: now.toISOString(),
+      playerName: playerName,
+      entryCount: (function() {
+        try { return (JSON.parse(data['ybg_state'] || '{}').entries || []).length; }
+        catch(e) { return 0; }
+      })(),
+      data: data
+    };
+
+    const json = JSON.stringify(backup, null, 2);  // pretty-printed so users can inspect it
+    const blob = new Blob([json], { type: 'application/json' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href = url;
+    a.download = 'mygrind-backup-' + playerName + '-' + dateStamp + '.json';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function() {
+      try { document.body.removeChild(a); } catch(e) {}
+      URL.revokeObjectURL(url);
+    }, 300);
+
+    // Record the backup time so we can show it in the UI
+    try { localStorage.setItem('ybg_last_backup_at', now.toISOString()); } catch(e) {}
+    updateBackupStatusDisplay();
+
+    if (typeof showShareToast === 'function') {
+      showShareToast('✅ Backup saved to your Downloads folder');
+    }
+  } catch(err) {
+    alert('Sorry — backup failed. Error: ' + (err && err.message ? err.message : 'unknown'));
+    try { console.error('[MG] downloadBackup failed:', err); } catch(e) {}
+  }
+}
+
+// Called from the Restore button — triggers the hidden file input's click
+function triggerRestoreFilePicker() {
+  const input = document.getElementById('restore-file-input');
+  if (input) input.click();
+}
+
+// Called when the user picks a file from the restore file input
+function handleRestoreFile(event) {
+  const file = event.target.files && event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const parsed = JSON.parse(e.target.result);
+
+      // Basic shape validation
+      if (!parsed || typeof parsed !== 'object' || !parsed.data || typeof parsed.data !== 'object') {
+        alert('This doesn\'t look like a My Grind backup file. Make sure you picked the right .json file.');
+        return;
+      }
+
+      // Schema version check — we only know how to restore schemaVersion 1 right now
+      if (parsed.schemaVersion && parsed.schemaVersion > BACKUP_SCHEMA_VERSION) {
+        alert('This backup is from a newer version of My Grind (schema v' + parsed.schemaVersion + '). Update the app before restoring.');
+        return;
+      }
+
+      // Summary for the confirm dialog
+      const exportedDate = parsed.exportedAt
+        ? new Date(parsed.exportedAt).toLocaleDateString()
+        : 'unknown date';
+      const entryCount = parsed.entryCount != null ? parsed.entryCount : '?';
+      const playerName = parsed.playerName || 'unknown';
+
+      const confirmed = confirm(
+        'Restore this backup?\n\n' +
+        'Player: ' + playerName + '\n' +
+        'Exported: ' + exportedDate + '\n' +
+        'Entries in backup: ' + entryCount + '\n\n' +
+        '⚠️ This will REPLACE all data currently on this device with the backup. This cannot be undone.\n\n' +
+        'Continue?'
+      );
+      if (!confirmed) return;
+
+      // Apply the restore — overwrite each key
+      const keys = Object.keys(parsed.data);
+      keys.forEach(function(key) {
+        // Only restore recognized ybg_* keys (paranoid — don't trust malicious backup files)
+        if (BACKUP_KEYS.indexOf(key) === -1) return;
+        try { localStorage.setItem(key, parsed.data[key]); } catch(e) {}
+      });
+
+      // Record the restore time separately from backup time
+      try { localStorage.setItem('ybg_last_restore_at', new Date().toISOString()); } catch(e) {}
+
+      alert('✅ Restore complete. The app will reload now to show your data.');
+      // Full reload so every component re-reads from localStorage
+      window.location.reload();
+    } catch(err) {
+      alert('Sorry — could not read that file. Make sure it\'s a My Grind backup file.\n\nError: ' + (err && err.message ? err.message : 'unknown'));
+      try { console.error('[MG] handleRestoreFile failed:', err); } catch(e) {}
+    }
+  };
+  reader.onerror = function() {
+    alert('Sorry — could not read that file. Try again with a different copy.');
+  };
+  reader.readAsText(file);
+
+  // Clear the input so the same file can be picked again if needed
+  try { event.target.value = ''; } catch(e) {}
+}
+
+// Update the "Last Backup" display in the Settings card
+function updateBackupStatusDisplay() {
+  const el = document.getElementById('backup-last-display');
+  if (!el) return;
+  try {
+    const ts = localStorage.getItem('ybg_last_backup_at');
+    if (!ts) {
+      el.textContent = 'Never — tap Backup below to create your first one';
+      el.style.color = '#888';
+      return;
+    }
+    const date = new Date(ts);
+    const daysAgo = Math.floor((Date.now() - date.getTime()) / (1000 * 60 * 60 * 24));
+    let label;
+    if (daysAgo === 0) label = 'Today at ' + date.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+    else if (daysAgo === 1) label = 'Yesterday';
+    else if (daysAgo < 7) label = daysAgo + ' days ago';
+    else label = date.toLocaleDateString();
+    el.textContent = label;
+    // Nudge color: green if < 7 days, amber if 7-14, red if > 14 days
+    if (daysAgo >= 14) el.style.color = '#E57373';
+    else if (daysAgo >= 7) el.style.color = '#E8C96A';
+    else el.style.color = '#A8D97B';
+  } catch(e) {
+    el.textContent = 'Status unknown';
+  }
+}
+
 // Sequential Stripe checkout flow for gift-mode multi-player purchases.
 // Opens one Stripe window per player, saving each player's pending access
 // binding before the window opens so activation works when the creator PIN
@@ -4695,7 +4927,11 @@ function showPanel(id) {
   // Refresh subscription card when My Profile opens
   if (id === 'players') { updateSubscriptionCard(); updateSettingsAccountInfo(); }
   // Refresh settings when settings tab opens
-  if (id === 'settings') { updateSettingsAccountInfo(); loadSettings(); }
+  if (id === 'settings') {
+    updateSettingsAccountInfo();
+    loadSettings();
+    try { if (typeof updateBackupStatusDisplay === 'function') updateBackupStatusDisplay(); } catch(e) {}
+  }
   // Generate QR when share tab opens
   if (id === 'share') { setTimeout(initQR, 100); }
   // Scroll back to top on tab switch
