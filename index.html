@@ -1440,8 +1440,22 @@ function dismissIosBanner() {
       <div class="gold-line"></div>
     </div>
 
-    <div class="alert alert-gold">
-      ⚾ &nbsp;<strong>APRIL</strong> — In-Season · One Game at a Time. Stay present. Team first.
+    <!-- ── COACH'S NOTE + MONTH FOCUS — moved to top so the coach's voice sets the tone ── -->
+    <!-- Titles, note body, and focus bullets all get populated from the `months` array in syncDashboardToMonth() -->
+    <div class="grid-2" style="margin-bottom:20px;">
+      <div class="card">
+        <div class="card-title" id="dash-coach-note-title">🗒️ Coach's Note</div>
+        <div class="coach-note" id="dash-coach-note-body" style="margin:0; font-size:13px;"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title" id="dash-focus-title">📋 This Month Focus</div>
+        <div id="dash-focus-list" style="font-size:14px; color:var(--light); line-height:1.8;"></div>
+      </div>
+    </div>
+
+    <div class="alert alert-gold" id="dash-month-alert">
+      ⚾ &nbsp;<strong id="dash-month-alert-name">APRIL</strong> — <span id="dash-month-alert-text">In-Season · One Game at a Time. Stay present. Team first.</span>
     </div>
 
     <div class="grid-3" style="margin-bottom:20px;">
@@ -1480,75 +1494,15 @@ function dismissIosBanner() {
       </button>
     </div>
 
-    <div class="grid-2">
-      <div class="card">
-        <div class="card-title">📋 This Month — April Focus</div>
-        <div style="font-size:14px; color:var(--light); line-height:1.8;">
-          <div style="padding:6px 0; border-bottom:1px solid var(--border);">✅ Compete — One Game at a Time</div>
-          <div style="padding:6px 0; border-bottom:1px solid var(--border);">✅ Team First — not stats, not scouts</div>
-          <div style="padding:6px 0; border-bottom:1px solid var(--border);">💪 Arm Care — non-negotiable daily</div>
-          <div style="padding:6px 0; border-bottom:1px solid var(--border);">📓 Post-Game Journal — every game</div>
-          <div style="padding:6px 0; border-bottom:1px solid var(--border);">🗣️ Talk to your coaches weekly</div>
-          <div style="padding:6px 0;">📚 GPA check — No Grades, No Baseball</div>
-        </div>
+    <!-- ── JOURNAL POINTER (Quick Log was removed — Daily Journal is the one place for entries) ── -->
+    <div class="card" style="margin-top:4px; border-left:3px solid var(--gold);">
+      <div class="card-title">📓 Log Today's Entry</div>
+      <div style="font-family:'Barlow'; font-size:13px; color:var(--light); line-height:1.7; margin-bottom:14px;">
+        Head to the <strong style="color:var(--gold);">Daily Journal tab</strong> to log today's game, practice, or reflection. Every entry keeps your streak alive and builds your season record.
       </div>
-
-      <div class="card">
-        <div class="card-title">🗒️ Coach's Note — April</div>
-        <div class="coach-note" style="margin:0; font-size:13px;">
-          "The season is long, but it goes fast. You will blink and it will be June. Take it one game at a time — stay present, stay humble, and play for your team. The best players I have ever coached were the ones who made everyone around them better. Be that player."
-          <br><br>— The Grind
-        </div>
-      </div>
-    </div>
-
-    <div class="card" style="margin-top:4px;">
-      <div class="card-title">⚡ Quick Log — Today's Entry</div>
-      <div style="font-family:'Barlow'; font-size:12px; color:var(--grey); margin-bottom:14px; line-height:1.5;">Log a quick entry here — it saves directly to your <strong style="color:var(--gold);">Daily Journal</strong>. Tap the Daily Journal tab to see all your entries.</div>
-      <div class="form-row">
-        <div>
-          <label>Entry Type</label>
-          <select id="quick-type" onchange="toggleQuickTitle()">
-            <option value="game">Game</option>
-            <option value="practice">Practice</option>
-            <option value="reflection">Reflection</option>
-          </select>
-        </div>
-        <div id="quick-title-wrapper">
-          <label>Title / Opponent</label>
-          <input type="text" id="quick-title" placeholder="e.g. vs Canyon HS">
-        </div>
-      </div>
-      <label>What happened? What did I do for my team?</label>
-      <div id="quick-prompt-hint" style="display:none; background:#1A1400; border-left:3px solid #C9A84C; padding:10px 14px; margin-bottom:10px; border-radius:3px; font-family:'Barlow'; font-size:12px; color:#C8C4BC; line-height:1.6;"></div>
-      <textarea id="quick-notes" placeholder="Write your post-game or practice entry here..."></textarea>
-
-      <!-- Practice reps counter (only shows for practice) -->
-      <div id="quick-reps-section" style="display:none; margin-top:14px; padding:14px; background:var(--card2); border:1px solid var(--border); border-radius:4px;">
-        <div style="font-family:'Barlow Condensed'; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--gold); margin-bottom:4px;">🔢 Rep Counter — Today's Practice</div>
-        <div style="font-family:'Barlow'; font-size:11px; color:var(--grey); margin-bottom:12px;">Track your volume. Nobody counts it for you. <strong style="color:var(--light);">You count it.</strong></div>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-          <div>
-            <label style="font-size:10px; letter-spacing:1px;">🏏 SWINGS</label>
-            <input type="number" id="quick-reps-swings" min="0" placeholder="0" inputmode="numeric" style="width:100%; padding:10px; font-size:15px; text-align:center;">
-          </div>
-          <div>
-            <label style="font-size:10px; letter-spacing:1px;">🥎 GROUND BALLS</label>
-            <input type="number" id="quick-reps-gb" min="0" placeholder="0" inputmode="numeric" style="width:100%; padding:10px; font-size:15px; text-align:center;">
-          </div>
-          <div>
-            <label style="font-size:10px; letter-spacing:1px;">🎯 THROWS</label>
-            <input type="number" id="quick-reps-throws" min="0" placeholder="0" inputmode="numeric" style="width:100%; padding:10px; font-size:15px; text-align:center;">
-          </div>
-          <div>
-            <label style="font-size:10px; letter-spacing:1px;">⚾ PITCHES</label>
-            <input type="number" id="quick-reps-pitches" min="0" placeholder="0" inputmode="numeric" style="width:100%; padding:10px; font-size:15px; text-align:center;">
-          </div>
-        </div>
-        <div id="quick-reps-total" style="margin-top:10px; text-align:center; font-family:'Barlow Condensed'; font-size:12px; letter-spacing:1.5px; text-transform:uppercase; color:var(--grey);">Total reps: <span id="quick-reps-total-num" style="color:var(--gold); font-weight:800;">0</span></div>
-      </div>
-
-      <button class="btn btn-gold" onclick="quickLog()" style="margin-top:14px;">⚾ &nbsp;Save Entry</button>
+      <button onclick="showPanel('journal')" class="btn btn-gold" style="width:100%;">
+        ➕ &nbsp;Go to Daily Journal
+      </button>
     </div>
 
     <!-- ── WEEKLY RECAP ── -->
@@ -4222,6 +4176,7 @@ function init() {
   if (dateInput) dateInput.valueAsDate = today;
 
   buildCalendar();
+  syncDashboardToMonth();
   renderAll();
 
   // ── CREATOR ACCESS & OLD FLAG CLEANUP ──────────────
@@ -4340,6 +4295,118 @@ function buildCalendar() {
 
 function toggleMonth(card) {
   card.classList.toggle('open');
+}
+
+// ─── SYNC DASHBOARD TO CURRENT MONTH ──────────────────────
+// Reads from the `months` array (same data source as the 12-month Training Calendar)
+// and populates the Coach's Note card, Focus list, and month alert on the Dashboard.
+// Called from init() and from the showPanel hook when user returns to Dashboard.
+function syncDashboardToMonth() {
+  try {
+    if (!Array.isArray(months) || months.length < 12) return;
+    const now = new Date();
+    const idx = now.getMonth(); // 0-11
+    const m = months[idx];
+    if (!m) return;
+
+    const monthTitleCase = (m.name || '').charAt(0) + (m.name || '').slice(1).toLowerCase();
+
+    // ── COACH'S NOTE ──
+    const coachTitle = document.getElementById('dash-coach-note-title');
+    const coachBody  = document.getElementById('dash-coach-note-body');
+    if (coachTitle) coachTitle.textContent = '🗒️ Coach' + String.fromCharCode(0x2019) + 's Note — ' + monthTitleCase;
+    if (coachBody && m.note) {
+      // Render quote + signature; coach-note CSS already handles italic styling
+      coachBody.innerHTML = '"' + m.note.replace(/"/g, '&quot;') + '"<br><br>— The Grind';
+    }
+
+    // ── FOCUS LIST ──
+    // Pull bullets from the month's `focus` tagline (· separated) and add the universal season rules
+    const focusTitle = document.getElementById('dash-focus-title');
+    const focusList  = document.getElementById('dash-focus-list');
+    if (focusTitle) focusTitle.textContent = '📋 This Month — ' + monthTitleCase + ' Focus';
+    if (focusList) {
+      const focusItems = buildFocusBullets(m);
+      focusList.innerHTML = focusItems.map(function(item, i) {
+        const isLast = i === focusItems.length - 1;
+        return '<div style="padding:6px 0;' + (isLast ? '' : ' border-bottom:1px solid var(--border);') + '">' + item + '</div>';
+      }).join('');
+    }
+
+    // ── MONTH ALERT BANNER ──
+    const alertName = document.getElementById('dash-month-alert-name');
+    const alertText = document.getElementById('dash-month-alert-text');
+    if (alertName) alertName.textContent = m.name;
+    if (alertText) {
+      // Compose a short tagline from the month type + focus
+      const typeLabel = m.type === 'season' ? 'In-Season' : m.type === 'preseason' ? 'Pre-Season' : 'Off-Season';
+      alertText.textContent = typeLabel + ' · ' + (m.focus || '');
+    }
+  } catch(e) { try { console.warn('[YBG] syncDashboardToMonth failed:', e); } catch(_) {} }
+}
+
+// Compose 6 focus bullets: the month's specific priorities (from `focus` tagline) + universal season rules.
+// Keeps the card's visual rhythm (6 bullets, emoji-prefixed) consistent across all 12 months.
+function buildFocusBullets(m) {
+  const specific = (m.focus || '').split('·').map(function(s){ return s.trim(); }).filter(Boolean);
+  // Map each specific focus word to a bullet with appropriate emoji
+  const bulletMap = {
+    'Health Check':         '🩺 Health Check — head to toe, address anything sore',
+    'Mechanics':            '🎯 Mechanics — fine-tune from film',
+    'Weight Room':          '🏋️ Weight Room — build the base',
+    'Weight Room Hard':     '🏋️ Weight Room Hard — heavy compound lifts',
+    'Daily Hitting':        '⚾ Daily Hitting — every single day',
+    'Situational Baseball': '⚾ Situational Baseball — know your job in every count',
+    'Mental Game':          '🧠 Mental Game — build your reset routine',
+    'Maintenance':          '🏋️ Maintenance Lifting — protect what you built',
+    'Maintenance Lifting':  '🏋️ Maintenance Lifting — protect what you built',
+    'Consistency':          '✅ Consistency — same routine every week',
+    'Midseason Grind':      '💪 Midseason Grind — do it tired',
+    'Team First':           '✅ Team First — not stats, not scouts',
+    'Sunday Rest':          '😴 Sunday Rest — for family and recovery',
+    'Sunday Always':        '😴 Sunday Always — family, church, rest',
+    'Rest':                 '😴 Rest — recovery is part of the work',
+    'Arm Health':           '🩹 Arm Health — do not break in June',
+    'Plate Discipline':     '🎯 Plate Discipline — swing at strikes',
+    'Travel Ball':          '✈️ Travel Ball — reps, development, exposure',
+    'Showcases':            '🎯 Showcases — polish the details',
+    'Showcase Prep':        '🎯 Showcase Prep — polish the details',
+    'Wood Bats':            '🪵 Wood Bats — sharpen your hands',
+    'Wood Bats Daily':      '🪵 Wood Bats Daily — build real bat speed',
+    'Speed':                '⚡ Speed — first step, base running, sprints',
+    'Goals':                '🎯 Goals — set them, write them down',
+    'Peak Strength Month':  '🏋️ Peak Strength — heaviest month of the year',
+    'Flexibility':          '🤸 Flexibility — mobility keeps you healthy',
+    'High Cage Volume':     '⚾ High Cage Volume — reps build the swing',
+    'Tone Down Lifting':    '🏋️ Tone Down Lifting — taper into the season',
+    'Transition':           '🔄 Transition — close the old year, open the new',
+    'Vision':               '👁️ Vision — train the eyes, see the ball',
+    'Family':               '❤️ Family — the people who got you here',
+    'Playoffs':             '🏆 Playoffs — one game at a time',
+    'Season End':           '📓 Season End — journal it, honor it',
+    'Reflection':           '📓 Reflection — what worked, what did not',
+    'Recovery':             '🩹 Recovery — let your body heal',
+    'Summer Ball':          '☀️ Summer Ball — reps and development',
+    'Fall Development':     '🍂 Fall Development — work on weaknesses',
+    'Off-Season Base':      '🏗️ Off-Season Base — lay the foundation'
+  };
+  const bullets = specific.map(function(f) {
+    if (bulletMap[f]) return bulletMap[f];
+    // Fallback: use the label as-is with a neutral bullet
+    return '✅ ' + f;
+  });
+
+  // Always include these universal rules so the card has 6 bullets and reinforces non-negotiables
+  const universal = [
+    '🩹 Arm Care — non-negotiable daily',
+    '📓 Daily Journal — every game, every practice',
+    '📚 No Grades · No Baseball'
+  ];
+  // Combine specific + universal, dedupe textually, trim to 6
+  const combined = bullets.concat(universal);
+  const seen = {};
+  const deduped = combined.filter(function(b){ if (seen[b]) return false; seen[b] = true; return true; });
+  return deduped.slice(0, 6);
 }
 
 // ─── JOURNAL ──────────────────────────────────────────────
@@ -8507,6 +8574,11 @@ setTimeout(function() {
     // (Stats "My Info" card was removed; Profile is now the single source of truth.)
     if (name === 'stats') {
       try { if (typeof calcStats === 'function') calcStats(); } catch(e) {}
+    }
+    // Refresh Dashboard month content whenever Dashboard is re-opened — catches cases
+    // where the app has been open past midnight/month-end.
+    if (name === 'dashboard') {
+      try { if (typeof syncDashboardToMonth === 'function') syncDashboardToMonth(); } catch(e) {}
     }
     return result;
   };
