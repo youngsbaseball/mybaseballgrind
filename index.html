@@ -2701,19 +2701,6 @@ function dismissIosBanner() {
         </div>
       </div>
 
-    <!-- ── MY INFO ── -->
-    <div class="card" style="margin-bottom:16px;">
-      <div class="card-title">👤 My Info</div>
-      <div class="form-row">
-        <div><label>My Name</label><input type="text" id="st-name" placeholder="First Last" oninput="calcStats()"></div>
-        <div><label>My Position</label><input type="text" id="st-pos" placeholder="e.g. SS / P" oninput="calcStats()"></div>
-      </div>
-      <div class="form-row">
-        <div><label>My Team / School</label><input type="text" id="st-team" placeholder="e.g. Canyon High School" oninput="calcStats()"></div>
-        <div><label>Season</label><input type="text" id="st-year" placeholder="e.g. Spring 2026" oninput="calcStats()"></div>
-      </div>
-    </div>
-
     <!-- ── BATTING ENTRY ── -->
     <div class="card" style="margin-bottom:16px;">
       <div class="card-title">⚾ My Batting Stats</div>
@@ -5107,16 +5094,22 @@ function calcStats() {
   if (fldCard) fldCard.style.display = (po > 0 || a > 0 || e > 0) ? 'block' : 'none';
 
   // ── NAMEPLATE ──
-  const name   = s('st-name');
-  const pos    = s('st-pos');
-  const team   = s('st-team');
-  const year   = s('st-year');
+  // Pull from Profile (pl-*) — single source of truth. Stats tab no longer duplicates name/position/team/season entry.
+  const profileName   = s('pl-name');
+  // pl-pos is a hidden <input> populated by savePositions(); fall back to the display div if empty.
+  let profilePos = s('pl-pos');
+  if (!profilePos) {
+    const posDisplay = document.getElementById('pl-pos-display');
+    if (posDisplay) profilePos = (posDisplay.textContent || '').replace(/^✅\s*/, '').trim();
+  }
+  const profileSchool = s('pl-school');
+  const profileSeason = s('pl-season');
   const npEl   = document.getElementById('st-nameplate');
   const spEl   = document.getElementById('st-subplate');
-  if (npEl) npEl.textContent = name ? name.toUpperCase() : '— Enter Your Info Below —';
+  if (npEl) npEl.textContent = profileName ? profileName.toUpperCase() : '— Complete Your Profile →';
   if (spEl) {
-    const parts = [pos, team, year].filter(Boolean);
-    spEl.textContent = parts.length ? parts.join(' · ') : 'Position · Team · Season';
+    const parts = [profilePos, profileSchool, profileSeason].filter(Boolean);
+    spEl.textContent = parts.length ? parts.join(' · ') : 'Set your info in the Profile tab';
   }
 
   // ── MAXPREPS LINK ──
@@ -5153,8 +5146,8 @@ function colorStat(id, val, thresholds, lower) {
 }
 
 function saveAllStats() {
+  // Note: name/pos/team/year no longer saved here — they live in Profile as the single source of truth.
   const data = {
-    name: s('st-name'), pos:  s('st-pos'),  team: s('st-team'), year: s('st-year'),
     g:    s('st-g'),    ab:   s('st-ab'),   h:    s('st-h'),
     '2b': s('st-2b'),  '3b': s('st-3b'),   hr:   s('st-hr'),
     rbi:  s('st-rbi'),  r:    s('st-r'),    bb:   s('st-bb'),
@@ -5178,7 +5171,8 @@ function initStats() {
     const saved = localStorage.getItem('ybg_player_stats');
     if (!saved) return;
     const d = JSON.parse(saved);
-    const fields = ['name','pos','team','year','g','ab','h','2b','3b','hr','rbi','r','bb','k','sb','hbp','ip','w','l','er','pk','pbb','ph','sv','cg','po','a','e','pop','mp','gc','sixty','velo'];
+    // Note: name/pos/team/year removed — those now live in Profile (pl-name, pl-pos, pl-school, pl-season).
+    const fields = ['g','ab','h','2b','3b','hr','rbi','r','bb','k','sb','hbp','ip','w','l','er','pk','pbb','ph','sv','cg','po','a','e','pop','mp','gc','sixty','velo'];
     fields.forEach(f => {
       const el = document.getElementById('st-' + f);
       if (el && d[f]) el.value = d[f];
@@ -8399,6 +8393,11 @@ setTimeout(function() {
     const result = origShowPanel.apply(this, arguments);
     if (name === 'team') {
       try { refreshTeamPanel(); } catch(e) {}
+    }
+    // Refresh Stats nameplate whenever Stats tab is opened — pulls latest Profile data.
+    // (Stats "My Info" card was removed; Profile is now the single source of truth.)
+    if (name === 'stats') {
+      try { if (typeof calcStats === 'function') calcStats(); } catch(e) {}
     }
     return result;
   };
