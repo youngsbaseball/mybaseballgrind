@@ -1145,6 +1145,14 @@ function dismissIosBanner() {
       <div style="font-family:'Barlow Condensed',sans-serif; font-size:11px; letter-spacing:3px; text-transform:uppercase; color:#555; margin-top:4px;">2026 Annual Baseball Journal</div>
     </div>
 
+    <!-- ── TRUST SIGNALS — Coach Young's credentials for cold-traffic users who don't know him ── -->
+    <div style="background:#0F0F0F; border-bottom:1px solid #2A2200; padding:12px 28px;">
+      <div style="font-family:'Barlow Condensed',sans-serif; font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:#888; text-align:center; line-height:1.7;">
+        Built by <span style="color:#C9A84C;">Coach Michael Young</span><br>
+        <span style="color:#555;">20 Years Experience · Reggie Smith Protégé · Son Drafted by Minnesota Twins</span>
+      </div>
+    </div>
+
     <div style="padding:24px 28px;">
 
       <!-- ── STEP 1: WHO IS THIS FOR ── -->
@@ -1217,6 +1225,46 @@ function dismissIosBanner() {
 
           <div style="font-family:'Barlow',sans-serif; font-size:12px; color:#444; line-height:1.5;">Each player's email is the only one that can open the app on their device. Your email is for billing only. We'll open Stripe once per player — same card pre-fills each time.</div>
         </div>
+      </div>
+
+      <!-- ═══ PRIMARY CTA — 7-DAY FREE TRIAL — promoted above paid plans ═══ -->
+      <!-- This is the recommended path for cold-traffic users. Only shown in self mode; -->
+      <!-- the gift flow routes through Stripe directly since trial is per-player, 1 device. -->
+      <div id="trial-primary-cta" style="background:linear-gradient(135deg,#1A1500,#141400); border:2px solid #C9A84C; border-radius:4px; padding:20px; margin-bottom:18px; position:relative; box-shadow:0 0 0 1px rgba(201,168,76,0.15);">
+        <div style="position:absolute; top:-10px; left:16px; background:#181818; padding:0 10px; font-family:'Barlow Condensed',sans-serif; font-size:10px; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:#C9A84C;">
+          ⭐ Start Here
+        </div>
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:10px; flex-wrap:wrap;">
+          <div>
+            <div style="font-family:'Bebas Neue',cursive; font-size:28px; color:#C9A84C; letter-spacing:2px; line-height:1;">🎁 TRY IT FREE</div>
+            <div style="font-family:'Barlow Condensed',sans-serif; font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:#888; margin-top:3px;">7 Days · Every Feature · No Card Needed</div>
+          </div>
+          <div style="font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:#27AE60; background:rgba(39,174,96,0.1); border:1px solid #27AE60; padding:4px 10px; border-radius:2px; white-space:nowrap;">No Card</div>
+        </div>
+        <div style="font-family:'Barlow',sans-serif; font-size:13px; color:#BBBBBB; line-height:1.6; margin-bottom:14px;">
+          Test drive every feature — journal, stats, goals, arm care, training calendar — for <strong style="color:#F4F4F4;">7 full days</strong>. Pick a plan later when you're sure.
+        </div>
+        <div id="trial-email-error" style="display:none; font-family:'Barlow Condensed',sans-serif; font-size:12px; color:#E57373; margin-bottom:10px; padding:10px 12px; background:rgba(192,57,43,0.1); border:1px solid rgba(192,57,43,0.3); border-radius:2px; letter-spacing:1px;"></div>
+        <button onclick="beginTrial()" style="width:100%; background:#C9A84C; color:#080808; font-family:'Barlow Condensed',sans-serif; font-size:14px; font-weight:800; letter-spacing:2px; text-transform:uppercase; padding:14px; border:none; border-radius:2px; cursor:pointer;" onmouseover="this.style.background='#E8C96A'" onmouseout="this.style.background='#C9A84C'">
+          ⚾ &nbsp;Start My 7-Day Free Trial →
+        </button>
+      </div>
+
+      <!-- Gift-mode alternative to the trial CTA — explains why trial is hidden for gift purchases -->
+      <div id="trial-gift-note" style="display:none; background:rgba(93,173,226,0.05); border:1px solid #2471A3; border-radius:3px; padding:13px 14px; margin-bottom:18px;">
+        <div style="font-family:'Barlow Condensed',sans-serif; font-size:10px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; color:#5DADE2; margin-bottom:4px;">
+          ℹ️ Gift Purchase
+        </div>
+        <div style="font-family:'Barlow',sans-serif; font-size:12px; color:#BBBBBB; line-height:1.6;">
+          The free trial is a personal signup for one device. For gift purchases covering multiple players, pick a plan below — each player gets their own 7-day trial built into their account.
+        </div>
+      </div>
+
+      <!-- Divider between trial and paid plans -->
+      <div style="display:flex; align-items:center; gap:10px; margin:8px 0 16px;">
+        <div style="flex:1; height:1px; background:linear-gradient(90deg, transparent, #2A2200);"></div>
+        <div style="font-family:'Barlow Condensed',sans-serif; font-size:10px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:#666; white-space:nowrap;">Or Choose a Plan</div>
+        <div style="flex:1; height:1px; background:linear-gradient(90deg, #2A2200, transparent);"></div>
       </div>
 
       <!-- ── STEP 3: CHOOSE YOUR PLAN ── -->
@@ -1307,27 +1355,6 @@ function dismissIosBanner() {
         <!-- Join-a-team link for players whose coach already created a team -->
         <div style="text-align:center; font-family:'Barlow Condensed',sans-serif; font-size:11px; letter-spacing:2px; text-transform:uppercase; color:#666; margin-bottom:14px;">
           Your coach already on My Grind? <a href="#" onclick="event.preventDefault(); showJoinTeamFromSignup();" style="color:#C9A84C; text-decoration:none; font-weight:700;">Have a team code? →</a>
-        </div>
-
-        <!-- ═══ NOT READY TO COMMIT? — 7-DAY FREE TRIAL (fallback) ═══════ -->
-        <div style="background:linear-gradient(135deg,#0E0E0E,#111111); border:1px dashed #C9A84C; border-radius:4px; padding:20px; margin-bottom:14px; position:relative;">
-          <div style="position:absolute; top:-10px; left:16px; background:#181818; padding:0 10px; font-family:'Barlow Condensed',sans-serif; font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#888;">
-            Not ready to commit?
-          </div>
-          <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:10px; flex-wrap:wrap;">
-            <div>
-              <div style="font-family:'Bebas Neue',cursive; font-size:26px; color:#C9A84C; letter-spacing:2px; line-height:1;">🎁 TRY IT FREE</div>
-              <div style="font-family:'Barlow Condensed',sans-serif; font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:#777; margin-top:3px;">7 Days · Every Feature · No Card</div>
-            </div>
-            <div style="font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:#27AE60; background:rgba(39,174,96,0.1); border:1px solid #27AE60; padding:4px 10px; border-radius:2px; white-space:nowrap;">No Card Needed</div>
-          </div>
-          <div style="font-family:'Barlow',sans-serif; font-size:13px; color:#BBBBBB; line-height:1.6; margin-bottom:14px;">
-            Test drive every feature — journal, stats, goals, arm care, and all the rest — for <strong style="color:#F4F4F4;">7 full days</strong>. Pick a plan above when you're sure.
-          </div>
-          <div id="trial-email-error" style="display:none; font-family:'Barlow Condensed',sans-serif; font-size:12px; color:#E57373; margin-bottom:10px; padding:10px 12px; background:rgba(192,57,43,0.1); border:1px solid rgba(192,57,43,0.3); border-radius:2px; letter-spacing:1px;"></div>
-          <button onclick="beginTrial()" style="width:100%; background:transparent; color:#C9A84C; font-family:'Barlow Condensed',sans-serif; font-size:14px; font-weight:800; letter-spacing:2px; text-transform:uppercase; padding:13px; border:1px solid #C9A84C; border-radius:2px; cursor:pointer; transition:all 0.15s;" onmouseover="this.style.background='rgba(201,168,76,0.08)'" onmouseout="this.style.background='transparent'">
-            ⚾ &nbsp;Start My 7-Day Free Trial →
-          </button>
         </div>
 
         <button onclick="goToPurchase('monthly')" style="width:100%; background:transparent; color:#555; font-family:'Barlow Condensed',sans-serif; font-size:12px; font-weight:700; letter-spacing:2px; text-transform:uppercase; padding:10px; border:1px solid #222; border-radius:2px; cursor:pointer;" onmouseover="this.style.background='rgba(201,168,76,0.05)'" onmouseout="this.style.background='transparent'">
@@ -3636,6 +3663,14 @@ function setRegistrationMode(mode) {
   giftBtn.style.borderColor  = mode === 'gift' ? 'var(--gold)' : '#2E2E2E';
   giftBtn.style.color        = mode === 'gift' ? 'var(--gold)' : '#666';
   document.getElementById('trial-email-error').style.display = 'none';
+
+  // Toggle the primary Free Trial CTA — only visible in self mode.
+  // In gift mode, show the explanatory note instead so parents understand
+  // why trial isn't an option for multi-player purchases.
+  const trialCta = document.getElementById('trial-primary-cta');
+  const giftNote = document.getElementById('trial-gift-note');
+  if (trialCta) trialCta.style.display = mode === 'self' ? 'block' : 'none';
+  if (giftNote) giftNote.style.display = mode === 'gift' ? 'block' : 'none';
 }
 
 function showEmailError(msg) {
