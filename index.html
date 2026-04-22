@@ -4938,6 +4938,152 @@ function showPanel(id) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
+// ═══════════════════════════════════════════════════════════════════════
+// SWIPE NAVIGATION — swipe left/right between tabs on touch devices
+// ═══════════════════════════════════════════════════════════════════════
+// Design rules (all must pass before a swipe triggers a tab switch):
+//   1. Touch must move at least SWIPE_MIN_DISTANCE pixels horizontally
+//   2. Horizontal distance must be 1.5x greater than vertical (ignore vertical scrolls)
+//   3. Must complete within SWIPE_MAX_TIME ms (ignore slow drags)
+//   4. Must NOT start on: form inputs, buttons, the tab bar, or scrollable children
+//   5. Must NOT trigger if any modal/overlay is currently visible
+// Wraps around: swiping left on last tab goes to first, and vice versa.
+
+const SWIPE_TAB_ORDER = [
+  'dashboard', 'academics', 'players', 'journal', 'calendar',
+  'goals', 'team', 'stats', 'share', 'settings'
+];
+const SWIPE_MIN_DISTANCE = 60;    // min horizontal px to count as a swipe
+const SWIPE_MAX_TIME     = 600;   // max ms — anything slower is a drag, not a swipe
+const SWIPE_AXIS_RATIO   = 1.5;   // horizontal must be 1.5x vertical to be "mostly horizontal"
+
+let _swipeStartX = 0;
+let _swipeStartY = 0;
+let _swipeStartTime = 0;
+let _swipeStartTarget = null;
+
+// Is any modal / overlay currently visible? If so, don't swipe.
+function _isAnyModalOpen() {
+  const modalIds = [
+    'trial-overlay',
+    'share-modal',
+    'parent-email-preview-modal',
+    'team-create-overlay'
+  ];
+  for (let i = 0; i < modalIds.length; i++) {
+    const el = document.getElementById(modalIds[i]);
+    if (el && el.style && el.style.display && el.style.display !== 'none') return true;
+  }
+  return false;
+}
+
+// Is this touch starting on something that shouldn't trigger a swipe?
+// - Form inputs (text, email, number, etc) — user might be selecting text
+// - Buttons — user is tapping a button
+// - The tab bar itself — user is trying to scroll the tabs
+// - Any element with data-no-swipe attribute — explicit opt-out
+function _isSwipeBlockedByTarget(target) {
+  if (!target) return false;
+  let el = target;
+  while (el && el !== document.body) {
+    const tag = (el.tagName || '').toLowerCase();
+    if (tag === 'input' || tag === 'textarea' || tag === 'select' || tag === 'button') return true;
+    if (el.classList && el.classList.contains('tab-bar')) return true;
+    if (el.getAttribute && el.getAttribute('data-no-swipe') === 'true') return true;
+    // Also ignore swipes that start inside any horizontally-scrollable element
+    if (el.scrollWidth && el.clientWidth && el.scrollWidth > el.clientWidth + 2) {
+      const style = window.getComputedStyle ? window.getComputedStyle(el) : null;
+      if (style && (style.overflowX === 'auto' || style.overflowX === 'scroll')) return true;
+    }
+    el = el.parentElement;
+  }
+  return false;
+}
+
+// Perform the tab switch with wraparound
+function _swipeToAdjacentTab(direction) {
+  // Find the currently active tab
+  const activePanels = document.querySelectorAll('.panel.active');
+  if (!activePanels || activePanels.length === 0) return;
+  const activeId = activePanels[0].id.replace('panel-', '');
+  const currentIdx = SWIPE_TAB_ORDER.indexOf(activeId);
+  if (currentIdx === -1) return;  // Unknown tab — bail
+
+  let nextIdx;
+  if (direction === 'left') {
+    // swiped left → next tab (wraps)
+    nextIdx = (currentIdx + 1) % SWIPE_TAB_ORDER.length;
+  } else {
+    // swiped right → previous tab (wraps)
+    nextIdx = (currentIdx - 1 + SWIPE_TAB_ORDER.length) % SWIPE_TAB_ORDER.length;
+  }
+
+  const nextId = SWIPE_TAB_ORDER[nextIdx];
+  try {
+    showPanel(nextId);
+    // Gentle haptic feedback on supported devices
+    if (typeof ybgHaptic === 'function') ybgHaptic('light');
+    else if (navigator.vibrate) { try { navigator.vibrate(10); } catch(e) {} }
+  } catch(e) {
+    try { console.warn('[MG] swipe nav failed:', e); } catch(_) {}
+  }
+}
+
+// Wire up touch listeners on the document
+// passive:true because we don't preventDefault — we want scrolling to work normally
+(function setupSwipeNav() {
+  if (!('ontouchstart' in window)) return;  // No touch support — don't bother
+
+  document.addEventListener('touchstart', function(e) {
+    if (!e.touches || e.touches.length !== 1) {
+      _swipeStartTime = 0;  // multi-touch — not a swipe
+      return;
+    }
+    const t = e.touches[0];
+    _swipeStartX = t.clientX;
+    _swipeStartY = t.clientY;
+    _swipeStartTime = Date.now();
+    _swipeStartTarget = e.target;
+  }, { passive: true });
+
+  document.addEventListener('touchend', function(e) {
+    if (!_swipeStartTime) return;
+    const elapsed = Date.now() - _swipeStartTime;
+    _swipeStartTime = 0;  // clear for next touch
+
+    // Rule 3: Must be a quick movement, not a slow drag
+    if (elapsed > SWIPE_MAX_TIME) return;
+
+    const touch = (e.changedTouches && e.changedTouches[0]) || null;
+    if (!touch) return;
+
+    const dx = touch.clientX - _swipeStartX;
+    const dy = touch.clientY - _swipeStartY;
+    const absDx = Math.abs(dx);
+    const absDy = Math.abs(dy);
+
+    // Rule 1: Must move far enough horizontally
+    if (absDx < SWIPE_MIN_DISTANCE) return;
+
+    // Rule 2: Must be mostly horizontal (not a diagonal)
+    if (absDx < absDy * SWIPE_AXIS_RATIO) return;
+
+    // Rule 5: No modals open
+    if (_isAnyModalOpen()) return;
+
+    // Rule 4: Didn't start on a form input, button, or scrollable element
+    if (_isSwipeBlockedByTarget(_swipeStartTarget)) return;
+
+    // All checks passed — switch tabs
+    _swipeToAdjacentTab(dx < 0 ? 'left' : 'right');
+  }, { passive: true });
+
+  // Cancel tracking if touch is interrupted (e.g., notification banner drops down)
+  document.addEventListener('touchcancel', function() {
+    _swipeStartTime = 0;
+  }, { passive: true });
+})();
+
 // ─── CALENDAR ─────────────────────────────────────────────
 function buildCalendar() {
   const container = document.getElementById('calendar-months');
