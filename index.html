@@ -1852,29 +1852,27 @@ function dismissIosBanner() {
       </div>
 
       <!-- ── MEDIA UPLOAD ── -->
+      <!-- TEMPORARILY DISABLED during beta. Reason: localStorage's 5-10MB quota can't hold
+           realistic photo/video base64. The previous code stripped dataUrls on save to stay
+           under quota, but that meant uploads appeared to work then showed as placeholders
+           after reopen — bad UX. Real media support arrives with cloud storage (Firebase
+           Storage / Cloudinary) post-beta. Elements are kept in DOM (display:none) so
+           existing JS functions don't throw. -->
       <div style="margin-bottom:20px;">
-        <label>📸 &nbsp;Photos & 🎥 Videos</label>
-        <div id="media-drop-zone" style="
-          border: 2px dashed var(--border);
-          border-radius: 4px;
-          padding: 28px;
-          text-align: center;
-          cursor: pointer;
-          transition: all 0.2s;
-          background: var(--card2);
-          position: relative;
-        "
-        onclick="document.getElementById('media-file-input').click()"
-        ondragover="handleDragOver(event)"
-        ondragleave="handleDragLeave(event)"
-        ondrop="handleDrop(event)">
-          <div style="font-size:32px; margin-bottom:8px;">📸</div>
-          <div style="font-family:'Barlow Condensed'; font-size:13px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--grey);">Tap to Upload or Drag & Drop</div>
-          <div style="font-family:'Barlow'; font-size:12px; color:var(--border); margin-top:4px;">Photos (JPG, PNG) · Videos (MP4, MOV) · Max 50MB each</div>
-          <input type="file" id="media-file-input" multiple accept="image/*,video/*" style="display:none;" onchange="handleFileSelect(event)">
+        <label>📸 &nbsp;Photos & Videos</label>
+        <div style="background:var(--card2); border:1px dashed var(--border); border-radius:4px; padding:22px; text-align:center;">
+          <div style="font-size:28px; margin-bottom:6px; opacity:0.5;">📸 🎥</div>
+          <div style="font-family:'Barlow Condensed'; font-size:13px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--gold);">Photo & Video Upload — Coming Soon</div>
+          <div style="font-family:'Barlow'; font-size:12px; color:var(--grey); margin-top:6px; line-height:1.5;">We're building cloud storage so your photos and videos persist across devices. Available in the next major update.</div>
         </div>
-        <!-- Media Preview Grid -->
-        <div id="media-preview-grid" style="display:none; margin-top:12px; display:grid; grid-template-columns:repeat(auto-fill, minmax(90px,1fr)); gap:8px;"></div>
+        <!-- Hidden legacy elements — kept so existing JS (handleDrop, renderMediaPreview) doesn't throw -->
+        <div id="media-drop-zone" style="display:none;"
+          onclick="document.getElementById('media-file-input').click()"
+          ondragover="handleDragOver(event)"
+          ondragleave="handleDragLeave(event)"
+          ondrop="handleDrop(event)"></div>
+        <input type="file" id="media-file-input" multiple accept="image/*" style="display:none;" onchange="handleFileSelect(event)">
+        <div id="media-preview-grid" style="display:none;"></div>
       </div>
 
       <!-- ── COACH / PARENT COMMENT ── -->
@@ -5317,18 +5315,37 @@ function handleFileSelect(e) {
 }
 
 function processFiles(files) {
+  // Journal media upload is PHOTOS ONLY for now. Videos were previously accepted but never
+  // actually persisted reliably because localStorage has ~5-10MB total quota and a single
+  // phone video (20-50MB) blows that budget. Real video support is planned for post-beta
+  // once we have cloud storage (Firebase/Cloudinary). Until then: clear rejection, clear message.
   files.forEach(file => {
-    if (!file.type.startsWith('image/') && !file.type.startsWith('video/')) return;
-    if (file.size > 50 * 1024 * 1024) { alert(file.name + ' is too large. Max 50MB.'); return; }
+    if (file.type.startsWith('video/')) {
+      alert('Videos aren\'t supported yet — just photos for now. Video support is coming soon!');
+      return;
+    }
+    if (!file.type.startsWith('image/')) {
+      alert('Only photos can be uploaded (JPG or PNG).');
+      return;
+    }
+    // 10MB cap — closer to what localStorage can actually hold. Previous 50MB limit
+    // allowed files that blew the quota and silently failed to save.
+    if (file.size > 10 * 1024 * 1024) {
+      alert(file.name + ' is too large. Max 10MB per photo.');
+      return;
+    }
     const reader = new FileReader();
     reader.onload = (e) => {
       pendingMedia.push({
-        type:    file.type.startsWith('image/') ? 'image' : 'video',
+        type:    'image',
         name:    file.name,
         dataUrl: e.target.result,
         size:    (file.size / (1024*1024)).toFixed(1) + 'MB'
       });
       renderMediaPreview();
+    };
+    reader.onerror = () => {
+      alert('Could not read ' + file.name + '. Try a different photo.');
     };
     reader.readAsDataURL(file);
   });
