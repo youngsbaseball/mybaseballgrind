@@ -1912,7 +1912,9 @@ function dismissIosBanner() {
         <!-- Name + position display -->
         <div style="flex:1; min-width:0;">
           <div id="profile-name-display" style="font-family:'Bebas Neue'; font-size:30px; letter-spacing:2px; color:var(--white); line-height:1; margin-bottom:6px;">—</div>
-          <div id="profile-pos-display" style="font-family:'Barlow Condensed'; font-size:12px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--grey); margin-bottom:12px;">Position · Team</div>
+          <div id="profile-pos-display" style="font-family:'Barlow Condensed'; font-size:12px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--grey); margin-bottom:4px;">Position · Team</div>
+          <!-- Height/Weight subheading — auto-fills from most recent Height & Weight entry -->
+          <div id="profile-hw-display" style="display:none; font-family:'Barlow Condensed'; font-size:12px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#58D68D; margin-bottom:12px;"></div>
           <div style="display:flex; gap:8px; flex-wrap:wrap;">
             <button onclick="document.getElementById('profile-pic-input').click()" style="background:transparent; border:1px solid var(--border); color:var(--grey); font-family:'Barlow Condensed'; font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:6px 12px; border-radius:2px; cursor:pointer;">
               📸 Upload Photo
@@ -1930,15 +1932,28 @@ function dismissIosBanner() {
       </div>
     </div>
 
-    <!-- ═══ 2) BASICS — Age, Grade, High School ═══════════════════════════ -->
+    <!-- ═══ 2) BASICS — Birthdate (auto-calculates Age), Grade, High School ═══ -->
     <!-- Surfaced above Academics so a coach/recruiter sees WHO the player is immediately. -->
     <div class="card" style="margin-bottom:16px;">
       <div class="card-title">🎒 The Basics</div>
       <div class="form-row">
         <div>
-          <label>My Age</label>
-          <input type="number" id="pl-age" placeholder="e.g. 15" min="5" max="25" oninput="saveProfile()">
+          <label>My Birthdate</label>
+          <input type="date" id="pl-birthdate" oninput="saveProfile()">
+          <!-- Hidden mirror so any legacy code reading pl-age still works; kept in sync by saveProfile() -->
+          <input type="hidden" id="pl-age">
         </div>
+        <div>
+          <label>My Age <span style="font-weight:400; color:var(--grey); font-size:11px;">(auto-calculated)</span></label>
+          <div id="pl-age-display" style="
+            font-family:'Bebas Neue',cursive; font-size:26px; letter-spacing:2px;
+            color:var(--gold); background:var(--card2); border:1px solid var(--border);
+            border-radius:2px; padding:10px 14px; min-height:46px; box-sizing:border-box;
+            display:flex; align-items:center;
+          ">—</div>
+        </div>
+      </div>
+      <div class="form-row">
         <div>
           <label>My Grade</label>
           <select id="pl-grade" onchange="saveProfile()">
@@ -1954,9 +1969,11 @@ function dismissIosBanner() {
             <option>College Senior</option>
           </select>
         </div>
+        <div>
+          <label>My High School / Team</label>
+          <input type="text" id="pl-school" placeholder="e.g. Canyon High School" oninput="saveProfile()">
+        </div>
       </div>
-      <label>My High School / Team</label>
-      <input type="text" id="pl-school" placeholder="e.g. Canyon High School" oninput="saveProfile()">
     </div>
 
     <!-- ═══ 3) PHYSICAL — Height & Weight tracker ═══════════════════════════ -->
@@ -2047,62 +2064,9 @@ function dismissIosBanner() {
       </div>
     </div>
 
-    <!-- ═══ 4) ACADEMICS — Grades lead the substantive content ═══════════════ -->
-    <!-- Positioned above the rest of the player detail intentionally: "No Grades · No Baseball" is the foundational rule. -->
-    <div class="card" style="margin-bottom:16px; background:linear-gradient(135deg,#141A14,#101410); border:2px solid #5A8A3A; box-shadow:0 0 0 1px rgba(168,217,123,0.08);">
-      <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px; flex-wrap:wrap;">
-        <span style="background:#5A8A3A; color:#F4F4F4; font-family:'Barlow Condensed'; font-size:10px; font-weight:800; letter-spacing:2px; text-transform:uppercase; padding:3px 9px; border-radius:2px;">Priority #1</span>
-        <div class="card-title" style="color:#A8D97B; margin:0;">📚 Academics — No Grades · No Baseball</div>
-      </div>
-
-      <div style="background:rgba(168,217,123,0.06); border:1px solid #1A3A1A; border-radius:2px; padding:12px 14px; margin-bottom:16px; font-size:13px; color:var(--light); line-height:1.7;">
-        "Pull every grade right now. If anything is slipping, handle it today — not next week."
-      </div>
-
-      <!-- GPA row -->
-      <div class="grid-2" style="margin-bottom:18px;">
-        <div style="text-align:center; padding:14px 10px; background:var(--card2); border-radius:3px; border-top:2px solid #2A3A2A;">
-          <div class="gpa-num" id="gpa-display" style="font-size:38px;">—</div>
-          <div class="gpa-label" style="margin-top:4px;">Current GPA · Target: <span id="gpa-target-display">—</span></div>
-        </div>
-        <div>
-          <label>My GPA</label>
-          <input type="number" id="gpa-current" step="0.1" min="0" max="4.0" placeholder="e.g. 3.2">
-          <label>Target GPA</label>
-          <input type="number" id="gpa-target" step="0.1" min="0" max="4.0" placeholder="e.g. 3.5">
-          <button class="btn btn-gold btn-sm" onclick="saveGPA()" style="margin-top:4px;">Save GPA</button>
-        </div>
-      </div>
-
-      <!-- Subject grades -->
-      <div style="font-family:'Barlow Condensed'; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#A8D97B; margin-bottom:10px;">📖 Monthly Grade Check</div>
-      <div id="grade-checks">
-        <div class="grade-row">
-          <div class="grade-label">English / Language Arts</div>
-          <select class="subject-grade" style="width:80px; margin-bottom:0;" onchange="renderGrades()"><option>A</option><option>B</option><option>C</option><option>D</option><option>F</option></select>
-        </div>
-        <div class="grade-row">
-          <div class="grade-label">Math</div>
-          <select class="subject-grade" style="width:80px; margin-bottom:0;" onchange="renderGrades()"><option>A</option><option>B</option><option>C</option><option>D</option><option>F</option></select>
-        </div>
-        <div class="grade-row">
-          <div class="grade-label">Science</div>
-          <select class="subject-grade" style="width:80px; margin-bottom:0;" onchange="renderGrades()"><option>A</option><option>B</option><option>C</option><option>D</option><option>F</option></select>
-        </div>
-        <div class="grade-row">
-          <div class="grade-label">History / Social Studies</div>
-          <select class="subject-grade" style="width:80px; margin-bottom:0;" onchange="renderGrades()"><option>A</option><option>B</option><option>C</option><option>D</option><option>F</option></select>
-        </div>
-        <div class="grade-row">
-          <div class="grade-label">Elective / PE</div>
-          <select class="subject-grade" style="width:80px; margin-bottom:0;" onchange="renderGrades()"><option>A</option><option>B</option><option>C</option><option>D</option><option>F</option></select>
-        </div>
-      </div>
-    </div>
-
-    <!-- ═══ 5) PLAYER DETAIL — positions, bats/throws, 60-yd, velo, bio ════ -->
+    <!-- ═══ 4) PLAYER DETAIL (About Me) — positions, bats/throws, 60-yd, velo, bio ════ -->
     <div class="card" style="margin-bottom:16px;">
-      <div class="card-title">⚾ Player Detail</div>
+      <div class="card-title">⚾ About Me</div>
 
       <div class="form-row">
         <div>
@@ -2172,6 +2136,82 @@ function dismissIosBanner() {
 
       <label>My Goals & Notes</label>
       <textarea id="pl-bio" placeholder="Strengths, goals, areas to improve, coach notes..." oninput="saveProfile()"></textarea>
+    </div>
+
+    <!-- ═══ 5) ACADEMICS — Grades live below identity & about-me ═══════════════ -->
+    <!-- "No Grades · No Baseball" stays a Priority #1 card via styling, but the natural reading order is: who I am → what I do on the field → my academic reality. -->
+    <div class="card" style="margin-bottom:16px; background:linear-gradient(135deg,#141A14,#101410); border:2px solid #5A8A3A; box-shadow:0 0 0 1px rgba(168,217,123,0.08); padding-top:0; padding-left:0; padding-right:0;">
+      <!-- Priority #1 badge row — full width, sits at top of card -->
+      <div style="background:#5A8A3A; color:#F4F4F4; font-family:'Barlow Condensed',sans-serif; font-size:10px; font-weight:800; letter-spacing:3px; text-transform:uppercase; padding:6px 16px; text-align:center;">
+        ⭐ &nbsp;Priority #1 &nbsp;·&nbsp; Academics &nbsp;⭐
+      </div>
+
+      <!-- THE RULE — Hero banner, unmissable the moment you reach this card -->
+      <div style="position:relative; padding:22px 16px 20px; text-align:center; background:
+            repeating-linear-gradient(
+              135deg,
+              transparent,
+              transparent 18px,
+              rgba(168,217,123,0.04) 18px,
+              rgba(168,217,123,0.04) 19px
+            );
+            border-bottom:1px solid #1A3A1A;">
+        <div style="font-family:'Bebas Neue',cursive; font-size:32px; letter-spacing:3px; line-height:1.15; color:#F4F4F4;">
+          <span style="color:#E57373;">NO</span> GRADES &nbsp;·&nbsp; <span style="color:#E57373;">NO</span> BASEBALL
+        </div>
+        <div style="font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:#6B8A4A; margin-top:8px;">
+          That Is The Rule
+        </div>
+      </div>
+
+      <!-- Card body — padded back in for the usual content -->
+      <div style="padding:18px 16px 2px;">
+        <div class="card-title" style="color:#A8D97B; margin-bottom:12px;">📚 My Academic Check-In</div>
+
+        <div style="background:rgba(168,217,123,0.06); border-left:3px solid #5A8A3A; padding:12px 14px; margin-bottom:16px; font-size:13px; color:var(--light); line-height:1.7; font-style:italic;">
+          "Pull every grade right now. If anything is slipping, handle it today — not next week."
+        </div>
+
+      <!-- GPA row -->
+      <div class="grid-2" style="margin-bottom:18px;">
+        <div style="text-align:center; padding:14px 10px; background:var(--card2); border-radius:3px; border-top:2px solid #2A3A2A;">
+          <div class="gpa-num" id="gpa-display" style="font-size:38px;">—</div>
+          <div class="gpa-label" style="margin-top:4px;">Current GPA · Target: <span id="gpa-target-display">—</span></div>
+        </div>
+        <div>
+          <label>My GPA</label>
+          <input type="number" id="gpa-current" step="0.1" min="0" max="4.0" placeholder="e.g. 3.2">
+          <label>Target GPA</label>
+          <input type="number" id="gpa-target" step="0.1" min="0" max="4.0" placeholder="e.g. 3.5">
+          <button class="btn btn-gold btn-sm" onclick="saveGPA()" style="margin-top:4px;">Save GPA</button>
+        </div>
+      </div>
+
+      <!-- Subject grades -->
+      <div style="font-family:'Barlow Condensed'; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#A8D97B; margin-bottom:10px;">📖 Monthly Grade Check</div>
+      <div id="grade-checks">
+        <div class="grade-row">
+          <div class="grade-label">English / Language Arts</div>
+          <select class="subject-grade" style="width:80px; margin-bottom:0;" onchange="renderGrades()"><option>A</option><option>B</option><option>C</option><option>D</option><option>F</option></select>
+        </div>
+        <div class="grade-row">
+          <div class="grade-label">Math</div>
+          <select class="subject-grade" style="width:80px; margin-bottom:0;" onchange="renderGrades()"><option>A</option><option>B</option><option>C</option><option>D</option><option>F</option></select>
+        </div>
+        <div class="grade-row">
+          <div class="grade-label">Science</div>
+          <select class="subject-grade" style="width:80px; margin-bottom:0;" onchange="renderGrades()"><option>A</option><option>B</option><option>C</option><option>D</option><option>F</option></select>
+        </div>
+        <div class="grade-row">
+          <div class="grade-label">History / Social Studies</div>
+          <select class="subject-grade" style="width:80px; margin-bottom:0;" onchange="renderGrades()"><option>A</option><option>B</option><option>C</option><option>D</option><option>F</option></select>
+        </div>
+        <div class="grade-row">
+          <div class="grade-label">Elective / PE</div>
+          <select class="subject-grade" style="width:80px; margin-bottom:0;" onchange="renderGrades()"><option>A</option><option>B</option><option>C</option><option>D</option><option>F</option></select>
+        </div>
+      </div>
+      </div><!-- /end academics content padding wrapper -->
     </div>
 
     <!-- ── SAVE CONFIRMATION ── -->
@@ -5309,6 +5349,26 @@ function updateProfileDisplay(name, pos, school) {
     const parts = [pos, school].filter(Boolean);
     posEl.textContent = parts.length ? parts.join(' · ') : 'Position · Team';
   }
+  // Height / Weight subheading — pulled from the most recent H&W log entry
+  updateProfileHWDisplay();
+}
+
+// Populates the green H&W subheading line under the Hero card.
+// Reads from the H&W log (set by saveHWEntry). Hidden when no entries exist.
+function updateProfileHWDisplay() {
+  try {
+    const hwEl = document.getElementById('profile-hw-display');
+    if (!hwEl) return;
+    const log = (typeof getHWLog === 'function') ? getHWLog() : [];
+    if (!log.length) { hwEl.style.display = 'none'; return; }
+    const latest = log[log.length - 1];
+    const parts = [];
+    if (latest.heightStr) parts.push(latest.heightStr);
+    if (latest.weight)    parts.push(latest.weight + ' lbs');
+    if (parts.length === 0) { hwEl.style.display = 'none'; return; }
+    hwEl.textContent = '📏 ' + parts.join('  ·  ');
+    hwEl.style.display = 'block';
+  } catch(e) {}
 }
 
 function savePositions() {
@@ -5321,19 +5381,49 @@ function savePositions() {
   saveProfile();
 }
 
+// ─── BIRTHDATE → AGE ──────────────────────────────────────
+// Compute an age in completed years from an ISO date string (YYYY-MM-DD).
+// Returns '' when the input is empty or invalid.
+function calculateAge(birthdateStr) {
+  if (!birthdateStr) return '';
+  const birth = new Date(birthdateStr);
+  if (isNaN(birth.getTime())) return '';
+  const today = new Date();
+  let age = today.getFullYear() - birth.getFullYear();
+  const m = today.getMonth() - birth.getMonth();
+  // If we haven't passed the birthday yet this year, subtract a year
+  if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) age--;
+  if (age < 0 || age > 120) return '';
+  return String(age);
+}
+
+// Read the birthdate input and push the computed age to the hidden pl-age mirror + gold display.
+// Called from saveProfile() and loadProfile() so the display stays in sync.
+function updateAgeFromBirthdate() {
+  const bd = document.getElementById('pl-birthdate')?.value || '';
+  const age = calculateAge(bd);
+  const hiddenAge = document.getElementById('pl-age');
+  const disp = document.getElementById('pl-age-display');
+  if (hiddenAge) hiddenAge.value = age;
+  if (disp) disp.textContent = age ? (age + ' yrs old') : '—';
+  return age;
+}
+
 function saveProfile() {
+  // Keep pl-age in sync with pl-birthdate every save — single source of truth is birthdate.
+  updateAgeFromBirthdate();
   const profile = {
-    name:   document.getElementById('pl-name')?.value   || '',
-    pos:    document.getElementById('pl-pos')?.value    || '',
-    age:    document.getElementById('pl-age')?.value    || '',
-    grade:  document.getElementById('pl-grade')?.value  || '',
-    school: document.getElementById('pl-school')?.value || '',
-    bats:   document.getElementById('pl-bats')?.value   || '',
-    gpa:    document.getElementById('pl-gpa')?.value    || '',
-    season: document.getElementById('pl-season')?.value || '',
-    sixty:  document.getElementById('pl-sixty')?.value  || '',
-    velo:   document.getElementById('pl-velo')?.value   || '',
-    bio:    document.getElementById('pl-bio')?.value    || '',
+    name:      document.getElementById('pl-name')?.value      || '',
+    pos:       document.getElementById('pl-pos')?.value       || '',
+    birthdate: document.getElementById('pl-birthdate')?.value || '',
+    age:       document.getElementById('pl-age')?.value       || '',
+    grade:     document.getElementById('pl-grade')?.value     || '',
+    school:    document.getElementById('pl-school')?.value    || '',
+    bats:      document.getElementById('pl-bats')?.value      || '',
+    season:    document.getElementById('pl-season')?.value    || '',
+    sixty:     document.getElementById('pl-sixty')?.value     || '',
+    velo:      document.getElementById('pl-velo')?.value      || '',
+    bio:       document.getElementById('pl-bio')?.value       || '',
     savedAt: new Date().toISOString()
   };
   try { localStorage.setItem('ybg_profile', JSON.stringify(profile)); } catch(e) {}
@@ -5353,12 +5443,16 @@ function loadProfile() {
     if (!saved) return;
     const p = JSON.parse(saved);
     // Load simple text/number fields
-    // Note: 'gpa' removed — the Academics card's gpa-current field is now the sole GPA source (see loadGradesUI)
-    const fields = ['name','age','grade','school','bats','season','sixty','velo','bio'];
+    // Note: 'age' stays in the list so any legacy profile saves still populate the hidden input,
+    //       but the real source of truth is 'birthdate' — which recomputes age via updateAgeFromBirthdate() below.
+    //       'gpa' removed — Academics card's gpa-current is the sole GPA source (see loadGradesUI).
+    const fields = ['name','birthdate','age','grade','school','bats','season','sixty','velo','bio'];
     fields.forEach(f => {
       const el = document.getElementById('pl-' + f);
       if (el && p[f]) el.value = p[f];
     });
+    // Recompute age from birthdate so the display reflects TODAY, not the date the profile was saved
+    updateAgeFromBirthdate();
     // Restore position checkboxes
     if (p.pos) {
       const savedPos = p.pos.split(' / ').map(v => v.trim());
@@ -5442,6 +5536,8 @@ function renderHWTracker() {
     if (currentEl)  currentEl.style.display  = 'none';
     if (historyEl)  historyEl.style.display  = 'none';
     if (reminderEl) reminderEl.style.display = 'none';
+    // Also clear the Hero subheading so it hides when no entries exist
+    try { updateProfileHWDisplay(); } catch(e) {}
     return;
   }
 
@@ -5509,6 +5605,9 @@ function renderHWTracker() {
     document.getElementById('hw-reminder-text').textContent = reminderText;
     reminderEl.style.display = 'block';
   }
+
+  // Push the latest height/weight up to the Hero card subheading
+  try { updateProfileHWDisplay(); } catch(e) {}
 }
 
 // ─── START ────────────────────────────────────────────────
