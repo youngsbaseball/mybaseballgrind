@@ -9818,5 +9818,153 @@ function updateCloudUI() {
   }
 })();
 </script>
+<!-- ═══ AUTO-SYNC + WELCOME SIGN-IN ═══ -->
+<div id="welcome-signin-overlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.88); z-index:100000; align-items:center; justify-content:center; padding:20px;">
+  <div style="background:#1a1a1a; border:1px solid #5DADE2; border-radius:8px; padding:28px 24px; max-width:340px; width:100%; text-align:center; color:#fff; font-family:Barlow,sans-serif; box-sizing:border-box;">
+    <div style="font-size:48px; margin-bottom:12px;">☁️</div>
+    <div style="font-family:'Bebas Neue',sans-serif; font-size:24px; letter-spacing:2px; color:#C9A84C; margin-bottom:10px;">PROTECT YOUR JOURNAL</div>
+    <div style="font-size:14px; line-height:1.6; color:#aaa; margin-bottom:22px;">
+      Sign in with Google to save your journal to the cloud. Safe if you lose your phone or switch devices. Takes 10 seconds.
+    </div>
+    <button onclick="_welcomeSignIn()" style="width:100%; background:#5DADE2; color:#080808; font-family:'Barlow Condensed',sans-serif; font-size:14px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; padding:14px; border:none; border-radius:2px; cursor:pointer; margin-bottom:10px;">
+      🔐 Sign in with Google
+    </button>
+    <button onclick="_welcomeDismiss()" style="width:100%; background:transparent; color:#888; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:10px; border:none; cursor:pointer;">
+      Maybe later
+    </button>
+  </div>
+</div>
+<script>
+(function() {
+  var _cloudSyncTimer = null;
+  var _cloudSyncInProgress = false;
+
+  // Debounced cloud save — schedules a save 3 seconds after the last change
+  window.autoSaveToCloud = function() {
+    try {
+      if (!window.firebase || !firebase.auth().currentUser) return;
+      if (_cloudSyncTimer) clearTimeout(_cloudSyncTimer);
+      _cloudSyncTimer = setTimeout(_doCloudSync, 3000);
+    } catch(e) {}
+  };
+
+  function _doCloudSync() {
+    if (_cloudSyncInProgress) return;
+    try {
+      var user = firebase.auth().currentUser;
+      if (!user) return;
+      _cloudSyncInProgress = true;
+      var data = {};
+      var keys = (typeof BACKUP_KEYS !== 'undefined' ? BACKUP_KEYS : []);
+      keys.forEach(function(key) {
+        var raw = localStorage.getItem(key);
+        if (raw !== null) data[key] = raw;
+      });
+      firebase.firestore().collection('users').doc(user.uid).set({
+        data: data,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        email: user.email || null,
+        appVersion: '2026.1',
+        autoSync: true
+      }).then(function() {
+        _cloudSyncInProgress = false;
+        try { localStorage.setItem('ybg_last_cloud_save_at', new Date().toISOString()); } catch(e) {}
+        _showSyncPing('Synced');
+      }).catch(function(err) {
+        _cloudSyncInProgress = false;
+        console.warn('[MG] auto sync failed:', err);
+      });
+    } catch(e) {
+      _cloudSyncInProgress = false;
+    }
+  }
+
+  // On sign-in: first device = push local to cloud; new device = pull cloud to local
+  function _onSignIn(user) {
+    if (!user) return;
+    try {
+      var localState = JSON.parse(localStorage.getItem('ybg_state') || '{}');
+      var hasLocalData = Array.isArray(localState.entries) && localState.entries.length > 0;
+      firebase.firestore().collection('users').doc(user.uid).get().then(function(doc) {
+        var hasCloudData = false;
+        var cloudCount = 0;
+        if (doc.exists && doc.data() && doc.data().data) {
+          try {
+            var cs = JSON.parse(doc.data().data.ybg_state || '{}');
+            cloudCount = Array.isArray(cs.entries) ? cs.entries.length : 0;
+            hasCloudData = cloudCount > 0;
+          } catch(e) {}
+        }
+        if (hasLocalData && !hasCloudData) {
+          // First-time sign-in: push local to cloud immediately
+          _doCloudSync();
+        } else if (!hasLocalData && hasCloudData) {
+          // New device: offer to restore from cloud
+          if (confirm('☁️ Cloud backup found!\n\n' + cloudCount + ' journal entries saved in the cloud. Pull them to this device?')) {
+            var cloud = doc.data();
+            Object.keys(cloud.data).forEach(function(key) {
+              try { localStorage.setItem(key, cloud.data[key]); } catch(e) {}
+            });
+            alert('Restored. App will reload.');
+            window.location.reload();
+          }
+        }
+      }).catch(function(err) { console.warn('[MG] onSignIn check failed:', err); });
+    } catch(e) {}
+  }
+
+  function _showSyncPing(msg) {
+    try {
+      var el = document.getElementById('ybg-sync-ping');
+      if (!el) {
+        el = document.createElement('div');
+        el.id = 'ybg-sync-ping';
+        el.style.cssText = 'position:fixed;bottom:16px;right:16px;background:rgba(39,174,96,0.95);color:#fff;font-family:Barlow,sans-serif;font-size:12px;font-weight:700;padding:8px 14px;border-radius:20px;box-shadow:0 2px 8px rgba(0,0,0,0.3);z-index:99999;opacity:0;transition:opacity 0.3s;';
+        document.body.appendChild(el);
+      }
+      el.textContent = '☁️ ' + msg;
+      el.style.opacity = '1';
+      setTimeout(function() { el.style.opacity = '0'; }, 2000);
+    } catch(e) {}
+  }
+
+  // Welcome banner handlers
+  window._welcomeSignIn = function() {
+    if (typeof signInWithGoogle === 'function') signInWithGoogle();
+    var o = document.getElementById('welcome-signin-overlay');
+    if (o) o.style.display = 'none';
+  };
+  window._welcomeDismiss = function() {
+    try { localStorage.setItem('ybg_welcome_dismissed', '1'); } catch(e) {}
+    var o = document.getElementById('welcome-signin-overlay');
+    if (o) o.style.display = 'none';
+  };
+
+  // Show welcome banner after 2.5s if not signed in and not previously dismissed
+  setTimeout(function() {
+    try {
+      if (localStorage.getItem('ybg_welcome_dismissed') === '1') return;
+      if (window.firebase && firebase.auth && firebase.auth().currentUser) return;
+      var o = document.getElementById('welcome-signin-overlay');
+      if (o) o.style.display = 'flex';
+    } catch(e) {}
+  }, 2500);
+
+  // Wire up auth listener for auto-sync + new-device detection
+  var _checkAuth = setInterval(function() {
+    if (window.firebase && firebase.auth) {
+      clearInterval(_checkAuth);
+      firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+          var o = document.getElementById('welcome-signin-overlay');
+          if (o) o.style.display = 'none';
+          try { localStorage.setItem('ybg_welcome_dismissed', '1'); } catch(e) {}
+          setTimeout(function() { _onSignIn(user); }, 800);
+        }
+      });
+    }
+  }, 200);
+})();
+</script>
 </body>
 </html>
