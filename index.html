@@ -3398,8 +3398,8 @@ function saveState() {
       gpa:     state.gpa     || { current: null, target: null }
     };
     localStorage.setItem('ybg_state', JSON.stringify(toSave));
+    try { if (window.autoSaveToCloud) window.autoSaveToCloud(); } catch(e) {}
     return true;
-
     } catch(e) {
     console.warn('[YBG] saveState failed:', e);
     // DO NOT overwrite saved data with empty entries — that silently wipes the user's journal.
