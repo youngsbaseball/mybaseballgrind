@@ -2949,9 +2949,7 @@ function dismissIosBanner() {
           Take a screenshot of your GameChanger box score. The app reads it automatically and fills your stats in — no typing required.
         </div>
 
-        <div id=gc-drop-zone-stats
- onclick=onclick="alert('📸 Screenshot Import is coming soon! For now, use the manual entry form below to type your stats.'); return false;"
- style="border:2px dashed #2471A3; border-radius:4px; padding:24px 16px; text-align:center; cursor:pointer; background:rgba(93,173,226,0.04); margin-bottom:10px;" onmouseover="this.style.borderColor='#5DADE2'; this.style.background='rgba(93,173,226,0.08)'" onmouseout="this.style.borderColor='#2471A3'; this.style.background='rgba(93,173,226,0.04)'">
+        <div id="gc-drop-zone-stats" onclick="document.getElementById('gc-screenshot-input-stats').click()" style="border:2px dashed #2471A3; border-radius:4px; padding:24px 16px; text-align:center; cursor:pointer; background:rgba(93,173,226,0.04); margin-bottom:10px;" onmouseover="this.style.borderColor='#5DADE2'; this.style.background='rgba(93,173,226,0.08)'" onmouseout="this.style.borderColor='#2471A3'; this.style.background='rgba(93,173,226,0.04)'">
           <div style="font-size:28px; margin-bottom:6px;">📱</div>
           <div style="font-family:'Barlow Condensed'; font-size:13px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#5DADE2; margin-bottom:3px;">Upload Box Score Screenshot</div>
           <div style="font-family:'Barlow'; font-size:12px; color:var(--grey);">Tap to select your GameChanger screenshot</div>
