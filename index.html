@@ -7947,7 +7947,139 @@ function exportJournalPDF() {
     } catch(e) { return 'Baseball'; }
   })();
   html += '<div class="footer">MY GRIND · ' + exportSportLabel + ' Journal<br>Log Every Game. Own the Grind.</div>';
-  html += '</body></html>';
+  html += 
+    <!-- ═══ FIREBASE CLOUD BACKUP — logic ═══ -->
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyBEftxaT0v6gHYW1dz_THm-JbLQ4CaOI9c",
+  authDomain: "my-grind-b8486.firebaseapp.com",
+  projectId: "my-grind-b8486",
+  storageBucket: "my-grind-b8486.firebasestorage.app",
+  messagingSenderId: "627787811658",
+  appId: "1:627787811658:web:2558d568cd92822db90fb3"
+};
+
+let _fbAuth = null;
+let _fbDb = null;
+
+try {
+  firebase.initializeApp(firebaseConfig);
+  _fbAuth = firebase.auth();
+  _fbDb = firebase.firestore();
+  _fbAuth.onAuthStateChanged(updateCloudUI);
+} catch(e) {
+  console.warn('[MG] Firebase init failed:', e);
+}
+
+async function signInWithGoogle() {
+  if (!_fbAuth) { alert('Cloud service unavailable. Refresh the page and try again.'); return; }
+  try {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    await _fbAuth.signInWithPopup(provider);
+    updateCloudUI();
+  } catch(err) {
+    console.error('[MG] signIn failed:', err);
+    if (err.code === 'auth/popup-blocked' || err.code === 'auth/popup-closed-by-user') {
+      alert('Sign-in popup was blocked or closed. Try again and allow popups for this site.');
+    } else if (err.code === 'auth/unauthorized-domain') {
+      alert('This domain is not authorized. Add it in Firebase → Authentication → Settings → Authorized Domains.');
+    } else {
+      alert('Sign-in failed: ' + (err.message || 'unknown'));
+    }
+  }
+}
+
+async function signOutCloud() {
+  if (!_fbAuth) return;
+  try { await _fbAuth.signOut(); updateCloudUI(); } catch(e) { console.error(e); }
+}
+
+async function saveToCloud() {
+  if (!_fbAuth || !_fbDb) { alert('Cloud service unavailable.'); return; }
+  if (!_fbAuth.currentUser) {
+    await signInWithGoogle();
+    if (!_fbAuth.currentUser) return;
+  }
+  try {
+    const data = {};
+    const keys = (typeof BACKUP_KEYS !== 'undefined' ? BACKUP_KEYS : []);
+    keys.forEach(function(key) {
+      const raw = localStorage.getItem(key);
+      if (raw !== null) data[key] = raw;
+    });
+    await _fbDb.collection('users').doc(_fbAuth.currentUser.uid).set({
+      data: data,
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+      email: _fbAuth.currentUser.email || null,
+      appVersion: '2026.1'
+    });
+    try { localStorage.setItem('ybg_last_cloud_save_at', new Date().toISOString()); } catch(e) {}
+    alert('☁️ Saved to cloud. Your data is safe across devices.');
+  } catch(err) {
+    console.error('[MG] saveToCloud failed:', err);
+    alert('Cloud save failed: ' + (err.message || 'unknown'));
+  }
+}
+
+async function restoreFromCloud() {
+  if (!_fbAuth || !_fbDb) { alert('Cloud service unavailable.'); return; }
+  if (!_fbAuth.currentUser) {
+    await signInWithGoogle();
+    if (!_fbAuth.currentUser) return;
+  }
+  try {
+    const doc = await _fbDb.collection('users').doc(_fbAuth.currentUser.uid).get();
+    if (!doc.exists || !doc.data().data) {
+      alert('No cloud backup found for this account. Tap Save to Cloud first.');
+      return;
+    }
+    const cloud = doc.data();
+    const when  = cloud.updatedAt && cloud.updatedAt.toDate ? cloud.updatedAt.toDate().toLocaleString() : 'unknown';
+    if (!confirm('Restore from cloud?\n\nLast saved: ' + when + '\n\n⚠️ This will REPLACE all data on this device with your cloud backup. Cannot be undone.\n\nContinue?')) return;
+    const allowedKeys = (typeof BACKUP_KEYS !== 'undefined' ? BACKUP_KEYS : []);
+    Object.keys(cloud.data).forEach(function(key) {
+      if (allowedKeys.indexOf(key) === -1) return;
+      try { localStorage.setItem(key, cloud.data[key]); } catch(e) {}
+    });
+    try { localStorage.setItem('ybg_last_restore_at', new Date().toISOString()); } catch(e) {}
+    alert('☁️ Restored. The app will reload.');
+    window.location.reload();
+  } catch(err) {
+    console.error('[MG] restoreFromCloud failed:', err);
+    alert('Cloud restore failed: ' + (err.message || 'unknown'));
+  }
+}
+
+function updateCloudUI() {
+  const statusEl = document.getElementById('cloud-status');
+  const emailEl  = document.getElementById('cloud-email');
+  const btnIn    = document.getElementById('btn-sign-in');
+  const btnOut   = document.getElementById('btn-sign-out');
+  const btnSave  = document.getElementById('btn-save-cloud');
+  const btnRest  = document.getElementById('btn-restore-cloud');
+  if (!statusEl) return;
+  const user = _fbAuth && _fbAuth.currentUser;
+  if (user) {
+    statusEl.textContent = '✓ Signed in';
+    statusEl.style.color = '#A8D97B';
+    if (emailEl) emailEl.textContent = user.email || '';
+    if (btnIn)   btnIn.style.display   = 'none';
+    if (btnOut)  btnOut.style.display  = 'block';
+    if (btnSave) btnSave.style.display = 'block';
+    if (btnRest) btnRest.style.display = 'block';
+  } else {
+    statusEl.textContent = 'Not signed in';
+    statusEl.style.color = 'var(--light)';
+    if (emailEl) emailEl.textContent = '';
+    if (btnIn)   btnIn.style.display   = 'block';
+    if (btnOut)  btnOut.style.display  = 'none';
+    if (btnSave) btnSave.style.display = 'none';
+    if (btnRest) btnRest.style.display = 'none';
+  }
+}
+</script>
+
+    '</body></html>';
 
   // Open in new window — user can print/save as PDF
   const win = window.open('', '_blank');
