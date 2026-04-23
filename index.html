@@ -4493,6 +4493,44 @@ function updateBackupStatusDisplay() {
   }
 }
 
+// ── BACKUP NUDGE ────────────────────────────────────────
+// Reminds users to back up their journal — protects against data loss.
+// Runs automatically 3 seconds after the app loads.
+function maybeNudgeBackup() {
+  try {
+    const entryCount = (state.entries || []).length;
+    const lastBackup = localStorage.getItem('ybg_last_backup_at') || localStorage.getItem('ybg_last_cloud_save_at');
+    const lastNudge  = localStorage.getItem('ybg_backup_nudge_at');
+    const now = Date.now();
+    const DAY = 24 * 60 * 60 * 1000;
+
+    // Only nudge once per day max
+    if (lastNudge && (now - new Date(lastNudge).getTime()) < DAY) return;
+
+    let message = null;
+    if (!lastBackup && entryCount >= 3) {
+      message = '📥 You have ' + entryCount + ' journal entries but have never backed up.\n\n' +
+                'Tap Settings → Cloud Backup → Save to Cloud to protect your data. ' +
+                'Takes 5 seconds.';
+    } else if (lastBackup) {
+      const days = Math.floor((now - new Date(lastBackup).getTime()) / DAY);
+      if (days >= 7) {
+        message = '📥 Last backup was ' + days + ' days ago.\n\n' +
+                  'Tap Settings → Cloud Backup → Save to Cloud to save your latest entries.';
+      }
+    }
+
+    if (message) {
+      localStorage.setItem('ybg_backup_nudge_at', new Date().toISOString());
+      setTimeout(function() { alert(message); }, 1200);
+    }
+  } catch(e) {}
+}
+
+// Run the nudge 3 seconds after the app loads
+try { setTimeout(maybeNudgeBackup, 3000); } catch(e) {}
+
+
 // Sequential Stripe checkout flow for gift-mode multi-player purchases.
 // Opens one Stripe window per player, saving each player's pending access
 // binding before the window opens so activation works when the creator PIN
