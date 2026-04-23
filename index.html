@@ -9799,5 +9799,24 @@ function updateCloudUI() {
   }
 }
 </script>
+<!-- ═══ DISABLE BROKEN GAMECHANGER SCREENSHOT BUTTON ═══ -->
+<script>
+(function() {
+  function _disableGcButton() {
+    var btn = document.getElementById('gc-drop-zone-stats');
+    if (btn) {
+      btn.onclick = function() {
+        alert('📸 Screenshot Import is coming soon! For now, use the manual entry form below to type your stats.');
+        return false;
+      };
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', _disableGcButton);
+  } else {
+    _disableGcButton();
+  }
+})();
+</script>
 </body>
 </html>
