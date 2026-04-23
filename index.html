@@ -3267,7 +3267,43 @@ function dismissIosBanner() {
       </div>
     </div>
 
-    <!-- ── CONTACT US — central hub for all contact channels ── -->
+    <!-- ── 
+       <!-- ── CLOUD BACKUP (Firebase) ── -->
+    <div class="card" style="margin-bottom:16px; border-left:3px solid #5DADE2;">
+      <div class="card-title">☁️ Cloud Backup</div>
+      <div style="font-family:'Barlow',sans-serif; font-size:13px; color:var(--grey); line-height:1.6; margin-bottom:14px;">
+        Sign in with Google to save your journal to the cloud. Your data is protected even if you lose your phone, clear your browser, or switch devices. Only you can see your data.
+      </div>
+
+      <div style="background:var(--card2); border:1px solid var(--border); border-radius:3px; padding:10px 14px; margin-bottom:12px;">
+        <div style="font-family:'Barlow Condensed',sans-serif; font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--grey); margin-bottom:4px;">Cloud Account</div>
+        <div id="cloud-status" style="font-family:'Barlow',sans-serif; font-size:13px; color:var(--light);">Not signed in</div>
+        <div id="cloud-email" style="font-family:'Barlow',sans-serif; font-size:11px; color:#5DADE2; margin-top:2px;"></div>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <button id="btn-sign-in" onclick="signInWithGoogle()" style="background:#5DADE2; color:#080808; font-family:'Barlow Condensed',sans-serif; font-size:13px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; padding:13px; border:none; border-radius:2px; cursor:pointer;">
+          🔐 Sign in with Google
+        </button>
+        <button id="btn-save-cloud" onclick="saveToCloud()" style="display:none; background:#5DADE2; color:#080808; font-family:'Barlow Condensed',sans-serif; font-size:13px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; padding:13px; border:none; border-radius:2px; cursor:pointer;">
+          ☁️ Save to Cloud
+        </button>
+        <button id="btn-restore-cloud" onclick="restoreFromCloud()" style="display:none; background:transparent; color:#5DADE2; font-family:'Barlow Condensed',sans-serif; font-size:13px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; padding:13px; border:1px solid #5DADE2; border-radius:2px; cursor:pointer;">
+          📥 Restore from Cloud
+        </button>
+        <button id="btn-sign-out" onclick="signOutCloud()" style="display:none; background:transparent; color:var(--grey); font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:10px; border:1px solid var(--border); border-radius:2px; cursor:pointer;">
+          Sign out
+        </button>
+      </div>
+
+      <div style="background:rgba(93,173,226,0.05); border:1px solid rgba(93,173,226,0.2); border-radius:3px; padding:12px 14px; margin-top:12px; font-family:'Barlow',sans-serif; font-size:12px; color:var(--grey); line-height:1.6;">
+        <strong style="color:var(--light);">☁️ Save to Cloud:</strong> Uploads your journal to your Google account. Do this after adding new entries.<br>
+        <strong style="color:var(--light); margin-top:4px; display:inline-block;">📥 Restore from Cloud:</strong> Pulls your journal back to this device. Use on a new phone or after clearing your browser.
+      </div>
+    </div>
+
+
+    CONTACT US — central hub for all contact channels ── -->
     <!-- Previously, contact info was scattered across multiple cards and screens. -->
     <!-- This card is the single source of truth inside the app. -->
     <div class="card" id="contact-us-card" style="margin-bottom:16px; border-left:3px solid var(--gold);">
