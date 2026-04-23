@@ -3399,17 +3399,20 @@ function saveState() {
     };
     localStorage.setItem('ybg_state', JSON.stringify(toSave));
     return true;
-  } catch(e) {
+
+    } catch(e) {
     console.warn('[YBG] saveState failed:', e);
-    // If quota exceeded, try without entries (keep goals at minimum)
-    try {
-      localStorage.setItem('ybg_state', JSON.stringify({
-        entries: [], players: state.players || [], goals: state.goals || [], gpa: state.gpa || { current: null, target: null }
-      }));
-    } catch(e2) {}
+    // DO NOT overwrite saved data with empty entries — that silently wipes the user's journal.
+    // Leave the last good save intact and warn the user so they can back up and free space.
+    if (!window._ybgStorageWarnShown) {
+      window._ybgStorageWarnShown = true;
+      setTimeout(function() {
+        alert('⚠️ Your phone storage for My Grind is full.\n\nYour latest entry may not have saved.\n\n1. Go to Settings → Cloud Backup → Save to Cloud\n2. Then delete older entries you don\'t need anymore');
+      }, 100);
+    }
     return false;
   }
-}
+
 
 // Initialize state — load from storage or use defaults
 let state = loadState() || {
