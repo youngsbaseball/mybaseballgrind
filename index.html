@@ -1170,7 +1170,11 @@ function dismissIosBanner() {
 </div>
 
 <!-- ── TRIAL OVERLAY (Welcome + Expired) ── -->
-<div id="trial-overlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.92); z-index:1000; align-items:center; justify-content:center; padding:24px; backdrop-filter:blur(12px);">
+<!-- CRITICAL: overflow-y:auto is required. Without it, on mobile phones where the
+     welcome screen is taller than the viewport, content gets clipped and users
+     can't tap the email input or pay buttons. align-items is flex-start (top-aligned)
+     rather than center so the header is always visible when the content scrolls. -->
+<div id="trial-overlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.92); z-index:1000; align-items:flex-start; justify-content:center; padding:24px; backdrop-filter:blur(12px); overflow-y:auto; -webkit-overflow-scrolling:touch;">
 
   <!-- WELCOME SCREEN -->
   <div id="trial-screen-welcome" style="max-width:460px; width:100%; background:#181818; border:1px solid #272727; border-radius:4px; overflow:hidden; animation:fadeIn 0.4s ease;">
