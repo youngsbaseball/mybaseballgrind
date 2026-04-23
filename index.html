@@ -3398,6 +3398,7 @@ function saveState() {
       gpa:     state.gpa     || { current: null, target: null }
     };
     localStorage.setItem('ybg_state', JSON.stringify(toSave));
+        try { if (window.autoSaveToCloud) window.autoSaveToCloud(); } catch(e) {}
     return true;
 
     } catch(e) {
