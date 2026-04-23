@@ -9818,5 +9818,116 @@ function updateCloudUI() {
   }
 })();
 </script>
+<!-- ═══ CLOUD AUTO-SYNC (safe version, no overlay) ═══ -->
+<script>
+(function() {
+  var _cloudSyncTimer = null;
+  var _cloudSyncInProgress = false;
+  var _signInHandled = false;
+
+  // Debounced cloud save — runs 3s after the last change
+  window.autoSaveToCloud = function() {
+    try {
+      if (!window.firebase || !firebase.auth().currentUser) return;
+      if (_cloudSyncTimer) clearTimeout(_cloudSyncTimer);
+      _cloudSyncTimer = setTimeout(_doCloudSync, 3000);
+    } catch(e) {}
+  };
+
+  function _doCloudSync() {
+    if (_cloudSyncInProgress) return;
+    try {
+      var user = firebase.auth().currentUser;
+      if (!user) return;
+      _cloudSyncInProgress = true;
+      var data = {};
+      var keys = (typeof BACKUP_KEYS !== 'undefined' ? BACKUP_KEYS : []);
+      keys.forEach(function(key) {
+        var raw = localStorage.getItem(key);
+        if (raw !== null) data[key] = raw;
+      });
+      firebase.firestore().collection('users').doc(user.uid).set({
+        data: data,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        email: user.email || null,
+        appVersion: '2026.1',
+        autoSync: true
+      }).then(function() {
+        _cloudSyncInProgress = false;
+        try { localStorage.setItem('ybg_last_cloud_save_at', new Date().toISOString()); } catch(e) {}
+        _showSyncPing('Synced');
+      }).catch(function(err) {
+        _cloudSyncInProgress = false;
+        console.warn('[MG] auto-sync failed:', err);
+      });
+    } catch(e) {
+      _cloudSyncInProgress = false;
+    }
+  }
+
+  // Tiny non-blocking toast (pointer-events:none so it can NEVER block clicks)
+  function _showSyncPing(msg) {
+    try {
+      var el = document.getElementById('ybg-sync-ping');
+      if (!el) {
+        el = document.createElement('div');
+        el.id = 'ybg-sync-ping';
+        el.style.cssText = 'position:fixed;bottom:16px;right:16px;background:rgba(39,174,96,0.95);color:#fff;font-family:Barlow,sans-serif;font-size:12px;font-weight:700;padding:8px 14px;border-radius:20px;box-shadow:0 2px 8px rgba(0,0,0,0.3);z-index:99999;opacity:0;transition:opacity 0.3s;pointer-events:none;';
+        document.body.appendChild(el);
+      }
+      el.textContent = '☁️ ' + msg;
+      el.style.opacity = '1';
+      setTimeout(function() { el.style.opacity = '0'; }, 2000);
+    } catch(e) {}
+  }
+
+  // On first sign-in this session: decide whether to push local or pull cloud
+  function _onFirstSignIn(user) {
+    if (_signInHandled) return;
+    _signInHandled = true;
+    try {
+      var localState = JSON.parse(localStorage.getItem('ybg_state') || '{}');
+      var hasLocalData = Array.isArray(localState.entries) && localState.entries.length > 0;
+      firebase.firestore().collection('users').doc(user.uid).get().then(function(doc) {
+        var hasCloudData = false;
+        var cloudCount = 0;
+        if (doc.exists && doc.data() && doc.data().data) {
+          try {
+            var cs = JSON.parse(doc.data().data.ybg_state || '{}');
+            cloudCount = Array.isArray(cs.entries) ? cs.entries.length : 0;
+            hasCloudData = cloudCount > 0;
+          } catch(e) {}
+        }
+        if (hasLocalData && !hasCloudData) {
+          _doCloudSync();
+        } else if (!hasLocalData && hasCloudData) {
+          setTimeout(function() {
+            if (confirm('☁️ Cloud backup found!\n\n' + cloudCount + ' journal entries saved in the cloud. Pull them to this device?')) {
+              try {
+                var cloud = doc.data();
+                Object.keys(cloud.data).forEach(function(key) {
+                  try { localStorage.setItem(key, cloud.data[key]); } catch(e) {}
+                });
+                alert('Restored. App will reload.');
+                window.location.reload();
+              } catch(e) {}
+            }
+          }, 1500);
+        }
+      }).catch(function(err) { console.warn('[MG] first sign-in check failed:', err); });
+    } catch(e) {}
+  }
+
+  // Wait for Firebase to be ready, then attach auth listener
+  var _checkAuth = setInterval(function() {
+    if (window.firebase && firebase.auth) {
+      clearInterval(_checkAuth);
+      firebase.auth().onAuthStateChanged(function(user) {
+        if (user) _onFirstSignIn(user);
+      });
+    }
+  }, 200);
+})();
+</script>
 </body>
 </html>
