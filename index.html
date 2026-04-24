@@ -704,7 +704,7 @@
 // ── SERVICE WORKER — enables offline use & install ──
 if ('serviceWorker' in navigator) {
   const swCode = `
-    const CACHE = 'ybg-mygrind-v3';
+    const CACHE = 'ybg-mygrind-v1';
     const ASSETS = ['/'];
     self.addEventListener('install', e => {
       e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS).catch(() => {})));
@@ -3399,20 +3399,17 @@ function saveState() {
     };
     localStorage.setItem('ybg_state', JSON.stringify(toSave));
     return true;
-
-    } catch(e) {
+  } catch(e) {
     console.warn('[YBG] saveState failed:', e);
-    // DO NOT overwrite saved data with empty entries — that silently wipes the user's journal.
-    // Leave the last good save intact and warn the user so they can back up and free space.
-    if (!window._ybgStorageWarnShown) {
-      window._ybgStorageWarnShown = true;
-      setTimeout(function() {
-        alert('⚠️ Your phone storage for My Grind is full.\n\nYour latest entry may not have saved.\n\n1. Go to Settings → Cloud Backup → Save to Cloud\n2. Then delete older entries you don\'t need anymore');
-      }, 100);
-    }
+    // If quota exceeded, try without entries (keep goals at minimum)
+    try {
+      localStorage.setItem('ybg_state', JSON.stringify({
+        entries: [], players: state.players || [], goals: state.goals || [], gpa: state.gpa || { current: null, target: null }
+      }));
+    } catch(e2) {}
     return false;
   }
-
+}
 
 // Initialize state — load from storage or use defaults
 let state = loadState() || {
@@ -4492,44 +4489,6 @@ function updateBackupStatusDisplay() {
     el.textContent = 'Status unknown';
   }
 }
-
-// ── BACKUP NUDGE ────────────────────────────────────────
-// Reminds users to back up their journal — protects against data loss.
-// Runs automatically 3 seconds after the app loads.
-function maybeNudgeBackup() {
-  try {
-    const entryCount = (state.entries || []).length;
-    const lastBackup = localStorage.getItem('ybg_last_backup_at') || localStorage.getItem('ybg_last_cloud_save_at');
-    const lastNudge  = localStorage.getItem('ybg_backup_nudge_at');
-    const now = Date.now();
-    const DAY = 24 * 60 * 60 * 1000;
-
-    // Only nudge once per day max
-    if (lastNudge && (now - new Date(lastNudge).getTime()) < DAY) return;
-
-    let message = null;
-    if (!lastBackup && entryCount >= 3) {
-      message = '📥 You have ' + entryCount + ' journal entries but have never backed up.\n\n' +
-                'Tap Settings → Cloud Backup → Save to Cloud to protect your data. ' +
-                'Takes 5 seconds.';
-    } else if (lastBackup) {
-      const days = Math.floor((now - new Date(lastBackup).getTime()) / DAY);
-      if (days >= 7) {
-        message = '📥 Last backup was ' + days + ' days ago.\n\n' +
-                  'Tap Settings → Cloud Backup → Save to Cloud to save your latest entries.';
-      }
-    }
-
-    if (message) {
-      localStorage.setItem('ybg_backup_nudge_at', new Date().toISOString());
-      setTimeout(function() { alert(message); }, 1200);
-    }
-  } catch(e) {}
-}
-
-// Run the nudge 3 seconds after the app loads
-try { setTimeout(maybeNudgeBackup, 3000); } catch(e) {}
-
 
 // Sequential Stripe checkout flow for gift-mode multi-player purchases.
 // Opens one Stripe window per player, saving each player's pending access
@@ -9798,25 +9757,6 @@ function updateCloudUI() {
     if (btnRest) btnRest.style.display = 'none';
   }
 }
-</script>
-<!-- ═══ DISABLE BROKEN GAMECHANGER SCREENSHOT BUTTON ═══ -->
-<script>
-(function() {
-  function _disableGcButton() {
-    var btn = document.getElementById('gc-drop-zone-stats');
-    if (btn) {
-      btn.onclick = function() {
-        alert('📸 Screenshot Import is coming soon! For now, use the manual entry form below to type your stats.');
-        return false;
-      };
-    }
-  }
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', _disableGcButton);
-  } else {
-    _disableGcButton();
-  }
-})();
 </script>
 </body>
 </html>
