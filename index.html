@@ -1738,7 +1738,7 @@ function dismissIosBanner() {
         <div style="margin-top:12px; text-align:center; font-family:'Barlow Condensed'; font-size:12px; letter-spacing:1.5px; text-transform:uppercase; color:var(--grey);">Total reps: <span id="jr-total-num" style="color:var(--gold); font-weight:800; font-family:'Bebas Neue'; font-size:18px; letter-spacing:1px;">0</span></div>
       </div>
 
-      <div class="form-row">
+      <div class="form-row" id="j-grade-row">
         <div>
           <label>Performance Grade (A–F)</label>
           <select id="j-grade">
@@ -5714,7 +5714,7 @@ function toggleGameStats() {
   // When Instructor is selected, hide everything except the Instructor card
   // to keep the form focused on just the instructor session.
   const hideOthers = isInstructor;
-  const fieldsToHide = ['j-title-wrapper', 'j-what-label', 'j-what', 'j-tomorrow-label', 'j-tomorrow', 'j-coach-section'];
+  const fieldsToHide = ['j-title-wrapper', 'j-what-label', 'j-what', 'j-tomorrow-label', 'j-tomorrow', 'j-coach-section', 'j-reps-section', 'j-grade-row'];
   fieldsToHide.forEach(function(fid) {
     const el = document.getElementById(fid);
     if (!el) return;
