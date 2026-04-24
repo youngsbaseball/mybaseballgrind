@@ -6623,6 +6623,42 @@ function applySportLabels(sport) {
   });
 }
 
+  
+  // ── DEEP SPORT SWAP ──────────────────────────────────
+  // Walk all visible text nodes and swap ⚾↔🥎 + Baseball↔Softball.
+  // Skip sport selectors (so they always show both options) and form inputs.
+  try {
+    const fromEmoji = isSoftball ? '⚾' : '🥎';
+    const toEmoji   = isSoftball ? '🥎' : '⚾';
+    const fromU     = isSoftball ? 'BASEBALL' : 'SOFTBALL';
+    const toU       = isSoftball ? 'SOFTBALL' : 'BASEBALL';
+    const fromC     = isSoftball ? 'Baseball' : 'Softball';
+    const toC       = isSoftball ? 'Softball' : 'Baseball';
+    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null);
+    const nodes = [];
+    let n;
+    while (n = walker.nextNode()) {
+      let p = n.parentElement, skip = false;
+      while (p) {
+        if (!p.tagName) break;
+        const t = p.tagName;
+        if (t === 'SCRIPT' || t === 'STYLE' || t === 'TEXTAREA' || t === 'INPUT') { skip = true; break; }
+        if (p.id === 'trial-sport-selector' || p.id === 'pl-sport-group') { skip = true; break; }
+        p = p.parentElement;
+      }
+      if (!skip) nodes.push(n);
+    }
+    nodes.forEach(function(tn) {
+      const original = tn.nodeValue;
+      const updated = original
+        .split(fromEmoji).join(toEmoji)
+        .split(fromU).join(toU)
+        .split(fromC).join(toC);
+      if (updated !== original) tn.nodeValue = updated;
+    });
+  } catch(e) { console.warn('[MG] deep sport swap error:', e); }
+
+
 function saveSport() {
   const sport = getSelectedSport();
   applySportUI(sport);
