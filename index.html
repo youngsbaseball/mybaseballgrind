@@ -1289,6 +1289,23 @@ function dismissIosBanner() {
         <div style="font-family:'Barlow',sans-serif; font-size:13px; color:#BBBBBB; line-height:1.6; margin-bottom:14px;">
           Test drive every feature — journal, stats, goals, arm care, training calendar — for <strong style="color:#F4F4F4;">7 full days</strong>. Pick a plan later when you're sure.
         </div>
+                <!-- ── SPORT SELECTOR — pick before starting trial ── -->
+        <div id="trial-sport-selector" style="background:rgba(201,168,76,0.05); border:1px solid #2A2200; border-radius:3px; padding:14px; margin-bottom:12px;">
+          <div style="font-family:'Barlow Condensed',sans-serif; font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#C9A84C; margin-bottom:10px; text-align:center;">
+            ⚾ 🥎 &nbsp;Choose Your Sport
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+            <label style="display:flex; align-items:center; justify-content:center; gap:8px; background:var(--card2); border:1px solid var(--border); border-radius:2px; padding:12px; cursor:pointer;">
+              <input type="radio" name="trial-sport" value="baseball" checked style="accent-color:#C9A84C; width:16px; height:16px;">
+              <span style="font-family:'Barlow Condensed',sans-serif; font-size:13px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:#F4F4F4;">⚾ Baseball</span>
+            </label>
+            <label style="display:flex; align-items:center; justify-content:center; gap:8px; background:var(--card2); border:1px solid var(--border); border-radius:2px; padding:12px; cursor:pointer;">
+              <input type="radio" name="trial-sport" value="softball" style="accent-color:#C9A84C; width:16px; height:16px;">
+              <span style="font-family:'Barlow Condensed',sans-serif; font-size:13px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:#F4F4F4;">🥎 Softball</span>
+            </label>
+          </div>
+        </div>
+
         <div id="trial-email-error" style="display:none; font-family:'Barlow Condensed',sans-serif; font-size:12px; color:#E57373; margin-bottom:10px; padding:10px 12px; background:rgba(192,57,43,0.1); border:1px solid rgba(192,57,43,0.3); border-radius:2px; letter-spacing:1px;"></div>
         <button onclick="beginTrial()" style="width:100%; background:#C9A84C; color:#080808; font-family:'Barlow Condensed',sans-serif; font-size:14px; font-weight:800; letter-spacing:2px; text-transform:uppercase; padding:14px; border:none; border-radius:2px; cursor:pointer;" onmouseover="this.style.background='#E8C96A'" onmouseout="this.style.background='#C9A84C'">
           ⚾ &nbsp;Start My 7-Day Free Trial →
