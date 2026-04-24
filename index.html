@@ -716,7 +716,7 @@
 // ── SERVICE WORKER — enables offline use & install ──
 if ('serviceWorker' in navigator) {
   const swCode = `
-    const CACHE = 'ybg-mygrind-v10';
+    const CACHE = 'ybg-mygrind-v11';
     const ASSETS = ['/'];
     self.addEventListener('install', e => {
       e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS).catch(() => {})));
@@ -7053,6 +7053,122 @@ if (_sf) _sf.style.display = 'block';
     } catch(e) { console.warn('[MG] instructor render error:', e); }
   };
 })();
+
+  
+// ── DAILY AFFIRMATION — shows once per day on Dashboard ──
+const YBG_AFFIRMATIONS = [
+  "The grind is a habit. Today, show up and keep it going.",
+  "Every rep you take today compounds. The player you're becoming thanks you.",
+  "Talent shows up on the big day. Work shows up every day.",
+  "The kid who outworks you this morning is the kid who beats you in June. Be that kid.",
+  "You don't need motivation. You need consistency. Show up.",
+  "Every great player had a Tuesday like today. What they did with it made them great.",
+  "The work you do when nobody's watching becomes the player everybody sees.",
+  "Your future self is built by today's reps. Get to it.",
+  "Short memory. Long grind. Today is a new day — make it count.",
+  "The game rewards the stubborn. Be stubborn about your development today.",
+  "Winners don't feel like training either. They train anyway. That's the only difference.",
+  "Nobody cares how you feel about today's grind. They'll care about the results in June.",
+  "Your legs are your foundation. Train them today like tomorrow's game depends on it.",
+  "Your teammates are counting on you to show up ready. Don't let them down.",
+  "One percent better every day equals 37 times better in a year. Start today's one percent.",
+  "The scoreboard is temporary. The habits you're building are permanent.",
+  "Your biggest opponent this season is whoever you look at in the mirror. Beat them today.",
+  "Sunday rest made you strong. Monday grind makes you unstoppable.",
+  "You can't control the weather, the umpire, or the lineup. Control today's work.",
+  "The grind isn't glamorous. It's just the price of being great.",
+  "Today is a chance to journal something the old you would be proud of.",
+  "Quiet work, loud results. Keep it quiet today.",
+  "Your swing, your arm, your mind — all three need a deposit today.",
+  "The best hitters fail seven out of ten times. Today, just focus on the ten swings.",
+  "Preparation is how confidence is built. Put in one rep today for the you on game day.",
+  "The field doesn't care what happened yesterday. Show up fresh.",
+  "Your body is a temple. Train it. Feed it. Rest it. Respect it.",
+  "Everybody wants the result. Earn yours today.",
+  "Be the player your ten-year-old self dreamed of becoming.",
+  "Small habits. Big games. Today's habits decide this summer's games.",
+  "You vs. you. Every day. That's the only competition that matters.",
+  "The dugout is your second classroom. Pay attention there too today.",
+  "Grades first. Training second. Life runs on both.",
+  "Today, be the teammate you'd want next to you in the box.",
+  "Hustle is free. Give it away generously today.",
+  "The player who loves the grind beats the player with more talent. Every time.",
+  "Today's tee work is tomorrow's line drive. Get the reps.",
+  "You'll never regret training on a day you didn't feel like it.",
+  "The season is long. Pace your grind, but never stop it.",
+  "One drill at a time. One rep at a time. One day at a time. That's how champions are built.",
+  "Your journal is proof the work happened. Fill it today.",
+  "Nobody checks in on you every morning except you. Do it.",
+  "The greatest ability is availability. Take care of your body today.",
+  "If nobody tells you today: the work you're doing matters. Keep going.",
+  "The grind is hard, but so is regret. Pick the hard thing you'll thank yourself for.",
+  "Today, eat well, sleep enough, and give one more rep than you did yesterday.",
+  "Scouts aren't watching your best days. They're watching your average days. Today is one.",
+  "Slumps are short for players who keep swinging. Keep swinging.",
+  "You don't have to be amazing today. You just have to be there. That's ninety percent.",
+  "The crowd won't remember your home runs. Your coach will remember how you ran out a grounder.",
+  "Today, pick one thing to improve. Just one. Go get it.",
+  "Your grind this week feeds the player you'll be next season. Don't waste a day.",
+  "The best in the game are the most coachable. Be the most coachable player on your team today.",
+  "You're exactly where the work has put you. Adjust the work if you want a different place.",
+  "Today is an opportunity, not an obligation. Treat it like the gift it is.",
+  "Your reputation gets built one day at a time. What's today's brick?",
+  "The kid who hits every day in January is the kid with the hot bat in June. Stay in it.",
+  "Nobody's coming to do it for you. Go do it.",
+  "Today is a day that future you will look back on. Make them proud.",
+  "Close yesterday. Open today. Fresh start. Make it count.",
+];
+
+(function showDailyAffirmation() {
+  try {
+    const today = new Date();
+    const ymd = today.getFullYear() + '-' + String(today.getMonth()+1).padStart(2,'0') + '-' + String(today.getDate()).padStart(2,'0');
+    const lastShown = localStorage.getItem('ybg_last_affirmation_date');
+    if (lastShown === ymd) return; // already shown today
+
+    // Pick affirmation based on day-of-year so everyone on the same calendar day gets the same message
+    const start = new Date(today.getFullYear(), 0, 0);
+    const dayOfYear = Math.floor((today - start) / (1000 * 60 * 60 * 24));
+    const idx = dayOfYear % YBG_AFFIRMATIONS.length;
+    const affirmation = YBG_AFFIRMATIONS[idx];
+
+    // Personalize with name + streak
+    let firstName = 'Player';
+    try {
+      const profile = JSON.parse(localStorage.getItem('ybg_profile') || '{}');
+      const raw = (profile.firstName || profile.name || '').trim();
+      if (raw) firstName = raw.split(' ')[0];
+    } catch(e) {}
+
+    let streakLine = '';
+    try {
+      const streak = parseInt(localStorage.getItem('ybg_streak') || '0');
+      if (streak > 0) streakLine = ' · Day ' + streak + ' of your grind';
+    } catch(e) {}
+
+    const esc = function(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); };
+
+    const banner = document.createElement('div');
+    banner.id = 'ybg-daily-affirmation';
+    banner.style.cssText = 'margin:16px 0 18px; padding:18px 44px 18px 22px; background:linear-gradient(135deg,#1A1500,#141400); border:1px solid var(--gold-dark); border-left:4px solid var(--gold); border-radius:4px; position:relative; opacity:0; transition:opacity 0.6s ease;';
+    banner.innerHTML =
+      '<button onclick="this.parentNode.remove();" aria-label="Close" style="position:absolute; top:6px; right:8px; background:transparent; border:none; color:var(--grey); font-size:20px; line-height:1; cursor:pointer; padding:4px 8px;">&times;</button>' +
+      '<div style="font-family:\'Barlow Condensed\',sans-serif; font-size:10px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:var(--gold); margin-bottom:6px;">🌅 Good morning, ' + esc(firstName) + esc(streakLine) + '</div>' +
+      '<div style="font-family:\'Barlow\',serif; font-size:14px; color:var(--white); line-height:1.6; font-style:italic;">"' + esc(affirmation) + '"</div>';
+
+    // Insert at top of dashboard panel
+    function mount() {
+      const dashboard = document.getElementById('panel-dashboard');
+      if (!dashboard) return false;
+      dashboard.insertBefore(banner, dashboard.firstChild);
+      setTimeout(function() { banner.style.opacity = '1'; }, 50);
+      localStorage.setItem('ybg_last_affirmation_date', ymd);
+      return true;
+    }
+    if (!mount()) setTimeout(mount, 500);
+  } catch(e) { console.warn('[MG] affirmation error:', e); }
+})();
+
 
 </script>
 
