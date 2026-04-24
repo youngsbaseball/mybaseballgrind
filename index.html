@@ -716,7 +716,7 @@
 // ── SERVICE WORKER — enables offline use & install ──
 if ('serviceWorker' in navigator) {
   const swCode = `
-    const CACHE = 'ybg-mygrind-v7';
+    const CACHE = 'ybg-mygrind-v8';
     const ASSETS = ['/'];
     self.addEventListener('install', e => {
       e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS).catch(() => {})));
@@ -2380,7 +2380,8 @@ function dismissIosBanner() {
             );
             border-bottom:1px solid #1A3A1A;">
         <div style="font-family:'Bebas Neue',cursive; font-size:36px; letter-spacing:3px; line-height:1.15; color:#F4F4F4;">
-          <span style="color:#E57373;">NO</span> GRADES &nbsp;·&nbsp; <span style="color:#E57373;">NO</span> BASEBALL
+          <span style="color:#E57373;">NO</span> GRADES &nbsp;·&nbsp; <span style="color:#E57373;">NO</NO</span> GAME
+
         </div>
         <div style="font-family:'Barlow Condensed',sans-serif; font-size:12px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:#6B8A4A; margin-top:10px;">
           That Is The Rule
@@ -6619,7 +6620,7 @@ function applySportUI(sport) {
 // Only in-app-after-signup copy gets swapped.
 function applySportLabels(sport) {
   const isSoftball = sport === 'softball';
-  const sportName = isSoftball ? 'Softball' : 'Baseball';
+  const sportName = const sportName = 'Game';
 
   // Long form: "No Grades · No Baseball — That's the rule."
   document.querySelectorAll('.sport-slogan').forEach(function(el) {
@@ -6641,7 +6642,7 @@ function applySportLabels(sport) {
 
   // "Grades Come First · Baseball Comes Second" subtitle
   document.querySelectorAll('.sport-sub-slogan').forEach(function(el) {
-    el.textContent = 'Grades Come First · ' + sportName + ' Comes Second';
+    el.textContent = 'Grades Come First · The ' + sportName + ' Comes Second';
   });
 }
 
