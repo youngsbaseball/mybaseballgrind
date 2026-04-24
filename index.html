@@ -716,7 +716,7 @@
 // ── SERVICE WORKER — enables offline use & install ──
 if ('serviceWorker' in navigator) {
   const swCode = `
-    const CACHE = 'ybg-mygrind-v11';
+    const CACHE = 'ybg-mygrind-v12';
     const ASSETS = ['/'];
     self.addEventListener('install', e => {
       e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS).catch(() => {})));
@@ -1693,7 +1693,9 @@ function dismissIosBanner() {
           <select id="j-type" onchange="toggleGameStats()">
             <option value="game">Game</option>
             <option value="practice">Practice</option>
-            <option value="reflection">Reflection</option>
+            <option value="reflection">Reflection</option>   
+            <option value="instructor">Instructor</option>
+
           </select>
         </div>
       </div>
@@ -1915,7 +1917,8 @@ function dismissIosBanner() {
 
       
       <!-- ── INSTRUCTOR SESSION ── -->
-      <div style="background:rgba(168,217,123,0.05); border:1px solid #2A3A2A; border-radius:3px; padding:16px; margin-bottom:20px;">
+      <div       <div id="j-instructor-section" style="display:none; background:rgba(168,217,123,0.05); border:1px solid #2A3A2A; border-radius:3px; padding:16px; margin-bottom:20px;">
+style="background:rgba(168,217,123,0.05); border:1px solid #2A3A2A; border-radius:3px; padding:16px; margin-bottom:20px;">
         <div style="font-family:'Barlow Condensed'; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#A8D97B; margin-bottom:6px;">🎓 &nbsp;Instructor Session</div>
         <div style="font-family:'Barlow'; font-size:12px; color:var(--grey); margin-bottom:12px; line-height:1.6;">Had a private lesson today? Log it here so you can track what you worked on over time.</div>
         <div class="form-row" style="margin-bottom:0;">
@@ -5698,6 +5701,12 @@ function toggleGameStats() {
   // Game stats and result
   if (section) section.style.display = isGame ? 'block' : 'none';
   if (resultW) resultW.style.display = isGame ? 'block' : 'none';
+  
+  // Instructor entry type — show the instructor session card
+  const instSec = document.getElementById('j-instructor-section');
+  const isInstructor = type === 'instructor';
+  if (instSec) instSec.style.display = isInstructor ? 'block' : 'none';
+
 
   // Title hidden for practice
   if (titleW) titleW.style.display = isPrac ? 'none' : 'block';
