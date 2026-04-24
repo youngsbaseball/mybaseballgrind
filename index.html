@@ -716,7 +716,7 @@
 // ── SERVICE WORKER — enables offline use & install ──
 if ('serviceWorker' in navigator) {
   const swCode = `
-    const CACHE = 'ybg-mygrind-v6';
+    const CACHE = 'ybg-mygrind-v7';
     const ASSETS = ['/'];
     self.addEventListener('install', e => {
       e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS).catch(() => {})));
@@ -7787,7 +7787,44 @@ const YBG_QUOTES = [
   { q: "The game will humble you. Journal it. Learn it. Come back better tomorrow.",                a: "The Grind" },
 ];
 
-function renderDailyQuote() {
+// ─── SOFTBALL QUOTES — mix of real greats + Grind wisdom ───
+// Merged into the daily rotation when sport === 'softball'.
+const YBG_QUOTES_SOFTBALL = [
+  { q: "Your bunt game is a weapon. Sharpen it.",                                                a: "The Grind" },
+  { q: "Pitchers throw 43 feet harder than you think. Stay locked in.",                          a: "The Grind" },
+  { q: "Drop step. Read the ball. React. The game rewards the player who trusts her eyes.",     a: "The Grind" },
+  { q: "Slapper, slugger, power hitter — every spot in the lineup is a weapon. Own your role.", a: "The Grind" },
+  { q: "Rise ball, drop ball, changeup. Study pitchers like a book. Read every page.",          a: "The Grind" },
+  { q: "Travel ball shows you who's committed. Be one of them.",                                a: "The Grind" },
+  { q: "Plate discipline wins games at every level — 10U, high school, college, national team.", a: "The Grind" },
+  { q: "Swing hard. In case you hit it.",                                                        a: "Lauren Chamberlain" },
+  { q: "You may only be as good as others think you are — but that's never going to happen. Believe in yourself.", a: "Jennie Finch" },
+  { q: "Trust that the hard work will pay off. It always does.",                                a: "Cat Osterman" },
+  { q: "Respect is earned. Not given.",                                                         a: "Crystl Bustos" },
+  { q: "Every time I step on the field, I want to be the best player out there.",              a: "Monica Abbott" },
+  { q: "The circle is your office. Own the plate. Own the at-bat.",                            a: "The Grind" },
+  { q: "No one gives you a hit. You take it. Every swing.",                                    a: "The Grind" },
+  { q: "Short game, small ball, inside game. Softball rewards the smart player.",              a: "The Grind" },
+  { q: "Your swing is your signature. Make it unmistakable.",                                  a: "The Grind" },
+  { q: "Fast hands. Strong base. Fearless eyes. That is the softball player.",                 a: "The Grind" },
+  { q: "Travel tournaments don't hand out trophies. They show who showed up ready.",           a: "The Grind" },
+  { q: "The diamond doesn't care what people say about girls in sports. Go play.",            a: "The Grind" },
+  { q: "Softball isn't a lesser game. It's a different one. Master it.",                      a: "The Grind" },
+];
+
+// One-time merge: add softball quotes into the daily rotation pool if sport is softball
+(function() {
+  try {
+    const profile = JSON.parse(localStorage.getItem('ybg_profile') || '{}');
+    if (profile.sport === 'softball' && !YBG_QUOTES._softballAdded) {
+      YBG_QUOTES.push.apply(YBG_QUOTES, YBG_QUOTES_SOFTBALL);
+      YBG_QUOTES._softballAdded = true;
+    }
+  } catch(e) {}
+})();
+
+
+  function renderDailyQuote() {
   // Pick a quote based on day of year — stays the same all day, rotates tomorrow
   const now = new Date();
   const start = new Date(now.getFullYear(), 0, 0);
