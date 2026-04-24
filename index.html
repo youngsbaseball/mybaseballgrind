@@ -6713,9 +6713,7 @@ function applySportLabels(sport) {
   document.querySelectorAll('.sport-sub-slogan').forEach(function(el) {
     el.textContent = 'Grades Come First · The ' + sportName + ' Comes Second';
   });
-}
 
-  
   // ── DEEP SPORT SWAP ──────────────────────────────────
   // Walk all visible text nodes and swap ⚾↔🥎 + Baseball↔Softball.
   // Skip sport selectors (so they always show both options) and form inputs.
@@ -6749,6 +6747,7 @@ function applySportLabels(sport) {
       if (updated !== original) tn.nodeValue = updated;
     });
   } catch(e) { console.warn('[MG] deep sport swap error:', e); }
+}
 
 
 function saveSport() {
