@@ -716,7 +716,7 @@
 // ── SERVICE WORKER — enables offline use & install ──
 if ('serviceWorker' in navigator) {
   const swCode = `
-    const CACHE = 'ybg-mygrind-v8';
+    const CACHE = 'ybg-mygrind-v9';
     const ASSETS = ['/'];
     self.addEventListener('install', e => {
       e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS).catch(() => {})));
@@ -1549,15 +1549,16 @@ function dismissIosBanner() {
 
 <div class="nav-tabs">
   <button class="tab-btn active" onclick="showPanel('dashboard')">⚾ Dashboard</button>
-  <button class="tab-btn" onclick="showPanel('academics')">📚 Academics</button>
-  <button class="tab-btn" onclick="showPanel('players')">👤 My Profile</button>
   <button class="tab-btn" onclick="showPanel('journal')">📓 Daily Journal</button>
-  <button class="tab-btn" onclick="showPanel('calendar')">📅 Training Calendar</button>
-  <button class="tab-btn" onclick="showPanel('goals')">🏆 Goals</button>
-  <button class="tab-btn" onclick="showPanel('team')">👥 Team</button>
   <button class="tab-btn" onclick="showPanel('stats')">📊 My Stats</button>
+  <button class="tab-btn" onclick="showPanel('goals')">🏆 Goals</button>
+  <button class="tab-btn" onclick="showPanel('academics')">📚 Academics</button>
+  <button class="tab-btn" onclick="showPanel('calendar')">📅 Training Calendar</button>
+  <button class="tab-btn" onclick="showPanel('team')">👥 Team</button>
+  <button class="tab-btn" onclick="showPanel('players')">👤 My Profile</button>
   <button class="tab-btn" onclick="showPanel('share')">📲 Share</button>
   <button class="tab-btn" onclick="showPanel('settings')">⚙️ Settings</button>
+
 </div>
 
 <main>
@@ -5077,8 +5078,9 @@ function showPanel(id) {
 // Wraps around: swiping left on last tab goes to first, and vice versa.
 
 const SWIPE_TAB_ORDER = [
-  'dashboard', 'academics', 'players', 'journal', 'calendar',
-  'goals', 'team', 'stats', 'share', 'settings'
+  'dashboard', 'journal', 'stats', 'goals', 'academics',
+  'calendar', 'team', 'players', 'share', 'settings'
+
 ];
 const SWIPE_MIN_DISTANCE = 60;    // min horizontal px to count as a swipe
 const SWIPE_MAX_TIME     = 600;   // max ms — anything slower is a drag, not a swipe
