@@ -716,7 +716,7 @@
 // ── SERVICE WORKER — enables offline use & install ──
 if ('serviceWorker' in navigator) {
   const swCode = `
-    const CACHE = 'ybg-mygrind-v9';
+    const CACHE = 'ybg-mygrind-v10';
     const ASSETS = ['/'];
     self.addEventListener('install', e => {
       e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS).catch(() => {})));
@@ -1912,6 +1912,49 @@ function dismissIosBanner() {
         <input type="file" id="media-file-input" multiple accept="image/*" style="display:none;" onchange="handleFileSelect(event)">
         <div id="media-preview-grid" style="display:none;"></div>
       </div>
+
+      
+      <!-- ── INSTRUCTOR SESSION ── -->
+      <div style="background:rgba(168,217,123,0.05); border:1px solid #2A3A2A; border-radius:3px; padding:16px; margin-bottom:20px;">
+        <div style="font-family:'Barlow Condensed'; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#A8D97B; margin-bottom:6px;">🎓 &nbsp;Instructor Session</div>
+        <div style="font-family:'Barlow'; font-size:12px; color:var(--grey); margin-bottom:12px; line-height:1.6;">Had a private lesson today? Log it here so you can track what you worked on over time.</div>
+        <div class="form-row" style="margin-bottom:0;">
+          <div>
+            <label>Instructor Name</label>
+            <input type="text" id="j-inst-name" placeholder="e.g. Coach Mike, Sharp Hitting Academy" style="margin-bottom:0;">
+          </div>
+          <div>
+            <label>Focus Area</label>
+            <select id="j-inst-focus" style="margin-bottom:0;">
+              <option value="">-- Select --</option>
+              <option value="hitting">🏏 Hitting</option>
+              <option value="pitching">⚾ Pitching</option>
+              <option value="fielding">🧤 Fielding</option>
+              <option value="catching">🎯 Catching</option>
+              <option value="baserunning">👟 Baserunning</option>
+              <option value="speed">⚡ Speed / Agility</option>
+              <option value="strength">💪 Strength</option>
+              <option value="mental">🧠 Mental Game</option>
+              <option value="other">📋 Other</option>
+            </select>
+          </div>
+        </div>
+        <div style="margin-top:12px;">
+          <label>What We Worked On</label>
+          <textarea id="j-inst-notes" placeholder="e.g. Tee work on back side, 50 swings. Then flips focusing on loading earlier..." style="min-height:80px; margin-bottom:0;"></textarea>
+        </div>
+        <div class="form-row" style="margin-top:12px; margin-bottom:0;">
+          <div>
+            <label>Session Duration (min)</label>
+            <input type="number" id="j-inst-duration" min="0" max="600" step="15" placeholder="e.g. 60" style="margin-bottom:0;">
+          </div>
+          <div>
+            <label>Next Session Date</label>
+            <input type="date" id="j-inst-next" style="margin-bottom:0;">
+          </div>
+        </div>
+      </div>
+
 
       <!-- ── COACH / PARENT COMMENT ── -->
       <div style="background:rgba(201,168,76,0.05); border:1px solid #2A2200; border-radius:3px; padding:16px; margin-bottom:20px;">
@@ -6943,6 +6986,74 @@ renderHWTracker();
 updateSubscriptionCard();
 const _sf = document.getElementById('social-share-footer');
 if (_sf) _sf.style.display = 'block';
+
+  
+// ── INSTRUCTOR LOG — extends Daily Journal with private-instruction tracking ──
+(function() {
+  if (typeof saveEntry !== 'function' || typeof renderEntries !== 'function') return;
+
+  const _origSave = saveEntry;
+  saveEntry = function() {
+    // Capture instructor fields BEFORE the original save clears them
+    const get = function(id) { const el = document.getElementById(id); return el ? el.value : ''; };
+    const instName     = (get('j-inst-name') || '').trim();
+    const instFocus    = get('j-inst-focus');
+    const instNotes    = (get('j-inst-notes') || '').trim();
+    const instDuration = parseInt(get('j-inst-duration')) || 0;
+    const instNext     = get('j-inst-next');
+    const has = !!(instName || instFocus || instNotes || instDuration || instNext);
+    const instructor = has ? { name: instName, focus: instFocus, notes: instNotes, duration: instDuration, next: instNext } : null;
+
+    _origSave();
+
+    if (instructor && state && state.entries && state.entries.length > 0) {
+      state.entries[0].instructor = instructor;
+      try { if (typeof saveState === 'function') saveState(); } catch(e) {}
+      try { renderEntries(); } catch(e) {}
+    }
+
+    ['j-inst-name','j-inst-focus','j-inst-notes','j-inst-duration','j-inst-next'].forEach(function(id) {
+      const el = document.getElementById(id);
+      if (el) el.value = '';
+    });
+  };
+
+  const _origRender = renderEntries;
+  renderEntries = function() {
+    _origRender();
+    try {
+      if (!state || !state.entries) return;
+      const cards = document.querySelectorAll('#entries-list .entry-card');
+      const focusLabels = { hitting:'🏏 Hitting', pitching:'⚾ Pitching', fielding:'🧤 Fielding', catching:'🎯 Catching', baserunning:'👟 Baserunning', speed:'⚡ Speed/Agility', strength:'💪 Strength', mental:'🧠 Mental Game', other:'📋 Other' };
+      const esc = function(s) { return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); };
+      state.entries.forEach(function(entry, i) {
+        if (!entry.instructor) return;
+        const card = cards[i];
+        if (!card) return;
+        if (card.querySelector('.ybg-inst-block')) return;
+        const ins = entry.instructor;
+        const focusLabel = focusLabels[ins.focus] || (ins.focus || '');
+        const headerParts = [];
+        if (ins.name)     headerParts.push('<strong style="color:var(--white);">' + esc(ins.name) + '</strong>');
+        if (focusLabel)   headerParts.push(esc(focusLabel));
+        if (ins.duration) headerParts.push(ins.duration + ' min');
+        const header = headerParts.join(' · ');
+        let html = '<div style="font-family:\'Barlow Condensed\'; font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#A8D97B; margin-bottom:6px;">🎓 Instructor Session</div>';
+        if (header)    html += '<div style="font-family:\'Barlow\'; font-size:13px; color:var(--light); margin-bottom:' + (ins.notes || ins.next ? '8' : '0') + 'px;">' + header + '</div>';
+        if (ins.notes) html += '<div style="font-family:\'Barlow\'; font-size:13px; color:var(--grey); line-height:1.6; margin-bottom:' + (ins.next ? '8' : '0') + 'px;">' + esc(ins.notes) + '</div>';
+        if (ins.next)  html += '<div style="font-family:\'Barlow Condensed\'; font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:#6B8A4A;">📅 Next: ' + esc(ins.next) + '</div>';
+        const block = document.createElement('div');
+        block.className = 'ybg-inst-block';
+        block.style.cssText = 'margin:12px 0; background:linear-gradient(135deg,#141A14,#101410); border:1px solid #5A8A3A; border-radius:3px; padding:14px 16px;';
+        block.innerHTML = html;
+        const title = card.querySelector('.entry-title');
+        if (title && title.parentNode) title.parentNode.insertBefore(block, title.nextSibling);
+        else card.appendChild(block);
+      });
+    } catch(e) { console.warn('[MG] instructor render error:', e); }
+  };
+})();
+
 </script>
 
 <!-- QR CODE LIBRARY -->
