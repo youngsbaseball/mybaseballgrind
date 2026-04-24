@@ -67,7 +67,19 @@
     --red: #C0392B;
     --green: #27AE60;
   }
+  /* ── SOFTBALL PALETTE ─────────────────────────────────
+     When body.sport-softball is active, gold accents shift
+     to a warm rose/pink palette. Keeps brand warmth + signals
+     the softball player's space. */
+  body.sport-softball {
+    --gold: #EC4899;       /* hot rose pink */
+    --gold-light: #F472B6; /* lighter pink */
+    --gold-dark: #BE185D;  /* deep rose */
+  }
 
+
+  
+  
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
@@ -704,7 +716,7 @@
 // ── SERVICE WORKER — enables offline use & install ──
 if ('serviceWorker' in navigator) {
   const swCode = `
-    const CACHE = 'ybg-mygrind-v5';
+    const CACHE = 'ybg-mygrind-v6';
     const ASSETS = ['/'];
     self.addEventListener('install', e => {
       e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS).catch(() => {})));
@@ -6550,6 +6562,16 @@ function getSelectedSport() {
 
 function applySportUI(sport) {
   const isSoftball = sport === 'softball';
+
+  
+  // Toggle body class for softball color palette (pink accent)
+  try {
+    if (document.body) {
+      if (isSoftball) document.body.classList.add('sport-softball');
+      else document.body.classList.remove('sport-softball');
+    }
+  } catch(e) {}
+
 
   // Toggle softball-only positions (DP, FLEX) visible only when softball is selected.
   // DH is still shown for both — used in some softball formats too.
