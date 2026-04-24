@@ -1698,14 +1698,14 @@ function dismissIosBanner() {
           </select>
         </div>
       </div>
-      <div id="j-title-wrapper">
+      <div id="j-title-wrapper" style="display:none;">
         <label id="j-title-label">Title / Opponent / Event</label>
         <input type="text" id="j-title" placeholder="e.g. vs Valencia HS – W 6-4">
       </div>
-      <label id="j-what-label">What happened? What did I do for my team?</label>
-      <textarea id="j-what" placeholder="Describe the game or practice..."></textarea>
-      <label id="j-tomorrow-label">What am I taking into tomorrow?</label>
-      <textarea id="j-tomorrow" placeholder="What's one thing to carry forward?"></textarea>
+      <label id="j-what-label">What did I work on today?</label>
+      <textarea id="j-what" placeholder="What drills, reps, or skills did I focus on? What felt good?"></textarea>
+      <label id="j-tomorrow-label">What am I taking into the next practice or game?</label>
+      <textarea id="j-tomorrow" placeholder="What is one thing I want to carry forward and keep working on?"></textarea>
       <!-- Reflection-only third prompt -->
       <div id="j-reflect-extra" style="display:none;">
         <label>How do I need to prepare for next week?</label>
@@ -1714,7 +1714,7 @@ function dismissIosBanner() {
 
       <!-- ══ PRACTICE REP COUNTER — shows when type = Practice ══ -->
       <!-- Ported from the removed Dashboard Quick Log. Reps persist on the entry so the Journal displays them historically. -->
-      <div id="j-reps-section" style="display:none; margin-top:4px; margin-bottom:20px; padding:14px 16px; background:rgba(201,168,76,0.06); border:1px solid var(--gold-dark); border-radius:3px;">
+      <div id="j-reps-section" style="display:block; margin-top:4px; margin-bottom:20px; padding:14px 16px; background:rgba(201,168,76,0.06); border:1px solid var(--gold-dark); border-radius:3px;">
         <div style="font-family:'Barlow Condensed'; font-size:12px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--gold); margin-bottom:4px;">🔢 Rep Counter — Today's Practice</div>
         <div style="font-family:'Barlow'; font-size:12px; color:var(--grey); margin-bottom:14px; line-height:1.5;">Track your volume. Nobody counts it for you. <strong style="color:var(--light);">You count it.</strong></div>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
@@ -1750,7 +1750,7 @@ function dismissIosBanner() {
             <option value="F">F — Struggled</option>
           </select>
         </div>
-        <div id="j-result-wrapper">
+        <div id="j-result-wrapper" style="display:none;">
           <label>Result</label>
           <select id="j-result">
             <option value="">-- W / L / T --</option>
@@ -1762,7 +1762,7 @@ function dismissIosBanner() {
       </div>
 
       <!-- ══ GAME STATS SECTION — shows when type = Game ══ -->
-      <div id="game-stats-section" style="margin-top:4px; margin-bottom:20px;">
+      <div id="game-stats-section" style="display:none; margin-top:4px; margin-bottom:20px;">
         <div style="background:rgba(201,168,76,0.06); border:1px solid var(--gold-dark); border-radius:3px; padding:16px 18px; margin-bottom:4px;">
           <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; flex-wrap:wrap; gap:8px;">
             <div style="font-family:'Barlow Condensed'; font-size:12px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--gold);">⚾ Today's Game Stats</div>
@@ -5050,6 +5050,11 @@ function init() {
   buildCalendar();
   syncDashboardToMonth();
   renderAll();
+
+  // Sync the journal form to the default entry type (Practice) so labels,
+  // placeholders, and visible fields match on first load — not just after
+  // the user manually changes the dropdown.
+  try { toggleGameStats(); } catch(e) { console.warn('[MG] init toggleGameStats:', e); }
 
   // ── CREATOR ACCESS & OLD FLAG CLEANUP ──────────────
   try {
