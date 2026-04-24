@@ -4078,6 +4078,17 @@ function beginTrial() {
     registeredAt: new Date().toISOString(), mode: registrationMode
   });
 
+    // Save sport selection from trial-sport radio (defaults to baseball)
+  try {
+    const sportRadio = document.querySelector('input[name="trial-sport"]:checked');
+    const sport = sportRadio ? sportRadio.value : 'baseball';
+    const profile = JSON.parse(localStorage.getItem('ybg_profile') || '{}');
+    profile.sport = sport;
+    localStorage.setItem('ybg_profile', JSON.stringify(profile));
+    if (typeof applySportUI === 'function') applySportUI(sport);
+  } catch(e) {}
+
+
   hideOverlay();
   showTrialBanner();
 }
