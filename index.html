@@ -2420,6 +2420,16 @@ function dismissIosBanner() {
         </div>
         <div class="grade-row">
           <div class="grade-label">Elective / PE</div>
+          
+        <!-- ── CUSTOM SUBJECTS — added by user ── -->
+        <div id="custom-grade-rows"></div>
+
+        <!-- Add another class -->
+        <div style="margin-top:14px; display:flex; gap:8px;">
+          <input type="text" id="custom-subject-input" placeholder="e.g. Spanish, Art, Robotics" maxlength="40" style="flex:1; background:var(--card2); border:1px solid var(--border); color:var(--light); padding:10px 12px; border-radius:3px; font-family:'Barlow',sans-serif; font-size:13px; outline:none; box-sizing:border-box;" onkeypress="if(event.key==='Enter'){event.preventDefault();addCustomSubject();}">
+          <button onclick="addCustomSubject()" style="background:#5A8A3A; color:#F4F4F4; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; padding:0 14px; border:none; border-radius:3px; cursor:pointer; white-space:nowrap;">+ Add Class</button>
+        </div>
+
           <select class="subject-grade" style="width:80px; margin-bottom:0;" onchange="renderGrades()"><option>A</option><option>B</option><option>C</option><option>D</option><option>F</option></select>
         </div>
       </div>
@@ -6000,6 +6010,84 @@ function loadGrades() {
     selects.forEach((s, i) => { if (grades[i]) s.value = grades[i]; });
   } catch(e) {}
 }
+
+  // ── CUSTOM CLASSES ──────────────────────────────────────
+// Users add classes beyond the 5 core ones (English, Math, etc).
+// Stored as [{name, grade}] in ybg_custom_subjects.
+function getCustomSubjects() {
+  try {
+    const raw = localStorage.getItem('ybg_custom_subjects');
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch(e) { return []; }
+}
+
+function saveCustomSubjects(list) {
+  try { localStorage.setItem('ybg_custom_subjects', JSON.stringify(list)); } catch(e) {}
+}
+
+function addCustomSubject() {
+  const input = document.getElementById('custom-subject-input');
+  if (!input) return;
+  const name = (input.value || '').trim();
+  if (!name) { alert('Type a class name first.'); return; }
+  if (name.length > 40) { alert('Class name too long (max 40 characters).'); return; }
+  const list = getCustomSubjects();
+  if (list.some(function(s) { return s.name.toLowerCase() === name.toLowerCase(); })) {
+    alert('You already have that class.');
+    return;
+  }
+  list.push({ name: name, grade: 'A' });
+  saveCustomSubjects(list);
+  input.value = '';
+  renderCustomSubjects();
+}
+
+function removeCustomSubject(idx) {
+  const list = getCustomSubjects();
+  if (idx < 0 || idx >= list.length) return;
+  if (!confirm('Remove "' + list[idx].name + '"?')) return;
+  list.splice(idx, 1);
+  saveCustomSubjects(list);
+  renderCustomSubjects();
+}
+
+function updateCustomSubjectGrade(idx, value) {
+  const list = getCustomSubjects();
+  if (idx < 0 || idx >= list.length) return;
+  list[idx].grade = value;
+  saveCustomSubjects(list);
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function renderCustomSubjects() {
+  const container = document.getElementById('custom-grade-rows');
+  if (!container) return;
+  const list = getCustomSubjects();
+  if (!list.length) { container.innerHTML = ''; return; }
+  container.innerHTML = list.map(function(s, i) {
+    const safeName = escapeHtml(s.name);
+    const g = s.grade || 'A';
+    const options = ['A','B','C','D','F'].map(function(x) {
+      return '<option value="' + x + '"' + (x === g ? ' selected' : '') + '>' + x + '</option>';
+    }).join('');
+    return '<div class="grade-row">' +
+      '<div class="grade-label">' + safeName + '</div>' +
+      '<div style="display:flex; gap:6px; align-items:center;">' +
+      '<select onchange="updateCustomSubjectGrade(' + i + ', this.value)" style="width:70px; margin-bottom:0;">' + options + '</select>' +
+      '<button onclick="removeCustomSubject(' + i + ')" title="Remove" style="background:transparent; color:#E57373; border:1px solid #663333; border-radius:3px; padding:6px 10px; cursor:pointer; font-size:12px;">✕</button>' +
+      '</div>' +
+      '</div>';
+  }).join('');
+}
+
+// Render custom subjects on page load
+try { setTimeout(renderCustomSubjects, 800); } catch(e) {}
+
 
 function addGoal() {
   const text = document.getElementById('goal-text').value.trim();
