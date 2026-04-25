@@ -1549,7 +1549,7 @@ main { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important;
         <div class="card-title" style="margin:0;">📓 Recent Entries</div>
         <button onclick="showPanel('journal')" style="background:transparent; border:1px solid var(--gold-dark); color:var(--gold); font-family:'Barlow Condensed'; font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:6px 12px; border-radius:3px; cursor:pointer;">View All</button>
       </div>
-      <div id="dash-recent-entries" style="font-family:'Barlow'; font-size:13px; color:var(--light); line-height:1.6;">
+      <div id="dash-recent-entries" style="font-family:'Barlow'; font-size:15px; color:var(--light); line-height:1.6;">
         <em style="color:var(--grey);">No entries yet — tap the button below to log your first one.</em>
       </div>
       <button onclick="showPanel('journal')" class="btn btn-gold" style="width:100%; margin-top:14px;">
@@ -1577,13 +1577,13 @@ main { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important;
           <div style="font-family:'Barlow Condensed'; font-size:10px; letter-spacing:1.5px; color:var(--grey); text-transform:uppercase; margin-top:4px;">SLG</div>
         </div>
       </div>
-      <div id="dash-last-game" style="font-family:'Barlow'; font-size:12px; color:var(--grey); padding-top:12px; border-top:1px solid var(--border); line-height:1.6;"></div>
+      <div id="dash-last-game" style="font-family:'Barlow'; font-size:14px; color:var(--grey); padding-top:12px; border-top:1px solid var(--border); line-height:1.6;"></div>
     </div>
 
     <!-- ── WEEKLY RECAP ── -->
     <div class="card" style="margin-top:16px;">
       <div class="card-title">📅 This Week's Grind</div>
-      <div id="weekly-recap-body" style="font-family:'Barlow'; font-size:13px; color:var(--light); line-height:1.8;"></div>
+      <div id="weekly-recap-body" style="font-family:'Barlow'; font-size:15px; color:var(--light); line-height:1.8;"></div>
       <button onclick="shareWeeklyRecap()" style="width:100%; margin-top:14px; background:var(--gold); color:#0D0D0D; font-family:'Barlow Condensed'; font-size:13px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; padding:12px; border:none; border-radius:4px; cursor:pointer;">
         📲 Text My Week to Mom/Dad
       </button>
@@ -1655,7 +1655,7 @@ main { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important;
       <!-- ══ PRACTICE REP COUNTER — shows when type = Practice ══ -->
       <div id="j-reps-section" style="display:block; margin-top:4px; margin-bottom:20px; padding:14px 16px; background:rgba(212,84,122,0.06); border:1px solid var(--gold-dark); border-radius:3px;">
         <div style="font-family:'Barlow Condensed'; font-size:12px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--gold); margin-bottom:4px;">🔢 Rep Counter — Today's Practice</div>
-        <div style="font-family:'Barlow'; font-size:12px; color:var(--grey); margin-bottom:14px; line-height:1.5;">Track your volume. Nobody counts it for you. <strong style="color:var(--light);">You count it.</strong></div>
+        <div style="font-family:'Barlow'; font-size:14px; color:var(--grey); margin-bottom:14px; line-height:1.5;">Track your volume. Nobody counts it for you. <strong style="color:var(--light);">You count it.</strong></div>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
           <div>
             <label style="font-size:10px; letter-spacing:1px;">🏏 SWINGS</label>
@@ -1709,7 +1709,7 @@ main { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important;
               📊 Pull from My Stats
             </button>
           </div>
-          <div style="font-family:'Barlow'; font-size:12px; color:var(--grey); margin-bottom:14px; line-height:1.5;">
+          <div style="font-family:'Barlow'; font-size:14px; color:var(--grey); margin-bottom:14px; line-height:1.5;">
             Enter what you did <strong style="color:var(--light);">in this game</strong>. These are your single-game numbers — not your season totals.
           </div>
           <!-- Journal → Stats note -->
@@ -1824,7 +1824,7 @@ main { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important;
       <!-- ── INSTRUCTOR SESSION ── -->
       <div id="j-instructor-section" style="display:none; background:rgba(168,217,123,0.05); border:1px solid #2A3A2A; border-radius:3px; padding:16px; margin-bottom:20px;">
         <div style="font-family:'Barlow Condensed'; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#A8D97B; margin-bottom:6px;">🎓 &nbsp;Instructor Session</div>
-        <div style="font-family:'Barlow'; font-size:12px; color:var(--grey); margin-bottom:12px; line-height:1.6;">Had a private lesson today? Log it here so you can track what you worked on over time.</div>
+        <div style="font-family:'Barlow'; font-size:14px; color:var(--grey); margin-bottom:12px; line-height:1.6;">Had a private lesson today? Log it here so you can track what you worked on over time.</div>
         <div class="form-row" style="margin-bottom:0;">
           <div>
             <label>Instructor Name</label>
@@ -1865,7 +1865,7 @@ main { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important;
       <!-- ── COACH / PARENT COMMENT ── -->
       <div id="j-coach-section" style="background:rgba(212,84,122,0.05); border:1px solid #2A0018; border-radius:3px; padding:16px; margin-bottom:20px;">
         <div style="font-family:'Barlow Condensed'; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--gold); margin-bottom:6px;">💬 &nbsp;What Did My Coach or Parent Say?</div>
-        <div style="font-family:'Barlow'; font-size:12px; color:var(--grey); margin-bottom:12px; line-height:1.6;">Did your coach, parent, or instructor give you feedback after this game or practice? Log it here so you never forget it.</div>
+        <div style="font-family:'Barlow'; font-size:14px; color:var(--grey); margin-bottom:12px; line-height:1.6;">Did your coach, parent, or instructor give you feedback after this game or practice? Log it here so you never forget it.</div>
         <div class="form-row" style="margin-bottom:0;">
           <div>
             <label>Who said it?</label>
@@ -1886,7 +1886,7 @@ main { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important;
           <label>What did they tell me?</label>
           <textarea id="j-comment-text" placeholder="e.g. Coach told me to stay back on off-speed pitches. Mom said she was proud of how I handled the strikeout..." style="min-height:80px; margin-bottom:0;"></textarea>
         </div>
-        <div style="font-family:'Barlow'; font-size:12px; color:var(--grey); margin-top:6px; line-height:1.5;">💡 This is your space to capture feedback from the people coaching you. Write it in their words so you can come back to it.</div>
+        <div style="font-family:'Barlow'; font-size:14px; color:var(--grey); margin-top:6px; line-height:1.5;">💡 This is your space to capture feedback from the people coaching you. Write it in their words so you can come back to it.</div>
       </div>
 
       <!-- ── MEDIA UPLOAD (moved to bottom of form) ── -->
@@ -1952,18 +1952,18 @@ main { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important;
       <div class="empty-state">
         <div class="empty-icon">📓</div>
         <h3>No Entries Yet</h3>
-        <p>Start logging your games, practices, and reflections above.<br>Close the book on every game — learn from it and move on.</p>
+        <p style="font-size:15px;">Start logging your games, practices, and reflections above.<br>Close the book on every game — learn from it and move on.</p>
       </div>
     </div>
 
     <!-- ── ARM CARE DAILY CHECKLIST ── -->
     <div class="card" style="margin-top:20px; margin-bottom:16px; border-left:3px solid #D4547A;">
       <div class="card-title">💪 Arm & Shoulder Care — Today</div>
-      <div style="font-family:'Barlow'; font-size:12px; color:var(--grey); margin-bottom:12px; line-height:1.5;">
+      <div style="font-family:'Barlow'; font-size:14px; color:var(--grey); margin-bottom:12px; line-height:1.5;">
         Non-negotiable daily. Pitchers especially — your arm is your career. Check each one off. <strong style="color:var(--gold);">Resets at midnight.</strong>
       </div>
       <div id="arm-care-list"></div>
-      <div id="arm-care-progress" style="font-family:'Barlow Condensed'; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--grey); text-align:center; margin-top:10px;"></div>
+      <div id="arm-care-progress" style="font-family:'Barlow Condensed'; font-size:13px; letter-spacing:1.5px; text-transform:uppercase; color:var(--grey); text-align:center; margin-top:10px;"></div>
     </div>
   </div>
 
@@ -2301,7 +2301,7 @@ main { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important;
       <div id="sub-trial-info" style="display:none; background:rgba(212,84,122,0.06); border:1px solid var(--gold-dark); border-radius:2px; padding:14px 16px; margin-bottom:16px;">
         <!-- Stack label + buttons vertically so they never overflow a narrow card -->
         <div style="font-family:'Barlow Condensed'; font-size:13px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--gold); margin-bottom:4px;">⏳ Free Trial Active</div>
-        <div id="sub-trial-days" style="font-family:'Barlow'; font-size:13px; color:var(--light); line-height:1.5; margin-bottom:12px;"></div>
+        <div id="sub-trial-days" style="font-family:'Barlow'; font-size:15px; color:var(--light); line-height:1.5; margin-bottom:12px;"></div>
         <!-- Buttons in a grid so they're always side-by-side at equal width, never push out of card -->
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
           <button onclick="goToPurchase('monthly')" style="background:transparent; border:1px solid var(--gold-dark); color:var(--gold); font-family:'Barlow Condensed'; font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:10px 8px; border-radius:2px; cursor:pointer; white-space:nowrap;">$4.99 / mo</button>
@@ -2312,7 +2312,7 @@ main { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important;
       <!-- Paid status — shown when subscribed -->
       <div id="sub-paid-info" style="display:none; background:rgba(39,174,96,0.06); border:1px solid #1A4A1A; border-radius:2px; padding:14px 16px; margin-bottom:16px;">
         <div style="font-family:'Barlow Condensed'; font-size:13px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:#27AE60; margin-bottom:4px;">✅ Active Subscription</div>
-        <div style="font-family:'Barlow'; font-size:13px; color:var(--light); line-height:1.6;">Your subscription is active. You have full access to all features.</div>
+        <div style="font-family:'Barlow'; font-size:15px; color:var(--light); line-height:1.6;">Your subscription is active. You have full access to all features.</div>
       </div>
 
       <!-- Cancel / Manage options -->
@@ -2327,7 +2327,7 @@ main { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important;
           </a>
         </div>
         <div style="background:rgba(212,84,122,0.04); border:1px solid #1E1A00; border-radius:2px; padding:12px 14px;">
-          <div style="font-family:'Barlow'; font-size:12px; color:var(--grey); line-height:1.7;">
+          <div style="font-family:'Barlow'; font-size:14px; color:var(--grey); line-height:1.7;">
             <strong style="color:var(--light);">Cancel anytime</strong> — no penalties, no fees. If you cancel during your billing period you keep access until the end of that period. Questions? Email <a href="mailto:coach@youngsbaseball.com" style="color:var(--gold); word-break:break-all;">coach@youngsbaseball.com</a>
           </div>
         </div>
@@ -2337,7 +2337,7 @@ main { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important;
       <!-- Labels on their own line so long emails never push the card wider than its container -->
       <div style="border-top:1px solid var(--border); padding-top:14px;">
         <div style="font-family:'Barlow Condensed'; font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--grey); margin-bottom:8px;">Account Info</div>
-        <div style="font-family:'Barlow'; font-size:12px; color:var(--grey); line-height:1.8;">
+        <div style="font-family:'Barlow'; font-size:14px; color:var(--grey); line-height:1.8;">
           <div style="margin-bottom:4px;">
             Registered email:<br>
             <span id="sub-email-display" style="display:inline-block; color:var(--gold); font-family:'Barlow Condensed'; letter-spacing:0.5px; word-break:break-all; overflow-wrap:anywhere; max-width:100%;">—</span>
@@ -2771,7 +2771,7 @@ main { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important;
       <!-- Stats source note -->
       <div style="background:rgba(212,84,122,0.05); border:1px solid var(--gold-dark); border-radius:3px; padding:14px 16px; margin-bottom:16px; display:flex; align-items:flex-start; gap:10px;">
         <span style="font-size:18px; flex-shrink:0;">📓</span>
-        <div style="font-family:'Barlow'; font-size:13px; color:var(--light); line-height:1.7;">
+        <div style="font-family:'Barlow'; font-size:15px; color:var(--light); line-height:1.7;">
           <strong style="color:var(--gold);">Your game stats from Daily Journal auto-populate here.</strong><br>
           Every time you log a game entry with stats in the <strong>Daily Journal tab</strong>, your season totals update here automatically — AVG, OBP, SLG, OPS, ERA, and WHIP all calculate on their own. You can also enter or edit any number below manually.
         </div>
@@ -2848,14 +2848,14 @@ main { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important;
       <!-- Option 1: Screenshot OCR -->
       <div style="background:rgba(93,173,226,0.06); border:1px solid #2471A3; border-radius:3px; padding:16px; margin-bottom:12px;">
         <div style="font-family:'Barlow Condensed'; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#5DADE2; margin-bottom:8px;">📸 Option 1 — Screenshot Import (Auto)</div>
-        <div style="font-family:'Barlow'; font-size:13px; color:var(--light); line-height:1.7; margin-bottom:14px;">
+        <div style="font-family:'Barlow'; font-size:15px; color:var(--light); line-height:1.7; margin-bottom:14px;">
           Take a screenshot of your GameChanger box score. The app reads it automatically and fills your stats in — no typing required.
         </div>
 
         <div id="gc-drop-zone-stats" onclick="document.getElementById('gc-screenshot-input-stats').click()" style="border:2px dashed #2471A3; border-radius:4px; padding:24px 16px; text-align:center; cursor:pointer; background:rgba(93,173,226,0.04); margin-bottom:10px;" onmouseover="this.style.borderColor='#5DADE2'; this.style.background='rgba(93,173,226,0.08)'" onmouseout="this.style.borderColor='#2471A3'; this.style.background='rgba(93,173,226,0.04)'">
           <div style="font-size:28px; margin-bottom:6px;">📱</div>
           <div style="font-family:'Barlow Condensed'; font-size:13px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#5DADE2; margin-bottom:3px;">Upload Box Score Screenshot</div>
-          <div style="font-family:'Barlow'; font-size:12px; color:var(--grey);">Tap to select your GameChanger screenshot</div>
+          <div style="font-family:'Barlow'; font-size:14px; color:var(--grey);">Tap to select your GameChanger screenshot</div>
           <input type="file" id="gc-screenshot-input-stats" accept="image/*" style="display:none;" onchange="processGCScreenshotStats(event)">
         </div>
 
@@ -2875,7 +2875,7 @@ main { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important;
       <!-- Option 2: Copy & Paste -->
       <div style="background:rgba(93,173,226,0.04); border:1px solid #1A3A4A; border-radius:3px; padding:16px;">
         <div style="font-family:'Barlow Condensed'; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#5DADE2; margin-bottom:10px;">📋 Option 2 — Copy & Paste (Manual)</div>
-        <div style="font-family:'Barlow'; font-size:13px; color:var(--light); line-height:1.9;">
+        <div style="font-family:'Barlow'; font-size:15px; color:var(--light); line-height:1.9;">
           <strong style="color:#5DADE2;">Step 1</strong> — Open the <strong>GameChanger</strong> app on your phone<br>
           <strong style="color:#5DADE2;">Step 2</strong> — Tap <strong>My Teams</strong> → select your team<br>
           <strong style="color:#5DADE2;">Step 3</strong> — Tap <strong>Stats</strong> at the top<br>
@@ -2890,7 +2890,7 @@ main { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important;
       <div class="card-title">🏆 MaxPreps</div>
       <div style="background:rgba(212,84,122,0.06); border:1px solid var(--gold-dark); border-radius:3px; padding:14px 16px; margin-bottom:14px;">
         <div style="font-family:'Barlow Condensed'; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--gold); margin-bottom:8px;">📋 Copy & Paste from MaxPreps</div>
-        <div style="font-family:'Barlow'; font-size:13px; color:var(--light); line-height:1.9;">
+        <div style="font-family:'Barlow'; font-size:15px; color:var(--light); line-height:1.9;">
           <strong style="color:var(--gold);">Step 1</strong> — Go to <strong>maxpreps.com</strong> on your phone or computer<br>
           <strong style="color:var(--gold);">Step 2</strong> — Search your <strong>school name</strong><br>
           <strong style="color:var(--gold);">Step 3</strong> — Tap <strong>Baseball → Stats</strong><br>
@@ -2899,7 +2899,7 @@ main { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important;
         </div>
       </div>
       <div style="background:rgba(212,84,122,0.03); border:1px solid #1E1A00; border-radius:2px; padding:12px 14px;">
-        <div style="font-family:'Barlow'; font-size:12px; color:var(--grey); line-height:1.7;">
+        <div style="font-family:'Barlow'; font-size:14px; color:var(--grey); line-height:1.7;">
           🔧 <strong style="color:var(--light);">Automatic MaxPreps sync is coming.</strong> We are currently working on API partnership approval with MaxPreps. Once approved, your season stats will import automatically with one tap.
         </div>
       </div>
@@ -2935,7 +2935,7 @@ main { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important;
       </div>
 
       <div style="font-family:'Bebas Neue',cursive; font-size:17px; letter-spacing:2px; color:var(--gold); margin-bottom:2px;">youngsbaseball.github.io/mybaseballgrind</div>
-      <div style="font-family:'Barlow'; font-size:12px; color:var(--grey); margin-bottom:18px;">Scan to start — 7-Day Free Trial · No Credit Card</div>
+      <div style="font-family:'Barlow'; font-size:14px; color:var(--grey); margin-bottom:18px;">Scan to start — 7-Day Free Trial · No Credit Card</div>
 
       <!-- Copy link -->
       <button onclick="shareToSocial('copy')" id="share-copy-btn" style="background:transparent; border:1px solid var(--gold-dark); color:var(--gold); font-family:'Barlow Condensed'; font-size:13px; font-weight:700; letter-spacing:2px; text-transform:uppercase; padding:11px 28px; border-radius:3px; cursor:pointer;">
@@ -2949,27 +2949,27 @@ main { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important;
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
         <div style="background:var(--card2); border-radius:3px; padding:12px 14px; border-left:3px solid var(--gold);">
           <div style="font-family:'Barlow Condensed'; font-size:13px; font-weight:700; color:var(--gold); margin-bottom:2px;">📓 Daily Journal</div>
-          <div style="font-family:'Barlow'; font-size:12px; color:var(--grey);">Game · Practice · Reflection</div>
+          <div style="font-family:'Barlow'; font-size:14px; color:var(--grey);">Game · Practice · Reflection</div>
         </div>
         <div style="background:var(--card2); border-radius:3px; padding:12px 14px; border-left:3px solid var(--gold);">
           <div style="font-family:'Barlow Condensed'; font-size:13px; font-weight:700; color:var(--gold); margin-bottom:2px;">📊 Stats Tracker</div>
-          <div style="font-family:'Barlow'; font-size:12px; color:var(--grey);">AVG · OBP · ERA · Auto-Calc</div>
+          <div style="font-family:'Barlow'; font-size:14px; color:var(--grey);">AVG · OBP · ERA · Auto-Calc</div>
         </div>
         <div style="background:var(--card2); border-radius:3px; padding:12px 14px; border-left:3px solid var(--gold);">
           <div style="font-family:'Barlow Condensed'; font-size:13px; font-weight:700; color:var(--gold); margin-bottom:2px;">📅 Training Calendar</div>
-          <div style="font-family:'Barlow'; font-size:12px; color:var(--grey);">12 months · Coach's notes</div>
+          <div style="font-family:'Barlow'; font-size:14px; color:var(--grey);">12 months · Coach's notes</div>
         </div>
         <div style="background:var(--card2); border-radius:3px; padding:12px 14px; border-left:3px solid var(--gold);">
           <div style="font-family:'Barlow Condensed'; font-size:13px; font-weight:700; color:var(--gold); margin-bottom:2px;">🏆 Goals & Grades</div>
-          <div style="font-family:'Barlow'; font-size:12px; color:var(--grey);">No Grades · No Softball</div>
+          <div style="font-family:'Barlow'; font-size:14px; color:var(--grey);">No Grades · No Softball</div>
         </div>
         <div style="background:var(--card2); border-radius:3px; padding:12px 14px; border-left:3px solid var(--gold);">
           <div style="font-family:'Barlow Condensed'; font-size:13px; font-weight:700; color:var(--gold); margin-bottom:2px;">📏 Physical Dev</div>
-          <div style="font-family:'Barlow'; font-size:12px; color:var(--grey);">Height · Weight · 60 Time</div>
+          <div style="font-family:'Barlow'; font-size:14px; color:var(--grey);">Height · Weight · 60 Time</div>
         </div>
         <div style="background:var(--card2); border-radius:3px; padding:12px 14px; border-left:3px solid var(--gold);">
           <div style="font-family:'Barlow Condensed'; font-size:13px; font-weight:700; color:var(--gold); margin-bottom:2px;">💬 Coach Feedback</div>
-          <div style="font-family:'Barlow'; font-size:12px; color:var(--grey);">Log what coaches tell you</div>
+          <div style="font-family:'Barlow'; font-size:14px; color:var(--grey);">Log what coaches tell you</div>
         </div>
       </div>
       <div style="margin-top:14px; text-align:center; font-family:'Barlow Condensed'; font-size:13px; letter-spacing:1px; color:var(--grey);">
@@ -3026,7 +3026,7 @@ main { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important;
     <div class="card" style="margin-bottom:16px;">
       <div class="card-title">🔔 Notifications</div>
 
-      <div id="notif-status-bar" style="background:rgba(212,84,122,0.06); border:1px solid var(--gold-dark); border-radius:2px; padding:12px 16px; margin-bottom:16px; font-family:'Barlow'; font-size:13px; color:var(--light); line-height:1.6;">
+      <div id="notif-status-bar" style="background:rgba(212,84,122,0.06); border:1px solid var(--gold-dark); border-radius:2px; padding:12px 16px; margin-bottom:16px; font-family:'Barlow'; font-size:15px; color:var(--light); line-height:1.6;">
         Daily reminders are <strong style="color:var(--gold);">enabled by default</strong> at 7:30 PM. Tap the button below to allow notifications — you can turn them off anytime with the toggle above.
       </div>
 
@@ -3034,7 +3034,7 @@ main { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important;
       <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 0; border-bottom:1px solid var(--border);">
         <div>
           <div style="font-family:'Barlow Condensed'; font-size:14px; font-weight:700; letter-spacing:1px; color:var(--white); margin-bottom:2px;">📓 Daily Journal Reminder</div>
-          <div style="font-family:'Barlow'; font-size:12px; color:var(--grey);">Reminds you to log today's game or practice</div>
+          <div style="font-family:'Barlow'; font-size:14px; color:var(--grey);">Reminds you to log today's game or practice</div>
         </div>
         <label style="position:relative; display:inline-block; width:52px; height:28px; flex-shrink:0;">
           <input type="checkbox" id="notif-daily-toggle" checked onchange="saveSettings()" style="opacity:0; width:0; height:0;">
@@ -3048,7 +3048,7 @@ main { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important;
       <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 0; border-bottom:1px solid var(--border);">
         <div>
           <div style="font-family:'Barlow Condensed'; font-size:14px; font-weight:700; letter-spacing:1px; color:var(--white); margin-bottom:2px;">⏰ Reminder Time</div>
-          <div style="font-family:'Barlow'; font-size:12px; color:var(--grey);">Default: 7:30 PM daily</div>
+          <div style="font-family:'Barlow'; font-size:14px; color:var(--grey);">Default: 7:30 PM daily</div>
         </div>
         <input type="time" id="notif-time" value="19:30" onchange="saveSettings()" style="background:var(--card2); border:1px solid var(--gold-dark); color:var(--gold); font-family:'Barlow Condensed'; font-size:14px; font-weight:700; padding:8px 12px; border-radius:2px; outline:none; width:120px;">
       </div>
@@ -3058,7 +3058,7 @@ main { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important;
         <button onclick="requestNotifications()" id="notif-enable-btn" style="width:100%; background:var(--gold); color:#080808; font-family:'Barlow Condensed'; font-size:14px; font-weight:800; letter-spacing:2px; text-transform:uppercase; padding:14px; border:none; border-radius:2px; cursor:pointer;">
           🔔 Enable Daily Reminders
         </button>
-        <div id="notif-permission-note" style="font-family:'Barlow'; font-size:12px; color:var(--grey); margin-top:8px; text-align:center; line-height:1.6;">
+        <div id="notif-permission-note" style="font-family:'Barlow'; font-size:14px; color:var(--grey); margin-top:8px; text-align:center; line-height:1.6;">
           Tap the button above then tap <strong style="color:var(--light);">"Allow"</strong> when your browser asks.<br>
           iPhone users: app must be installed to home screen first.
         </div>
@@ -3069,12 +3069,12 @@ main { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important;
     <!-- ── MAXPREPS ── -->
     <div class="card" style="margin-bottom:16px;">
       <div class="card-title">📊 MaxPreps Integration</div>
-      <div style="font-family:'Barlow'; font-size:13px; color:var(--light); line-height:1.7; margin-bottom:16px;">
+      <div style="font-family:'Barlow'; font-size:15px; color:var(--light); line-height:1.7; margin-bottom:16px;">
         Enter your MaxPreps profile URL and we'll guide you on syncing your season stats. Full automatic import coming when MaxPreps API access is approved.
       </div>
       <label style="font-family:'Barlow Condensed'; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--grey); margin-bottom:6px; display:block;">Your MaxPreps Profile URL</label>
       <input type="url" id="settings-mp-url" placeholder="https://www.maxpreps.com/athlete/..." style="width:100%; background:var(--card2); border:1px solid var(--border); color:var(--light); font-family:'Barlow'; font-size:14px; padding:11px 14px; border-radius:2px; outline:none; box-sizing:border-box; margin-bottom:10px;" oninput="saveSettings()">
-      <div style="background:rgba(212,84,122,0.05); border:1px solid var(--gold-dark); border-radius:2px; padding:12px 14px; font-family:'Barlow'; font-size:12px; color:var(--grey); line-height:1.7;">
+      <div style="background:rgba(212,84,122,0.05); border:1px solid var(--gold-dark); border-radius:2px; padding:12px 14px; font-family:'Barlow'; font-size:14px; color:var(--grey); line-height:1.7;">
         🔧 Automatic MaxPreps sync is coming — API partnership approval in progress. For now, copy your stats from MaxPreps and enter them in the <strong style="color:var(--light);">My Stats tab</strong>. Your MaxPreps URL is saved there too.
       </div>
     </div>
@@ -3086,7 +3086,7 @@ main { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important;
       <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 0; border-bottom:1px solid var(--border);">
         <div>
           <div style="font-family:'Barlow Condensed'; font-size:13px; font-weight:700; letter-spacing:1px; color:var(--white);">Auto-save Journal Entries</div>
-          <div style="font-family:'Barlow'; font-size:12px; color:var(--grey);">Save drafts as you type</div>
+          <div style="font-family:'Barlow'; font-size:14px; color:var(--grey);">Save drafts as you type</div>
         </div>
         <input type="checkbox" id="pref-autosave" checked onchange="saveSettings()" style="accent-color:var(--gold); width:18px; height:18px;">
       </div>
@@ -3094,7 +3094,7 @@ main { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important;
       <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 0; border-bottom:1px solid var(--border);">
         <div>
           <div style="font-family:'Barlow Condensed'; font-size:13px; font-weight:700; letter-spacing:1px; color:var(--white);">Stats Auto-Populate from Journal</div>
-          <div style="font-family:'Barlow'; font-size:12px; color:var(--grey);">Game stats fill My Stats automatically</div>
+          <div style="font-family:'Barlow'; font-size:14px; color:var(--grey);">Game stats fill My Stats automatically</div>
         </div>
         <input type="checkbox" id="pref-autostats" checked onchange="saveSettings()" style="accent-color:var(--gold); width:18px; height:18px;">
       </div>
@@ -3102,7 +3102,7 @@ main { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important;
       <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 0; border-bottom:1px solid var(--border);">
         <div>
           <div style="font-family:'Barlow Condensed'; font-size:13px; font-weight:700; letter-spacing:1px; color:var(--white);">Show Install Prompt</div>
-          <div style="font-family:'Barlow'; font-size:12px; color:var(--grey);">Remind me to add to home screen</div>
+          <div style="font-family:'Barlow'; font-size:14px; color:var(--grey);">Remind me to add to home screen</div>
         </div>
         <input type="checkbox" id="pref-install" checked onchange="saveSettings()" style="accent-color:var(--gold); width:18px; height:18px;">
       </div>
@@ -3110,7 +3110,7 @@ main { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important;
       <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 0;">
         <div>
           <div style="font-family:'Barlow Condensed'; font-size:13px; font-weight:700; letter-spacing:1px; color:var(--white);">Scroll to Top on Tab Switch</div>
-          <div style="font-family:'Barlow'; font-size:12px; color:var(--grey);">Page scrolls up when changing tabs</div>
+          <div style="font-family:'Barlow'; font-size:14px; color:var(--grey);">Page scrolls up when changing tabs</div>
         </div>
         <input type="checkbox" id="pref-scroll" checked onchange="saveSettings()" style="accent-color:var(--gold); width:18px; height:18px;">
       </div>
@@ -3140,10 +3140,10 @@ main { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important;
         Found a bug? Have a feature request? Just want to share how the app is working for you? Drop me a note — I read every one.
       </div>
 
-      <label style="display:block; font-family:'Barlow Condensed'; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--grey); margin-bottom:6px;">Your Email <span style="color:#E57373;">*</span></label>
+      <label style="display:block; font-family:'Barlow Condensed'; font-size:13px; letter-spacing:1.5px; text-transform:uppercase; color:var(--grey); margin-bottom:6px;">Your Email <span style="color:#E57373;">*</span></label>
       <input type="email" id="fb-email" placeholder="you@example.com" autocomplete="email" style="width:100%; background:var(--card2); border:1px solid var(--border); color:var(--light); padding:12px; border-radius:3px; font-family:'Barlow'; font-size:14px; margin-bottom:14px; box-sizing:border-box;">
 
-      <label style="display:block; font-family:'Barlow Condensed'; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--grey); margin-bottom:6px;">Your Feedback <span style="color:#E57373;">*</span></label>
+      <label style="display:block; font-family:'Barlow Condensed'; font-size:13px; letter-spacing:1.5px; text-transform:uppercase; color:var(--grey); margin-bottom:6px;">Your Feedback <span style="color:#E57373;">*</span></label>
       <textarea id="fb-message" placeholder="Tell me what's on your mind — what's working, what's broken, what would make this app better for you..." style="width:100%; min-height:120px; background:var(--card2); border:1px solid var(--border); color:var(--light); padding:12px; border-radius:3px; font-family:'Barlow'; font-size:14px; line-height:1.6; resize:vertical; box-sizing:border-box; margin-bottom:8px;"></textarea>
 
       <div id="fb-status" style="display:none; font-family:'Barlow'; font-size:12px; padding:10px 12px; border-radius:3px; margin-bottom:10px; line-height:1.5;"></div>
@@ -4873,7 +4873,7 @@ function pullSeasonStats() {
 function renderEntries() {
   const container = document.getElementById('entries-list');
   if (!state.entries.length) {
-    container.innerHTML = `<div class="empty-state"><div class="empty-icon">📓</div><h3>No Entries Yet</h3><p>Start logging your games, practices, and reflections above.<br>Close the book on every game — learn from it and move on.</p></div>`;
+    container.innerHTML = `<div class="empty-state"><div class="empty-icon">📓</div><h3>No Entries Yet</h3><p style="font-size:15px;">Start logging your games, practices, and reflections above.<br>Close the book on every game — learn from it and move on.</p></div>`;
     return;
   }
 
@@ -4959,7 +4959,7 @@ function renderEntries() {
               </div>
             `).join('')}
           </div>
-          <div style="margin-top:10px; padding-top:8px; border-top:1px solid var(--border); text-align:center; font-family:'Barlow Condensed'; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--grey);">
+          <div style="margin-top:10px; padding-top:8px; border-top:1px solid var(--border); text-align:center; font-family:'Barlow Condensed'; font-size:13px; letter-spacing:1.5px; text-transform:uppercase; color:var(--grey);">
             Total reps: <span style="color:var(--gold); font-family:'Bebas Neue'; font-size:18px; letter-spacing:1px;">${e.reps.total}</span>
           </div>
         </div>
@@ -4971,7 +4971,7 @@ function renderEntries() {
           <div style="font-family:'Barlow Condensed'; font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#A8D97B; margin-bottom:10px;">🎓 Instructor Session</div>
           ${e.instructor.name ? `<div style="font-family:'Barlow'; font-size:14px; color:var(--white); font-weight:600; margin-bottom:6px;">${e.instructor.name}</div>` : ''}
           ${e.instructor.focus ? `<div style="font-family:'Barlow Condensed'; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:#A8D97B; margin-bottom:8px;">Focus: ${e.instructor.focus}</div>` : ''}
-          ${e.instructor.notes ? `<div style="font-family:'Barlow'; font-size:13px; color:var(--light); line-height:1.6; margin-bottom:8px; padding:8px 10px; background:rgba(0,0,0,0.2); border-left:2px solid #5A8A3A; border-radius:2px;">${e.instructor.notes}</div>` : ''}
+          ${e.instructor.notes ? `<div style="font-family:'Barlow'; font-size:15px; color:var(--light); line-height:1.6; margin-bottom:8px; padding:8px 10px; background:rgba(0,0,0,0.2); border-left:2px solid #5A8A3A; border-radius:2px;">${e.instructor.notes}</div>` : ''}
           ${(e.instructor.duration || e.instructor.next) ? `
             <div style="display:flex; gap:14px; flex-wrap:wrap; font-family:'Barlow Condensed'; font-size:11px; letter-spacing:1px; text-transform:uppercase; color:var(--grey); padding-top:8px; border-top:1px solid var(--border);">
               ${e.instructor.duration ? `<div>⏱ <span style="color:var(--light);">${e.instructor.duration} min</span></div>` : ''}
@@ -5242,7 +5242,7 @@ function renderGoals() {
     container.innerHTML = `<div style="text-align:center; padding:24px 16px; background:rgba(212,84,122,0.04); border:1px dashed var(--gold-dark); border-radius:3px;">
       <div style="font-size:32px; margin-bottom:6px;">🎯</div>
       <div style="font-family:'Bebas Neue',cursive; font-size:18px; letter-spacing:1.5px; color:var(--gold); line-height:1;">SET YOUR FIRST GOAL</div>
-      <div style="font-family:'Barlow'; font-size:13px; color:var(--light); margin-top:6px; line-height:1.6;">Up to 3 measurable goals for the season. Make them specific. Make them count.</div>
+      <div style="font-family:'Barlow'; font-size:15px; color:var(--light); margin-top:6px; line-height:1.6;">Up to 3 measurable goals for the season. Make them specific. Make them count.</div>
     </div>`;
     return;
   }
@@ -6945,6 +6945,10 @@ const STREAK_MILESTONES = [3, 7, 14, 30, 50, 100, 200, 365];
 
 function checkMilestones(streak) {
   if (!streak || streak < 3) return;
+
+  // Check for review prompt at 3-day streak (before milestone guard)
+  checkReviewPrompt(streak);
+
   if (!STREAK_MILESTONES.includes(streak)) return;
 
   const key = 'ybg_milestone_' + streak;
@@ -9133,6 +9137,46 @@ window.addEventListener('load', function() {
 });
 </script>
 
+
+<!-- ══ REVIEW PROMPT OVERLAY ══════════════════════════════════════ -->
+<div id="review-overlay" style="display:none;position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,0.88);backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:24px;">
+  <div style="max-width:380px;width:100%;background:#141414;border:1px solid #2E2E2E;border-radius:12px;padding:28px 24px;text-align:center;">
+    <div style="font-size:48px;margin-bottom:12px;">🔥</div>
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#D4547A;margin-bottom:8px;">3-Day Streak</div>
+    <div style="font-family:'Bebas Neue',cursive;font-size:28px;letter-spacing:1.5px;color:#F5F5F5;margin-bottom:10px;">You're Building the Habit</div>
+    <div style="font-size:15px;color:#AAA;line-height:1.7;margin-bottom:20px;">3 days logged. That's not luck — that's discipline. Coach Young wants to hear how MyGrind is working for you.</div>
+
+    <div style="color:#FFD700;font-size:28px;letter-spacing:4px;margin-bottom:16px;">★★★★★</div>
+
+    <div style="font-size:13px;color:#666;margin-bottom:20px;line-height:1.6;">Your review helps other players find this journal and start their own grind. Takes 30 seconds.</div>
+
+    <a id="review-link" href="mailto:coach@youngsbaseball.com?subject=MyGrind Review&body=I've been using MyGrind for 3 days and wanted to share my feedback:" style="display:block;background:#D4547A;color:#080808;border-radius:6px;padding:14px;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;letter-spacing:2px;text-transform:uppercase;text-decoration:none;margin-bottom:10px;">⭐ &nbsp;Leave a Review</a>
+
+    <button onclick="closeReview()" style="width:100%;background:transparent;border:1px solid #2E2E2E;border-radius:6px;padding:12px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#555;cursor:pointer;">Maybe Later</button>
+
+    <div style="font-size:11px;color:#333;margin-top:12px;">You can also email us at coach@youngsbaseball.com</div>
+  </div>
+</div>
+<script>
+// ══ REVIEW PROMPT — fires after first 3-day streak ═══════════════
+function checkReviewPrompt(streak) {
+  if (streak < 3) return;
+  var key = 'ybg_review_prompted';
+  if (localStorage.getItem(key) === '1') return; // only show once
+  localStorage.setItem(key, '1');
+  setTimeout(showReview, 1200); // slight delay after milestone celebration
+}
+
+function showReview() {
+  var el = document.getElementById('review-overlay');
+  if (el) el.style.display = 'flex';
+}
+
+function closeReview() {
+  var el = document.getElementById('review-overlay');
+  if (el) el.style.display = 'none';
+}
+</script>
 <script src="mg-config.js"></script>
 </body>
 </html>
