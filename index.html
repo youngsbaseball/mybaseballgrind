@@ -13,7 +13,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="My Grind">
-<meta name="msapplication-TileColor" content="#0D0D0D">
+<meta name="msapplication-TileColor" content="#161920">
 <meta name="msapplication-tap-highlight" content="no">
 
 <!-- ── PWA MANIFEST ── -->
@@ -56,14 +56,14 @@
     --gold: #C9A84C;
     --gold-light: #E8C96A;
     --gold-dark: #9A7A30;
-    --black: #0A0A0A;
-    --dark: #141414;
-    --card: #1A1A1A;
-    --card2: #222222;
-    --border: #2E2E2E;
+    --black: #111318;
+    --dark: #1C2028;
+    --card: #242830;
+    --card2: #2C3038;
+    --border: #383E48;
     --grey: #888;
-    --light: #CCCCCC;
-    --white: #F5F5F5;
+    --light: #D8DDE5;
+    --white: #F0F4FA;
     --red: #C0392B;
     --green: #27AE60;
   }
@@ -71,7 +71,7 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
-    background: var(--black);
+    background: #1C2028318;
     color: var(--white);
     font-family: 'Barlow', sans-serif;
     min-height: 100vh;
@@ -707,7 +707,7 @@
   height: 34px;
   border-radius: 50%;
   background: rgba(10,10,10,0.85);
-  border: 1px solid #3A3A3A;
+  border: 1px solid #404650;
   color: #777;
   font-size: 16px;
   cursor: pointer;
@@ -832,21 +832,21 @@ function dismissIosBanner() {
 <body>
 
 <!-- ── LOADING SPLASH ── -->
-<div id="ybg-splash" style="position:fixed; inset:0; z-index:99999; background:#0D0D0D; display:flex; flex-direction:column; align-items:center; justify-content:center; transition:opacity 0.5s ease;">
-  <div style="width:88px; height:88px; background:#C9A84C; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'Bebas Neue',sans-serif; font-size:32px; font-weight:900; color:#0D0D0D; letter-spacing:2px; box-shadow:0 0 0 4px #0D0D0D, 0 0 0 5px #C9A84C; animation:ybgPulse 1.2s ease-in-out infinite;">YBG</div>
+<div id="ybg-splash" style="position:fixed; inset:0; z-index:99999; background:#161920; display:flex; flex-direction:column; align-items:center; justify-content:center; transition:opacity 0.5s ease;">
+  <div style="width:88px; height:88px; background:#C9A84C; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'Bebas Neue',sans-serif; font-size:32px; font-weight:900; color:#161920; letter-spacing:2px; box-shadow:0 0 0 4px #161920, 0 0 0 5px #C9A84C; animation:ybgPulse 1.2s ease-in-out infinite;">YBG</div>
   <div style="font-family:'Bebas Neue',sans-serif; font-size:28px; letter-spacing:6px; color:#F4F4F4; margin-top:22px;">MY <span style="color:#C9A84C;">GRIND</span></div>
   <div style="font-family:'Barlow Condensed',sans-serif; font-size:11px; letter-spacing:3px; color:#666; margin-top:4px; text-transform:uppercase;">Baseball Journal</div>
 </div>
 <style>
   @keyframes ybgPulse {
-    0%, 100% { transform:scale(1); box-shadow:0 0 0 4px #0D0D0D, 0 0 0 5px #C9A84C, 0 0 0 5px rgba(201,168,76,0); }
-    50%      { transform:scale(1.05); box-shadow:0 0 0 4px #0D0D0D, 0 0 0 5px #C9A84C, 0 0 30px 8px rgba(201,168,76,0.4); }
+    0%, 100% { transform:scale(1); box-shadow:0 0 0 4px #161920, 0 0 0 5px #C9A84C, 0 0 0 5px rgba(201,168,76,0); }
+    50%      { transform:scale(1.05); box-shadow:0 0 0 4px #161920, 0 0 0 5px #C9A84C, 0 0 30px 8px rgba(201,168,76,0.4); }
   }
 </style>
 
 <!-- ══ SHARE MODAL ══════════════════════════════════════ -->
-<div id="share-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.88); z-index:9999; align-items:flex-end; justify-content:center; padding:0; backdrop-filter:blur(8px);" onclick="closeShareModal(event)">
-  <div id="share-modal-panel" style="background:linear-gradient(180deg,#181400,#0E0C00); border-top:2px solid #C9A84C; border-radius:16px 16px 0 0; width:100%; max-width:520px; padding:28px 24px 40px; animation:slideUp 0.3s ease;">
+<div id="share-modal" style="display:none; position:fixed; inset:0; background:rgba(10,12,16,0.92); z-index:9999; align-items:flex-end; justify-content:center; padding:0; backdrop-filter:blur(8px);" onclick="closeShareModal(event)">
+  <div id="share-modal-panel" style="background:linear-gradient(180deg,#181B22,#141720); border-top:2px solid #C9A84C; border-radius:16px 16px 0 0; width:100%; max-width:520px; padding:28px 24px 40px; animation:slideUp 0.3s ease;">
 
     <!-- Handle bar -->
     <div style="width:48px; height:4px; background:#333; border-radius:2px; margin:0 auto 20px;"></div>
@@ -865,14 +865,14 @@ function dismissIosBanner() {
 
     <!-- Editable post caption -->
     <div style="position:relative; margin-bottom:16px;">
-      <textarea id="share-modal-text" style="width:100%; min-height:160px; background:#111; border:1px solid #2A2200; color:#F4F4F4; font-family:'Barlow',sans-serif; font-size:14px; line-height:1.7; padding:14px 16px; border-radius:6px; outline:none; resize:none; box-sizing:border-box;" onfocus="this.style.borderColor='#C9A84C'" onblur="this.style.borderColor='#2A2200'"></textarea>
+      <textarea id="share-modal-text" style="width:100%; min-height:160px; background:#1C2028; border:1px solid #2C3038; color:#F4F4F4; font-family:'Barlow',sans-serif; font-size:14px; line-height:1.7; padding:14px 16px; border-radius:6px; outline:none; resize:none; box-sizing:border-box;" onfocus="this.style.borderColor='#C9A84C'" onblur="this.style.borderColor='#2C3038'"></textarea>
       <div style="position:absolute; bottom:10px; right:12px; font-family:'Barlow',sans-serif; font-size:11px; color:#333;">✏️ Edit if you'd like</div>
     </div>
 
     <!-- App icon card instead of raw URL -->
-    <div style="background:#0A0A00; border:1px solid #1E1800; border-radius:4px; padding:10px 14px; margin-bottom:20px; display:flex; align-items:center; justify-content:space-between; gap:10px;">
+    <div style="background:#0A0A00; border:1px solid #1E2128; border-radius:4px; padding:10px 14px; margin-bottom:20px; display:flex; align-items:center; justify-content:space-between; gap:10px;">
       <div style="display:flex; align-items:center; gap:10px;">
-        <div style="width:44px; height:44px; background:linear-gradient(135deg,#1A1400,#0E0C00); border:2px solid #C9A84C; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+        <div style="width:44px; height:44px; background:linear-gradient(135deg,#1A1D24,#141720); border:2px solid #C9A84C; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
           <div style="text-align:center; line-height:1.1;">
             <div style="font-family:'Bebas Neue',cursive; font-size:10px; color:#fff; letter-spacing:1px;">MY</div>
             <div style="font-family:'Bebas Neue',cursive; font-size:10px; color:#C9A84C; letter-spacing:1px;">GRIND</div>
@@ -884,7 +884,7 @@ function dismissIosBanner() {
           <div style="font-family:'Barlow',sans-serif; font-size:11px; color:#555; margin-top:1px;">7-Day Free Trial · No Credit Card Required</div>
         </div>
       </div>
-      <button onclick="copyModalLink()" id="modal-copy-btn" style="background:transparent; border:1px solid #2A2200; color:#C9A84C; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:700; letter-spacing:1px; padding:6px 12px; border-radius:2px; cursor:pointer; white-space:nowrap; flex-shrink:0;">Copy Link</button>
+      <button onclick="copyModalLink()" id="modal-copy-btn" style="background:transparent; border:1px solid #2C3038; color:#C9A84C; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:700; letter-spacing:1px; padding:6px 12px; border-radius:2px; cursor:pointer; white-space:nowrap; flex-shrink:0;">Copy Link</button>
     </div>
 
     <!-- Instagram note (shown only for IG) -->
@@ -911,19 +911,19 @@ function dismissIosBanner() {
 </style>
 
 <!-- ── ANDROID / CHROME INSTALL BANNER ── -->
-<div id="install-banner" style="display:none; position:fixed; bottom:0; left:0; right:0; z-index:9998; background:linear-gradient(135deg,#1A1400,#0D0D0D); border-top:1px solid var(--gold-dark, #8B6914); padding:14px 20px; align-items:center; gap:14px; flex-wrap:wrap;">
+<div id="install-banner" style="display:none; position:fixed; bottom:0; left:0; right:0; z-index:9998; background:linear-gradient(135deg,#1A1D24,#161920); border-top:1px solid var(--gold-dark, #8B6914); padding:14px 20px; align-items:center; gap:14px; flex-wrap:wrap;">
   <div style="flex:1; min-width:0;">
     <div style="font-family:'Barlow Condensed',sans-serif; font-size:13px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:#C9A84C; margin-bottom:2px;">⚾ Install My Grind</div>
     <div style="font-family:'Barlow',sans-serif; font-size:12px; color:#AAAAAA; line-height:1.4;">Add to your home screen for the full app experience — works offline too.</div>
   </div>
   <div style="display:flex; gap:8px; flex-shrink:0;">
-    <button onclick="installApp()" style="background:#C9A84C; border:none; color:#0D0D0D; font-family:'Barlow Condensed',sans-serif; font-size:12px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:10px 18px; border-radius:2px; cursor:pointer; white-space:nowrap;">Install App</button>
+    <button onclick="installApp()" style="background:#C9A84C; border:none; color:#161920; font-family:'Barlow Condensed',sans-serif; font-size:12px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:10px 18px; border-radius:2px; cursor:pointer; white-space:nowrap;">Install App</button>
     <button onclick="dismissInstallBanner()" style="background:transparent; border:1px solid #333; color:#666; font-family:'Barlow Condensed',sans-serif; font-size:12px; font-weight:700; letter-spacing:1px; text-transform:uppercase; padding:10px 14px; border-radius:2px; cursor:pointer;">Not Now</button>
   </div>
 </div>
 
 <!-- ── IOS / SAFARI INSTALL BANNER ── -->
-<div id="ios-install-banner" style="display:none; position:fixed; bottom:0; left:0; right:0; z-index:9998; background:linear-gradient(135deg,#1A1400,#0D0D0D); border-top:1px solid var(--gold-dark, #8B6914); padding:14px 20px;">
+<div id="ios-install-banner" style="display:none; position:fixed; bottom:0; left:0; right:0; z-index:9998; background:linear-gradient(135deg,#1A1D24,#161920); border-top:1px solid var(--gold-dark, #8B6914); padding:14px 20px;">
   <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:12px;">
     <div style="flex:1;">
       <div style="font-family:'Barlow Condensed',sans-serif; font-size:13px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:#C9A84C; margin-bottom:4px;">⚾ Add My Grind to Home Screen</div>
@@ -946,7 +946,7 @@ function dismissIosBanner() {
 </header>
 
 <!-- ── TRIAL COUNTDOWN BANNER ── -->
-<div id="trial-banner" style="display:none; background:linear-gradient(90deg,#1A1400,#1E1800,#1A1400); border-bottom:1px solid #3A2E00; padding:10px 24px; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; z-index:99; position:relative;">
+<div id="trial-banner" style="display:none; background:linear-gradient(90deg,#1A1D24,#1E2128,#1A1D24); border-bottom:1px solid #303540; padding:10px 24px; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; z-index:99; position:relative;">
   <div style="display:flex; align-items:center; gap:10px;">
     <span style="font-size:16px;">⏳</span>
     <div>
@@ -979,7 +979,7 @@ function dismissIosBanner() {
 
 <!-- ── CREATE/EDIT TEAM MODAL (coaches) ── -->
 <div id="team-create-overlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.93); z-index:1001; align-items:center; justify-content:center; padding:16px; backdrop-filter:blur(12px); overflow-y:auto;">
-  <div style="background:#0D0D0D; border:2px solid #C9A84C; border-radius:6px; max-width:480px; width:100%; padding:24px 20px; max-height:94vh; overflow-y:auto; margin:auto;">
+  <div style="background:#161920; border:2px solid #C9A84C; border-radius:6px; max-width:480px; width:100%; padding:24px 20px; max-height:94vh; overflow-y:auto; margin:auto;">
     <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
       <div>
         <div id="team-modal-title" style="font-family:'Bebas Neue'; font-size:24px; letter-spacing:2px; color:#C9A84C; line-height:1;">CREATE YOUR TEAM</div>
@@ -988,27 +988,27 @@ function dismissIosBanner() {
       <button onclick="closeTeamCreateModal()" style="background:transparent; border:none; color:#666; font-size:24px; cursor:pointer; padding:0; line-height:1;">✕</button>
     </div>
 
-    <div id="tc-preview" style="margin-bottom:16px; padding:20px; text-align:center; background:#181818; border-radius:6px; border:1px solid #2A2A2A; position:relative; overflow:hidden;">
+    <div id="tc-preview" style="margin-bottom:16px; padding:20px; text-align:center; background:#222630; border-radius:6px; border:1px solid #2A2A2A; position:relative; overflow:hidden;">
       <div id="tc-preview-strip" style="position:absolute; top:0; left:0; right:0; height:4px; background:#C9A84C;"></div>
-      <div id="tc-preview-logo" style="width:64px; height:64px; border-radius:50%; margin:0 auto 10px; display:flex; align-items:center; justify-content:center; font-family:'Bebas Neue'; font-size:22px; font-weight:900; background:#C9A84C; color:#0D0D0D; box-shadow:0 0 0 2px #0D0D0D, 0 0 0 4px #C9A84C;">YBG</div>
+      <div id="tc-preview-logo" style="width:64px; height:64px; border-radius:50%; margin:0 auto 10px; display:flex; align-items:center; justify-content:center; font-family:'Bebas Neue'; font-size:22px; font-weight:900; background:#C9A84C; color:#161920; box-shadow:0 0 0 2px #161920, 0 0 0 4px #C9A84C;">YBG</div>
       <div id="tc-preview-name" style="font-family:'Bebas Neue'; font-size:22px; letter-spacing:2px; color:#F4F4F4;">TEAM NAME</div>
       <div id="tc-preview-loc" style="font-family:'Barlow Condensed'; font-size:11px; letter-spacing:2px; color:#888; text-transform:uppercase; margin-top:2px;">City · State</div>
     </div>
 
     <label style="display:block; font-family:'Barlow Condensed'; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:#AAA; margin-bottom:6px;">Team Name *</label>
-    <input type="text" id="tc-name" maxlength="40" placeholder="e.g. YBG Travel 14U" oninput="updateTeamPreview()" style="width:100%; background:#1A1A1A; border:1px solid #2A2A2A; color:#F4F4F4; padding:11px 14px; border-radius:4px; font-family:'Barlow'; font-size:14px; margin-bottom:14px; box-sizing:border-box;">
+    <input type="text" id="tc-name" maxlength="40" placeholder="e.g. YBG Travel 14U" oninput="updateTeamPreview()" style="width:100%; background:#242830; border:1px solid #2A2A2A; color:#F4F4F4; padding:11px 14px; border-radius:4px; font-family:'Barlow'; font-size:14px; margin-bottom:14px; box-sizing:border-box;">
 
     <label style="display:block; font-family:'Barlow Condensed'; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:#AAA; margin-bottom:6px;">Logo Letters (2-4 chars) *</label>
-    <input type="text" id="tc-abbr" maxlength="4" placeholder="YBG" oninput="this.value=this.value.toUpperCase(); updateTeamPreview()" style="width:100%; background:#1A1A1A; border:1px solid #2A2A2A; color:#F4F4F4; padding:11px 14px; border-radius:4px; font-family:'Barlow'; font-size:14px; margin-bottom:14px; box-sizing:border-box; text-transform:uppercase; letter-spacing:2px;">
+    <input type="text" id="tc-abbr" maxlength="4" placeholder="YBG" oninput="this.value=this.value.toUpperCase(); updateTeamPreview()" style="width:100%; background:#242830; border:1px solid #2A2A2A; color:#F4F4F4; padding:11px 14px; border-radius:4px; font-family:'Barlow'; font-size:14px; margin-bottom:14px; box-sizing:border-box; text-transform:uppercase; letter-spacing:2px;">
 
     <div style="display:grid; grid-template-columns:2fr 1fr; gap:10px; margin-bottom:14px;">
       <div>
         <label style="display:block; font-family:'Barlow Condensed'; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:#AAA; margin-bottom:6px;">City</label>
-        <input type="text" id="tc-city" placeholder="Santa Clarita" oninput="updateTeamPreview()" style="width:100%; background:#1A1A1A; border:1px solid #2A2A2A; color:#F4F4F4; padding:11px 14px; border-radius:4px; font-family:'Barlow'; font-size:14px; box-sizing:border-box;">
+        <input type="text" id="tc-city" placeholder="Santa Clarita" oninput="updateTeamPreview()" style="width:100%; background:#242830; border:1px solid #2A2A2A; color:#F4F4F4; padding:11px 14px; border-radius:4px; font-family:'Barlow'; font-size:14px; box-sizing:border-box;">
       </div>
       <div>
         <label style="display:block; font-family:'Barlow Condensed'; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:#AAA; margin-bottom:6px;">State</label>
-        <input type="text" id="tc-state" maxlength="2" placeholder="CA" oninput="this.value=this.value.toUpperCase(); updateTeamPreview()" style="width:100%; background:#1A1A1A; border:1px solid #2A2A2A; color:#F4F4F4; padding:11px 14px; border-radius:4px; font-family:'Barlow'; font-size:14px; box-sizing:border-box; text-transform:uppercase;">
+        <input type="text" id="tc-state" maxlength="2" placeholder="CA" oninput="this.value=this.value.toUpperCase(); updateTeamPreview()" style="width:100%; background:#242830; border:1px solid #2A2A2A; color:#F4F4F4; padding:11px 14px; border-radius:4px; font-family:'Barlow'; font-size:14px; box-sizing:border-box; text-transform:uppercase;">
       </div>
     </div>
 
@@ -1016,16 +1016,16 @@ function dismissIosBanner() {
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;">
       <div>
         <div style="font-family:'Barlow'; font-size:11px; color:#888; margin-bottom:4px;">Primary</div>
-        <div style="display:flex; align-items:center; gap:8px; background:#1A1A1A; border:1px solid #2A2A2A; padding:6px 10px; border-radius:4px;">
+        <div style="display:flex; align-items:center; gap:8px; background:#242830; border:1px solid #2A2A2A; padding:6px 10px; border-radius:4px;">
           <input type="color" id="tc-primary" value="#C9A84C" oninput="updateTeamPreview()" style="width:36px; height:36px; border:none; background:none; cursor:pointer; padding:0;">
           <span id="tc-primary-hex" style="font-family:monospace; font-size:12px; color:#F4F4F4;">#C9A84C</span>
         </div>
       </div>
       <div>
         <div style="font-family:'Barlow'; font-size:11px; color:#888; margin-bottom:4px;">Accent</div>
-        <div style="display:flex; align-items:center; gap:8px; background:#1A1A1A; border:1px solid #2A2A2A; padding:6px 10px; border-radius:4px;">
-          <input type="color" id="tc-accent" value="#0D0D0D" oninput="updateTeamPreview()" style="width:36px; height:36px; border:none; background:none; cursor:pointer; padding:0;">
-          <span id="tc-accent-hex" style="font-family:monospace; font-size:12px; color:#F4F4F4;">#0D0D0D</span>
+        <div style="display:flex; align-items:center; gap:8px; background:#242830; border:1px solid #2A2A2A; padding:6px 10px; border-radius:4px;">
+          <input type="color" id="tc-accent" value="#161920" oninput="updateTeamPreview()" style="width:36px; height:36px; border:none; background:none; cursor:pointer; padding:0;">
+          <span id="tc-accent-hex" style="font-family:monospace; font-size:12px; color:#F4F4F4;">#161920</span>
         </div>
       </div>
     </div>
@@ -1033,12 +1033,12 @@ function dismissIosBanner() {
     <div style="margin-bottom:16px;">
       <div style="font-family:'Barlow'; font-size:11px; color:#888; margin-bottom:6px;">Or pick a preset:</div>
       <div style="display:flex; gap:6px; flex-wrap:wrap;">
-        <button onclick="setTeamPreset('#C9A84C','#0D0D0D')" title="YBG Gold/Black" style="width:36px; height:24px; background:linear-gradient(90deg,#C9A84C 50%, #0D0D0D 50%); border:1px solid #444; border-radius:3px; cursor:pointer;"></button>
+        <button onclick="setTeamPreset('#C9A84C','#161920')" title="YBG Gold/Black" style="width:36px; height:24px; background:linear-gradient(90deg,#C9A84C 50%, #161920 50%); border:1px solid #444; border-radius:3px; cursor:pointer;"></button>
         <button onclick="setTeamPreset('#CE1126','#FFFFFF')" title="Red/White" style="width:36px; height:24px; background:linear-gradient(90deg,#CE1126 50%, #FFFFFF 50%); border:1px solid #444; border-radius:3px; cursor:pointer;"></button>
         <button onclick="setTeamPreset('#0D47A1','#FFFFFF')" title="Blue/White" style="width:36px; height:24px; background:linear-gradient(90deg,#0D47A1 50%, #FFFFFF 50%); border:1px solid #444; border-radius:3px; cursor:pointer;"></button>
         <button onclick="setTeamPreset('#1B5E20','#FFD700')" title="Green/Gold" style="width:36px; height:24px; background:linear-gradient(90deg,#1B5E20 50%, #FFD700 50%); border:1px solid #444; border-radius:3px; cursor:pointer;"></button>
         <button onclick="setTeamPreset('#4A148C','#FFFFFF')" title="Purple/White" style="width:36px; height:24px; background:linear-gradient(90deg,#4A148C 50%, #FFFFFF 50%); border:1px solid #444; border-radius:3px; cursor:pointer;"></button>
-        <button onclick="setTeamPreset('#F57C00','#0D0D0D')" title="Orange/Black" style="width:36px; height:24px; background:linear-gradient(90deg,#F57C00 50%, #0D0D0D 50%); border:1px solid #444; border-radius:3px; cursor:pointer;"></button>
+        <button onclick="setTeamPreset('#F57C00','#161920')" title="Orange/Black" style="width:36px; height:24px; background:linear-gradient(90deg,#F57C00 50%, #161920 50%); border:1px solid #444; border-radius:3px; cursor:pointer;"></button>
         <button onclick="setTeamPreset('#00796B','#FFFFFF')" title="Teal/White" style="width:36px; height:24px; background:linear-gradient(90deg,#00796B 50%, #FFFFFF 50%); border:1px solid #444; border-radius:3px; cursor:pointer;"></button>
         <button onclick="setTeamPreset('#6D4C41','#FFC107')" title="Brown/Yellow" style="width:36px; height:24px; background:linear-gradient(90deg,#6D4C41 50%, #FFC107 50%); border:1px solid #444; border-radius:3px; cursor:pointer;"></button>
       </div>
@@ -1047,14 +1047,14 @@ function dismissIosBanner() {
     <div style="border-top:1px solid #2A2A2A; padding-top:16px; margin-bottom:14px;">
       <div style="font-family:'Barlow Condensed'; font-size:11px; letter-spacing:2px; text-transform:uppercase; color:#C9A84C; margin-bottom:10px;">COACH INFO</div>
       <label style="display:block; font-family:'Barlow Condensed'; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:#AAA; margin-bottom:6px;">Coach Name *</label>
-      <input type="text" id="tc-coach-name" placeholder="Coach Smith" style="width:100%; background:#1A1A1A; border:1px solid #2A2A2A; color:#F4F4F4; padding:11px 14px; border-radius:4px; font-family:'Barlow'; font-size:14px; margin-bottom:12px; box-sizing:border-box;">
+      <input type="text" id="tc-coach-name" placeholder="Coach Smith" style="width:100%; background:#242830; border:1px solid #2A2A2A; color:#F4F4F4; padding:11px 14px; border-radius:4px; font-family:'Barlow'; font-size:14px; margin-bottom:12px; box-sizing:border-box;">
       <label style="display:block; font-family:'Barlow Condensed'; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:#AAA; margin-bottom:6px;">Coach Email * <span style="color:#666; text-transform:none; letter-spacing:0;">(where player messages go)</span></label>
-      <input type="email" id="tc-coach-email" placeholder="coach@example.com" style="width:100%; background:#1A1A1A; border:1px solid #2A2A2A; color:#F4F4F4; padding:11px 14px; border-radius:4px; font-family:'Barlow'; font-size:14px; margin-bottom:0; box-sizing:border-box;">
+      <input type="email" id="tc-coach-email" placeholder="coach@example.com" style="width:100%; background:#242830; border:1px solid #2A2A2A; color:#F4F4F4; padding:11px 14px; border-radius:4px; font-family:'Barlow'; font-size:14px; margin-bottom:0; box-sizing:border-box;">
     </div>
 
     <div id="tc-error" style="display:none; background:#3A1A1A; border:1px solid #C0392B; color:#FFB7AC; padding:10px 14px; border-radius:4px; margin-bottom:14px; font-family:'Barlow'; font-size:12px;"></div>
 
-    <button id="tc-submit" onclick="submitTeamCreate()" style="width:100%; background:#C9A84C; color:#0D0D0D; font-family:'Barlow Condensed'; font-size:14px; font-weight:800; letter-spacing:2px; text-transform:uppercase; padding:14px; border:none; border-radius:4px; cursor:pointer;">
+    <button id="tc-submit" onclick="submitTeamCreate()" style="width:100%; background:#C9A84C; color:#161920; font-family:'Barlow Condensed'; font-size:14px; font-weight:800; letter-spacing:2px; text-transform:uppercase; padding:14px; border:none; border-radius:4px; cursor:pointer;">
       ✅ Create Team
     </button>
   </div>
@@ -1062,26 +1062,26 @@ function dismissIosBanner() {
 
 <!-- ── JOIN TEAM CONFIRMATION MODAL ── -->
 <div id="team-join-overlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.93); z-index:1001; align-items:center; justify-content:center; padding:16px; backdrop-filter:blur(12px);">
-  <div style="background:#0D0D0D; border:2px solid #C9A84C; border-radius:6px; max-width:420px; width:100%; padding:24px 20px;">
+  <div style="background:#161920; border:2px solid #C9A84C; border-radius:6px; max-width:420px; width:100%; padding:24px 20px;">
     <div style="text-align:center; margin-bottom:16px;">
       <div id="tj-logo" style="width:72px; height:72px; border-radius:50%; margin:0 auto 12px; display:flex; align-items:center; justify-content:center; font-family:'Bebas Neue'; font-size:24px; font-weight:900;">YBG</div>
       <div id="tj-name" style="font-family:'Bebas Neue'; font-size:24px; letter-spacing:2px; color:#F4F4F4;">TEAM NAME</div>
       <div id="tj-loc" style="font-family:'Barlow Condensed'; font-size:11px; letter-spacing:2px; color:#888; text-transform:uppercase; margin-top:2px;"></div>
       <div id="tj-coach" style="font-family:'Barlow'; font-size:13px; color:#C9A84C; margin-top:10px;"></div>
     </div>
-    <div style="background:#181400; border-left:3px solid #C9A84C; padding:12px 14px; margin-bottom:18px; font-family:'Barlow'; font-size:12px; color:#AAA; line-height:1.6;">
+    <div style="background:#181B22; border-left:3px solid #C9A84C; padding:12px 14px; margin-bottom:18px; font-family:'Barlow'; font-size:12px; color:#AAA; line-height:1.6;">
       By joining, your weekly journal updates can be sent directly to your coach. You can leave anytime — your profile stays yours.
     </div>
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
       <button onclick="closeJoinModal()" style="background:transparent; border:1px solid #2A2A2A; color:#AAA; font-family:'Barlow Condensed'; font-size:12px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:12px; border-radius:4px; cursor:pointer;">Cancel</button>
-      <button onclick="confirmJoinTeam()" style="background:#C9A84C; color:#0D0D0D; font-family:'Barlow Condensed'; font-size:12px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; padding:12px; border:none; border-radius:4px; cursor:pointer;">✅ Join Team</button>
+      <button onclick="confirmJoinTeam()" style="background:#C9A84C; color:#161920; font-family:'Barlow Condensed'; font-size:12px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; padding:12px; border:none; border-radius:4px; cursor:pointer;">✅ Join Team</button>
     </div>
   </div>
 </div>
 
 <!-- ═══ SEASON-END ROSTER REVIEW MODAL ══════════════════════════ -->
 <div id="season-end-overlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.93); z-index:1002; align-items:center; justify-content:center; padding:16px; backdrop-filter:blur(12px); overflow-y:auto;">
-  <div style="background:#0D0D0D; border:2px solid #E67E22; border-radius:6px; max-width:500px; width:100%; max-height:92vh; overflow-y:auto;">
+  <div style="background:#161920; border:2px solid #E67E22; border-radius:6px; max-width:500px; width:100%; max-height:92vh; overflow-y:auto;">
     <div style="background:linear-gradient(135deg,#1A0E00,#140A00); border-bottom:1px solid #3A1E00; padding:20px 22px; text-align:center;">
       <div style="font-size:36px; line-height:1; margin-bottom:6px;">🗓️</div>
       <div style="font-family:'Bebas Neue'; font-size:26px; letter-spacing:2px; color:#E67E22; line-height:1;">SEASON-END REVIEW</div>
@@ -1110,7 +1110,7 @@ function dismissIosBanner() {
 <!-- ═══ REMOVED-FROM-TEAM PAYWALL SCREEN ═════════════════════════ -->
 <!-- Shown to players who were removed from a sponsored team and have exhausted 7-day grace -->
 <div id="removed-team-overlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.94); z-index:1003; align-items:center; justify-content:center; padding:16px; backdrop-filter:blur(12px); overflow-y:auto;">
-  <div style="max-width:460px; width:100%; background:#181818; border:1px solid #3A1E00; border-radius:4px; overflow:hidden;">
+  <div style="max-width:460px; width:100%; background:#222630; border:1px solid #3A1E00; border-radius:4px; overflow:hidden;">
     <div style="background:linear-gradient(135deg,#1A0E00,#140A00); border-bottom:1px solid #3A1E00; padding:28px; text-align:center;">
       <div style="font-size:44px; margin-bottom:8px;">👋</div>
       <div style="font-family:'Bebas Neue'; font-size:30px; letter-spacing:3px; color:#F4F4F4; line-height:1;">REMOVED FROM</div>
@@ -1126,7 +1126,7 @@ function dismissIosBanner() {
       <div style="font-family:'Barlow Condensed'; font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#555; margin-bottom:8px; text-align:center;">Keep Your Grind Going</div>
 
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;">
-        <div style="background:#111; border:1px solid #2E2E2E; border-radius:3px; padding:16px; text-align:center;">
+        <div style="background:#1C2028; border:1px solid #383E48; border-radius:3px; padding:16px; text-align:center;">
           <div style="font-family:'Barlow Condensed'; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#777; margin-bottom:6px;">Monthly</div>
           <div style="font-family:'Bebas Neue'; font-size:38px; color:#C9A84C; line-height:1;">$4<span style="font-size:20px;">.99</span></div>
           <div style="font-family:'Barlow Condensed'; font-size:10px; color:#555; margin-bottom:12px;">per month</div>
@@ -1151,31 +1151,31 @@ function dismissIosBanner() {
 
 <!-- ── GRADE CHECK NAG OVERLAY (every 6 weeks) ── -->
 <div id="grade-nag-overlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.93); z-index:1001; align-items:center; justify-content:center; padding:24px; backdrop-filter:blur(12px);">
-  <div style="background:#0D0D0D; border:2px solid #C9A84C; border-radius:6px; max-width:480px; width:100%; padding:28px 24px; max-height:92vh; overflow-y:auto;">
+  <div style="background:#161920; border:2px solid #C9A84C; border-radius:6px; max-width:480px; width:100%; padding:28px 24px; max-height:92vh; overflow-y:auto;">
     <div style="text-align:center; margin-bottom:20px;">
       <div style="font-size:40px; line-height:1;">📚</div>
       <div style="font-family:'Bebas Neue'; font-size:28px; letter-spacing:2px; color:#C9A84C; margin-top:6px; line-height:1;">GPA CHECK</div>
       <div style="font-family:'Barlow'; font-size:13px; color:#F4F4F4; margin-top:8px;">No Grades · No Game — That's the rule.</div>
     </div>
 
-    <div style="background:#1A1400; border-left:3px solid #C9A84C; padding:12px 16px; margin-bottom:18px; font-family:'Barlow'; font-size:13px; color:#AAA; line-height:1.6;">
+    <div style="background:#1A1D24; border-left:3px solid #C9A84C; padding:12px 16px; margin-bottom:18px; font-family:'Barlow'; font-size:13px; color:#AAA; line-height:1.6;">
       Check in honestly. This stays private on your device — a grading-period reality check so you don't fall behind.
     </div>
 
     <label style="display:block; font-family:'Barlow Condensed'; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:#AAA; margin-bottom:6px;">How are your grades this grading period?</label>
     <div id="grade-nag-options" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:16px;">
-      <button class="grade-nag-btn" data-val="all-a" onclick="selectGradeNagOption(this)" style="background:#1A1A1A; border:1px solid #2A2A2A; color:#F4F4F4; font-family:'Barlow Condensed'; font-size:13px; font-weight:700; letter-spacing:1px; text-transform:uppercase; padding:14px 10px; border-radius:4px; cursor:pointer;">🏆 All A's</button>
-      <button class="grade-nag-btn" data-val="a-b" onclick="selectGradeNagOption(this)" style="background:#1A1A1A; border:1px solid #2A2A2A; color:#F4F4F4; font-family:'Barlow Condensed'; font-size:13px; font-weight:700; letter-spacing:1px; text-transform:uppercase; padding:14px 10px; border-radius:4px; cursor:pointer;">✅ A's &amp; B's</button>
-      <button class="grade-nag-btn" data-val="slipping" onclick="selectGradeNagOption(this)" style="background:#1A1A1A; border:1px solid #2A2A2A; color:#F4F4F4; font-family:'Barlow Condensed'; font-size:13px; font-weight:700; letter-spacing:1px; text-transform:uppercase; padding:14px 10px; border-radius:4px; cursor:pointer;">⚠️ Slipping</button>
-      <button class="grade-nag-btn" data-val="help" onclick="selectGradeNagOption(this)" style="background:#1A1A1A; border:1px solid #2A2A2A; color:#F4F4F4; font-family:'Barlow Condensed'; font-size:13px; font-weight:700; letter-spacing:1px; text-transform:uppercase; padding:14px 10px; border-radius:4px; cursor:pointer;">🆘 Need Help</button>
+      <button class="grade-nag-btn" data-val="all-a" onclick="selectGradeNagOption(this)" style="background:#242830; border:1px solid #2A2A2A; color:#F4F4F4; font-family:'Barlow Condensed'; font-size:13px; font-weight:700; letter-spacing:1px; text-transform:uppercase; padding:14px 10px; border-radius:4px; cursor:pointer;">🏆 All A's</button>
+      <button class="grade-nag-btn" data-val="a-b" onclick="selectGradeNagOption(this)" style="background:#242830; border:1px solid #2A2A2A; color:#F4F4F4; font-family:'Barlow Condensed'; font-size:13px; font-weight:700; letter-spacing:1px; text-transform:uppercase; padding:14px 10px; border-radius:4px; cursor:pointer;">✅ A's &amp; B's</button>
+      <button class="grade-nag-btn" data-val="slipping" onclick="selectGradeNagOption(this)" style="background:#242830; border:1px solid #2A2A2A; color:#F4F4F4; font-family:'Barlow Condensed'; font-size:13px; font-weight:700; letter-spacing:1px; text-transform:uppercase; padding:14px 10px; border-radius:4px; cursor:pointer;">⚠️ Slipping</button>
+      <button class="grade-nag-btn" data-val="help" onclick="selectGradeNagOption(this)" style="background:#242830; border:1px solid #2A2A2A; color:#F4F4F4; font-family:'Barlow Condensed'; font-size:13px; font-weight:700; letter-spacing:1px; text-transform:uppercase; padding:14px 10px; border-radius:4px; cursor:pointer;">🆘 Need Help</button>
     </div>
 
     <label style="display:block; font-family:'Barlow Condensed'; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:#AAA; margin-bottom:6px;">Which class needs the most work right now?</label>
-    <input type="text" id="grade-nag-subject" placeholder="e.g. Algebra, History, English..." style="width:100%; background:#1A1A1A; border:1px solid #2A2A2A; color:#F4F4F4; padding:12px; border-radius:4px; font-family:'Barlow'; font-size:14px; margin-bottom:16px; box-sizing:border-box;">
+    <input type="text" id="grade-nag-subject" placeholder="e.g. Algebra, History, English..." style="width:100%; background:#242830; border:1px solid #2A2A2A; color:#F4F4F4; padding:12px; border-radius:4px; font-family:'Barlow'; font-size:14px; margin-bottom:16px; box-sizing:border-box;">
 
-    <div id="grade-nag-message" style="display:none; background:#1A1400; border:1px solid #8B6914; border-radius:4px; padding:12px 14px; margin-bottom:16px; font-family:'Barlow'; font-size:12px; color:#F4F4F4; line-height:1.6;"></div>
+    <div id="grade-nag-message" style="display:none; background:#1A1D24; border:1px solid #8B6914; border-radius:4px; padding:12px 14px; margin-bottom:16px; font-family:'Barlow'; font-size:12px; color:#F4F4F4; line-height:1.6;"></div>
 
-    <button id="grade-nag-submit" onclick="submitGradeNag()" disabled style="width:100%; background:#1A1A1A; color:#666; font-family:'Barlow Condensed'; font-size:14px; font-weight:800; letter-spacing:2px; text-transform:uppercase; padding:14px; border:1px solid #2A2A2A; border-radius:4px; cursor:not-allowed; transition:all 0.2s;">
+    <button id="grade-nag-submit" onclick="submitGradeNag()" disabled style="width:100%; background:#242830; color:#666; font-family:'Barlow Condensed'; font-size:14px; font-weight:800; letter-spacing:2px; text-transform:uppercase; padding:14px; border:1px solid #2A2A2A; border-radius:4px; cursor:not-allowed; transition:all 0.2s;">
       Pick an option above
     </button>
     <div style="text-align:center; margin-top:12px; font-family:'Barlow'; font-size:11px; color:#555;">
@@ -1185,13 +1185,13 @@ function dismissIosBanner() {
 </div>
 
 <!-- ── TRIAL OVERLAY (Welcome + Expired) ── -->
-<div id="trial-overlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.92); z-index:1000; align-items:center; justify-content:center; padding:24px; backdrop-filter:blur(12px);">
+<div id="trial-overlay" style="display:none; position:fixed; inset:0; background:rgba(10,12,16,0.94); z-index:1000; align-items:center; justify-content:center; padding:24px; backdrop-filter:blur(12px);">
 
   <!-- WELCOME SCREEN -->
-  <div id="trial-screen-welcome" style="max-width:440px; width:100%; background:#181818; border:1px solid #272727; border-radius:4px; overflow:hidden; animation:fadeIn 0.4s ease;">
+  <div id="trial-screen-welcome" style="max-width:440px; width:100%; background:#222630; border:1px solid #2D3139; border-radius:4px; overflow:hidden; animation:fadeIn 0.4s ease;">
 
     <!-- HEADER -->
-    <div style="background:linear-gradient(135deg,#1A1500,#141400); border-bottom:1px solid #2A2200; padding:24px 28px; text-align:center;">
+    <div style="background:linear-gradient(135deg,#1A1D24,#141720); border-bottom:1px solid #2C3038; padding:24px 28px; text-align:center;">
       <div style="width:56px; height:56px; background:#C9A84C; clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%); display:flex; align-items:center; justify-content:center; font-family:'Bebas Neue',cursive; font-size:22px; color:#080808; margin:0 auto 12px;">YBG</div>
       <div style="font-family:'Bebas Neue',cursive; font-size:34px; letter-spacing:3px; color:#F4F4F4; line-height:1;">MY <span style="color:#C9A84C;">GRIND</span></div>
       <div style="font-family:'Barlow Condensed',sans-serif; font-size:11px; letter-spacing:3px; text-transform:uppercase; color:#555; margin-top:4px;">2026 Annual Baseball Journal</div>
@@ -1206,7 +1206,7 @@ function dismissIosBanner() {
         <div style="font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#777; margin-top:6px;">Every Feature · No Card Required</div>
       </div>
 
-      <div style="background:rgba(201,168,76,0.06); border:1px solid #2A2200; border-radius:3px; padding:14px 16px; margin-bottom:20px; font-family:'Barlow',sans-serif; font-size:13px; color:#BBBBBB; line-height:1.6; text-align:center;">
+      <div style="background:rgba(201,168,76,0.06); border:1px solid #2C3038; border-radius:3px; padding:14px 16px; margin-bottom:20px; font-family:'Barlow',sans-serif; font-size:13px; color:#BBBBBB; line-height:1.6; text-align:center;">
         Test drive the full app for <strong style="color:#F4F4F4;">7 days</strong> — journal, stats, goals, arm care, all of it. No credit card. No commitment.
       </div>
 
@@ -1220,21 +1220,21 @@ function dismissIosBanner() {
       <!-- SELF MODE (default) -->
       <div id="mode-self">
         <label style="display:block; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#888; margin-bottom:6px;">Your Email Address</label>
-        <input type="email" id="user-email-input" placeholder="yourname@email.com" autocomplete="email" style="width:100%; background:#111; border:1px solid #2E2E2E; color:#F4F4F4; font-family:'Barlow',sans-serif; font-size:15px; padding:13px 14px; border-radius:2px; outline:none; margin-bottom:6px; box-sizing:border-box;" onfocus="this.style.borderColor='#C9A84C'" onblur="this.style.borderColor='#2E2E2E'">
+        <input type="email" id="user-email-input" placeholder="yourname@email.com" autocomplete="email" style="width:100%; background:#1C2028; border:1px solid #383E48; color:#F4F4F4; font-family:'Barlow',sans-serif; font-size:15px; padding:13px 14px; border-radius:2px; outline:none; margin-bottom:6px; box-sizing:border-box;" onfocus="this.style.borderColor='#C9A84C'" onblur="this.style.borderColor='#383E48'">
         <div style="font-family:'Barlow',sans-serif; font-size:12px; color:#444; line-height:1.5; margin-bottom:14px;">This email locks the app to your device.</div>
       </div>
 
       <!-- GIFT MODE — collapsed by default -->
       <div id="mode-gift" style="display:none;">
-        <div style="background:rgba(201,168,76,0.06); border:1px solid #2A2200; border-radius:2px; padding:12px 14px; margin-bottom:14px; font-size:12px; color:#BBBBBB; line-height:1.6;">
+        <div style="background:rgba(201,168,76,0.06); border:1px solid #2C3038; border-radius:2px; padding:12px 14px; margin-bottom:14px; font-size:12px; color:#BBBBBB; line-height:1.6;">
           Enter your email as the <strong style="color:#F4F4F4;">buyer</strong>, and the player's email below.
         </div>
         <label style="display:block; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#888; margin-bottom:6px;">Your Email <span style="color:#444;">(Buyer)</span></label>
-        <input type="email" id="purchaser-email-input" placeholder="parent@email.com" autocomplete="email" style="width:100%; background:#111; border:1px solid #2E2E2E; color:#F4F4F4; font-family:'Barlow',sans-serif; font-size:15px; padding:13px 14px; border-radius:2px; outline:none; margin-bottom:14px; box-sizing:border-box;" onfocus="this.style.borderColor='#C9A84C'" onblur="this.style.borderColor='#2E2E2E'">
+        <input type="email" id="purchaser-email-input" placeholder="parent@email.com" autocomplete="email" style="width:100%; background:#1C2028; border:1px solid #383E48; color:#F4F4F4; font-family:'Barlow',sans-serif; font-size:15px; padding:13px 14px; border-radius:2px; outline:none; margin-bottom:14px; box-sizing:border-box;" onfocus="this.style.borderColor='#C9A84C'" onblur="this.style.borderColor='#383E48'">
         <label style="display:block; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#C9A84C; margin-bottom:6px;">⚾ Player Email <span style="color:#555; font-weight:400;">(Who Gets Access)</span></label>
         <div id="gift-players-list">
           <div class="gift-player-row" data-idx="0" style="display:flex; gap:6px; align-items:flex-start; margin-bottom:8px;">
-            <input type="email" id="player-email-input" class="gift-player-input" placeholder="player@email.com" style="flex:1; background:#111; border:1px solid #C9A84C; color:#F4F4F4; font-family:'Barlow',sans-serif; font-size:15px; padding:13px 14px; border-radius:2px; outline:none; box-sizing:border-box; margin-bottom:0;" onfocus="this.style.borderColor='#E8C96A'" onblur="this.style.borderColor='#C9A84C'">
+            <input type="email" id="player-email-input" class="gift-player-input" placeholder="player@email.com" style="flex:1; background:#1C2028; border:1px solid #C9A84C; color:#F4F4F4; font-family:'Barlow',sans-serif; font-size:15px; padding:13px 14px; border-radius:2px; outline:none; box-sizing:border-box; margin-bottom:0;" onfocus="this.style.borderColor='#E8C96A'" onblur="this.style.borderColor='#C9A84C'">
           </div>
         </div>
         <div style="font-family:'Barlow',sans-serif; font-size:12px; color:#444; line-height:1.5; margin:8px 0 14px;">The player's email locks the app to their device.</div>
@@ -1249,10 +1249,10 @@ function dismissIosBanner() {
 
       <!-- SECONDARY LINKS -->
       <div style="display:flex; gap:8px; margin-bottom:18px;">
-        <button id="welcome-toggle-gift" onclick="toggleWelcomeMode()" style="flex:1; background:transparent; color:#888; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:10px 8px; border:1px solid #222; border-radius:2px; cursor:pointer;" onmouseover="this.style.color='#C9A84C'; this.style.borderColor='#3A2E00';" onmouseout="this.style.color='#888'; this.style.borderColor='#222';">
+        <button id="welcome-toggle-gift" onclick="toggleWelcomeMode()" style="flex:1; background:transparent; color:#888; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:10px 8px; border:1px solid #222; border-radius:2px; cursor:pointer;" onmouseover="this.style.color='#C9A84C'; this.style.borderColor='#303540';" onmouseout="this.style.color='#888'; this.style.borderColor='#222';">
           👨‍👩‍👧 &nbsp;Buying for Someone Else?
         </button>
-        <button onclick="goToPurchase('monthly')" style="flex:1; background:transparent; color:#666; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:10px 8px; border:1px solid #222; border-radius:2px; cursor:pointer;" onmouseover="this.style.color='#C9A84C'; this.style.borderColor='#3A2E00';" onmouseout="this.style.color='#666'; this.style.borderColor='#222';">
+        <button onclick="goToPurchase('monthly')" style="flex:1; background:transparent; color:#666; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:10px 8px; border:1px solid #222; border-radius:2px; cursor:pointer;" onmouseover="this.style.color='#C9A84C'; this.style.borderColor='#303540';" onmouseout="this.style.color='#666'; this.style.borderColor='#222';">
           Already Paid? Unlock →
         </button>
       </div>
@@ -1261,14 +1261,14 @@ function dismissIosBanner() {
       <div style="text-align:center; font-family:'Barlow Condensed',sans-serif; font-size:11px; letter-spacing:1px; color:#333; border-top:1px solid #1E1E1E; padding-top:16px;">
         Pricing shown when trial ends · coach@youngsbaseball.com
         <br><br>
-        <span onclick="unlockCreator()" style="color:#1A1A1A; cursor:pointer; font-size:10px; user-select:none;" title="Creator Access">⚾</span>
+        <span onclick="unlockCreator()" style="color:#242830; cursor:pointer; font-size:10px; user-select:none;" title="Creator Access">⚾</span>
       </div>
 
     </div>
   </div>
   <!-- EXPIRED SCREEN -->
   <!-- EXPIRED SCREEN -->
-  <div id="trial-screen-expired" style="display:none; max-width:460px; width:100%; background:#181818; border:1px solid #272727; border-radius:4px; overflow:hidden; animation:fadeIn 0.4s ease;">
+  <div id="trial-screen-expired" style="display:none; max-width:460px; width:100%; background:#222630; border:1px solid #2D3139; border-radius:4px; overflow:hidden; animation:fadeIn 0.4s ease;">
 
     <div style="background:linear-gradient(135deg,#1A0A00,#180800); border-bottom:1px solid #3A1800; padding:28px; text-align:center;">
       <div style="font-size:48px; margin-bottom:8px;">⏰</div>
@@ -1277,7 +1277,7 @@ function dismissIosBanner() {
     </div>
 
     <div style="padding:28px;">
-      <div style="background:rgba(201,168,76,0.06); border:1px solid #2A2200; border-radius:2px; padding:14px 16px; margin-bottom:20px; font-size:13px; color:#BBBBBB; line-height:1.7; text-align:center;">
+      <div style="background:rgba(201,168,76,0.06); border:1px solid #2C3038; border-radius:2px; padding:14px 16px; margin-bottom:20px; font-size:13px; color:#BBBBBB; line-height:1.7; text-align:center;">
         You've experienced My Grind. Choose the plan that works for you and keep all your progress going.
       </div>
 
@@ -1285,7 +1285,7 @@ function dismissIosBanner() {
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px;">
 
         <!-- MONTHLY -->
-        <div style="background:#111; border:1px solid #2E2E2E; border-radius:3px; padding:18px; text-align:center;">
+        <div style="background:#1C2028; border:1px solid #383E48; border-radius:3px; padding:18px; text-align:center;">
           <div style="font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#777; margin-bottom:8px;">Monthly</div>
           <div style="font-family:'Bebas Neue',cursive; font-size:44px; color:#C9A84C; line-height:1;">$8<span style="font-size:22px;">.99</span></div>
           <div style="font-family:'Barlow Condensed',sans-serif; font-size:11px; color:#555; margin-bottom:14px;">$8.99/mo · cancel anytime</div>
@@ -1316,7 +1316,7 @@ function dismissIosBanner() {
   </div>
 
   <!-- BLOCKED SCREEN -->
-  <div id="trial-screen-blocked" style="display:none; max-width:460px; width:100%; background:#181818; border:1px solid #3A1010; border-radius:4px; overflow:hidden; animation:fadeIn 0.4s ease;">
+  <div id="trial-screen-blocked" style="display:none; max-width:460px; width:100%; background:#222630; border:1px solid #3A1010; border-radius:4px; overflow:hidden; animation:fadeIn 0.4s ease;">
     <div style="background:linear-gradient(135deg,#1A0808,#100505); border-bottom:1px solid #3A1010; padding:28px; text-align:center;">
       <div style="font-size:48px; margin-bottom:8px;">🚫</div>
       <div style="font-family:'Bebas Neue',cursive; font-size:32px; letter-spacing:3px; color:#E57373;">ACCESS BLOCKED</div>
@@ -1333,7 +1333,7 @@ function dismissIosBanner() {
         <a href="https://youngsbaseball.github.io/mybaseballgrind" style="font-family:'Barlow Condensed',sans-serif; font-size:12px; letter-spacing:1.5px; text-transform:uppercase; color:#C9A84C; text-decoration:none;">Purchase Your Own Access → youngsbaseball.github.io/mybaseballgrind</a>
       </div>
       <div style="margin-top:16px;">
-        <span onclick="unlockCreator()" style="color:#1A1A1A; cursor:pointer; font-size:10px; user-select:none;" title="Creator Access">⚾</span>
+        <span onclick="unlockCreator()" style="color:#242830; cursor:pointer; font-size:10px; user-select:none;" title="Creator Access">⚾</span>
       </div>
     </div>
   </div>
@@ -1347,7 +1347,7 @@ function dismissIosBanner() {
   left: 0;
   right: 0;
   z-index: 500;
-  background: rgba(10,10,10,0.98);
+  background: rgba(17,19,24,0.98);
   backdrop-filter: blur(12px);
   border-top: 1px solid #2A2A2A;
   display: flex;
@@ -1445,20 +1445,20 @@ main { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important;
     <!-- ── MILESTONE CELEBRATION (hidden by default, shown when hit) ── -->
     <div id="milestone-card" class="card" style="display:none; margin-bottom:20px; background:linear-gradient(135deg,#C9A84C 0%,#8B6F2F 100%); border:2px solid #FFD966; padding:20px; text-align:center;">
       <div id="milestone-emoji" style="font-size:40px; line-height:1; margin-bottom:8px;">🔥</div>
-      <div id="milestone-title" style="font-family:'Bebas Neue',cursive; font-size:26px; letter-spacing:2px; color:#0D0D0D; line-height:1;">STREAK UNLOCKED</div>
-      <div id="milestone-sub" style="font-family:'Barlow'; font-size:13px; color:#2A1F00; margin-top:4px; margin-bottom:14px;">You hit a 7-day streak. Keep grinding.</div>
-      <button onclick="shareMilestone()" style="background:#0D0D0D; color:var(--gold); font-family:'Barlow Condensed'; font-size:13px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; padding:12px 24px; border:1px solid #000; border-radius:4px; cursor:pointer;">
+      <div id="milestone-title" style="font-family:'Bebas Neue',cursive; font-size:26px; letter-spacing:2px; color:#161920; line-height:1;">STREAK UNLOCKED</div>
+      <div id="milestone-sub" style="font-family:'Barlow'; font-size:13px; color:#242830; margin-top:4px; margin-bottom:14px;">You hit a 7-day streak. Keep grinding.</div>
+      <button onclick="shareMilestone()" style="background:#161920; color:var(--gold); font-family:'Barlow Condensed'; font-size:13px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; padding:12px 24px; border:1px solid #000; border-radius:4px; cursor:pointer;">
         📲 Share This Win
       </button>
-      <button onclick="dismissMilestone()" style="background:transparent; color:#2A1F00; font-family:'Barlow Condensed'; font-size:11px; letter-spacing:1px; text-transform:uppercase; padding:12px 16px; border:none; cursor:pointer; margin-left:6px;">
+      <button onclick="dismissMilestone()" style="background:transparent; color:#242830; font-family:'Barlow Condensed'; font-size:11px; letter-spacing:1px; text-transform:uppercase; padding:12px 16px; border:none; cursor:pointer; margin-left:6px;">
         Dismiss
       </button>
     </div>
 
     <!-- ── SEASON GOALS (moved here from old Goals tab) — featured card ── -->
-    <div class="card" style="margin-bottom:24px; padding:0; border:1px solid var(--gold); background:#0E0C00; overflow:hidden;">
+    <div class="card" style="margin-bottom:24px; padding:0; border:1px solid var(--gold); background:#141720; overflow:hidden;">
       <!-- Bold gold gradient header strip -->
-      <div style="background:linear-gradient(135deg,#1F1800,#15100A); border-bottom:1px solid var(--gold-dark); padding:16px 20px;">
+      <div style="background:linear-gradient(135deg,#1F2228,#15100A); border-bottom:1px solid var(--gold-dark); padding:16px 20px;">
         <div style="font-family:'Bebas Neue',cursive; font-size:24px; letter-spacing:2.5px; color:var(--gold); line-height:1;">🏆 SEASON GOALS</div>
         <div style="font-family:'Barlow Condensed'; font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--grey); margin-top:4px;">Set them · Track them · Finish them</div>
       </div>
@@ -1476,7 +1476,7 @@ main { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important;
 
           <!-- Full preset menu dropdown -->
           <div style="margin-top:12px;">
-            <select id="goal-preset-menu" onchange="addPresetGoalFromMenu(this)" style="width:100%; font-size:14px; padding:11px; background:#111; border:1px solid var(--border); color:var(--light); border-radius:3px;">
+            <select id="goal-preset-menu" onchange="addPresetGoalFromMenu(this)" style="width:100%; font-size:14px; padding:11px; background:#1C2028; border:1px solid var(--border); color:var(--light); border-radius:3px;">
               <option value="">📋 Browse Full Goal Menu — pick to add…</option>
               <optgroup label="🏆 Team Accolades">
                 <option value="Make All-Stars|team">Make All-Stars</option>
@@ -1639,7 +1639,7 @@ main { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important;
     <div class="card" style="margin-top:16px;">
       <div class="card-title">📅 This Week's Grind</div>
       <div id="weekly-recap-body" style="font-family:'Barlow'; font-size:15px; color:var(--light); line-height:1.8;"></div>
-      <button onclick="shareWeeklyRecap()" style="width:100%; margin-top:14px; background:var(--gold); color:#0D0D0D; font-family:'Barlow Condensed'; font-size:13px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; padding:12px; border:none; border-radius:4px; cursor:pointer;">
+      <button onclick="shareWeeklyRecap()" style="width:100%; margin-top:14px; background:var(--gold); color:#161920; font-family:'Barlow Condensed'; font-size:13px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; padding:12px; border:none; border-radius:4px; cursor:pointer;">
         📲 Text My Week to Mom/Dad
       </button>
     </div>
@@ -1670,7 +1670,7 @@ main { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important;
     </div>
 
     <!-- ── DAILY QUOTE (rotates each day) — bigger format for journal ── -->
-    <div id="daily-quote-card" class="card" style="margin-bottom:20px; background:linear-gradient(135deg,#1A1400,#0E0C00); border-left:4px solid var(--gold); padding:24px 26px;">
+    <div id="daily-quote-card" class="card" style="margin-bottom:20px; background:linear-gradient(135deg,#1A1D24,#141720); border-left:4px solid var(--gold); padding:24px 26px;">
       <div style="font-family:'Barlow Condensed'; font-size:12px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:var(--gold); margin-bottom:14px; text-align:center;">🎯 Today's Grind</div>
       <div id="daily-quote-text" style="font-family:Georgia,serif; font-size:20px; font-style:italic; color:var(--white); line-height:1.6; text-align:center;"></div>
       <div id="daily-quote-author" style="font-family:'Barlow Condensed'; font-size:13px; letter-spacing:2px; color:var(--gold); margin-top:14px; text-align:center; text-transform:uppercase;"></div>
@@ -1927,7 +1927,7 @@ main { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important;
       </div>
 
       <!-- ── COACH / PARENT COMMENT ── -->
-      <div id="j-coach-section" style="background:rgba(201,168,76,0.05); border:1px solid #2A2200; border-radius:3px; padding:16px; margin-bottom:20px;">
+      <div id="j-coach-section" style="background:rgba(201,168,76,0.05); border:1px solid #2C3038; border-radius:3px; padding:16px; margin-bottom:20px;">
         <div style="font-family:'Barlow Condensed'; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--gold); margin-bottom:6px;">💬 &nbsp;What Did My Coach or Parent Say?</div>
         <div style="font-family:'Barlow'; font-size:14px; color:var(--grey); margin-bottom:12px; line-height:1.6;">Did your coach, parent, or instructor give you feedback after this game or practice? Log it here so you never forget it.</div>
         <div class="form-row" style="margin-bottom:0;">
@@ -2423,7 +2423,7 @@ main { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important;
     <div id="team-view-none">
 
       <!-- Hero card -->
-      <div class="card" style="margin-bottom:16px; background:linear-gradient(135deg,#1A1400,#0E0C00); border:2px solid var(--gold-dark); text-align:center; padding:28px 20px;">
+      <div class="card" style="margin-bottom:16px; background:linear-gradient(135deg,#1A1D24,#141720); border:2px solid var(--gold-dark); text-align:center; padding:28px 20px;">
         <div style="font-size:42px; line-height:1; margin-bottom:6px;">🏟️</div>
         <div style="font-family:'Bebas Neue',cursive; font-size:30px; letter-spacing:2px; color:var(--white); line-height:1; margin-bottom:6px;">PLAY FOR A TEAM</div>
         <div style="font-family:'Barlow'; font-size:13px; color:var(--grey); line-height:1.6; max-width:320px; margin:0 auto;">
@@ -2464,7 +2464,7 @@ main { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important;
         <div style="font-family:'Barlow'; font-size:13px; color:var(--grey); margin-bottom:14px; line-height:1.6;">
           Create your team. Set your colors. Share the code with your players. <strong style="color:var(--gold);">It's free for coaches.</strong>
         </div>
-        <button onclick="openTeamCreateModal()" style="width:100%; background:var(--gold); color:#0D0D0D; font-family:'Barlow Condensed'; font-size:14px; font-weight:800; letter-spacing:2px; text-transform:uppercase; padding:14px; border:none; border-radius:4px; cursor:pointer;">
+        <button onclick="openTeamCreateModal()" style="width:100%; background:var(--gold); color:#161920; font-family:'Barlow Condensed'; font-size:14px; font-weight:800; letter-spacing:2px; text-transform:uppercase; padding:14px; border:none; border-radius:4px; cursor:pointer;">
           ➕ Create My Team
         </button>
       </div>
@@ -2480,7 +2480,7 @@ main { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important;
         <div id="team-color-strip-top" style="position:absolute; top:0; left:0; right:0; height:5px;"></div>
 
         <!-- Logo circle -->
-        <div id="team-logo-circle" style="width:90px; height:90px; border-radius:50%; margin:0 auto 14px; display:flex; align-items:center; justify-content:center; font-family:'Bebas Neue'; font-size:32px; font-weight:900; box-shadow:0 0 0 3px #0D0D0D, 0 0 0 5px var(--gold);">YBG</div>
+        <div id="team-logo-circle" style="width:90px; height:90px; border-radius:50%; margin:0 auto 14px; display:flex; align-items:center; justify-content:center; font-family:'Bebas Neue'; font-size:32px; font-weight:900; box-shadow:0 0 0 3px #161920, 0 0 0 5px var(--gold);">YBG</div>
 
         <div id="team-name-display" style="font-family:'Bebas Neue',cursive; font-size:30px; letter-spacing:2px; line-height:1; margin-bottom:6px;">YBG TRAVEL</div>
         <div id="team-location-display" style="font-family:'Barlow Condensed'; font-size:12px; letter-spacing:2px; color:var(--grey); text-transform:uppercase; margin-bottom:14px;">— · —</div>
@@ -2505,7 +2505,7 @@ main { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important;
         <div style="font-family:'Barlow'; font-size:13px; color:var(--grey); line-height:1.6; margin-bottom:14px;">
           Send this week's journal summary straight to your coach. Great for showing you're putting in the work.
         </div>
-        <button onclick="sendJournalToCoach()" style="width:100%; background:var(--gold); color:#0D0D0D; font-family:'Barlow Condensed'; font-size:13px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; padding:12px; border:none; border-radius:4px; cursor:pointer;">
+        <button onclick="sendJournalToCoach()" style="width:100%; background:var(--gold); color:#161920; font-family:'Barlow Condensed'; font-size:13px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; padding:12px; border:none; border-radius:4px; cursor:pointer;">
           📧 Send My Week to Coach
         </button>
       </div>
@@ -2529,7 +2529,7 @@ main { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important;
       <!-- Coach's team hero -->
       <div class="card" style="margin-bottom:16px; text-align:center; padding:28px 20px; position:relative; overflow:hidden;">
         <div id="coach-color-strip-top" style="position:absolute; top:0; left:0; right:0; height:5px;"></div>
-        <div id="coach-team-logo" style="width:90px; height:90px; border-radius:50%; margin:0 auto 14px; display:flex; align-items:center; justify-content:center; font-family:'Bebas Neue'; font-size:32px; font-weight:900; box-shadow:0 0 0 3px #0D0D0D, 0 0 0 5px var(--gold);">YBG</div>
+        <div id="coach-team-logo" style="width:90px; height:90px; border-radius:50%; margin:0 auto 14px; display:flex; align-items:center; justify-content:center; font-family:'Bebas Neue'; font-size:32px; font-weight:900; box-shadow:0 0 0 3px #161920, 0 0 0 5px var(--gold);">YBG</div>
         <div id="coach-team-name" style="font-family:'Bebas Neue',cursive; font-size:30px; letter-spacing:2px; line-height:1; margin-bottom:6px;">YOUR TEAM</div>
         <div id="coach-team-location" style="font-family:'Barlow Condensed'; font-size:12px; letter-spacing:2px; color:var(--grey); text-transform:uppercase; margin-bottom:14px;">— · —</div>
         <div style="display:inline-block; background:var(--card2); padding:6px 14px; border-radius:20px; font-family:'Barlow Condensed'; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--gold); border:1px solid var(--gold-dark);">
@@ -2547,7 +2547,7 @@ main { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important;
           <div style="font-family:'Barlow Condensed'; font-size:10px; letter-spacing:2px; color:var(--grey); text-transform:uppercase; margin-bottom:4px;">Team Code</div>
           <div id="coach-team-code" style="font-family:'Bebas Neue'; font-size:28px; letter-spacing:3px; color:var(--gold);">—</div>
         </div>
-        <button onclick="shareTeamInvite()" style="width:100%; background:var(--gold); color:#0D0D0D; font-family:'Barlow Condensed'; font-size:13px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; padding:12px; border:none; border-radius:4px; cursor:pointer;">
+        <button onclick="shareTeamInvite()" style="width:100%; background:var(--gold); color:#161920; font-family:'Barlow Condensed'; font-size:13px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; padding:12px; border:none; border-radius:4px; cursor:pointer;">
           📲 Share With Players
         </button>
       </div>
@@ -2556,7 +2556,7 @@ main { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important;
       <div id="coach-sponsor-panel" style="display:none;">
 
         <!-- Sponsor status banner -->
-        <div class="card" style="margin-bottom:16px; background:linear-gradient(135deg,#1F1800,#15100A); border:2px solid var(--gold); padding:18px;">
+        <div class="card" style="margin-bottom:16px; background:linear-gradient(135deg,#1F2228,#15100A); border:2px solid var(--gold); padding:18px;">
           <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px; flex-wrap:wrap;">
             <div style="font-family:'Bebas Neue'; font-size:22px; letter-spacing:2px; color:var(--gold); line-height:1;">🏆 TEAM SPONSOR ACTIVE</div>
             <div style="font-family:'Barlow Condensed'; font-size:10px; letter-spacing:1.5px; color:#9A7A30; text-transform:uppercase;">$450 / Year</div>
@@ -2565,7 +2565,7 @@ main { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important;
             <strong style="color:var(--gold);">— / 15 seats used</strong> · <span id="sponsor-seats-remaining">15 available</span>
           </div>
           <!-- Seat usage bar -->
-          <div style="height:6px; background:#1A1A1A; border-radius:3px; overflow:hidden; margin-bottom:10px;">
+          <div style="height:6px; background:#242830; border-radius:3px; overflow:hidden; margin-bottom:10px;">
             <div id="sponsor-seat-bar" style="height:100%; width:0%; background:linear-gradient(90deg,#C9A84C,#E8C96A); transition:width 0.3s ease;"></div>
           </div>
           <div id="sponsor-renewal-warning" style="display:none; background:rgba(230,126,34,0.08); border-left:3px solid #E67E22; padding:9px 11px; font-family:'Barlow'; font-size:12px; color:#E8C96A; line-height:1.5; border-radius:2px; margin-bottom:10px;"></div>
@@ -2584,14 +2584,14 @@ main { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important;
 
           <!-- Logo preview + extracted colors -->
           <div style="display:flex; gap:14px; align-items:center; margin-bottom:14px;">
-            <div id="sponsor-logo-preview" style="width:80px; height:80px; border-radius:50%; background:#1A1A1A; border:2px dashed #2E2E2E; display:flex; align-items:center; justify-content:center; font-size:28px; color:#444; flex-shrink:0; overflow:hidden;">
+            <div id="sponsor-logo-preview" style="width:80px; height:80px; border-radius:50%; background:#242830; border:2px dashed #383E48; display:flex; align-items:center; justify-content:center; font-size:28px; color:#444; flex-shrink:0; overflow:hidden;">
               📷
             </div>
             <div style="flex:1; min-width:0;">
               <div style="font-family:'Barlow Condensed'; font-size:10px; letter-spacing:2px; color:var(--grey); text-transform:uppercase; margin-bottom:6px;">Extracted Colors</div>
               <div style="display:flex; gap:8px; margin-bottom:6px;">
-                <div id="sponsor-color-primary" style="flex:1; height:30px; background:#C9A84C; border:1px solid #2E2E2E; border-radius:3px; display:flex; align-items:center; justify-content:center; font-family:'Barlow Condensed'; font-size:10px; font-weight:700; color:#080808; letter-spacing:1px;">#C9A84C</div>
-                <div id="sponsor-color-accent" style="flex:1; height:30px; background:#0D0D0D; border:1px solid #2E2E2E; border-radius:3px; display:flex; align-items:center; justify-content:center; font-family:'Barlow Condensed'; font-size:10px; font-weight:700; color:#C9A84C; letter-spacing:1px;">#0D0D0D</div>
+                <div id="sponsor-color-primary" style="flex:1; height:30px; background:#C9A84C; border:1px solid #383E48; border-radius:3px; display:flex; align-items:center; justify-content:center; font-family:'Barlow Condensed'; font-size:10px; font-weight:700; color:#080808; letter-spacing:1px;">#C9A84C</div>
+                <div id="sponsor-color-accent" style="flex:1; height:30px; background:#161920; border:1px solid #383E48; border-radius:3px; display:flex; align-items:center; justify-content:center; font-family:'Barlow Condensed'; font-size:10px; font-weight:700; color:#C9A84C; letter-spacing:1px;">#161920</div>
               </div>
               <div style="font-family:'Barlow'; font-size:11px; color:#555; line-height:1.5;">Primary · Accent</div>
             </div>
@@ -2980,7 +2980,7 @@ main { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important;
     </div>
 
     <!-- ── HERO INVITE ── -->
-    <div style="text-align:center; padding:28px 20px; background:linear-gradient(135deg,#1A1400,#0E0C00); border:1px solid var(--gold-dark); border-radius:6px; margin-bottom:20px;">
+    <div style="text-align:center; padding:28px 20px; background:linear-gradient(135deg,#1A1D24,#141720); border:1px solid var(--gold-dark); border-radius:6px; margin-bottom:20px;">
       <div style="font-family:'Bebas Neue',cursive; font-size:42px; letter-spacing:3px; color:var(--white); line-height:1; margin-bottom:6px;">KNOW A <span style="color:var(--gold);">PLAYER?</span></div>
       <div style="font-family:'Barlow'; font-size:14px; color:var(--grey); line-height:1.7; margin-bottom:20px; max-width:340px; margin-left:auto; margin-right:auto;">
         Every player deserves a real plan. Share My Grind and give them a <strong style="color:var(--gold);">7-day free trial</strong> — no credit card, no commitment.
@@ -3647,12 +3647,12 @@ function setRegistrationMode(mode) {
   const giftBtn = document.getElementById('mode-gift-btn');
   if (selfBtn) {
     selfBtn.style.background   = mode === 'self' ? 'rgba(201,168,76,0.12)' : 'transparent';
-    selfBtn.style.borderColor  = mode === 'self' ? 'var(--gold)' : '#2E2E2E';
+    selfBtn.style.borderColor  = mode === 'self' ? 'var(--gold)' : '#383E48';
     selfBtn.style.color        = mode === 'self' ? 'var(--gold)' : '#666';
   }
   if (giftBtn) {
     giftBtn.style.background   = mode === 'gift' ? 'rgba(201,168,76,0.12)' : 'transparent';
-    giftBtn.style.borderColor  = mode === 'gift' ? 'var(--gold)' : '#2E2E2E';
+    giftBtn.style.borderColor  = mode === 'gift' ? 'var(--gold)' : '#383E48';
     giftBtn.style.color        = mode === 'gift' ? 'var(--gold)' : '#666';
   }
   document.getElementById('trial-email-error').style.display = 'none';
@@ -3800,7 +3800,7 @@ function addGiftPlayer() {
   row.style.cssText = 'display:flex; gap:6px; align-items:flex-start; margin-bottom:8px;';
   row.innerHTML =
     '<input type="email" class="gift-player-input" placeholder="player' + (idx + 1) + '@email.com" ' +
-      'style="flex:1; background:#111; border:1px solid #C9A84C; color:#F4F4F4; ' +
+      'style="flex:1; background:#1C2028; border:1px solid #C9A84C; color:#F4F4F4; ' +
       'font-family:\'Barlow\',sans-serif; font-size:15px; padding:11px 14px; border-radius:2px; ' +
       'outline:none; box-sizing:border-box; margin-bottom:0;" ' +
       'onfocus="this.style.borderColor=\'#E8C96A\'" onblur="this.style.borderColor=\'#C9A84C\'" ' +
@@ -3947,7 +3947,7 @@ function showGiftProgressBanner(currentIdx, total, playerEmails, purchaserEmail)
     banner = document.createElement('div');
     banner.id = 'gift-progress-banner';
     banner.style.cssText = 'position:fixed; top:0; left:0; right:0; z-index:1100; ' +
-      'background:linear-gradient(135deg,#1A1500,#141400); border-bottom:2px solid #C9A84C; ' +
+      'background:linear-gradient(135deg,#1A1D24,#141720); border-bottom:2px solid #C9A84C; ' +
       'padding:16px 20px; font-family:\'Barlow\',sans-serif; color:#F4F4F4; text-align:center; ' +
       'box-shadow:0 4px 14px rgba(0,0,0,0.6); animation:fadeIn 0.3s ease;';
     document.body.appendChild(banner);
@@ -4964,7 +4964,7 @@ function renderEntries() {
 
       <!-- GAME STATS BOX -->
       ${e.gameStats ? `
-        <div style="margin:12px 0; background:linear-gradient(135deg,#1A1500,#141400); border:1px solid var(--gold-dark); border-radius:3px; padding:14px 16px;">
+        <div style="margin:12px 0; background:linear-gradient(135deg,#1A1D24,#141720); border:1px solid var(--gold-dark); border-radius:3px; padding:14px 16px;">
           <div style="font-family:'Barlow Condensed'; font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--gold); margin-bottom:10px;">⚾ Game Stats</div>
           <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:3px; margin-bottom:${e.gameStats.ip ? '8px' : '0'};">
             ${[
@@ -5009,7 +5009,7 @@ function renderEntries() {
 
       <!-- PRACTICE REP COUNTER BOX -->
       ${e.reps ? `
-        <div style="margin:12px 0; background:linear-gradient(135deg,#1A1500,#141400); border:1px solid var(--gold-dark); border-radius:3px; padding:14px 16px;">
+        <div style="margin:12px 0; background:linear-gradient(135deg,#1A1D24,#141720); border:1px solid var(--gold-dark); border-radius:3px; padding:14px 16px;">
           <div style="font-family:'Barlow Condensed'; font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--gold); margin-bottom:10px;">🔢 Practice Reps</div>
           <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:3px;">
             ${[
@@ -5320,7 +5320,7 @@ function renderGoals() {
       <div style="flex:1; min-width:0;">
         <div style="font-family:'Barlow'; font-size:18px; font-weight:600; color:${g.done ? 'var(--grey)' : 'var(--white)'}; line-height:1.4; ${g.done ? 'text-decoration:line-through;' : ''}">${g.text}</div>
         <div style="margin-top:6px;">
-          <span style="display:inline-block; font-family:'Barlow Condensed',sans-serif; font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:#0D0D0D; background:${catColors[g.cat] || 'var(--gold)'}; padding:3px 9px; border-radius:2px;">${g.cat}</span>
+          <span style="display:inline-block; font-family:'Barlow Condensed',sans-serif; font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:#161920; background:${catColors[g.cat] || 'var(--gold)'}; padding:3px 9px; border-radius:2px;">${g.cat}</span>
         </div>
       </div>
       <button class="btn btn-danger btn-sm" onclick="deleteGoal(${g.id})" style="flex-shrink:0;">✕</button>
@@ -6128,7 +6128,7 @@ function copyReferralLink() {
       setTimeout(() => {
         btn.innerHTML = '📋 Copy Link';
         btn.style.color = '#BBBBBB';
-        btn.style.borderColor = '#2E2E2E';
+        btn.style.borderColor = '#383E48';
       }, 2500);
     });
   } else {
@@ -6676,7 +6676,7 @@ function showShareToast(msg) {
   if (!toast) {
     toast = document.createElement('div');
     toast.id = 'share-toast';
-    toast.style.cssText = 'position:fixed; bottom:80px; left:50%; transform:translateX(-50%); background:#1A1400; border:1px solid #C9A84C; color:#C9A84C; font-family:"Barlow Condensed",sans-serif; font-size:13px; font-weight:700; letter-spacing:1px; padding:12px 20px; border-radius:4px; z-index:9999; white-space:nowrap; box-shadow:0 8px 24px rgba(0,0,0,0.5);';
+    toast.style.cssText = 'position:fixed; bottom:80px; left:50%; transform:translateX(-50%); background:#1A1D24; border:1px solid #C9A84C; color:#C9A84C; font-family:"Barlow Condensed",sans-serif; font-size:13px; font-weight:700; letter-spacing:1px; padding:12px 20px; border-radius:4px; z-index:9999; white-space:nowrap; box-shadow:0 8px 24px rgba(0,0,0,0.5);';
     document.body.appendChild(toast);
   }
   toast.textContent = msg;
@@ -7232,17 +7232,17 @@ function exportJournalPDF() {
   html += '<style>';
   html += '@page { margin: 0.5in; }';
   html += 'body { font-family: Georgia, serif; color:#222; line-height:1.6; max-width:760px; margin:30px auto; padding:20px; }';
-  html += 'h1 { font-family: Arial, sans-serif; color:#0D0D0D; border-bottom:3px solid #C9A84C; padding-bottom:10px; }';
+  html += 'h1 { font-family: Arial, sans-serif; color:#161920; border-bottom:3px solid #C9A84C; padding-bottom:10px; }';
   html += 'h2 { font-family: Arial, sans-serif; color:#8B6F2F; margin-top:30px; border-bottom:1px solid #ccc; padding-bottom:4px; }';
   html += '.summary { background:#FAF5E3; border-left:4px solid #C9A84C; padding:16px 20px; margin:20px 0; }';
-  html += '.summary strong { color:#0D0D0D; }';
+  html += '.summary strong { color:#161920; }';
   html += '.entry { border-left:3px solid #C9A84C; padding:12px 18px; margin:14px 0; background:#FAFAFA; page-break-inside:avoid; }';
   html += '.entry .meta { font-size:12px; color:#888; font-family:Arial,sans-serif; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }';
-  html += '.entry .title { font-weight:bold; font-size:17px; color:#0D0D0D; margin-bottom:8px; }';
+  html += '.entry .title { font-weight:bold; font-size:17px; color:#161920; margin-bottom:8px; }';
   html += '.entry p { margin:8px 0; }';
   html += '.entry .label { font-family:Arial,sans-serif; font-size:11px; color:#888; text-transform:uppercase; letter-spacing:1px; margin-top:8px; }';
   html += '.footer { text-align:center; color:#888; font-size:12px; margin-top:40px; border-top:1px solid #ccc; padding-top:16px; }';
-  html += '.print-btn { position:fixed; top:10px; right:10px; background:#C9A84C; color:#0D0D0D; font-family:Arial,sans-serif; font-weight:bold; padding:10px 18px; border:none; border-radius:4px; cursor:pointer; font-size:14px; }';
+  html += '.print-btn { position:fixed; top:10px; right:10px; background:#C9A84C; color:#161920; font-family:Arial,sans-serif; font-weight:bold; padding:10px 18px; border:none; border-radius:4px; cursor:pointer; font-size:14px; }';
   html += '@media print { .print-btn { display:none; } }';
   html += '</style></head><body>';
   html += '<button class="print-btn" onclick="window.print()">🖨️ Print / Save as PDF</button>';
@@ -7617,7 +7617,7 @@ function showGradeNag() {
   if (!overlay) return;
   // Reset form state
   document.querySelectorAll('.grade-nag-btn').forEach(function(b) {
-    b.style.background = '#1A1A1A';
+    b.style.background = '#242830';
     b.style.borderColor = '#2A2A2A';
     b.style.color = '#F4F4F4';
     b.dataset.selected = '';
@@ -7629,7 +7629,7 @@ function showGradeNag() {
   const submit = document.getElementById('grade-nag-submit');
   if (submit) {
     submit.disabled = true;
-    submit.style.background = '#1A1A1A';
+    submit.style.background = '#242830';
     submit.style.color = '#666';
     submit.style.cursor = 'not-allowed';
     submit.style.borderColor = '#2A2A2A';
@@ -7642,7 +7642,7 @@ function showGradeNag() {
 function selectGradeNagOption(btn) {
   // Clear all
   document.querySelectorAll('.grade-nag-btn').forEach(function(b) {
-    b.style.background = '#1A1A1A';
+    b.style.background = '#242830';
     b.style.borderColor = '#2A2A2A';
     b.style.color = '#F4F4F4';
     b.dataset.selected = '';
@@ -7671,7 +7671,7 @@ function selectGradeNagOption(btn) {
   if (submit) {
     submit.disabled = false;
     submit.style.background = '#C9A84C';
-    submit.style.color = '#0D0D0D';
+    submit.style.color = '#161920';
     submit.style.cursor = 'pointer';
     submit.style.borderColor = '#C9A84C';
     submit.textContent = '✅ Check In — Stay Eligible';
@@ -7826,7 +7826,7 @@ function renderTeamList() {
 
   container.innerHTML = teams.map(function(t) {
     const primary  = t.primaryColor || '#C9A84C';
-    const accent   = t.accentColor  || '#0D0D0D';
+    const accent   = t.accentColor  || '#161920';
     const location = [t.city, t.state].filter(Boolean).join(', ');
     const abbr     = t.abbr || (t.name || 'T').substring(0,3).toUpperCase();
     return '<div onclick="openJoinModal(\'' + t.id + '\')" style="' +
@@ -7868,8 +7868,8 @@ function openJoinModal(teamId) {
   const coach= document.getElementById('tj-coach');
   if (logo) {
     logo.style.background = team.primaryColor || '#C9A84C';
-    logo.style.color      = team.accentColor  || '#0D0D0D';
-    logo.style.boxShadow  = '0 0 0 2px #0D0D0D, 0 0 0 4px ' + (team.primaryColor || '#C9A84C');
+    logo.style.color      = team.accentColor  || '#161920';
+    logo.style.boxShadow  = '0 0 0 2px #161920, 0 0 0 4px ' + (team.primaryColor || '#C9A84C');
     logo.textContent      = team.abbr || 'T';
   }
   if (name) name.textContent = team.name || '—';
@@ -7909,12 +7909,12 @@ function renderJoinedView() {
   const loc   = document.getElementById('team-location-display');
   const coach = document.getElementById('team-coach-info');
   const primary = t.primaryColor || '#C9A84C';
-  const accent  = t.accentColor  || '#0D0D0D';
+  const accent  = t.accentColor  || '#161920';
 
   if (logo) {
     logo.style.background = primary;
     logo.style.color      = accent;
-    logo.style.boxShadow  = '0 0 0 3px #0D0D0D, 0 0 0 5px ' + primary;
+    logo.style.boxShadow  = '0 0 0 3px #161920, 0 0 0 5px ' + primary;
     logo.textContent      = t.abbr || (t.name || 'T').substring(0,3).toUpperCase();
   }
   if (strip) strip.style.background = primary;
@@ -8015,12 +8015,12 @@ function renderCoachView() {
   const loc   = document.getElementById('coach-team-location');
   const code  = document.getElementById('coach-team-code');
   const primary = t.primaryColor || '#C9A84C';
-  const accent  = t.accentColor  || '#0D0D0D';
+  const accent  = t.accentColor  || '#161920';
 
   if (logo) {
     logo.style.background = primary;
     logo.style.color      = accent;
-    logo.style.boxShadow  = '0 0 0 3px #0D0D0D, 0 0 0 5px ' + primary;
+    logo.style.boxShadow  = '0 0 0 3px #161920, 0 0 0 5px ' + primary;
     logo.textContent      = t.abbr || 'T';
   }
   if (strip) strip.style.background = primary;
@@ -8079,7 +8079,7 @@ function openTeamCreateModal(editMode) {
     if (el) el.value = '';
   });
   document.getElementById('tc-primary').value = '#C9A84C';
-  document.getElementById('tc-accent').value  = '#0D0D0D';
+  document.getElementById('tc-accent').value  = '#161920';
 
   if (editMode === true && getMyCoachedTeamId()) {
     // Edit mode — prefill with existing team data
@@ -8093,7 +8093,7 @@ function openTeamCreateModal(editMode) {
       document.getElementById('tc-city').value  = t.city       || '';
       document.getElementById('tc-state').value = t.state      || '';
       document.getElementById('tc-primary').value = t.primaryColor || '#C9A84C';
-      document.getElementById('tc-accent').value  = t.accentColor  || '#0D0D0D';
+      document.getElementById('tc-accent').value  = t.accentColor  || '#161920';
       document.getElementById('tc-coach-name').value  = t.coachName  || '';
       document.getElementById('tc-coach-email').value = t.coachEmail || '';
     }
@@ -8131,7 +8131,7 @@ function updateTeamPreview() {
     const logo = document.getElementById('tc-preview-logo');
     logo.style.background = primary;
     logo.style.color      = accent;
-    logo.style.boxShadow  = '0 0 0 2px #0D0D0D, 0 0 0 4px ' + primary;
+    logo.style.boxShadow  = '0 0 0 2px #161920, 0 0 0 4px ' + primary;
     logo.textContent      = abbr || 'YBG';
 
     document.getElementById('tc-preview-strip').style.background = primary;
@@ -8382,7 +8382,7 @@ function handleSponsorLogoUpload(evt) {
         const preview = document.getElementById('sponsor-logo-preview');
         if (preview) {
           preview.innerHTML = '';
-          preview.style.background = '#0D0D0D';
+          preview.style.background = '#161920';
           preview.style.border = '2px solid ' + colors.primary;
           const previewImg = document.createElement('img');
           previewImg.src = dataUrl;
@@ -8445,11 +8445,11 @@ function extractDominantColors(img) {
   });
 
   if (sorted.length === 0) {
-    return { primary: '#C9A84C', accent: '#0D0D0D' };
+    return { primary: '#C9A84C', accent: '#161920' };
   }
 
   const primary = rgbKeyToHex(sorted[0]);
-  let accent = '#0D0D0D';
+  let accent = '#161920';
   // Find a second color that's sufficiently different from the primary
   for (let j = 1; j < sorted.length; j++) {
     const candidate = rgbKeyToHex(sorted[j]);
@@ -9017,7 +9017,7 @@ setTimeout(function() {
 </script>
 
 <!-- ══ QUOTE OF THE DAY POPUP ══════════════════════════════════════════ -->
-<div id="qotd-overlay" style="display:none;position:fixed;inset:0;z-index:9990;background:rgba(0,0,0,0.92);backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:24px;">
+<div id="qotd-overlay" style="display:none;position:fixed;inset:0;z-index:9990;background:rgba(10,12,16,0.94);backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:24px;">
   <div style="max-width:400px;width:100%;text-align:center;">
 
     <!-- YBG badge -->
@@ -9202,8 +9202,8 @@ window.addEventListener('load', function() {
 <div id="voice-toast" class="voice-toast">🎤 Listening...</div>
 
 <!-- ══ REVIEW PROMPT OVERLAY ══════════════════════════════════════ -->
-<div id="review-overlay" style="display:none;position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,0.88);backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:24px;">
-  <div style="max-width:380px;width:100%;background:#141414;border:1px solid #2E2E2E;border-radius:12px;padding:28px 24px;text-align:center;">
+<div id="review-overlay" style="display:none;position:fixed;inset:0;z-index:9000;background:rgba(10,12,16,0.92);backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:24px;">
+  <div style="max-width:380px;width:100%;background:#1C2028;border:1px solid #383E48;border-radius:12px;padding:28px 24px;text-align:center;">
     <div style="font-size:48px;margin-bottom:12px;">🔥</div>
     <div style="font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#C9A84C;margin-bottom:8px;">3-Day Streak</div>
     <div style="font-family:'Bebas Neue',cursive;font-size:28px;letter-spacing:1.5px;color:#F5F5F5;margin-bottom:10px;">You're Building the Habit</div>
@@ -9215,7 +9215,7 @@ window.addEventListener('load', function() {
 
     <a id="review-link" href="mailto:coach@youngsbaseball.com?subject=MyGrind Review&body=I've been using MyGrind for 3 days and wanted to share my feedback:" style="display:block;background:#C9A84C;color:#080808;border-radius:6px;padding:14px;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;letter-spacing:2px;text-transform:uppercase;text-decoration:none;margin-bottom:10px;">⭐ &nbsp;Leave a Review</a>
 
-    <button onclick="closeReview()" style="width:100%;background:transparent;border:1px solid #2E2E2E;border-radius:6px;padding:12px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#555;cursor:pointer;">Maybe Later</button>
+    <button onclick="closeReview()" style="width:100%;background:transparent;border:1px solid #383E48;border-radius:6px;padding:12px;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#555;cursor:pointer;">Maybe Later</button>
 
     <div style="font-size:11px;color:#333;margin-top:12px;">You can also email us at coach@youngsbaseball.com</div>
   </div>
