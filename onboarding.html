@@ -133,7 +133,7 @@ input[type=email]:focus { border-color: #C9A84C; }
       </div>
     </div>
     <button class="cta" style="max-width:340px;" onclick="go(1)">Get Started →</button>
-    <div style="margin-top:14px;background:rgba(201,168,76,0.1);border:1px solid #9A7A30;border-radius:6px;padding:10px 20px;text-align:center;"><div style="font-family:'Bebas Neue',Arial,sans-serif;font-size:22px;color:#C9A84C;letter-spacing:2px;">7-DAY FREE TRIAL</div><div style="font-size:13px;color:#888;margin-top:2px;">No credit card required · Cancel anytime</div></div>
+    <div class="trial-badge" style="margin-top:14px;background:rgba(201,168,76,0.1);border:1px solid #9A7A30;border-radius:6px;padding:10px 20px;text-align:center;"><div style="font-family:'Bebas Neue',Arial,sans-serif;font-size:22px;color:#C9A84C;letter-spacing:2px;">7-DAY FREE TRIAL</div><div style="font-size:13px;color:#888;margin-top:2px;">No credit card required · Cancel anytime</div></div>
   </div>
 </div>
 
@@ -532,8 +532,23 @@ var cur = 0;
   try {
     var a  = JSON.parse(localStorage.getItem('ybg_access') || '{}');
     var sa = JSON.parse(localStorage.getItem('ybg_softball_access') || '{}');
-    if (a.paid  === true) { window.location.href = BB_URL; }
-    if (sa.paid === true) { window.location.href = SB_URL; }
+    if (a.paid  === true) { window.location.href = BB_URL; return; }
+    if (sa.paid === true) { window.location.href = SB_URL; return; }
+
+    // Returning expired user — personalize welcome screen
+    var isExpired = (a.trialExpired === true) || (sa.trialExpired === true);
+    if (isExpired) {
+      setTimeout(function() {
+        var h1    = document.querySelector('#s0 h1');
+        var sub   = document.querySelector('#s0 .sub');
+        var btn   = document.querySelector('#s0 .cta');
+        var badge = document.querySelector('#s0 .trial-badge');
+        if (h1)    h1.innerHTML = "Welcome back. <span>Your grind isn't finished.</span>";
+        if (sub)   sub.textContent = "Your 7-day trial ended — your progress is saved. Choose a plan and pick up right where you left off.";
+        if (btn)   btn.textContent = "See My Plan Options →";
+        if (badge) badge.style.display = 'none';
+      }, 120);
+    }
   } catch(e) {}
 })();
 
