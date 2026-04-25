@@ -3432,24 +3432,26 @@ function checkAccess() {
   // Creator always gets in
   if (isCreator()) { removeBanner(); return; }
 
-  // QR scan — auto-start trial immediately, no email gate
-  // Clear any stale unpaid access state so QR always works
+  // Clean up legacy auto-trial accounts (created by the old QR auto-start flow).
+  // These show as 'qrscan@ybg.app' or were created with mode='qr' and no real
+  // email. Wipe them so the user gets a proper welcome screen with email capture.
+  try {
+    const legacy = JSON.parse(localStorage.getItem('ybg_access') || '{}');
+    const isLegacyAutoTrial = legacy.email === 'qrscan@ybg.app' ||
+                              (legacy.mode === 'qr' && (!legacy.email || legacy.email.endsWith('@ybg.app')));
+    if (isLegacyAutoTrial && !legacy.paid) {
+      localStorage.removeItem('ybg_access');
+      sessionStorage.removeItem('ybg_access');
+    }
+  } catch(e) {}
+
+  // QR scan / shared link — clear the scan flag and fall through to welcome
+  // screen so the visitor sees the proper "Start Your 7-Day Free Trial"
+  // landing with email capture (no more silent auto-start).
   if (localStorage.getItem('ybg_qr_scan') === '1') {
     localStorage.removeItem('ybg_qr_scan');
-    const existingAcc = retrieve('access') || {};
-    if (!existingAcc.paid && !existingAcc.trialStart) {
-      const fp = getDeviceFingerprint();
-      saveAccessState({
-        email: 'qrscan@ybg.app',
-        fingerprint: fp,
-        trialStart: Date.now(),
-        paid: false,
-        mode: 'qr',
-        registeredAt: new Date().toISOString()
-      });
-      showTrialBanner();
-      return;
-    }
+    // Intentionally do NOT auto-create a trial here. Fall through so
+    // status === 'no_trial' and showTrialWelcome() runs below.
   }
 
   const status = validateSession();
