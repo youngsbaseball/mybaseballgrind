@@ -244,14 +244,15 @@ input[type=email]:focus { border-color: #C9A84C; }
     <div class="badge">Your Journey</div>
     <h1>What are you<br><span>working toward?</span></h1>
     <div class="gold-bar"></div>
-    <p class="sub">This is the foundation of your entire plan. Be specific — it matters.</p>
-    <button class="opt" onclick="pick(this,'goal','Make a travel team')">🏆 &nbsp;Make a travel / select team</button>
-    <button class="opt" onclick="pick(this,'goal','Improve specific skills')">📈 &nbsp;Improve specific skills</button>
-    <button class="opt" onclick="pick(this,'goal','Get recruited to college')">🎓 &nbsp;Get recruited to college</button>
-    <button class="opt" onclick="pick(this,'goal','Earn a starting spot')">🔑 &nbsp;Earn a starting spot on my team</button>
-    <button class="opt" onclick="pick(this,'goal','Stay sharp in the off-season')">❄️ &nbsp;Stay sharp in the off-season</button>
-    <button class="opt" onclick="pick(this,'goal','Build consistent habits')">🔥 &nbsp;Build consistent training habits</button>
-    <button class="opt" onclick="pick(this,'goal','Just love the game')">❤️ &nbsp;I just love the game</button>
+    <p class="sub">Pick everything that applies — most players have more than one goal.</p>
+    <div style="display:inline-block;background:#1A1A1A;border:1px solid #2E2E2E;border-radius:20px;padding:4px 12px;font-family:'Barlow Condensed',Arial,sans-serif;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#555;margin-bottom:12px;">✓ Select all that apply</div>
+    <button class="opt" onclick="toggle(this,'goal','Make a travel team')">🏆 &nbsp;Make a travel / select team</button>
+    <button class="opt" onclick="toggle(this,'goal','Improve specific skills')">📈 &nbsp;Improve specific skills</button>
+    <button class="opt" onclick="toggle(this,'goal','Get recruited to college')">🎓 &nbsp;Get recruited to college</button>
+    <button class="opt" onclick="toggle(this,'goal','Earn a starting spot')">🔑 &nbsp;Earn a starting spot on my team</button>
+    <button class="opt" onclick="toggle(this,'goal','Stay sharp in the off-season')">❄️ &nbsp;Stay sharp in the off-season</button>
+    <button class="opt" onclick="toggle(this,'goal','Build consistent habits')">🔥 &nbsp;Build consistent training habits</button>
+    <button class="opt" onclick="toggle(this,'goal','Just love the game')">❤️ &nbsp;I just love the game</button>
   </div>
   <div class="bnav"><button class="back-btn" onclick="go(5)">← Back</button><div class="dots" id="d6"></div><button class="next-btn" id="n6" onclick="goNext(6,7)" disabled style="opacity:0.3;">Next →</button></div>
 </div>
@@ -521,7 +522,7 @@ var TOTAL_STEPS    = 13; // steps 1–13 shown in progress
 // ══ STATE ═════════════════════════════════════════
 var d = {
   sport: 'baseball', age: '', position: [], level: '',
-  team: '', goal: '', struggle: [], coachFeedback: [],
+  team: '', goal: [], struggle: [], coachFeedback: [],
   trainingDays: '', email: '', plan: 'annual'
 };
 var cur = 0;
@@ -671,7 +672,7 @@ function buildPositions() {
   var positions = d.sport === 'softball' ? sb : bb;
   var grid = document.getElementById('posGrid');
   grid.innerHTML = positions.map(function(p) {
-    return '<button class="opt" onclick="pick(this,\'position\',\'' + p.l + '\')">' + p.e + ' &nbsp;' + p.l + '</button>';
+    return '<button class="opt" onclick="toggle(this,\'position\',\'' + p.l + '\')">' + p.e + ' &nbsp;' + p.l + '</button>';
   }).join('');
 }
 
@@ -699,7 +700,8 @@ function emailNext() {
 function buildPlan() {
   var sportLabel = d.sport === 'softball' ? 'Softball' : 'Baseball';
   var t = document.getElementById('planTitle');
-  if (t) t.textContent = sportLabel + ' Player Plan — ' + (d.goal || 'Your Goal');
+  var goalLabel = Array.isArray(d.goal) ? d.goal.join(' + ') : (d.goal || 'Your Goal');
+  if (t) t.textContent = sportLabel + ' Player Plan — ' + goalLabel;
 
   var sub = document.getElementById('s11sub');
   if (sub) sub.textContent = 'Based on your answers — here\'s what MyGrind built for you, ' + (d.age || 'player') + '.';
@@ -719,7 +721,7 @@ function buildPlan() {
     '<div>✅ Daily journal prompts for ' + posLabel + '</div>' +
     '<div>✅ ' + drills + '</div>' +
     '<div>✅ Weekly progress snapshot</div>' +
-    '<div>✅ Goal: <em style="color:#C9A84C;">' + (d.goal || 'Your goal') + '</em></div>' +
+    '<div>✅ Goal: <em style="color:#C9A84C;">' + goalLabel + '</em></div>' +
     '<div>' + coachLine + '</div>' +
     '<div>✅ Shareable training report for coaches</div>';
 
@@ -738,10 +740,11 @@ function buildPlan() {
   if (cta) {
     var emoji = d.sport === 'softball' ? '🥎' : '⚾';
     var txt = emoji + '  Start My Free Trial →';
-    if (d.goal === 'Make a travel team')       txt = emoji + '  Start Making the Team →';
-    if (d.goal === 'Get recruited to college') txt = emoji + '  Start My Recruiting Journey →';
-    if (d.goal === 'Earn a starting spot')     txt = emoji + '  Start Earning My Spot →';
-    if (d.goal === 'Build consistent habits')  txt = emoji + '  Start Building My Habit →';
+    var goals = Array.isArray(d.goal) ? d.goal : [d.goal];
+    if (goals.includes('Make a travel team'))       txt = emoji + '  Start Making the Team →';
+    if (goals.includes('Get recruited to college')) txt = emoji + '  Start My Recruiting Journey →';
+    if (goals.includes('Earn a starting spot'))     txt = emoji + '  Start Earning My Spot →';
+    if (goals.includes('Build consistent habits'))  txt = emoji + '  Start Building My Habit →';
     cta.textContent = txt;
   }
 }
@@ -786,9 +789,12 @@ function writeToApp() {
   var now  = Date.now();
   var access  = { email: d.email, fingerprint: fp, trialStart: now, paid: false, sport: d.sport, goal: d.goal, mode: 'onboarding' };
   var posStr = Array.isArray(d.position) ? d.position.join(', ') : d.position;
-  var profile = { sport: d.sport, age: d.age, position: posStr, level: d.level, team: d.team, bio: d.sport + ' · ' + d.age + ' · Goal: ' + d.goal, savedAt: new Date().toISOString() };
+  var profile = { sport: d.sport, age: d.age, position: posStr, level: d.level, team: d.team, bio: d.sport + ' · ' + d.age + ' · Goal: ' + (Array.isArray(d.goal) ? d.goal.join(', ') : d.goal), savedAt: new Date().toISOString() };
   var state   = { goals: [], entries: [], players: [] };
-  if (d.goal) state.goals.push({ id: now, text: d.goal, cat: 'mental', done: false });
+  var goalArr = Array.isArray(d.goal) ? d.goal : (d.goal ? [d.goal] : []);
+  goalArr.forEach(function(g, i) {
+    if (g) state.goals.push({ id: now + i, text: g, cat: 'mental', done: false });
+  });
   var coachItems = Array.isArray(d.coachFeedback) ? d.coachFeedback : (d.coachFeedback ? [d.coachFeedback] : []);
   coachItems.forEach(function(fb, i) {
     if (fb && fb !== 'Nothing specific yet') {
