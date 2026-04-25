@@ -1133,7 +1133,7 @@ function dismissIosBanner() {
 <div id="trial-overlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.92); z-index:1000; align-items:center; justify-content:center; padding:24px; backdrop-filter:blur(12px);">
 
   <!-- WELCOME SCREEN -->
-  <div id="trial-screen-welcome" style="max-width:460px; width:100%; background:#181818; border:1px solid #272727; border-radius:4px; overflow:hidden; animation:fadeIn 0.4s ease;">
+  <div id="trial-screen-welcome" style="max-width:440px; width:100%; background:#181818; border:1px solid #272727; border-radius:4px; overflow:hidden; animation:fadeIn 0.4s ease;">
 
     <!-- HEADER -->
     <div style="background:linear-gradient(135deg,#1A1500,#141400); border-bottom:1px solid #2A2200; padding:24px 28px; text-align:center;">
@@ -1142,206 +1142,75 @@ function dismissIosBanner() {
       <div style="font-family:'Barlow Condensed',sans-serif; font-size:11px; letter-spacing:3px; text-transform:uppercase; color:#555; margin-top:4px;">2026 Annual Baseball Journal</div>
     </div>
 
-    <div style="padding:24px 28px;">
+    <div style="padding:28px;">
 
-      <!-- ── STEP 1: WHO IS THIS FOR ── -->
-      <div style="margin-bottom:20px;">
-        <div style="font-family:'Barlow Condensed',sans-serif; font-size:10px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:#555; margin-bottom:10px;">Step 1 — Who is this for?</div>
-        <div style="display:flex; gap:8px;">
-          <button id="mode-self-btn" onclick="setRegistrationMode('self')" style="flex:1; padding:12px 8px; background:rgba(201,168,76,0.12); border:1px solid #C9A84C; color:#C9A84C; font-family:'Barlow Condensed',sans-serif; font-size:12px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; border-radius:2px; cursor:pointer;">⚾ I'm the Player</button>
-          <button id="mode-gift-btn" onclick="setRegistrationMode('gift')" style="flex:1; padding:12px 8px; background:transparent; border:1px solid #2E2E2E; color:#666; font-family:'Barlow Condensed',sans-serif; font-size:12px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; border-radius:2px; cursor:pointer;">👨‍👩‍👧 Buying for My Player</button>
-        </div>
+      <!-- HERO -->
+      <div style="text-align:center; margin-bottom:22px;">
+        <div style="font-size:42px; line-height:1; margin-bottom:6px;">🎁</div>
+        <div style="font-family:'Bebas Neue',cursive; font-size:32px; letter-spacing:2px; color:#C9A84C; line-height:1.1;">7-DAY FREE TRIAL</div>
+        <div style="font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#777; margin-top:6px;">Every Feature · No Card Required</div>
       </div>
 
-      <!-- ── STEP 2: ENTER INFO ── -->
-      <div style="margin-bottom:20px;">
-        <div style="font-family:'Barlow Condensed',sans-serif; font-size:10px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:#555; margin-bottom:10px;">Step 2 — Enter Info</div>
-
-        <!-- SELF MODE -->
-        <div id="mode-self">
-          <label style="display:block; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#666; margin-bottom:6px;">Your Email Address</label>
-          <input type="email" id="user-email-input" placeholder="yourname@email.com" style="width:100%; background:#111; border:1px solid #2E2E2E; color:#F4F4F4; font-family:'Barlow',sans-serif; font-size:15px; padding:11px 14px; border-radius:2px; outline:none; margin-bottom:6px; box-sizing:border-box;" onfocus="this.style.borderColor='#C9A84C'" onblur="this.style.borderColor='#2E2E2E'">
-          <div style="font-family:'Barlow',sans-serif; font-size:12px; color:#444; line-height:1.5;">This email locks the app to your device. Only this email can access the app.</div>
-        </div>
-
-        <!-- GIFT / PARENT MODE — supports up to 3 players per checkout -->
-        <div id="mode-gift" style="display:none;">
-          <div style="background:rgba(201,168,76,0.06); border:1px solid #2A2200; border-radius:2px; padding:12px 14px; margin-bottom:14px; font-size:13px; color:#BBBBBB; line-height:1.6;">
-            Buying for your kids, a friend's kid, or a player you mentor? Enter your email as the <strong style="color:#F4F4F4;">buyer</strong> and <strong style="color:#C9A84C;">up to 3 player emails</strong> below. Each player gets their own app access.
-          </div>
-
-          <!-- BUYER EMAIL -->
-          <label style="display:block; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#666; margin-bottom:6px;">Your Email <span style="color:#444;">(Buyer — Parent / Coach)</span></label>
-          <input type="email" id="purchaser-email-input" placeholder="parent@email.com" style="width:100%; background:#111; border:1px solid #2E2E2E; color:#F4F4F4; font-family:'Barlow',sans-serif; font-size:15px; padding:11px 14px; border-radius:2px; outline:none; margin-bottom:16px; box-sizing:border-box;" onfocus="this.style.borderColor='#C9A84C'" onblur="this.style.borderColor='#2E2E2E'">
-
-          <!-- PLAYER EMAILS — dynamic list, rendered by renderGiftPlayers() -->
-          <label style="display:block; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#C9A84C; margin-bottom:6px;">⚾ Player Email<span id="gift-plural">s</span> <span style="color:#555; font-weight:400;">(Who Gets Access)</span></label>
-          <div id="gift-players-list">
-            <!-- First player email — always present, cannot be removed. ID preserved for backward compatibility. -->
-            <div class="gift-player-row" data-idx="0" style="display:flex; gap:6px; align-items:flex-start; margin-bottom:8px;">
-              <input type="email" id="player-email-input" class="gift-player-input" placeholder="player1@email.com" style="flex:1; background:#111; border:1px solid #C9A84C; color:#F4F4F4; font-family:'Barlow',sans-serif; font-size:15px; padding:11px 14px; border-radius:2px; outline:none; box-sizing:border-box; margin-bottom:0;" onfocus="this.style.borderColor='#E8C96A'" onblur="this.style.borderColor='#C9A84C'" oninput="updateGiftTotal()">
-            </div>
-          </div>
-
-          <!-- Add-another-player button -->
-          <button type="button" id="gift-add-btn" onclick="addGiftPlayer()" style="width:100%; background:transparent; border:1px dashed #5A7A3A; color:#A8D97B; font-family:'Barlow Condensed',sans-serif; font-size:12px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:11px; border-radius:3px; cursor:pointer; margin-bottom:12px; transition:all 0.15s;" onmouseover="this.style.background='rgba(168,217,123,0.06)'; this.style.borderColor='#A8D97B';" onmouseout="this.style.background='transparent'; this.style.borderColor='#5A7A3A';">
-            ➕ &nbsp;Add Another Player
-          </button>
-
-          <!-- Running total — visible only for 2+ players -->
-          <div id="gift-total-row" style="display:none; background:rgba(201,168,76,0.08); border:1px solid #2A2200; border-radius:3px; padding:11px 14px; margin-bottom:12px; display:none; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap;">
-            <div style="font-family:'Barlow Condensed',sans-serif; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:#888;">
-              <span id="gift-count-label">1 player</span> · <span id="gift-plan-label">annual</span>
-            </div>
-            <div style="font-family:'Bebas Neue',cursive; font-size:22px; color:#C9A84C; letter-spacing:1px; line-height:1;">
-              <span id="gift-total-display">$29.99</span><span style="font-size:11px; color:#666; font-family:'Barlow',sans-serif; letter-spacing:0; margin-left:4px;">total</span>
-            </div>
-          </div>
-
-          <!-- Team Sponsor upsell — appears at 3+ players (encourages $300 option) -->
-          <div id="gift-sponsor-upsell" style="display:none; background:linear-gradient(135deg,#1F1800,#15100A); border:1px solid #C9A84C; border-radius:3px; padding:13px 14px; margin-bottom:12px;">
-            <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
-              <span style="font-size:18px;">🏆</span>
-              <div style="font-family:'Barlow Condensed',sans-serif; font-size:12px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; color:#E8C96A;">Got 4+ Kids to Cover?</div>
-            </div>
-            <div style="font-family:'Barlow',sans-serif; font-size:12px; color:#BBBBBB; line-height:1.6; margin-bottom:10px;">
-              <strong style="color:#F4F4F4;">Team Sponsor</strong> covers up to <strong style="color:#E8C96A;">15 players</strong> for <strong style="color:#E8C96A;">$300/year</strong> — about $20 per seat. Better deal if you're sponsoring a whole squad or a big family.
-            </div>
-            <button type="button" onclick="scrollToSponsorCard()" style="width:100%; background:#C9A84C; color:#080808; font-family:'Barlow Condensed',sans-serif; font-size:12px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; padding:10px; border:none; border-radius:2px; cursor:pointer;" onmouseover="this.style.background='#E8C96A'" onmouseout="this.style.background='#C9A84C'">
-              🏆 &nbsp;See Team Sponsor →
-            </button>
-          </div>
-
-          <div style="font-family:'Barlow',sans-serif; font-size:12px; color:#444; line-height:1.5;">Each player's email is the only one that can open the app on their device. Your email is for billing only. We'll open Stripe once per player — same card pre-fills each time.</div>
-        </div>
+      <div style="background:rgba(201,168,76,0.06); border:1px solid #2A2200; border-radius:3px; padding:14px 16px; margin-bottom:20px; font-family:'Barlow',sans-serif; font-size:13px; color:#BBBBBB; line-height:1.6; text-align:center;">
+        Test drive the full app for <strong style="color:#F4F4F4;">7 days</strong> — journal, stats, goals, arm care, all of it. No credit card. No commitment.
       </div>
 
-      <!-- ── STEP 3: CHOOSE YOUR PLAN ── -->
-      <div style="margin-bottom:20px;">
-        <div style="font-family:'Barlow Condensed',sans-serif; font-size:10px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:#555; margin-bottom:10px;">Step 3 — Choose Your Plan</div>
+      <!-- ── REGISTRATION ── -->
+      <!-- Hidden mode toggle controls — keep IDs so existing setRegistrationMode JS still works -->
+      <div style="display:none;">
+        <button id="mode-self-btn" onclick="setRegistrationMode('self')"></button>
+        <button id="mode-gift-btn" onclick="setRegistrationMode('gift')"></button>
+      </div>
 
-        <!-- Individual Player Plans — Monthly / Annual -->
-        <div style="font-family:'Barlow Condensed',sans-serif; font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#555; margin-bottom:8px; text-align:center;">For Players</div>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:14px;">
-          <div style="background:#111; border:1px solid #2A2A2A; border-radius:3px; padding:16px; text-align:center;">
-            <div style="font-family:'Barlow Condensed',sans-serif; font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#666; margin-bottom:6px;">Monthly</div>
-            <div style="font-family:'Bebas Neue',cursive; font-size:36px; color:#F4F4F4; line-height:1;">$2.99</div>
-            <div style="font-family:'Barlow',sans-serif; font-size:11px; color:#555; margin-bottom:12px;">per month · cancel anytime</div>
-            <button onclick="goToPurchase('monthly')" style="width:100%; background:transparent; color:#C9A84C; font-family:'Barlow Condensed',sans-serif; font-size:12px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; padding:9px; border:1px solid #C9A84C; border-radius:2px; cursor:pointer;" onmouseover="this.style.background='rgba(201,168,76,0.1)'" onmouseout="this.style.background='transparent'">Subscribe →</button>
-          </div>
-          <div style="position:relative; background:linear-gradient(135deg,#1E1800,#1A1500); border:1px solid #C9A84C; border-radius:3px; padding:16px; text-align:center;">
-            <div style="position:absolute; top:-10px; left:50%; transform:translateX(-50%); background:#C9A84C; color:#080808; font-family:'Barlow Condensed',sans-serif; font-size:10px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; padding:3px 10px; border-radius:1px; white-space:nowrap;">Best Value</div>
-            <div style="font-family:'Barlow Condensed',sans-serif; font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#C9A84C; margin-bottom:6px;">Annual</div>
-            <div style="font-family:'Bebas Neue',cursive; font-size:36px; color:#C9A84C; line-height:1;">$29.99</div>
-            <div style="font-family:'Barlow',sans-serif; font-size:11px; color:#555; margin-bottom:12px;">per year · save $6</div>
-            <button onclick="goToPurchase('annual')" style="width:100%; background:#C9A84C; color:#080808; font-family:'Barlow Condensed',sans-serif; font-size:12px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; padding:9px; border:none; border-radius:2px; cursor:pointer;" onmouseover="this.style.background='#E8C96A'" onmouseout="this.style.background='#C9A84C'">⚾ Get Annual →</button>
+      <!-- SELF MODE (default) -->
+      <div id="mode-self">
+        <label style="display:block; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#888; margin-bottom:6px;">Your Email Address</label>
+        <input type="email" id="user-email-input" placeholder="yourname@email.com" autocomplete="email" style="width:100%; background:#111; border:1px solid #2E2E2E; color:#F4F4F4; font-family:'Barlow',sans-serif; font-size:15px; padding:13px 14px; border-radius:2px; outline:none; margin-bottom:6px; box-sizing:border-box;" onfocus="this.style.borderColor='#C9A84C'" onblur="this.style.borderColor='#2E2E2E'">
+        <div style="font-family:'Barlow',sans-serif; font-size:12px; color:#444; line-height:1.5; margin-bottom:14px;">This email locks the app to your device.</div>
+      </div>
+
+      <!-- GIFT MODE — collapsed by default -->
+      <div id="mode-gift" style="display:none;">
+        <div style="background:rgba(201,168,76,0.06); border:1px solid #2A2200; border-radius:2px; padding:12px 14px; margin-bottom:14px; font-size:12px; color:#BBBBBB; line-height:1.6;">
+          Enter your email as the <strong style="color:#F4F4F4;">buyer</strong>, and the player's email below.
+        </div>
+        <label style="display:block; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#888; margin-bottom:6px;">Your Email <span style="color:#444;">(Buyer)</span></label>
+        <input type="email" id="purchaser-email-input" placeholder="parent@email.com" autocomplete="email" style="width:100%; background:#111; border:1px solid #2E2E2E; color:#F4F4F4; font-family:'Barlow',sans-serif; font-size:15px; padding:13px 14px; border-radius:2px; outline:none; margin-bottom:14px; box-sizing:border-box;" onfocus="this.style.borderColor='#C9A84C'" onblur="this.style.borderColor='#2E2E2E'">
+        <label style="display:block; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#C9A84C; margin-bottom:6px;">⚾ Player Email <span style="color:#555; font-weight:400;">(Who Gets Access)</span></label>
+        <div id="gift-players-list">
+          <div class="gift-player-row" data-idx="0" style="display:flex; gap:6px; align-items:flex-start; margin-bottom:8px;">
+            <input type="email" id="player-email-input" class="gift-player-input" placeholder="player@email.com" style="flex:1; background:#111; border:1px solid #C9A84C; color:#F4F4F4; font-family:'Barlow',sans-serif; font-size:15px; padding:13px 14px; border-radius:2px; outline:none; box-sizing:border-box; margin-bottom:0;" onfocus="this.style.borderColor='#E8C96A'" onblur="this.style.borderColor='#C9A84C'">
           </div>
         </div>
+        <div style="font-family:'Barlow',sans-serif; font-size:12px; color:#444; line-height:1.5; margin:8px 0 14px;">The player's email locks the app to their device.</div>
+      </div>
 
-        <!-- ═══ COACH & TEAM PLANS — LADDER: Tools → Sponsor ═══════════ -->
-        <div style="display:flex; align-items:center; gap:10px; margin:18px 0 10px;">
-          <div style="flex:1; height:1px; background:linear-gradient(90deg, transparent, #2A2200);"></div>
-          <div style="font-family:'Barlow Condensed',sans-serif; font-size:10px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:#888; white-space:nowrap;">Coach &amp; Team Plans</div>
-          <div style="flex:1; height:1px; background:linear-gradient(90deg, #2A2200, transparent);"></div>
-        </div>
+      <div id="trial-email-error" style="display:none; font-family:'Barlow Condensed',sans-serif; font-size:12px; color:#E57373; margin-bottom:12px; padding:10px 12px; background:rgba(192,57,43,0.1); border:1px solid rgba(192,57,43,0.3); border-radius:2px; letter-spacing:1px;"></div>
 
-        <!-- LEVEL 1 — TEAM COACH ($29.99/yr) -->
-        <div style="position:relative; background:linear-gradient(135deg,#12180D,#0D120A); border:1px solid #5A8A3A; border-radius:3px; padding:18px; margin-bottom:10px;">
-          <div style="position:absolute; top:-9px; left:14px; background:#5A8A3A; color:#F4F4F4; font-family:'Barlow Condensed',sans-serif; font-size:9px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; padding:3px 9px; border-radius:1px;">Level 1 · Team Tools</div>
-          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; flex-wrap:wrap; gap:8px; margin-top:4px;">
-            <div>
-              <div style="font-family:'Bebas Neue',cursive; font-size:24px; color:#A8D97B; letter-spacing:2px; line-height:1;">🏟️ TEAM COACH</div>
-              <div style="font-family:'Barlow Condensed',sans-serif; font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:#6A8A4A; margin-top:3px;">Best for Rec League · School · Clinic Coaches</div>
-            </div>
-            <div style="text-align:right;">
-              <div style="font-family:'Bebas Neue',cursive; font-size:28px; color:#A8D97B; line-height:1;">$29.99</div>
-              <div style="font-family:'Barlow',sans-serif; font-size:10px; color:#556;">per year</div>
-            </div>
-          </div>
-          <div style="background:rgba(168,217,123,0.06); border-left:3px solid #5A8A3A; padding:10px 12px; margin-bottom:12px; font-family:'Barlow',sans-serif; font-size:12px; color:#BBBBBB; line-height:1.6;">
-            Get the <strong style="color:#F4F4F4;">full coach toolkit</strong> — roster, team code, weekly player updates, direct messaging. <strong style="color:#A8D97B;">Parents buy their own player subscription</strong> and join your roster with your code.
-          </div>
-          <button onclick="goToCoachPurchase()" style="width:100%; background:#5A8A3A; color:#F4F4F4; font-family:'Barlow Condensed',sans-serif; font-size:14px; font-weight:800; letter-spacing:2px; text-transform:uppercase; padding:13px; border:none; border-radius:2px; cursor:pointer;" onmouseover="this.style.background='#6BA347'" onmouseout="this.style.background='#5A8A3A'">
-            🏟️ &nbsp;Start Team Signup →
-          </button>
-        </div>
+      <!-- BIG GOLD CTA -->
+      <button onclick="beginTrial()" style="width:100%; background:#C9A84C; color:#080808; font-family:'Barlow Condensed',sans-serif; font-size:15px; font-weight:800; letter-spacing:2.5px; text-transform:uppercase; padding:16px; border:none; border-radius:3px; cursor:pointer; transition:background 0.15s; margin-bottom:14px;" onmouseover="this.style.background='#E8C96A'" onmouseout="this.style.background='#C9A84C'">
+        ⚾ &nbsp;Start My 7-Day Free Trial →
+      </button>
 
-        <!-- Ladder step indicator -->
-        <div style="text-align:center; font-family:'Barlow Condensed',sans-serif; font-size:10px; letter-spacing:2.5px; text-transform:uppercase; color:#444; margin:6px 0 10px;">
-          ↑ &nbsp;Covering the whole roster? Step up &nbsp;↑
-        </div>
-
-        <!-- LEVEL 2 — TEAM SPONSOR ($300/yr, 15 seats) -->
-        <div style="position:relative; background:linear-gradient(135deg,#1F1800,#15100A); border:2px solid #C9A84C; border-radius:3px; padding:20px; margin-bottom:14px; box-shadow:0 0 0 1px rgba(201,168,76,0.15);">
-          <div style="position:absolute; top:-11px; left:14px; background:#C9A84C; color:#080808; font-family:'Barlow Condensed',sans-serif; font-size:9px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; padding:3px 9px; border-radius:1px;">Level 2 · Full-Ride Sponsor</div>
-          <div style="position:absolute; top:-11px; right:14px; background:#0D0D0D; color:#C9A84C; font-family:'Barlow Condensed',sans-serif; font-size:9px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; padding:3px 9px; border-radius:1px; border:1px solid #C9A84C;">⭐ Best Value</div>
-          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; flex-wrap:wrap; gap:8px; margin-top:8px;">
-            <div>
-              <div style="font-family:'Bebas Neue',cursive; font-size:26px; color:#E8C96A; letter-spacing:2px; line-height:1;">🏆 TEAM SPONSOR</div>
-              <div style="font-family:'Barlow Condensed',sans-serif; font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:#9A7A30; margin-top:3px;">Best for Travel Teams · Academies · Sponsored Rosters</div>
-            </div>
-            <div style="text-align:right;">
-              <div style="font-family:'Bebas Neue',cursive; font-size:30px; color:#E8C96A; line-height:1;">$300</div>
-              <div style="font-family:'Barlow',sans-serif; font-size:10px; color:#6A5A20;">per year · $20/seat</div>
-            </div>
-          </div>
-
-          <div style="background:rgba(201,168,76,0.06); border-left:3px solid #C9A84C; padding:10px 12px; margin-bottom:12px; font-family:'Barlow',sans-serif; font-size:12px; color:#BBBBBB; line-height:1.6;">
-            Everything in <strong style="color:#A8D97B;">Team Coach</strong>, plus you <strong style="color:#E8C96A;">cover your 15-player roster</strong> for the whole year. Custom logo &amp; team colors, sponsor-invite links, season-end roster reviews — no player payments.
-          </div>
-
-          <!-- Policy acknowledgment checkbox — required by goToTeamSponsorPurchase() -->
-          <label for="team-policy-ack" style="display:flex; align-items:flex-start; gap:10px; background:#0E0E0E; border:1px solid #2A2200; border-radius:3px; padding:11px 13px; margin-bottom:12px; cursor:pointer; font-family:'Barlow',sans-serif; font-size:12px; color:#BBBBBB; line-height:1.6;">
-            <input type="checkbox" id="team-policy-ack" style="margin-top:3px; flex-shrink:0; accent-color:#C9A84C; width:16px; height:16px; cursor:pointer;">
-            <span>I understand the <strong style="color:#E8C96A;">Team Sponsor policy</strong>: $300 is non-refundable, covers up to 15 seats for 12 months, auto-renews annually, and removed players get 7 days of read-only grace before their access ends. <strong style="color:#F4F4F4;">Existing paid players who join my team keep their own plan — no seat is consumed.</strong></span>
-          </label>
-
-          <button onclick="goToTeamSponsorPurchase()" style="width:100%; background:#C9A84C; color:#080808; font-family:'Barlow Condensed',sans-serif; font-size:14px; font-weight:800; letter-spacing:2px; text-transform:uppercase; padding:13px; border:none; border-radius:2px; cursor:pointer;" onmouseover="this.style.background='#E8C96A'" onmouseout="this.style.background='#C9A84C'">
-            🏆 &nbsp;Sponsor My Team ($300) →
-          </button>
-        </div>
-
-        <!-- Join-a-team link for players whose coach already created a team -->
-        <div style="text-align:center; font-family:'Barlow Condensed',sans-serif; font-size:11px; letter-spacing:2px; text-transform:uppercase; color:#666; margin-bottom:14px;">
-          Your coach already on My Grind? <a href="#" onclick="event.preventDefault(); showJoinTeamFromSignup();" style="color:#C9A84C; text-decoration:none; font-weight:700;">Have a team code? →</a>
-        </div>
-
-        <!-- ═══ NOT READY TO COMMIT? — 7-DAY FREE TRIAL (fallback) ═══════ -->
-        <div style="background:linear-gradient(135deg,#0E0E0E,#111111); border:1px dashed #C9A84C; border-radius:4px; padding:20px; margin-bottom:14px; position:relative;">
-          <div style="position:absolute; top:-10px; left:16px; background:#181818; padding:0 10px; font-family:'Barlow Condensed',sans-serif; font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#888;">
-            Not ready to commit?
-          </div>
-          <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:10px; flex-wrap:wrap;">
-            <div>
-              <div style="font-family:'Bebas Neue',cursive; font-size:26px; color:#C9A84C; letter-spacing:2px; line-height:1;">🎁 TRY IT FREE</div>
-              <div style="font-family:'Barlow Condensed',sans-serif; font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:#777; margin-top:3px;">7 Days · Every Feature · No Card</div>
-            </div>
-            <div style="font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:#27AE60; background:rgba(39,174,96,0.1); border:1px solid #27AE60; padding:4px 10px; border-radius:2px; white-space:nowrap;">No Card Needed</div>
-          </div>
-          <div style="font-family:'Barlow',sans-serif; font-size:13px; color:#BBBBBB; line-height:1.6; margin-bottom:14px;">
-            Test drive every feature — journal, stats, goals, arm care, and all the rest — for <strong style="color:#F4F4F4;">7 full days</strong>. Pick a plan above when you're sure.
-          </div>
-          <div id="trial-email-error" style="display:none; font-family:'Barlow Condensed',sans-serif; font-size:12px; color:#E57373; margin-bottom:10px; padding:10px 12px; background:rgba(192,57,43,0.1); border:1px solid rgba(192,57,43,0.3); border-radius:2px; letter-spacing:1px;"></div>
-          <button onclick="beginTrial()" style="width:100%; background:transparent; color:#C9A84C; font-family:'Barlow Condensed',sans-serif; font-size:14px; font-weight:800; letter-spacing:2px; text-transform:uppercase; padding:13px; border:1px solid #C9A84C; border-radius:2px; cursor:pointer; transition:all 0.15s;" onmouseover="this.style.background='rgba(201,168,76,0.08)'" onmouseout="this.style.background='transparent'">
-            ⚾ &nbsp;Start My 7-Day Free Trial →
-          </button>
-        </div>
-
-        <button onclick="goToPurchase('monthly')" style="width:100%; background:transparent; color:#555; font-family:'Barlow Condensed',sans-serif; font-size:12px; font-weight:700; letter-spacing:2px; text-transform:uppercase; padding:10px; border:1px solid #222; border-radius:2px; cursor:pointer;" onmouseover="this.style.background='rgba(201,168,76,0.05)'" onmouseout="this.style.background='transparent'">
-          Already purchased? Unlock Full Access →
+      <!-- SECONDARY LINKS -->
+      <div style="display:flex; gap:8px; margin-bottom:18px;">
+        <button id="welcome-toggle-gift" onclick="toggleWelcomeMode()" style="flex:1; background:transparent; color:#888; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:10px 8px; border:1px solid #222; border-radius:2px; cursor:pointer;" onmouseover="this.style.color='#C9A84C'; this.style.borderColor='#3A2E00';" onmouseout="this.style.color='#888'; this.style.borderColor='#222';">
+          👨‍👩‍👧 &nbsp;Buying for Someone Else?
+        </button>
+        <button onclick="goToPurchase('monthly')" style="flex:1; background:transparent; color:#666; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:10px 8px; border:1px solid #222; border-radius:2px; cursor:pointer;" onmouseover="this.style.color='#C9A84C'; this.style.borderColor='#3A2E00';" onmouseout="this.style.color='#666'; this.style.borderColor='#222';">
+          Already Paid? Unlock →
         </button>
       </div>
 
       <!-- FOOTER -->
       <div style="text-align:center; font-family:'Barlow Condensed',sans-serif; font-size:11px; letter-spacing:1px; color:#333; border-top:1px solid #1E1E1E; padding-top:16px;">
-        Secure checkout via Stripe · coach@youngsbaseball.com
+        Pricing shown when trial ends · coach@youngsbaseball.com
         <br><br>
         <span onclick="unlockCreator()" style="color:#1A1A1A; cursor:pointer; font-size:10px; user-select:none;" title="Creator Access">⚾</span>
       </div>
 
     </div>
   </div>
-
   <!-- EXPIRED SCREEN -->
   <!-- EXPIRED SCREEN -->
   <div id="trial-screen-expired" style="display:none; max-width:460px; width:100%; background:#181818; border:1px solid #272727; border-radius:4px; overflow:hidden; animation:fadeIn 0.4s ease;">
@@ -3561,13 +3430,32 @@ function setRegistrationMode(mode) {
   document.getElementById('mode-gift').style.display  = mode === 'gift' ? 'block' : 'none';
   const selfBtn = document.getElementById('mode-self-btn');
   const giftBtn = document.getElementById('mode-gift-btn');
-  selfBtn.style.background   = mode === 'self' ? 'rgba(201,168,76,0.12)' : 'transparent';
-  selfBtn.style.borderColor  = mode === 'self' ? 'var(--gold)' : '#2E2E2E';
-  selfBtn.style.color        = mode === 'self' ? 'var(--gold)' : '#666';
-  giftBtn.style.background   = mode === 'gift' ? 'rgba(201,168,76,0.12)' : 'transparent';
-  giftBtn.style.borderColor  = mode === 'gift' ? 'var(--gold)' : '#2E2E2E';
-  giftBtn.style.color        = mode === 'gift' ? 'var(--gold)' : '#666';
+  if (selfBtn) {
+    selfBtn.style.background   = mode === 'self' ? 'rgba(201,168,76,0.12)' : 'transparent';
+    selfBtn.style.borderColor  = mode === 'self' ? 'var(--gold)' : '#2E2E2E';
+    selfBtn.style.color        = mode === 'self' ? 'var(--gold)' : '#666';
+  }
+  if (giftBtn) {
+    giftBtn.style.background   = mode === 'gift' ? 'rgba(201,168,76,0.12)' : 'transparent';
+    giftBtn.style.borderColor  = mode === 'gift' ? 'var(--gold)' : '#2E2E2E';
+    giftBtn.style.color        = mode === 'gift' ? 'var(--gold)' : '#666';
+  }
   document.getElementById('trial-email-error').style.display = 'none';
+}
+
+// Toggle the welcome screen between self-mode and gift-mode for the
+// simplified trial flow. Updates the toggle button label so the user
+// can switch back. Wraps setRegistrationMode so all the underlying
+// state stays in sync.
+function toggleWelcomeMode() {
+  const newMode = (registrationMode === 'self') ? 'gift' : 'self';
+  setRegistrationMode(newMode);
+  const toggleBtn = document.getElementById('welcome-toggle-gift');
+  if (toggleBtn) {
+    toggleBtn.innerHTML = (newMode === 'gift')
+      ? '⚾ &nbsp;Back — I\'m the Player'
+      : '👨\u200d👩\u200d👧 &nbsp;Buying for Someone Else?';
+  }
 }
 
 function showEmailError(msg) {
