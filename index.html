@@ -1501,53 +1501,41 @@ function dismissIosBanner() {
       </div>
     </div>
 
+    <!-- ── RECENT ENTRIES SNAPSHOT ── -->
     <div class="card" style="margin-top:4px;">
-      <div class="card-title">⚡ Quick Log — Today's Entry</div>
-      <div style="font-family:'Barlow'; font-size:12px; color:var(--grey); margin-bottom:14px; line-height:1.5;">Log a quick entry here — it saves directly to your <strong style="color:var(--gold);">Daily Journal</strong>. Tap the Daily Journal tab to see all your entries.</div>
-      <div class="form-row">
-        <div>
-          <label>Entry Type</label>
-          <select id="quick-type" onchange="toggleQuickTitle()">
-            <option value="game">Game</option>
-            <option value="practice">Practice</option>
-            <option value="reflection">Reflection</option>
-          </select>
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
+        <div class="card-title" style="margin:0;">📓 Recent Entries</div>
+        <button onclick="showPanel('journal')" style="background:transparent; border:1px solid var(--gold-dark); color:var(--gold); font-family:'Barlow Condensed'; font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:6px 12px; border-radius:3px; cursor:pointer;">View All</button>
+      </div>
+      <div id="dash-recent-entries" style="font-family:'Barlow'; font-size:13px; color:var(--light); line-height:1.6;">
+        <em style="color:var(--grey);">No entries yet — tap the button below to log your first one.</em>
+      </div>
+      <button onclick="showPanel('journal')" class="btn btn-gold" style="width:100%; margin-top:14px;">
+        📓 &nbsp;Open Daily Journal
+      </button>
+    </div>
+
+    <!-- ── GAME STATS SNAPSHOT (only shows if game entries exist) ── -->
+    <div id="dash-stats-card" class="card" style="display:none; margin-top:16px; border-left:3px solid var(--gold);">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
+        <div class="card-title" style="margin:0;">⚾ Hitting Stats — Season</div>
+        <button onclick="showPanel('stats')" style="background:transparent; border:1px solid var(--gold-dark); color:var(--gold); font-family:'Barlow Condensed'; font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:6px 12px; border-radius:3px; cursor:pointer;">Full Stats</button>
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; margin-bottom:14px;">
+        <div style="text-align:center; padding:14px 6px; background:var(--card2); border:1px solid var(--gold-dark); border-radius:3px;">
+          <div id="dash-stat-avg" style="font-family:'Bebas Neue'; font-size:26px; color:var(--gold); line-height:1;">.000</div>
+          <div style="font-family:'Barlow Condensed'; font-size:10px; letter-spacing:1.5px; color:var(--grey); text-transform:uppercase; margin-top:4px;">AVG</div>
         </div>
-        <div id="quick-title-wrapper">
-          <label>Title / Opponent</label>
-          <input type="text" id="quick-title" placeholder="e.g. vs Canyon HS">
+        <div style="text-align:center; padding:14px 6px; background:var(--card2); border:1px solid var(--gold-dark); border-radius:3px;">
+          <div id="dash-stat-obp" style="font-family:'Bebas Neue'; font-size:26px; color:var(--gold); line-height:1;">.000</div>
+          <div style="font-family:'Barlow Condensed'; font-size:10px; letter-spacing:1.5px; color:var(--grey); text-transform:uppercase; margin-top:4px;">OBP</div>
+        </div>
+        <div style="text-align:center; padding:14px 6px; background:var(--card2); border:1px solid var(--gold-dark); border-radius:3px;">
+          <div id="dash-stat-slg" style="font-family:'Bebas Neue'; font-size:26px; color:var(--gold); line-height:1;">.000</div>
+          <div style="font-family:'Barlow Condensed'; font-size:10px; letter-spacing:1.5px; color:var(--grey); text-transform:uppercase; margin-top:4px;">SLG</div>
         </div>
       </div>
-      <label>What happened? What did I do for my team?</label>
-      <div id="quick-prompt-hint" style="display:none; background:#1A1400; border-left:3px solid #C9A84C; padding:10px 14px; margin-bottom:10px; border-radius:3px; font-family:'Barlow'; font-size:12px; color:#C8C4BC; line-height:1.6;"></div>
-      <textarea id="quick-notes" placeholder="Write your post-game or practice entry here..."></textarea>
-
-      <!-- Practice reps counter (only shows for practice) -->
-      <div id="quick-reps-section" style="display:none; margin-top:14px; padding:14px; background:var(--card2); border:1px solid var(--border); border-radius:4px;">
-        <div style="font-family:'Barlow Condensed'; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--gold); margin-bottom:4px;">🔢 Rep Counter — Today's Practice</div>
-        <div style="font-family:'Barlow'; font-size:11px; color:var(--grey); margin-bottom:12px;">Track your volume. Nobody counts it for you. <strong style="color:var(--light);">You count it.</strong></div>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-          <div>
-            <label style="font-size:10px; letter-spacing:1px;">🏏 SWINGS</label>
-            <input type="number" id="quick-reps-swings" min="0" placeholder="0" inputmode="numeric" style="width:100%; padding:10px; font-size:15px; text-align:center;">
-          </div>
-          <div>
-            <label style="font-size:10px; letter-spacing:1px;">🥎 GROUND BALLS</label>
-            <input type="number" id="quick-reps-gb" min="0" placeholder="0" inputmode="numeric" style="width:100%; padding:10px; font-size:15px; text-align:center;">
-          </div>
-          <div>
-            <label style="font-size:10px; letter-spacing:1px;">🎯 THROWS</label>
-            <input type="number" id="quick-reps-throws" min="0" placeholder="0" inputmode="numeric" style="width:100%; padding:10px; font-size:15px; text-align:center;">
-          </div>
-          <div>
-            <label style="font-size:10px; letter-spacing:1px;">⚾ PITCHES</label>
-            <input type="number" id="quick-reps-pitches" min="0" placeholder="0" inputmode="numeric" style="width:100%; padding:10px; font-size:15px; text-align:center;">
-          </div>
-        </div>
-        <div id="quick-reps-total" style="margin-top:10px; text-align:center; font-family:'Barlow Condensed'; font-size:12px; letter-spacing:1.5px; text-transform:uppercase; color:var(--grey);">Total reps: <span id="quick-reps-total-num" style="color:var(--gold); font-weight:800;">0</span></div>
-      </div>
-
-      <button class="btn btn-gold" onclick="quickLog()" style="margin-top:14px;">⚾ &nbsp;Save Entry</button>
+      <div id="dash-last-game" style="font-family:'Barlow'; font-size:12px; color:var(--grey); padding-top:12px; border-top:1px solid var(--border); line-height:1.6;"></div>
     </div>
 
     <!-- ── WEEKLY RECAP ── -->
@@ -5172,6 +5160,109 @@ function renderAll() {
   // Streak is handled by updateStreakDisplay() in the new features module
   // Auto-populate My Stats from game journal entries
   accumulateGameStats();
+  // Refresh the dashboard snapshot cards (Recent Entries, Hitting Stats)
+  try { renderDashboardSnapshots(); } catch(e) { console.warn('[MG] dashboard snapshot:', e); }
+}
+
+// ───────────────────────────────────────────────────────
+// DASHBOARD SNAPSHOTS — Recent Entries + Hitting Stats
+// Pulls from state.entries to give an at-a-glance view
+// without requiring a separate data store.
+// ───────────────────────────────────────────────────────
+function renderDashboardSnapshots() {
+  // ── Recent Entries (last 3) ──
+  const recentEl = document.getElementById('dash-recent-entries');
+  if (recentEl) {
+    if (!state.entries || state.entries.length === 0) {
+      recentEl.innerHTML = '<em style="color:var(--grey);">No entries yet — tap the button below to log your first one.</em>';
+    } else {
+      const labelFor = function(t) {
+        if (t === 'game')       return '⚾ Game';
+        if (t === 'practice')   return '🏏 Practice';
+        if (t === 'instructor') return '🎓 Instructor';
+        if (t === 'reflection') return '🧠 Reflection';
+        return '📓 Entry';
+      };
+      const colorFor = function(t) {
+        if (t === 'game')       return '#C9A84C';
+        if (t === 'practice')   return '#A8D97B';
+        if (t === 'instructor') return '#7BC8D9';
+        if (t === 'reflection') return '#D9A87B';
+        return 'var(--gold)';
+      };
+      const escapeHtml = function(s) {
+        return String(s || '').replace(/[&<>"']/g, function(c) {
+          return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c];
+        });
+      };
+      const rows = state.entries.slice(0, 3).map(function(e) {
+        const label = labelFor(e.type);
+        const color = colorFor(e.type);
+        const dateStr = escapeHtml(e.date || '');
+        const titleStr = escapeHtml(e.title || (e.type === 'practice' ? 'Practice' : (e.type === 'instructor' ? 'Lesson' : 'Entry')));
+        const preview = escapeHtml((e.what || '').substring(0, 80)) + ((e.what || '').length > 80 ? '…' : '');
+        return '' +
+          '<div style="padding:10px 0; border-bottom:1px solid var(--border);">' +
+            '<div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:4px;">' +
+              '<span style="font-family:\'Barlow Condensed\'; font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:' + color + ';">' + label + '</span>' +
+              '<span style="font-family:\'Barlow\'; font-size:11px; color:var(--grey);">' + dateStr + '</span>' +
+            '</div>' +
+            '<div style="font-family:\'Barlow\'; font-size:13px; font-weight:600; color:var(--light); margin-bottom:2px;">' + titleStr + '</div>' +
+            (preview ? '<div style="font-family:\'Barlow\'; font-size:12px; color:var(--grey); line-height:1.5;">' + preview + '</div>' : '') +
+          '</div>';
+      }).join('');
+      recentEl.innerHTML = rows;
+      // Clean up the trailing border on the last row
+      const last = recentEl.lastElementChild;
+      if (last && last.style) last.style.borderBottom = 'none';
+    }
+  }
+
+  // ── Hitting Stats Snapshot (only if game entries with stats exist) ──
+  const statsCard = document.getElementById('dash-stats-card');
+  if (statsCard) {
+    const gameEntries = (state.entries || []).filter(function(e) {
+      return e.type === 'game' && e.gameStats && (parseInt(e.gameStats.ab) > 0 || parseInt(e.gameStats.h) > 0);
+    });
+    if (gameEntries.length === 0) {
+      statsCard.style.display = 'none';
+    } else {
+      let ab = 0, h = 0, hr = 0, bb = 0;
+      gameEntries.forEach(function(e) {
+        const gs = e.gameStats;
+        ab += parseInt(gs.ab) || 0;
+        h  += parseInt(gs.h)  || 0;
+        hr += parseInt(gs.hr) || 0;
+        bb += parseInt(gs.bb) || 0;
+      });
+      const tb  = h + (hr * 2);
+      const pa  = ab + bb;
+      const avg = ab > 0 ? (h / ab).toFixed(3) : '.000';
+      const obp = pa > 0 ? ((h + bb) / pa).toFixed(3) : '.000';
+      const slg = ab > 0 ? (tb / ab).toFixed(3) : '.000';
+      const setText = function(id, val) { const el = document.getElementById(id); if (el) el.textContent = val; };
+      setText('dash-stat-avg', avg);
+      setText('dash-stat-obp', obp);
+      setText('dash-stat-slg', slg);
+      // Last game preview
+      const lastGame = gameEntries[0];
+      const lgEl = document.getElementById('dash-last-game');
+      if (lgEl && lastGame) {
+        const gs = lastGame.gameStats;
+        const lgAvg = (parseInt(gs.ab) > 0) ? ((parseInt(gs.h) || 0) / parseInt(gs.ab)).toFixed(3) : null;
+        const safeTitle = String(lastGame.title || 'Last Game').replace(/[<>]/g, '');
+        const safeDate  = String(lastGame.date || '').replace(/[<>]/g, '');
+        let parts = [];
+        if (gs.ab) parts.push(gs.h + '-for-' + gs.ab);
+        if (lgAvg) parts.push('AVG ' + lgAvg);
+        if (gs.hr && parseInt(gs.hr) > 0) parts.push(gs.hr + ' HR');
+        if (gs.rbi && parseInt(gs.rbi) > 0) parts.push(gs.rbi + ' RBI');
+        lgEl.innerHTML = '<strong style="color:var(--light);">Last Game:</strong> ' + safeTitle + ' · ' + safeDate +
+                         (parts.length ? '<br><span style="color:var(--gold);">' + parts.join(' · ') + '</span>' : '');
+      }
+      statsCard.style.display = 'block';
+    }
+  }
 }
 
 // ═══════════════════════════════════════════════════════
