@@ -9,7 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@700&family=Barlow:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-body { background: #0A0A0A; color: #F5F5F5; font-family: 'Barlow', Arial, sans-serif; min-height: 100vh; }
+body { background: #0A0A0A; color: #F5F5F5; font-family: 'Barlow', Arial, sans-serif; font-size: 16px; min-height: 100vh; }
 
 /* ── SCREENS ── */
 .screen { display: none; flex-direction: column; min-height: 100vh; padding: 0 0 80px; }
@@ -21,17 +21,17 @@ body { background: #0A0A0A; color: #F5F5F5; font-family: 'Barlow', Arial, sans-s
 .prog-track { height: 3px; background: #222; border-radius: 2px; overflow: hidden; }
 .prog-fill { height: 100%; background: #C9A84C; border-radius: 2px; transition: width 0.4s ease; }
 .prog-label { display: flex; justify-content: space-between; margin-top: 5px; padding-bottom: 10px; }
-.prog-step { font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #555; }
+.prog-step { font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #555; }
 
 /* ── TYPE ── */
-.badge { font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: #C9A84C; margin-bottom: 5px; }
-h1 { font-family: 'Bebas Neue', Arial, sans-serif; font-size: 30px; letter-spacing: 1.5px; line-height: 1.1; color: #F5F5F5; margin-bottom: 8px; }
+.badge { font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: #C9A84C; margin-bottom: 5px; }
+h1 { font-family: 'Bebas Neue', Arial, sans-serif; font-size: 34px; letter-spacing: 1.5px; line-height: 1.1; color: #F5F5F5; margin-bottom: 8px; }
 h1 span { color: #C9A84C; }
-.sub { font-size: 13px; color: #999; line-height: 1.7; margin-bottom: 18px; }
+.sub { font-size: 15px; color: #999; line-height: 1.7; margin-bottom: 18px; }
 .gold-bar { width: 36px; height: 3px; background: #C9A84C; margin-bottom: 14px; }
 
 /* ── OPTION BUTTONS ── */
-.opt { display: block; width: 100%; background: #1A1A1A; border: 1px solid #2E2E2E; border-radius: 6px; padding: 14px 16px; font-family: 'Barlow', Arial, sans-serif; font-size: 14px; color: #CCC; text-align: left; cursor: pointer; margin-bottom: 8px; transition: border-color 0.15s, background 0.15s, color 0.15s; -webkit-user-select: none; user-select: none; }
+.opt { display: block; width: 100%; background: #1A1A1A; border: 1px solid #2E2E2E; border-radius: 6px; padding: 14px 16px; font-family: 'Barlow', Arial, sans-serif; font-size: 16px; color: #CCC; text-align: left; cursor: pointer; margin-bottom: 8px; transition: border-color 0.15s, background 0.15s, color 0.15s; -webkit-user-select: none; user-select: none; }
 .opt:active { border-color: #C9A84C; background: rgba(201,168,76,0.1); color: #C9A84C; }
 .opt.selected { border-color: #C9A84C; background: rgba(201,168,76,0.1); color: #C9A84C; }
 .opt.selected::after { content: ' ✓'; float: right; }
@@ -40,24 +40,24 @@ h1 span { color: #C9A84C; }
 .sport-card { display: flex; align-items: center; gap: 16px; background: #1A1A1A; border: 2px solid #2E2E2E; border-radius: 10px; padding: 18px 20px; cursor: pointer; margin-bottom: 10px; transition: all 0.2s; -webkit-user-select: none; user-select: none; }
 .sport-card:active { border-color: #C9A84C; background: rgba(201,168,76,0.08); }
 .sport-emoji { font-size: 36px; line-height: 1; flex-shrink: 0; }
-.sport-name { font-family: 'Bebas Neue', Arial, sans-serif; font-size: 22px; letter-spacing: 1.5px; color: #F5F5F5; }
-.sport-desc { font-size: 12px; color: #666; margin-top: 2px; }
+.sport-name { font-family: 'Bebas Neue', Arial, sans-serif; font-size: 26px; letter-spacing: 1.5px; color: #F5F5F5; }
+.sport-desc { font-size: 14px; color: #666; margin-top: 2px; }
 
 /* ── CARDS ── */
 .card { background: #1A1A1A; border: 1px solid #2E2E2E; border-radius: 8px; padding: 16px; margin-bottom: 12px; }
 .card-gold { background: linear-gradient(135deg,#1A1400,#0E0C00); border-color: #9A7A30; }
-.card-title { font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #C9A84C; margin-bottom: 10px; }
+.card-title { font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #C9A84C; margin-bottom: 10px; }
 
 /* ── EMAIL ── */
-.field-label { display: block; font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #777; margin-bottom: 6px; }
-input[type=email] { width: 100%; background: #1A1A1A; border: 1px solid #2E2E2E; border-radius: 4px; color: #F5F5F5; font-size: 16px; padding: 13px 14px; outline: none; margin-bottom: 6px; transition: border-color 0.2s; }
+.field-label { display: block; font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #777; margin-bottom: 6px; }
+input[type=email] { width: 100%; background: #1A1A1A; border: 1px solid #2E2E2E; border-radius: 4px; color: #F5F5F5; font-size: 17px; padding: 14px 14px; outline: none; margin-bottom: 6px; transition: border-color 0.2s; }
 input[type=email]:focus { border-color: #C9A84C; }
-.field-note { font-size: 12px; color: #555; margin-bottom: 14px; line-height: 1.5; }
+.field-note { font-size: 14px; color: #555; margin-bottom: 14px; line-height: 1.5; }
 
 /* ── REVIEWS ── */
 .stars { color: #FFD700; font-size: 14px; letter-spacing: 1px; }
 .review { background: #1A1A1A; border: 1px solid #2E2E2E; border-radius: 6px; padding: 12px 14px; margin-bottom: 8px; }
-.review-text { font-size: 13px; color: #CCC; font-style: italic; line-height: 1.6; margin-bottom: 5px; }
+.review-text { font-size: 15px; color: #CCC; font-style: italic; line-height: 1.6; margin-bottom: 5px; }
 .review-name { font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #C9A84C; }
 .ph { background: rgba(201,168,76,0.05); border: 1px dashed #3A2E00; border-radius: 4px; padding: 6px 12px; font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: #5A4A20; text-align: center; margin-bottom: 8px; }
 
@@ -67,18 +67,18 @@ input[type=email]:focus { border-color: #C9A84C; }
 .vs-bad { background: rgba(192,57,43,0.08); border: 1px solid #4A1A1A; }
 .vs-good { background: rgba(39,174,96,0.08); border: 1px solid #1A4A1A; }
 .vs-title { font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
-.vs-line { font-size: 12px; color: #CCC; margin-bottom: 5px; line-height: 1.5; }
+.vs-line { font-size: 14px; color: #CCC; margin-bottom: 5px; line-height: 1.6; }
 
 /* ── PLAN CARDS ── */
 .plan { border: 1px solid #2E2E2E; border-radius: 8px; padding: 14px 16px; margin-bottom: 8px; cursor: pointer; transition: border-color 0.2s; overflow: hidden; }
 .plan.featured { border: 2px solid #C9A84C; }
-.plan-name { font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 15px; font-weight: 700; letter-spacing: 1px; color: #F5F5F5; }
+.plan-name { font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 17px; font-weight: 700; letter-spacing: 1px; color: #F5F5F5; }
 .plan-badge { display: inline-block; background: rgba(201,168,76,0.15); color: #C9A84C; font-size: 10px; font-weight: 700; letter-spacing: 1px; padding: 2px 8px; border-radius: 10px; margin-left: 6px; font-family: 'Barlow Condensed', Arial, sans-serif; text-transform: uppercase; }
-.plan-price { font-size: 12px; color: #555; margin-top: 3px; }
+.plan-price { font-size: 14px; color: #555; margin-top: 3px; }
 .plan-amount { font-family: 'Bebas Neue', Arial, sans-serif; font-size: 26px; color: #C9A84C; float: right; margin-top: -22px; }
 
 /* ── BUTTONS ── */
-.cta { display: block; width: 100%; background: #C9A84C; color: #080808; border: none; border-radius: 6px; padding: 16px; font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 15px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; margin-top: 8px; transition: opacity 0.2s; -webkit-user-select: none; user-select: none; }
+.cta { display: block; width: 100%; background: #C9A84C; color: #080808; border: none; border-radius: 6px; padding: 16px; font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 17px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; margin-top: 8px; transition: opacity 0.2s; -webkit-user-select: none; user-select: none; }
 .cta:active { opacity: 0.85; }
 .skip { display: block; text-align: center; font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 12px; letter-spacing: 1px; color: #444; margin-top: 12px; cursor: pointer; padding: 8px; }
 .skip:active { color: #777; }
@@ -133,7 +133,7 @@ input[type=email]:focus { border-color: #C9A84C; }
       </div>
     </div>
     <button class="cta" style="max-width:340px;" onclick="go(1)">Get Started →</button>
-    <div style="font-size:11px;color:#333;margin-top:10px;">7-Day Free Trial · No Credit Card Required</div>
+    <div style="margin-top:14px;background:rgba(201,168,76,0.1);border:1px solid #9A7A30;border-radius:6px;padding:10px 20px;text-align:center;"><div style="font-family:'Bebas Neue',Arial,sans-serif;font-size:22px;color:#C9A84C;letter-spacing:2px;">7-DAY FREE TRIAL</div><div style="font-size:13px;color:#888;margin-top:2px;">No credit card required · Cancel anytime</div></div>
   </div>
 </div>
 
@@ -479,7 +479,7 @@ input[type=email]:focus { border-color: #C9A84C; }
     <div style="text-align:center;margin-bottom:16px;">
       <div class="badge" style="text-align:center;">Start Your Free Trial</div>
       <h1 style="font-size:28px;">7 days free.<br>Then choose your plan.</h1>
-      <div style="display:inline-block;background:rgba(201,168,76,0.12);color:#C9A84C;font-family:'Barlow Condensed',Arial,sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:5px 14px;border-radius:20px;margin-top:8px;">No charge until day 8 · Cancel anytime</div>
+      <div style="display:inline-block;background:rgba(201,168,76,0.12);border:1px solid #9A7A30;color:#C9A84C;font-family:'Barlow Condensed',Arial,sans-serif;font-size:14px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:8px 18px;border-radius:6px;margin-top:10px;">✓ &nbsp;No charge until day 8 · Cancel anytime</div>
     </div>
 
     <div class="plan featured" id="planAnnual" onclick="pickPlan('annual')">
@@ -504,7 +504,7 @@ input[type=email]:focus { border-color: #C9A84C; }
       </div>
     </div>
 
-    <div style="font-size:11px;color:#444;text-align:center;margin-bottom:12px;">We'll remind you before your trial ends. No surprise charges.</div>
+    <div style="background:#1A1A1A;border:1px solid #2E2E2E;border-radius:6px;padding:12px;text-align:center;margin-bottom:12px;"><div style="font-family:'Bebas Neue',Arial,sans-serif;font-size:20px;color:#C9A84C;letter-spacing:1px;">FREE FOR 7 DAYS</div><div style="font-size:13px;color:#777;margin-top:3px;">We'll remind you 24 hours before the trial ends.<br>No surprise charges. Cancel with one tap.</div></div>
     <button class="cta" id="trialCTA" onclick="startTrial()">⚾ &nbsp;Start My Free Trial →</button>
     <div class="skip" onclick="skipTrial()">Continue with limited access</div>
     <div style="text-align:center;font-size:10px;color:#2E2E2E;margin-top:10px;padding-bottom:20px;">Secure checkout via Stripe · coach@youngsbaseball.com</div>
