@@ -3127,6 +3127,30 @@ function dismissIosBanner() {
       </div>
     </div>
 
+    <!-- ── FEEDBACK ── -->
+    <div class="card" style="margin-bottom:16px; border-color:var(--gold-dark);">
+      <div class="card-title">💬 Send Feedback</div>
+      <div style="font-family:'Barlow'; font-size:13px; color:var(--grey); margin-bottom:14px; line-height:1.6;">
+        Found a bug? Have a feature request? Just want to share how the app is working for you? Drop me a note — I read every one.
+      </div>
+
+      <label style="display:block; font-family:'Barlow Condensed'; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--grey); margin-bottom:6px;">Your Email <span style="color:#E57373;">*</span></label>
+      <input type="email" id="fb-email" placeholder="you@example.com" autocomplete="email" style="width:100%; background:var(--card2); border:1px solid var(--border); color:var(--light); padding:12px; border-radius:3px; font-family:'Barlow'; font-size:14px; margin-bottom:14px; box-sizing:border-box;">
+
+      <label style="display:block; font-family:'Barlow Condensed'; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--grey); margin-bottom:6px;">Your Feedback <span style="color:#E57373;">*</span></label>
+      <textarea id="fb-message" placeholder="Tell me what's on your mind — what's working, what's broken, what would make this app better for you..." style="width:100%; min-height:120px; background:var(--card2); border:1px solid var(--border); color:var(--light); padding:12px; border-radius:3px; font-family:'Barlow'; font-size:14px; line-height:1.6; resize:vertical; box-sizing:border-box; margin-bottom:8px;"></textarea>
+
+      <div id="fb-status" style="display:none; font-family:'Barlow'; font-size:12px; padding:10px 12px; border-radius:3px; margin-bottom:10px; line-height:1.5;"></div>
+
+      <button onclick="sendFeedback()" class="btn btn-gold" style="width:100%;">
+        ✉️ &nbsp;Send Feedback
+      </button>
+
+      <div style="text-align:center; font-family:'Barlow'; font-size:11px; color:var(--border); margin-top:10px; line-height:1.5;">
+        Goes straight to coach@youngsbaseball.com
+      </div>
+    </div>
+
     <!-- Settings version -->
     <div style="text-align:center; font-family:'Barlow'; font-size:11px; color:var(--border); padding:16px 0;">
       My Grind · Version 2026.1
@@ -5801,6 +5825,64 @@ const DEFAULT_SETTINGS = {
   prefScroll:   true,
 };
 
+// ─── FEEDBACK ─────────────────────────────────────────────
+// Validate the form, then open the user's email client with a pre-filled
+// message to coach@youngsbaseball.com. The mailto approach means no backend
+// is required — feedback arrives directly in Coach Young's inbox.
+function sendFeedback() {
+  const emailEl   = document.getElementById('fb-email');
+  const messageEl = document.getElementById('fb-message');
+  const statusEl  = document.getElementById('fb-status');
+  const email     = (emailEl?.value || '').trim();
+  const message   = (messageEl?.value || '').trim();
+
+  function showStatus(text, kind) {
+    if (!statusEl) return;
+    statusEl.textContent = text;
+    statusEl.style.display = 'block';
+    if (kind === 'error') {
+      statusEl.style.background = 'rgba(229,115,115,0.10)';
+      statusEl.style.border = '1px solid rgba(229,115,115,0.35)';
+      statusEl.style.color = '#E57373';
+    } else {
+      statusEl.style.background = 'rgba(168,217,123,0.10)';
+      statusEl.style.border = '1px solid rgba(168,217,123,0.35)';
+      statusEl.style.color = '#A8D97B';
+    }
+  }
+
+  // Validate email
+  const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  if (!emailOk)  { showStatus('Please enter a valid email so I can follow up.', 'error'); emailEl?.focus(); return; }
+  if (!message) { showStatus('Please enter your feedback.', 'error'); messageEl?.focus(); return; }
+  if (message.length < 10) { showStatus('Tell me a little more — at least 10 characters.', 'error'); messageEl?.focus(); return; }
+
+  // Build mailto link with pre-filled subject and body
+  const subject = 'My Grind App — Feedback';
+  const body =
+    'From: ' + email + '\n' +
+    'Sent: ' + new Date().toLocaleString() + '\n' +
+    '------------------------------------\n\n' +
+    message + '\n\n' +
+    '------------------------------------\n' +
+    'Sent from My Grind app · v2026.1';
+  const mailto = 'mailto:coach@youngsbaseball.com' +
+                 '?subject=' + encodeURIComponent(subject) +
+                 '&body=' + encodeURIComponent(body);
+
+  // Open the user's email client
+  window.location.href = mailto;
+
+  // Show success message and clear the form after a brief delay
+  showStatus('✅ Thanks! Your email app should open shortly. Hit Send to deliver it.', 'ok');
+  setTimeout(function() {
+    if (messageEl) messageEl.value = '';
+    if (statusEl)  statusEl.style.display = 'none';
+  }, 8000);
+
+  try { ybgHaptic && ybgHaptic(20); } catch(e) {}
+}
+
 function saveSettings() {
   const s = {
     notifDaily:    document.getElementById('notif-daily-toggle')?.checked ?? true,
@@ -5830,6 +5912,19 @@ function loadSettings() {
     updateNotifSlider(s.notifDaily);
     applySettings(s);
     updateSettingsAccountInfo();
+
+    // Pre-fill the Feedback email field with the user's account email
+    // (only if it's a real email, not the legacy placeholder, and the
+    // user hasn't already typed something else).
+    try {
+      const fbEmailEl = document.getElementById('fb-email');
+      if (fbEmailEl && !fbEmailEl.value) {
+        const acc = getAccessState ? getAccessState() : null;
+        const userEmail = acc && acc.email && !acc.email.endsWith('@ybg.app') ? acc.email : '';
+        if (userEmail) fbEmailEl.value = userEmail;
+      }
+    } catch(e) {}
+
     return s;
   } catch(e) { return DEFAULT_SETTINGS; }
 }
