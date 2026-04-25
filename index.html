@@ -1285,15 +1285,53 @@ function dismissIosBanner() {
 
 </div>
 
-<div class="nav-tabs">
-  <button class="tab-btn active" onclick="showPanel('players')">👤 My Profile</button>
-  <button class="tab-btn" onclick="showPanel('dashboard')">⚾ Dashboard</button>
-  <button class="tab-btn" onclick="showPanel('journal')">📓 Daily Journal</button>
-  <button class="tab-btn" onclick="showPanel('calendar')">📅 Training Calendar</button>
-  <button class="tab-btn" onclick="showPanel('team')">👥 Team</button>
-  <button class="tab-btn" onclick="showPanel('stats')">📊 My Stats</button>
-  <button class="tab-btn" onclick="showPanel('share')">📲 Share</button>
-  <button class="tab-btn" onclick="showPanel('settings')">⚙️ Settings</button>
+<!-- ── DROPDOWN NAVIGATION ── -->
+<div id="mg-nav" style="position:sticky;top:0;z-index:200;background:rgba(10,10,10,0.97);backdrop-filter:blur(10px);border-bottom:1px solid #2E2E2E;">
+
+  <!-- NAV BAR -->
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:0 20px;height:48px;">
+
+    <!-- Current section label -->
+    <div style="display:flex;align-items:center;gap:10px;">
+      <span id="mg-nav-icon" style="font-size:16px;">📓</span>
+      <span id="mg-nav-label" style="font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#F5F5F5;">Daily Journal</span>
+    </div>
+
+    <!-- Hamburger trigger -->
+    <button id="mg-nav-btn" onclick="toggleMgNav()" style="background:transparent;border:1px solid #2E2E2E;border-radius:3px;padding:7px 10px;cursor:pointer;display:flex;flex-direction:column;gap:4px;align-items:center;justify-content:center;transition:border-color 0.2s;" onmouseover="this.style.borderColor='#C9A84C'" onmouseout="this.style.borderColor='#2E2E2E'">
+      <span class="mg-bar" style="display:block;width:18px;height:2px;background:#C9A84C;border-radius:1px;transition:all 0.3s;"></span>
+      <span class="mg-bar" style="display:block;width:18px;height:2px;background:#C9A84C;border-radius:1px;transition:all 0.3s;"></span>
+      <span class="mg-bar" style="display:block;width:18px;height:2px;background:#C9A84C;border-radius:1px;transition:all 0.3s;"></span>
+    </button>
+  </div>
+
+  <!-- DROPDOWN MENU (hidden by default) -->
+  <div id="mg-nav-menu" style="display:none;border-top:1px solid #1E1E1E;padding:8px 0;">
+    <button class="tab-btn mg-menu-item active" onclick="navTo('journal','📓','Daily Journal')" style="display:flex;align-items:center;gap:12px;width:100%;padding:13px 20px;background:transparent;border:none;border-left:3px solid #C9A84C;color:#C9A84C;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;text-align:left;transition:background 0.15s;">
+      <span>📓</span> Daily Journal
+    </button>
+    <button class="tab-btn mg-menu-item" onclick="navTo('dashboard','⚾','Dashboard')" style="display:flex;align-items:center;gap:12px;width:100%;padding:13px 20px;background:transparent;border:none;border-left:3px solid transparent;color:#888;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;text-align:left;transition:background 0.15s;">
+      <span>⚾</span> Dashboard
+    </button>
+    <button class="tab-btn mg-menu-item" onclick="navTo('players','👤','My Profile')" style="display:flex;align-items:center;gap:12px;width:100%;padding:13px 20px;background:transparent;border:none;border-left:3px solid transparent;color:#888;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;text-align:left;transition:background 0.15s;">
+      <span>👤</span> My Profile
+    </button>
+    <button class="tab-btn mg-menu-item" onclick="navTo('stats','📊','My Stats')" style="display:flex;align-items:center;gap:12px;width:100%;padding:13px 20px;background:transparent;border:none;border-left:3px solid transparent;color:#888;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;text-align:left;transition:background 0.15s;">
+      <span>📊</span> My Stats
+    </button>
+    <button class="tab-btn mg-menu-item" onclick="navTo('calendar','📅','Training Calendar')" style="display:flex;align-items:center;gap:12px;width:100%;padding:13px 20px;background:transparent;border:none;border-left:3px solid transparent;color:#888;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;text-align:left;transition:background 0.15s;">
+      <span>📅</span> Training Calendar
+    </button>
+    <button class="tab-btn mg-menu-item" onclick="navTo('team','👥','My Team')" style="display:flex;align-items:center;gap:12px;width:100%;padding:13px 20px;background:transparent;border:none;border-left:3px solid transparent;color:#888;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;text-align:left;transition:background 0.15s;">
+      <span>👥</span> My Team
+    </button>
+    <button class="tab-btn mg-menu-item" onclick="navTo('share','📲','Share')" style="display:flex;align-items:center;gap:12px;width:100%;padding:13px 20px;background:transparent;border:none;border-left:3px solid transparent;color:#888;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;text-align:left;transition:background 0.15s;">
+      <span>📲</span> Share
+    </button>
+    <button class="tab-btn mg-menu-item" onclick="navTo('settings','⚙️','Settings')" style="display:flex;align-items:center;gap:12px;width:100%;padding:13px 20px;background:transparent;border:none;border-left:3px solid transparent;color:#888;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;text-align:left;transition:background 0.15s;">
+      <span>⚙️</span> Settings
+    </button>
+  </div>
 </div>
 
 <main>
@@ -1547,7 +1585,7 @@ function dismissIosBanner() {
   </div>
 
   <!-- ══════════════════════════════════════════ JOURNAL ══ -->
-  <div class="panel" id="panel-journal">
+  <div class="panel active" id="panel-journal">
     <div class="section-header">
       <div class="section-title">DAILY <span>JOURNAL</span></div>
       <div class="section-sub">Post-Game · Practice · Reflection</div>
@@ -1919,7 +1957,7 @@ function dismissIosBanner() {
   </div>
 
   <!-- ══════════════════════════════════════════ PLAYERS ══ -->
-  <div class="panel active" id="panel-players">
+  <div class="panel" id="panel-players">
     <div class="section-header">
       <div class="section-title">MY <span>PROFILE</span></div>
       <div class="section-sub">This is your journal — your info, your season, your grind</div>
@@ -8878,6 +8916,181 @@ setTimeout(function() {
   try { refreshTeamPanel(); } catch(e) {}
 }, 300);
 </script>
+
+<!-- ══ QUOTE OF THE DAY POPUP ══════════════════════════════════════════ -->
+<div id="qotd-overlay" style="display:none;position:fixed;inset:0;z-index:9990;background:rgba(0,0,0,0.92);backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:24px;">
+  <div style="max-width:400px;width:100%;text-align:center;">
+
+    <!-- YBG badge -->
+    <div style="width:56px;height:56px;background:#C9A84C;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',cursive;font-size:20px;color:#080808;margin:0 auto 20px;">YBG</div>
+
+    <!-- Label -->
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#C9A84C;margin-bottom:16px;">Today's Grind</div>
+
+    <!-- Quote -->
+    <div id="qotd-text" style="font-family:Georgia,serif;font-size:22px;font-style:italic;color:#F5F5F5;line-height:1.6;margin-bottom:16px;"></div>
+    <div id="qotd-author" style="font-family:'Barlow Condensed',sans-serif;font-size:13px;letter-spacing:2px;text-transform:uppercase;color:#C9A84C;margin-bottom:32px;"></div>
+
+    <!-- CTA -->
+    <button onclick="closeQotd()" style="background:#C9A84C;color:#080808;border:none;border-radius:4px;padding:14px 40px;font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;letter-spacing:2px;text-transform:uppercase;cursor:pointer;width:100%;max-width:280px;transition:opacity 0.2s;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">
+      ⚾ &nbsp;Start My Grind →
+    </button>
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:1px;color:#444;margin-top:14px;text-transform:uppercase;">Opening Daily Journal...</div>
+  </div>
+</div>
+
+<script>
+// ══ DROPDOWN NAV ══════════════════════════════════════════════════════
+var _mgNavOpen = false;
+
+function toggleMgNav() {
+  _mgNavOpen = !_mgNavOpen;
+  var menu = document.getElementById('mg-nav-menu');
+  var btn  = document.getElementById('mg-nav-btn');
+  if (menu) menu.style.display = _mgNavOpen ? 'block' : 'none';
+  // Animate bars into X when open
+  var bars = document.querySelectorAll('.mg-bar');
+  if (_mgNavOpen) {
+    if (bars[0]) { bars[0].style.transform = 'translateY(6px) rotate(45deg)'; }
+    if (bars[1]) { bars[1].style.opacity = '0'; }
+    if (bars[2]) { bars[2].style.transform = 'translateY(-6px) rotate(-45deg)'; }
+  } else {
+    bars.forEach(function(b) { b.style.transform = ''; b.style.opacity = '1'; });
+  }
+}
+
+function closeMgNav() {
+  _mgNavOpen = false;
+  var menu = document.getElementById('mg-nav-menu');
+  if (menu) menu.style.display = 'none';
+  document.querySelectorAll('.mg-bar').forEach(function(b) {
+    b.style.transform = ''; b.style.opacity = '1';
+  });
+}
+
+function navTo(panel, icon, label) {
+  // Update header label
+  var iconEl  = document.getElementById('mg-nav-icon');
+  var labelEl = document.getElementById('mg-nav-label');
+  if (iconEl)  iconEl.textContent  = icon;
+  if (labelEl) labelEl.textContent = label;
+
+  // Update active state on menu items
+  document.querySelectorAll('.mg-menu-item').forEach(function(item) {
+    item.style.color       = '#888';
+    item.style.borderColor = 'transparent';
+    item.style.background  = 'transparent';
+  });
+  // Find clicked item and highlight it
+  event.currentTarget.style.color       = '#C9A84C';
+  event.currentTarget.style.borderColor = '#C9A84C';
+
+  // Close menu then show panel
+  closeMgNav();
+  if (typeof showPanel === 'function') showPanel(panel);
+}
+
+// Close nav when tapping outside
+document.addEventListener('click', function(e) {
+  if (!_mgNavOpen) return;
+  var nav = document.getElementById('mg-nav');
+  if (nav && !nav.contains(e.target)) closeMgNav();
+}, true);
+
+// ══ QUOTE OF THE DAY POPUP ════════════════════════════════════════════
+var YBG_QOTD = [
+  { q: "The grind is not a moment. It is a decision you make every morning.", a: "The Grind" },
+  { q: "Talent gets you noticed. Preparation gets you paid.", a: "The Grind" },
+  { q: "If you don't journal it, you didn't learn from it.", a: "The Grind" },
+  { q: "Play for the name on the front. Your name on the back takes care of itself.", a: "The Grind" },
+  { q: "Nobody cares how hard you work when nobody is watching. Work hard anyway.", a: "The Grind" },
+  { q: "The scoreboard tells you who won. The journal tells you why.", a: "The Grind" },
+  { q: "Confidence comes from the reps nobody saw you take.", a: "The Grind" },
+  { q: "One at-bat at a time. One inning at a time. One game at a time.", a: "The Grind" },
+  { q: "Everybody wants to hit. Nobody wants to take ground balls. That's where games are won.", a: "The Grind" },
+  { q: "Two things you control: your effort and your attitude. Own them both.", a: "The Grind" },
+  { q: "Hustle is the only stat that never slumps.", a: "The Grind" },
+  { q: "You don't rise to the occasion. You fall to your level of preparation.", a: "The Grind" },
+  { q: "The best hitters I ever coached failed 7 out of 10 times. They kept swinging.", a: "Coach Young" },
+  { q: "Scouts watch how you run to first base after a groundout. Run hard. Always.", a: "The Grind" },
+  { q: "A great teammate is worth more than a great player. Be both.", a: "The Grind" },
+  { q: "Your mental game is your biggest advantage. Protect it. Train it.", a: "The Grind" },
+  { q: "No grades, no game. That is not a threat — that is a gift.", a: "Coach Young" },
+  { q: "The game will humble you. Journal it. Learn it. Come back better tomorrow.", a: "The Grind" },
+  { q: "Losing stings. Learning from it lasts.", a: "The Grind" },
+  { q: "The kid who sprints out every ground ball becomes the man who finishes every job.", a: "The Grind" },
+  { q: "Close the book on every game. Learn from it and move on.", a: "Coach Young" },
+  { q: "Respect the game. Respect your opponent. Respect yourself.", a: "The Grind" },
+  { q: "Sleep is a performance tool. Treat it like one.", a: "The Grind" },
+  { q: "You cannot control the umpire. Control what you can control.", a: "The Grind" },
+  { q: "The best players I ever coached were the ones who made everyone around them better.", a: "Coach Young" },
+  { q: "Your teammates remember how you played for them. Your stats do not.", a: "The Grind" },
+  { q: "Coaches don't remember your best game. They remember your effort on your worst day.", a: "The Grind" },
+  { q: "The work you did last June is showing up right now.", a: "Coach Young" },
+  { q: "Be first to practice and last to leave. Let that be your reputation.", a: "The Grind" },
+  { q: "Every rep you log is a receipt. Show coaches your receipts.", a: "Coach Young" }
+];
+
+function showQotd() {
+  // Pick quote based on day of year — same quote all day, rotates tomorrow
+  var now   = new Date();
+  var start = new Date(now.getFullYear(), 0, 0);
+  var day   = Math.floor((now - start) / (1000 * 60 * 60 * 24));
+  var q     = YBG_QOTD[day % YBG_QOTD.length];
+
+  var textEl   = document.getElementById('qotd-text');
+  var authorEl = document.getElementById('qotd-author');
+  if (textEl)   textEl.textContent   = '\u201c' + q.q + '\u201d';
+  if (authorEl) authorEl.textContent = '\u2014 ' + q.a;
+
+  var overlay = document.getElementById('qotd-overlay');
+  if (overlay) overlay.style.display = 'flex';
+}
+
+function closeQotd() {
+  var overlay = document.getElementById('qotd-overlay');
+  if (overlay) overlay.style.display = 'none';
+  // Land on Daily Journal
+  navTo('journal', '📓', 'Daily Journal');
+}
+
+// Show quote on every app open — after access check clears (800ms delay)
+window.addEventListener('load', function() {
+  setTimeout(function() {
+    // Only show if not on the trial/paywall overlay
+    var trialOverlay = document.getElementById('trial-overlay');
+    var isBlocked = trialOverlay && trialOverlay.style.display === 'flex';
+    if (!isBlocked) {
+      showQotd();
+    } else {
+      // Wait for access to clear then show quote
+      var watcher = setInterval(function() {
+        var still = document.getElementById('trial-overlay');
+        if (!still || still.style.display !== 'flex') {
+          clearInterval(watcher);
+          setTimeout(showQotd, 400);
+        }
+      }, 500);
+    }
+  }, 900);
+});
+
+// Also make journal the default panel on load
+window.addEventListener('load', function() {
+  setTimeout(function() {
+    // Set journal as active panel (replaces the default 'players' active state)
+    document.querySelectorAll('.panel').forEach(function(p) { p.classList.remove('active'); });
+    var journal = document.getElementById('panel-journal');
+    if (journal) journal.classList.add('active');
+    // Update nav label
+    var iconEl  = document.getElementById('mg-nav-icon');
+    var labelEl = document.getElementById('mg-nav-label');
+    if (iconEl)  iconEl.textContent  = '📓';
+    if (labelEl) labelEl.textContent = 'Daily Journal';
+  }, 200);
+});
+</script>
+
 <script src="mg-config.js"></script>
 </body>
 </html>
