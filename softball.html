@@ -696,6 +696,61 @@
 
   .checklist-item.checked { color: var(--grey); text-decoration: line-through; }
   input[type="range"] { accent-color: var(--gold); }
+
+/* ── VOICE INPUT ── */
+.voice-field-wrap { position: relative; margin-bottom: 0; }
+.mic-btn {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(10,10,10,0.85);
+  border: 1px solid #3A3A3A;
+  color: #777;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  z-index: 10;
+  backdrop-filter: blur(4px);
+}
+.mic-btn:hover { border-color: #D4547A; color: #D4547A; }
+.mic-btn.listening {
+  background: #D4547A;
+  border-color: #D4547A;
+  color: #080808;
+  animation: micPulse 1s infinite;
+}
+@keyframes micPulse {
+  0%, 100% { box-shadow: 0 0 0 0 #D4547A44; }
+  50% { box-shadow: 0 0 0 8px #D4547A00; }
+}
+.voice-toast {
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(10,10,10,0.95);
+  border: 1px solid #D4547A;
+  color: #D4547A;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 10px 20px;
+  border-radius: 20px;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.voice-toast.show { opacity: 1; }
+
 </style>
 <script>
 // ── SERVICE WORKER — enables offline use & install ──
@@ -1643,13 +1698,22 @@ main { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important;
         <input type="text" id="j-title" placeholder="e.g. End of Week Reflection">
       </div>
       <label id="j-what-label">What did I work on today?</label>
-      <textarea id="j-what" placeholder="What drills, reps, or skills did I focus on? What felt good?"></textarea>
+      <div class="voice-field-wrap">
+        <textarea id="j-what" placeholder="What drills, reps, or skills did I focus on? What felt good?" style="padding-right:50px;"></textarea>
+        <button class="mic-btn" onclick="startVoice('j-what',this)" title="Tap to speak">🎤</button>
+      </div>
       <label id="j-tomorrow-label">What am I taking into the next practice or game?</label>
-      <textarea id="j-tomorrow" placeholder="What is one thing I want to carry forward and keep working on?"></textarea>
+      <div class="voice-field-wrap">
+        <textarea id="j-tomorrow" placeholder="What is one thing I want to carry forward and keep working on?" style="padding-right:50px;"></textarea>
+        <button class="mic-btn" onclick="startVoice('j-tomorrow',this)" title="Tap to speak">🎤</button>
+      </div>
       <!-- Reflection-only third prompt -->
       <div id="j-reflect-extra" style="display:none;">
         <label>How do I need to prepare for next week?</label>
-        <textarea id="j-prepare" placeholder="What do I need to work on? What is my focus going into next practice or game?"></textarea>
+        <div class="voice-field-wrap">
+        <textarea id="j-prepare" placeholder="What do I need to work on? What is my focus going into next practice or game?" style="padding-right:50px;"></textarea>
+        <button class="mic-btn" onclick="startVoice('j-prepare',this)" title="Tap to speak">🎤</button>
+      </div>
       </div>
 
       <!-- ══ PRACTICE REP COUNTER — shows when type = Practice ══ -->
@@ -9146,6 +9210,8 @@ window.addEventListener('load', function() {
 </script>
 
 
+<div id="voice-toast" class="voice-toast">🎤 Listening...</div>
+
 <!-- ══ REVIEW PROMPT OVERLAY ══════════════════════════════════════ -->
 <div id="review-overlay" style="display:none;position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,0.88);backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:24px;">
   <div style="max-width:380px;width:100%;background:#141414;border:1px solid #2E2E2E;border-radius:12px;padding:28px 24px;text-align:center;">
@@ -9183,6 +9249,100 @@ function showReview() {
 function closeReview() {
   var el = document.getElementById('review-overlay');
   if (el) el.style.display = 'none';
+}
+</script>
+<script>
+// ══ VOICE INPUT — Web Speech API ═════════════════════════════════
+var _voiceRecognition = null;
+var _voiceActive      = false;
+var _voiceBtn         = null;
+var _voiceField       = null;
+
+function startVoice(fieldId, btn) {
+  // Stop if already listening
+  if (_voiceActive && _voiceRecognition) {
+    _voiceRecognition.stop();
+    return;
+  }
+
+  // Check browser support
+  var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) {
+    showVoiceToast('Voice not supported in this browser');
+    return;
+  }
+
+  _voiceField = document.getElementById(fieldId);
+  _voiceBtn   = btn;
+  if (!_voiceField) return;
+
+  _voiceRecognition = new SpeechRecognition();
+  _voiceRecognition.lang           = 'en-US';
+  _voiceRecognition.continuous     = true;   // keeps listening until stopped
+  _voiceRecognition.interimResults = true;   // shows words as they come in
+
+  var existingText = _voiceField.value;
+  var interim      = '';
+
+  _voiceRecognition.onstart = function() {
+    _voiceActive = true;
+    if (_voiceBtn) _voiceBtn.classList.add('listening');
+    if (_voiceBtn) _voiceBtn.textContent = '⏹';
+    showVoiceToast('🎤 Listening... tap ⏹ to stop');
+  };
+
+  _voiceRecognition.onresult = function(event) {
+    interim = '';
+    var final = '';
+    for (var i = event.resultIndex; i < event.results.length; i++) {
+      if (event.results[i].isFinal) {
+        final += event.results[i][0].transcript;
+      } else {
+        interim += event.results[i][0].transcript;
+      }
+    }
+    // Show interim + final in the field
+    _voiceField.value = existingText + (existingText && final ? ' ' : '') + final + interim;
+    if (final) existingText = _voiceField.value.replace(interim, '');
+  };
+
+  _voiceRecognition.onerror = function(e) {
+    if (e.error === 'not-allowed') {
+      showVoiceToast('Microphone access denied — check your browser settings');
+    } else if (e.error !== 'aborted') {
+      showVoiceToast('Voice error: ' + e.error);
+    }
+    stopVoice();
+  };
+
+  _voiceRecognition.onend = function() {
+    stopVoice();
+  };
+
+  _voiceRecognition.start();
+}
+
+function stopVoice() {
+  _voiceActive = false;
+  if (_voiceBtn) {
+    _voiceBtn.classList.remove('listening');
+    _voiceBtn.textContent = '🎤';
+  }
+  hideVoiceToast();
+  _voiceRecognition = null;
+  _voiceBtn = null;
+}
+
+function showVoiceToast(msg) {
+  var t = document.getElementById('voice-toast');
+  if (!t) return;
+  t.textContent = msg;
+  t.classList.add('show');
+}
+
+function hideVoiceToast() {
+  var t = document.getElementById('voice-toast');
+  if (t) t.classList.remove('show');
 }
 </script>
 <script src="mg-config.js"></script>
