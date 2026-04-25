@@ -1285,54 +1285,76 @@ function dismissIosBanner() {
 
 </div>
 
-<!-- ── DROPDOWN NAVIGATION ── -->
-<div id="mg-nav" style="position:sticky;top:0;z-index:200;background:rgba(10,10,10,0.97);backdrop-filter:blur(10px);border-bottom:1px solid #2E2E2E;">
+<!-- ── BOTTOM TAB BAR ── -->
+<nav id="mg-bottom-nav" style="
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 500;
+  background: rgba(10,10,10,0.98);
+  backdrop-filter: blur(12px);
+  border-top: 1px solid #2A2A2A;
+  display: flex;
+  align-items: stretch;
+  height: 62px;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  max-width: 100%;
+">
+  <button class="tab-btn mg-tab" id="tab-journal"  onclick="mgTab('journal','tab-journal')"  style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;background:transparent;border:none;border-top:2px solid #C9A84C;color:#C9A84C;cursor:pointer;padding:8px 4px;transition:all 0.15s;font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;">
+    <span style="font-size:20px;line-height:1;">📓</span>Journal
+  </button>
+  <button class="tab-btn mg-tab" id="tab-dashboard" onclick="mgTab('dashboard','tab-dashboard')" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;background:transparent;border:none;border-top:2px solid transparent;color:#555;cursor:pointer;padding:8px 4px;transition:all 0.15s;font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;">
+    <span style="font-size:20px;line-height:1;">⚾</span>Home
+  </button>
+  <button class="tab-btn mg-tab" id="tab-stats"    onclick="mgTab('stats','tab-stats')"    style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;background:transparent;border:none;border-top:2px solid transparent;color:#555;cursor:pointer;padding:8px 4px;transition:all 0.15s;font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;">
+    <span style="font-size:20px;line-height:1;">📊</span>Stats
+  </button>
+  <button class="tab-btn mg-tab" id="tab-players"  onclick="mgTab('players','tab-players')"  style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;background:transparent;border:none;border-top:2px solid transparent;color:#555;cursor:pointer;padding:8px 4px;transition:all 0.15s;font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;">
+    <span style="font-size:20px;line-height:1;">👤</span>Profile
+  </button>
+  <button class="tab-btn mg-tab" id="tab-more"     onclick="toggleMoreMenu()"               style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;background:transparent;border:none;border-top:2px solid transparent;color:#555;cursor:pointer;padding:8px 4px;transition:all 0.15s;font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;">
+    <span style="font-size:20px;line-height:1;">···</span>More
+  </button>
+</nav>
 
-  <!-- NAV BAR -->
-  <div style="display:flex;align-items:center;justify-content:space-between;padding:0 20px;height:48px;">
-
-    <!-- Current section label -->
-    <div style="display:flex;align-items:center;gap:10px;">
-      <span id="mg-nav-icon" style="font-size:16px;">📓</span>
-      <span id="mg-nav-label" style="font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#F5F5F5;">Daily Journal</span>
-    </div>
-
-    <!-- Hamburger trigger -->
-    <button id="mg-nav-btn" onclick="toggleMgNav()" style="background:transparent;border:1px solid #2E2E2E;border-radius:3px;padding:7px 10px;cursor:pointer;display:flex;flex-direction:column;gap:4px;align-items:center;justify-content:center;transition:border-color 0.2s;" onmouseover="this.style.borderColor='#C9A84C'" onmouseout="this.style.borderColor='#2E2E2E'">
-      <span class="mg-bar" style="display:block;width:18px;height:2px;background:#C9A84C;border-radius:1px;transition:all 0.3s;"></span>
-      <span class="mg-bar" style="display:block;width:18px;height:2px;background:#C9A84C;border-radius:1px;transition:all 0.3s;"></span>
-      <span class="mg-bar" style="display:block;width:18px;height:2px;background:#C9A84C;border-radius:1px;transition:all 0.3s;"></span>
-    </button>
-  </div>
-
-  <!-- DROPDOWN MENU (hidden by default) -->
-  <div id="mg-nav-menu" style="display:none;border-top:1px solid #1E1E1E;padding:8px 0;">
-    <button class="tab-btn mg-menu-item active" onclick="navTo('journal','📓','Daily Journal')" style="display:flex;align-items:center;gap:12px;width:100%;padding:13px 20px;background:transparent;border:none;border-left:3px solid #C9A84C;color:#C9A84C;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;text-align:left;transition:background 0.15s;">
-      <span>📓</span> Daily Journal
-    </button>
-    <button class="tab-btn mg-menu-item" onclick="navTo('dashboard','⚾','Dashboard')" style="display:flex;align-items:center;gap:12px;width:100%;padding:13px 20px;background:transparent;border:none;border-left:3px solid transparent;color:#888;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;text-align:left;transition:background 0.15s;">
-      <span>⚾</span> Dashboard
-    </button>
-    <button class="tab-btn mg-menu-item" onclick="navTo('players','👤','My Profile')" style="display:flex;align-items:center;gap:12px;width:100%;padding:13px 20px;background:transparent;border:none;border-left:3px solid transparent;color:#888;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;text-align:left;transition:background 0.15s;">
-      <span>👤</span> My Profile
-    </button>
-    <button class="tab-btn mg-menu-item" onclick="navTo('stats','📊','My Stats')" style="display:flex;align-items:center;gap:12px;width:100%;padding:13px 20px;background:transparent;border:none;border-left:3px solid transparent;color:#888;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;text-align:left;transition:background 0.15s;">
-      <span>📊</span> My Stats
-    </button>
-    <button class="tab-btn mg-menu-item" onclick="navTo('calendar','📅','Training Calendar')" style="display:flex;align-items:center;gap:12px;width:100%;padding:13px 20px;background:transparent;border:none;border-left:3px solid transparent;color:#888;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;text-align:left;transition:background 0.15s;">
-      <span>📅</span> Training Calendar
-    </button>
-    <button class="tab-btn mg-menu-item" onclick="navTo('team','👥','My Team')" style="display:flex;align-items:center;gap:12px;width:100%;padding:13px 20px;background:transparent;border:none;border-left:3px solid transparent;color:#888;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;text-align:left;transition:background 0.15s;">
-      <span>👥</span> My Team
-    </button>
-    <button class="tab-btn mg-menu-item" onclick="navTo('share','📲','Share')" style="display:flex;align-items:center;gap:12px;width:100%;padding:13px 20px;background:transparent;border:none;border-left:3px solid transparent;color:#888;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;text-align:left;transition:background 0.15s;">
-      <span>📲</span> Share
-    </button>
-    <button class="tab-btn mg-menu-item" onclick="navTo('settings','⚙️','Settings')" style="display:flex;align-items:center;gap:12px;width:100%;padding:13px 20px;background:transparent;border:none;border-left:3px solid transparent;color:#888;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;text-align:left;transition:background 0.15s;">
-      <span>⚙️</span> Settings
-    </button>
-  </div>
+<!-- ── MORE MENU (slides up from bottom tab) ── -->
+<div id="mg-more-menu" style="
+  display:none;
+  position:fixed;
+  bottom:62px;
+  left:0;right:0;
+  z-index:499;
+  background:rgba(10,10,10,0.98);
+  backdrop-filter:blur(12px);
+  border-top:1px solid #2A2A2A;
+  padding:8px 0 4px;
+  animation:slideUpMenu 0.2s ease;
+">
+  <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#444;padding:6px 20px 10px;">More</div>
+  <button onclick="mgTab('calendar',null);closeMoreMenu()" style="display:flex;align-items:center;gap:14px;width:100%;padding:14px 20px;background:transparent;border:none;color:#CCCCCC;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;text-align:left;" onmouseover="this.style.background='rgba(201,168,76,0.06)'" onmouseout="this.style.background='transparent'">
+    <span style="font-size:20px;width:28px;text-align:center;">📅</span> Training Calendar
+  </button>
+  <button onclick="mgTab('team',null);closeMoreMenu()" style="display:flex;align-items:center;gap:14px;width:100%;padding:14px 20px;background:transparent;border:none;color:#CCCCCC;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;text-align:left;" onmouseover="this.style.background='rgba(201,168,76,0.06)'" onmouseout="this.style.background='transparent'">
+    <span style="font-size:20px;width:28px;text-align:center;">👥</span> My Team
+  </button>
+  <button onclick="mgTab('share',null);closeMoreMenu()" style="display:flex;align-items:center;gap:14px;width:100%;padding:14px 20px;background:transparent;border:none;color:#CCCCCC;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;text-align:left;" onmouseover="this.style.background='rgba(201,168,76,0.06)'" onmouseout="this.style.background='transparent'">
+    <span style="font-size:20px;width:28px;text-align:center;">📲</span> Share
+  </button>
+  <button onclick="mgTab('settings',null);closeMoreMenu()" style="display:flex;align-items:center;gap:14px;width:100%;padding:14px 20px;background:transparent;border:none;color:#CCCCCC;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;text-align:left;" onmouseover="this.style.background='rgba(201,168,76,0.06)'" onmouseout="this.style.background='transparent'">
+    <span style="font-size:20px;width:28px;text-align:center;">⚙️</span> Settings
+  </button>
 </div>
+
+<style>
+@keyframes slideUpMenu {
+  from { transform: translateY(20px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+/* Push main content up so bottom nav doesn't cover it */
+main { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important; }
+#social-share-footer { margin-bottom: calc(62px + env(safe-area-inset-bottom, 0px)); }
+</style>
 
 <main>
 
@@ -8940,62 +8962,70 @@ setTimeout(function() {
 </div>
 
 <script>
-// ══ DROPDOWN NAV ══════════════════════════════════════════════════════
-var _mgNavOpen = false;
 
-function toggleMgNav() {
-  _mgNavOpen = !_mgNavOpen;
-  var menu = document.getElementById('mg-nav-menu');
-  var btn  = document.getElementById('mg-nav-btn');
-  if (menu) menu.style.display = _mgNavOpen ? 'block' : 'none';
-  // Animate bars into X when open
-  var bars = document.querySelectorAll('.mg-bar');
-  if (_mgNavOpen) {
-    if (bars[0]) { bars[0].style.transform = 'translateY(6px) rotate(45deg)'; }
-    if (bars[1]) { bars[1].style.opacity = '0'; }
-    if (bars[2]) { bars[2].style.transform = 'translateY(-6px) rotate(-45deg)'; }
+// ══ BOTTOM TAB BAR ════════════════════════════════════════════════════
+function mgTab(panel, tabId) {
+  // Reset all tabs
+  document.querySelectorAll('.mg-tab').forEach(function(t) {
+    t.style.color       = '#555';
+    t.style.borderColor = 'transparent';
+  });
+  // Highlight active tab (if it's a bottom bar tab)
+  if (tabId) {
+    var activeTab = document.getElementById(tabId);
+    if (activeTab) {
+      activeTab.style.color       = '#C9A84C';
+      activeTab.style.borderColor = '#C9A84C';
+    }
   } else {
-    bars.forEach(function(b) { b.style.transform = ''; b.style.opacity = '1'; });
+    // "More" section — highlight the More button
+    var moreTab = document.getElementById('tab-more');
+    if (moreTab) {
+      moreTab.style.color       = '#C9A84C';
+      moreTab.style.borderColor = '#C9A84C';
+    }
   }
-}
-
-function closeMgNav() {
-  _mgNavOpen = false;
-  var menu = document.getElementById('mg-nav-menu');
-  if (menu) menu.style.display = 'none';
-  document.querySelectorAll('.mg-bar').forEach(function(b) {
-    b.style.transform = ''; b.style.opacity = '1';
-  });
-}
-
-function navTo(panel, icon, label) {
-  // Update header label
-  var iconEl  = document.getElementById('mg-nav-icon');
-  var labelEl = document.getElementById('mg-nav-label');
-  if (iconEl)  iconEl.textContent  = icon;
-  if (labelEl) labelEl.textContent = label;
-
-  // Update active state on menu items
-  document.querySelectorAll('.mg-menu-item').forEach(function(item) {
-    item.style.color       = '#888';
-    item.style.borderColor = 'transparent';
-    item.style.background  = 'transparent';
-  });
-  // Find clicked item and highlight it
-  event.currentTarget.style.color       = '#C9A84C';
-  event.currentTarget.style.borderColor = '#C9A84C';
-
-  // Close menu then show panel
-  closeMgNav();
   if (typeof showPanel === 'function') showPanel(panel);
 }
 
-// Close nav when tapping outside
+function toggleMoreMenu() {
+  var menu = document.getElementById('mg-more-menu');
+  if (!menu) return;
+  var isOpen = menu.style.display === 'block';
+  menu.style.display = isOpen ? 'none' : 'block';
+  // Highlight More tab when open
+  var moreTab = document.getElementById('tab-more');
+  if (moreTab) {
+    moreTab.style.color       = isOpen ? '#555' : '#C9A84C';
+    moreTab.style.borderColor = isOpen ? 'transparent' : '#C9A84C';
+  }
+}
+
+function closeMoreMenu() {
+  var menu = document.getElementById('mg-more-menu');
+  if (menu) menu.style.display = 'none';
+  var moreTab = document.getElementById('tab-more');
+  if (moreTab) {
+    moreTab.style.color       = '#555';
+    moreTab.style.borderColor = 'transparent';
+  }
+}
+
+// Close more menu when tapping outside
 document.addEventListener('click', function(e) {
-  if (!_mgNavOpen) return;
-  var nav = document.getElementById('mg-nav');
-  if (nav && !nav.contains(e.target)) closeMgNav();
+  var menu    = document.getElementById('mg-more-menu');
+  var moreBtn = document.getElementById('tab-more');
+  if (!menu || menu.style.display !== 'block') return;
+  if (moreBtn && moreBtn.contains(e.target)) return;
+  if (!menu.contains(e.target)) closeMoreMenu();
 }, true);
+
+// Set journal tab active on load
+window.addEventListener('load', function() {
+  setTimeout(function() {
+    mgTab('journal', 'tab-journal');
+  }, 250);
+});
 
 // ══ QUOTE OF THE DAY POPUP ════════════════════════════════════════════
 var YBG_QOTD = [
