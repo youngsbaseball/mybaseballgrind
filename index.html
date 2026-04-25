@@ -1340,29 +1340,37 @@ function dismissIosBanner() {
       </button>
     </div>
 
-    <!-- ── SEASON GOALS (moved here from old Goals tab) ── -->
-    <div class="card" style="margin-bottom:20px; border-left:3px solid var(--gold);">
-      <div class="card-title">🏆 Season Goals (3 Measurable Goals)</div>
-      <div id="goals-list"></div>
-      <div class="form-row" style="margin-top:16px;">
-        <div>
-          <label>New Goal</label>
-          <input type="text" id="goal-text" placeholder="e.g. Hit .350 this season">
-        </div>
-        <div>
-          <label>Category</label>
-          <select id="goal-cat">
-            <option value="hitting">Hitting</option>
-            <option value="pitching">Pitching</option>
-            <option value="fielding">Fielding</option>
-            <option value="strength">Strength / Fitness</option>
-            <option value="academics">Academics</option>
-            <option value="mental">Mental Game</option>
-            <option value="team">Team / Character</option>
-          </select>
-        </div>
+    <!-- ── SEASON GOALS (moved here from old Goals tab) — featured card ── -->
+    <div class="card" style="margin-bottom:24px; padding:0; border:1px solid var(--gold); background:#0E0C00; overflow:hidden;">
+      <!-- Bold gold gradient header strip -->
+      <div style="background:linear-gradient(135deg,#1F1800,#15100A); border-bottom:1px solid var(--gold-dark); padding:16px 20px;">
+        <div style="font-family:'Bebas Neue',cursive; font-size:24px; letter-spacing:2.5px; color:var(--gold); line-height:1;">🏆 SEASON GOALS</div>
+        <div style="font-family:'Barlow Condensed'; font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--grey); margin-top:4px;">Set them · Track them · Finish them</div>
       </div>
-      <button class="btn btn-gold" onclick="addGoal()">🏆 &nbsp;Add Goal</button>
+
+      <div style="padding:18px 20px;">
+        <div id="goals-list"></div>
+
+        <div class="form-row" style="margin-top:18px;">
+          <div>
+            <label style="font-family:'Barlow Condensed'; font-size:12px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--gold);">New Goal</label>
+            <input type="text" id="goal-text" placeholder="e.g. Hit .350 this season" style="font-size:15px; padding:12px;">
+          </div>
+          <div>
+            <label style="font-family:'Barlow Condensed'; font-size:12px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--gold);">Category</label>
+            <select id="goal-cat" style="font-size:15px; padding:12px;">
+              <option value="hitting">Hitting</option>
+              <option value="pitching">Pitching</option>
+              <option value="fielding">Fielding</option>
+              <option value="strength">Strength / Fitness</option>
+              <option value="academics">Academics</option>
+              <option value="mental">Mental Game</option>
+              <option value="team">Team / Character</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn btn-gold" onclick="addGoal()" style="font-size:15px; padding:14px;">🏆 &nbsp;Add Goal</button>
+      </div>
     </div>
 
     <div class="grid-2">
@@ -4994,20 +5002,26 @@ function renderGoals() {
   const container = document.getElementById('goals-list');
   if (!container) return;
   if (!state.goals.length) {
-    container.innerHTML = `<div style="color:var(--grey); font-size:14px; padding:16px 0;">No goals set yet. Add up to 3 measurable goals for the season.</div>`;
+    container.innerHTML = `<div style="text-align:center; padding:24px 16px; background:rgba(201,168,76,0.04); border:1px dashed var(--gold-dark); border-radius:3px;">
+      <div style="font-size:32px; margin-bottom:6px;">🎯</div>
+      <div style="font-family:'Bebas Neue',cursive; font-size:18px; letter-spacing:1.5px; color:var(--gold); line-height:1;">SET YOUR FIRST GOAL</div>
+      <div style="font-family:'Barlow'; font-size:13px; color:var(--light); margin-top:6px; line-height:1.6;">Up to 3 measurable goals for the season. Make them specific. Make them count.</div>
+    </div>`;
     return;
   }
 
   const catColors = { hitting:'#27AE60', pitching:'#2980B9', fielding:'#8E44AD', strength:'#E67E22', academics:'#C9A84C', mental:'#E74C3C', team:'#1ABC9C' };
 
   container.innerHTML = state.goals.map(g => `
-    <div style="display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid var(--border);">
-      <input type="checkbox" ${g.done ? 'checked' : ''} onchange="toggleGoal(${g.id})" style="width:18px; height:18px; accent-color:var(--gold); margin:0;">
-      <div style="flex:1;">
-        <div style="font-size:15px; color:${g.done ? 'var(--grey)' : 'var(--white)'}; ${g.done ? 'text-decoration:line-through;' : ''}">${g.text}</div>
-        <div style="font-family:'Barlow Condensed',sans-serif; font-size:11px; letter-spacing:1px; text-transform:uppercase; color:${catColors[g.cat] || 'var(--gold)'}; margin-top:2px;">${g.cat}</div>
+    <div style="display:flex; align-items:center; gap:14px; padding:16px 12px; margin-bottom:8px; background:${g.done ? 'rgba(39,174,96,0.04)' : 'var(--card2)'}; border:1px solid ${g.done ? 'rgba(39,174,96,0.25)' : 'var(--border)'}; border-radius:4px; transition:all 0.2s;">
+      <input type="checkbox" ${g.done ? 'checked' : ''} onchange="toggleGoal(${g.id})" style="width:24px; height:24px; accent-color:var(--gold); margin:0; flex-shrink:0; cursor:pointer;">
+      <div style="flex:1; min-width:0;">
+        <div style="font-family:'Barlow'; font-size:18px; font-weight:600; color:${g.done ? 'var(--grey)' : 'var(--white)'}; line-height:1.4; ${g.done ? 'text-decoration:line-through;' : ''}">${g.text}</div>
+        <div style="margin-top:6px;">
+          <span style="display:inline-block; font-family:'Barlow Condensed',sans-serif; font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:#0D0D0D; background:${catColors[g.cat] || 'var(--gold)'}; padding:3px 9px; border-radius:2px;">${g.cat}</span>
+        </div>
       </div>
-      <button class="btn btn-danger btn-sm" onclick="deleteGoal(${g.id})">✕</button>
+      <button class="btn btn-danger btn-sm" onclick="deleteGoal(${g.id})" style="flex-shrink:0;">✕</button>
     </div>
   `).join('');
 }
