@@ -1290,7 +1290,6 @@ function dismissIosBanner() {
   <button class="tab-btn" onclick="showPanel('dashboard')">⚾ Dashboard</button>
   <button class="tab-btn" onclick="showPanel('journal')">📓 Daily Journal</button>
   <button class="tab-btn" onclick="showPanel('calendar')">📅 Training Calendar</button>
-  <button class="tab-btn" onclick="showPanel('goals')">🏆 Goals</button>
   <button class="tab-btn" onclick="showPanel('team')">👥 Team</button>
   <button class="tab-btn" onclick="showPanel('stats')">📊 My Stats</button>
   <button class="tab-btn" onclick="showPanel('share')">📲 Share</button>
@@ -1339,6 +1338,31 @@ function dismissIosBanner() {
       <button onclick="dismissMilestone()" style="background:transparent; color:#2A1F00; font-family:'Barlow Condensed'; font-size:11px; letter-spacing:1px; text-transform:uppercase; padding:12px 16px; border:none; cursor:pointer; margin-left:6px;">
         Dismiss
       </button>
+    </div>
+
+    <!-- ── SEASON GOALS (moved here from old Goals tab) ── -->
+    <div class="card" style="margin-bottom:20px; border-left:3px solid var(--gold);">
+      <div class="card-title">🏆 Season Goals (3 Measurable Goals)</div>
+      <div id="goals-list"></div>
+      <div class="form-row" style="margin-top:16px;">
+        <div>
+          <label>New Goal</label>
+          <input type="text" id="goal-text" placeholder="e.g. Hit .350 this season">
+        </div>
+        <div>
+          <label>Category</label>
+          <select id="goal-cat">
+            <option value="hitting">Hitting</option>
+            <option value="pitching">Pitching</option>
+            <option value="fielding">Fielding</option>
+            <option value="strength">Strength / Fitness</option>
+            <option value="academics">Academics</option>
+            <option value="mental">Mental Game</option>
+            <option value="team">Team / Character</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn btn-gold" onclick="addGoal()">🏆 &nbsp;Add Goal</button>
     </div>
 
     <div class="grid-2">
@@ -2165,45 +2189,7 @@ function dismissIosBanner() {
   </div>
 
   <!-- ══════════════════════════════════════════ GOALS ══ -->
-  <div class="panel" id="panel-goals">
-    <div class="section-header">
-      <div class="section-title">SEASON <span>GOALS</span></div>
-      <div class="section-sub">Set Them · Track Them · Finish Them</div>
-      <div class="gold-line"></div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">🏆 Season Goals (3 Measurable Goals)</div>
-      <div id="goals-list"></div>
-      <div class="form-row" style="margin-top:16px;">
-        <div>
-          <label>New Goal</label>
-          <input type="text" id="goal-text" placeholder="e.g. Hit .350 this season">
-        </div>
-        <div>
-          <label>Category</label>
-          <select id="goal-cat">
-            <option value="hitting">Hitting</option>
-            <option value="pitching">Pitching</option>
-            <option value="fielding">Fielding</option>
-            <option value="strength">Strength / Fitness</option>
-            <option value="academics">Academics</option>
-            <option value="mental">Mental Game</option>
-            <option value="team">Team / Character</option>
-          </select>
-        </div>
-      </div>
-      <button class="btn btn-gold" onclick="addGoal()">🏆 &nbsp;Add Goal</button>
-    </div>
-
-    <!-- Friendly pointer to the new Grades home -->
-    <div class="card" style="margin-top:12px; background:rgba(201,168,76,0.04); border-left:3px solid var(--gold-dark);">
-      <div style="font-family:'Barlow'; font-size:13px; color:var(--grey); line-height:1.7;">
-        📚 <strong style="color:var(--gold);">Looking for Grades?</strong> They moved to your <a href="#" onclick="event.preventDefault(); showPanel('players');" style="color:var(--gold); font-weight:700; text-decoration:none;">Profile tab</a> — grades are part of who you are, not a separate goal.
-      </div>
-    </div>
-
-  </div><!-- END panel-goals -->
+  <div class="panel" id="panel-goals" style="display:none;"></div><!-- panel-goals removed; goals now live on Dashboard -->
 
   <!-- ══════════════════════════════════════════ TEAM ══ -->
   <div class="panel" id="panel-team">
@@ -5006,6 +4992,7 @@ function deleteGoal(id) {
 
 function renderGoals() {
   const container = document.getElementById('goals-list');
+  if (!container) return;
   if (!state.goals.length) {
     container.innerHTML = `<div style="color:var(--grey); font-size:14px; padding:16px 0;">No goals set yet. Add up to 3 measurable goals for the season.</div>`;
     return;
