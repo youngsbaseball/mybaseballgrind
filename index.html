@@ -1094,20 +1094,20 @@ function dismissIosBanner() {
   </div>
 </div>
 
-<!-- ── GRADE CHECK NAG OVERLAY (weekly) ── -->
+<!-- ── GRADE CHECK NAG OVERLAY (every 6 weeks) ── -->
 <div id="grade-nag-overlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.93); z-index:1001; align-items:center; justify-content:center; padding:24px; backdrop-filter:blur(12px);">
   <div style="background:#0D0D0D; border:2px solid #C9A84C; border-radius:6px; max-width:480px; width:100%; padding:28px 24px; max-height:92vh; overflow-y:auto;">
     <div style="text-align:center; margin-bottom:20px;">
       <div style="font-size:40px; line-height:1;">📚</div>
       <div style="font-family:'Bebas Neue'; font-size:28px; letter-spacing:2px; color:#C9A84C; margin-top:6px; line-height:1;">GPA CHECK</div>
-      <div style="font-family:'Barlow'; font-size:13px; color:#F4F4F4; margin-top:8px;">No Grades · No Baseball — That's the rule.</div>
+      <div style="font-family:'Barlow'; font-size:13px; color:#F4F4F4; margin-top:8px;">No Grades · No Game — That's the rule.</div>
     </div>
 
     <div style="background:#1A1400; border-left:3px solid #C9A84C; padding:12px 16px; margin-bottom:18px; font-family:'Barlow'; font-size:13px; color:#AAA; line-height:1.6;">
-      Check in honestly. This stays private on your device — just a weekly reality check so you don't fall behind.
+      Check in honestly. This stays private on your device — a grading-period reality check so you don't fall behind.
     </div>
 
-    <label style="display:block; font-family:'Barlow Condensed'; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:#AAA; margin-bottom:6px;">How are your grades this week?</label>
+    <label style="display:block; font-family:'Barlow Condensed'; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:#AAA; margin-bottom:6px;">How are your grades this grading period?</label>
     <div id="grade-nag-options" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:16px;">
       <button class="grade-nag-btn" data-val="all-a" onclick="selectGradeNagOption(this)" style="background:#1A1A1A; border:1px solid #2A2A2A; color:#F4F4F4; font-family:'Barlow Condensed'; font-size:13px; font-weight:700; letter-spacing:1px; text-transform:uppercase; padding:14px 10px; border-radius:4px; cursor:pointer;">🏆 All A's</button>
       <button class="grade-nag-btn" data-val="a-b" onclick="selectGradeNagOption(this)" style="background:#1A1A1A; border:1px solid #2A2A2A; color:#F4F4F4; font-family:'Barlow Condensed'; font-size:13px; font-weight:700; letter-spacing:1px; text-transform:uppercase; padding:14px 10px; border-radius:4px; cursor:pointer;">✅ A's &amp; B's</button>
@@ -1115,7 +1115,7 @@ function dismissIosBanner() {
       <button class="grade-nag-btn" data-val="help" onclick="selectGradeNagOption(this)" style="background:#1A1A1A; border:1px solid #2A2A2A; color:#F4F4F4; font-family:'Barlow Condensed'; font-size:13px; font-weight:700; letter-spacing:1px; text-transform:uppercase; padding:14px 10px; border-radius:4px; cursor:pointer;">🆘 Need Help</button>
     </div>
 
-    <label style="display:block; font-family:'Barlow Condensed'; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:#AAA; margin-bottom:6px;">Which class needs the most work this week?</label>
+    <label style="display:block; font-family:'Barlow Condensed'; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:#AAA; margin-bottom:6px;">Which class needs the most work right now?</label>
     <input type="text" id="grade-nag-subject" placeholder="e.g. Algebra, History, English..." style="width:100%; background:#1A1A1A; border:1px solid #2A2A2A; color:#F4F4F4; padding:12px; border-radius:4px; font-family:'Barlow'; font-size:14px; margin-bottom:16px; box-sizing:border-box;">
 
     <div id="grade-nag-message" style="display:none; background:#1A1400; border:1px solid #8B6914; border-radius:4px; padding:12px 14px; margin-bottom:16px; font-family:'Barlow'; font-size:12px; color:#F4F4F4; line-height:1.6;"></div>
@@ -1124,7 +1124,7 @@ function dismissIosBanner() {
       Pick an option above
     </button>
     <div style="text-align:center; margin-top:12px; font-family:'Barlow'; font-size:11px; color:#555;">
-      📚 No Grades · No Baseball — The Grind
+      📚 No Grades · No Game — The Grind
     </div>
   </div>
 </div>
@@ -1488,7 +1488,7 @@ function dismissIosBanner() {
           <div style="padding:6px 0; border-bottom:1px solid var(--border);">💪 Arm Care — non-negotiable daily</div>
           <div style="padding:6px 0; border-bottom:1px solid var(--border);">📓 Post-Game Journal — every game</div>
           <div style="padding:6px 0; border-bottom:1px solid var(--border);">🗣️ Talk to your coaches weekly</div>
-          <div style="padding:6px 0;">📚 GPA check — No Grades, No Baseball</div>
+          <div style="padding:6px 0;">📚 GPA check — No Grades, No Game</div>
         </div>
       </div>
 
@@ -2192,11 +2192,11 @@ function dismissIosBanner() {
     </div>
 
     <!-- ═══ 5) ACADEMICS — Grades live below identity & about-me ═══════════════ -->
-    <!-- "No Grades · No Baseball" stays a Priority #1 card via styling, but the natural reading order is: who I am → what I do on the field → my academic reality. -->
+    <!-- "No Grades · No Game" stays a Priority #1 card via styling, but the natural reading order is: who I am → what I do on the field → my academic reality. -->
     <div class="card" style="margin-bottom:16px; background:linear-gradient(135deg,#141A14,#101410); border:2px solid #5A8A3A; box-shadow:0 0 0 1px rgba(168,217,123,0.08);">
       <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px; flex-wrap:wrap;">
         <span style="background:#5A8A3A; color:#F4F4F4; font-family:'Barlow Condensed'; font-size:10px; font-weight:800; letter-spacing:2px; text-transform:uppercase; padding:3px 9px; border-radius:2px;">Priority #1</span>
-        <div class="card-title" style="color:#A8D97B; margin:0;">📚 Academics — No Grades · No Baseball</div>
+        <div class="card-title" style="color:#A8D97B; margin:0;">📚 Academics — No Grades · No Game</div>
       </div>
 
       <div style="background:rgba(168,217,123,0.06); border:1px solid #1A3A1A; border-radius:2px; padding:12px 14px; margin-bottom:16px; font-size:13px; color:var(--light); line-height:1.7;">
@@ -2955,7 +2955,7 @@ function dismissIosBanner() {
         </div>
         <div style="background:var(--card2); border-radius:3px; padding:12px 14px; border-left:3px solid var(--gold);">
           <div style="font-family:'Barlow Condensed'; font-size:13px; font-weight:700; color:var(--gold); margin-bottom:2px;">🏆 Goals & Grades</div>
-          <div style="font-family:'Barlow'; font-size:12px; color:var(--grey);">No Grades · No Baseball</div>
+          <div style="font-family:'Barlow'; font-size:12px; color:var(--grey);">No Grades · No Game</div>
         </div>
         <div style="background:var(--card2); border-radius:3px; padding:12px 14px; border-left:3px solid var(--gold);">
           <div style="font-family:'Barlow Condensed'; font-size:13px; font-weight:700; color:var(--gold); margin-bottom:2px;">📏 Physical Dev</div>
@@ -3252,7 +3252,7 @@ const months = [
     intro: "May is the grind month. Your body is tired, your schedule is packed, and the season feels long. Do it anyway. Hit every day. Lift twice a week. Arm care every single morning. And Sunday — give it to your family. The players who manage their body and their relationships through May are the ones who peak in June and July.",
     weeks: [
       { title: "Week 1 — Stay in the Routine No Matter What", content: "This is the week players start skipping things because they are tired. Do not be that player.\n\n🏋️ MON · WED — Maintenance Lifting: Same program. Your body needs this to stay strong through the long season. Do not skip it.\n⚾ EVERY DAY — Hitting: Minimum 30 focused swings. Tired hitters who stay mechanical slump less. Keep the groove sharp.\n🩹 DAILY — Arm Care: May is prime arm-injury month. Do not skip the bands. Not once.\n😴 SUNDAY — Rest. Your family misses you. Give them this day and come back Monday recharged." },
-      { title: "Week 2 — Midseason Check-In", content: "Where are your stats? More importantly — are you helping your team win? Pull your numbers and be honest with yourself.\n\n🏋️ MON · WED — Maintenance Lifting: Stay consistent. Your legs power everything — do not let them go.\n⚾ EVERY DAY — Hitting: If you are slumping — hit more, not less. Back to basics. Tee, soft toss, front toss. Find the feel.\n📊 — Check your grades too. No grades, no baseball. Handle it now.\n😴 SUNDAY — Rest. Lunch with the family. Watch a game. Come back ready." },
+      { title: "Week 2 — Midseason Check-In", content: "Where are your stats? More importantly — are you helping your team win? Pull your numbers and be honest with yourself.\n\n🏋️ MON · WED — Maintenance Lifting: Stay consistent. Your legs power everything — do not let them go.\n⚾ EVERY DAY — Hitting: If you are slumping — hit more, not less. Back to basics. Tee, soft toss, front toss. Find the feel.\n📊 — Check your grades too. No grades, no game. Handle it now.\n😴 SUNDAY — Rest. Lunch with the family. Watch a game. Come back ready." },
       { title: "Week 3 — Handle Failure Like a Pro", content: "Every great player goes through rough stretches in May. How you handle it determines how June goes.\n\n🏋️ MON · WED — Maintenance Lifting: Non-negotiable. Consistent players finish strong.\n⚾ EVERY DAY — Hitting: Build your reset routine. Bad game last night? Get in the cage this morning. Reset the feel before it becomes a mental problem.\n🧠 MENTAL — What is your process after a strikeout? After an error? Write it down and practice it.\n😴 SUNDAY — Rest and family. A player who is happy at home is a player who plays free." },
       { title: "Week 4 — Post-Game Journal Every Game", content: "Close the book on every game. Write one honest entry. What happened. What I did for my team. What I am taking into tomorrow.\n\n🏋️ MON · WED — Maintenance Lifting: Keep it going. You are building a body that finishes the season strong.\n⚾ EVERY DAY — Hitting: Never miss. The streak matters. Count the days and protect the number.\n📓 — One post-game journal entry every game. The journal does not lie.\n😴 SUNDAY — Family. Rest. Love the people who make this all possible." }
     ],
@@ -3264,7 +3264,7 @@ const months = [
     weeks: [
       { title: "Week 1 — Arm Care is Your Job Right Now", content: "June is when the wear shows. Your arm has been working since February. Take care of it like a professional.\n\n🏋️ MON · WED — Maintenance Lifting: Full body, moderate load. Protect your body for the stretch run.\n⚾ EVERY DAY — Hitting: Still every day. Plate discipline focus — know your zone, stop chasing. Quality at-bats.\n🩹 DAILY — Arm Care: Band work, shoulder mobility, forearm flexibility. Every single day. If something hurts — tell your coach. Do not throw through pain.\n😴 SUNDAY — Rest. Family. Recharge. Your arm needs this day as much as everything else." },
       { title: "Week 2 — Plate Discipline", content: "Two-strike approach. Know your zone. Stop expanding early in counts. Chart every at-bat and find the pattern.\n\n🏋️ MON · WED — Maintenance Lifting: Same program. Stay disciplined in the weight room just like in the batters box.\n⚾ EVERY DAY — Hitting: Every swing with a purpose — not just getting hacks in. What pitch? What part of the field? Intentional swings every day.\n📋 — Chart your at-bats. Look for patterns in what pitchers are throwing you.\n😴 SUNDAY — Rest. Spend time with your family. Disconnect from baseball for one day." },
-      { title: "Week 3 — Finals & Grades", content: "Handle your classroom before you handle the field. Finals are here.\n\n🏋️ MON · WED — Maintenance Lifting: Stay consistent — even during finals week.\n⚾ EVERY DAY — Hitting: Keep the daily habit even when school gets busy. 20 focused tee swings is better than zero.\n📚 — Pull every grade right now. Talk to your teachers. No grades, no baseball — that is not a threat, that is the rule.\n😴 SUNDAY — Family and rest. Study if you need to, but step away from the grind." },
+      { title: "Week 3 — Finals & Grades", content: "Handle your classroom before you handle the field. Finals are here.\n\n🏋️ MON · WED — Maintenance Lifting: Stay consistent — even during finals week.\n⚾ EVERY DAY — Hitting: Keep the daily habit even when school gets busy. 20 focused tee swings is better than zero.\n📚 — Pull every grade right now. Talk to your teachers. No grades, no game — that is not a threat, that is the rule.\n😴 SUNDAY — Family and rest. Study if you need to, but step away from the grind." },
       { title: "Week 4 — Close the First Half Strong", content: "How has your season gone? Are you helping your team win? What does the second half need to look like?\n\n🏋️ MON · WED — Maintenance Lifting: Finish the first half strong in the weight room.\n⚾ EVERY DAY — Hitting: Talk to your coach and instructor about your first-half adjustments. Then get in the cage and work on them every day.\n🗺️ — Plan your summer. Travel ball? Showcases? Rest? Know your path before July arrives.\n😴 SUNDAY — Family. Rest. This one matters — June is hard and your family has been holding things down while you grind." }
     ],
     note: "Finish June strong. Take care of your arm like it is your livelihood — because for many of you, it is. Hit every day. Lift twice a week. And give Sunday to the people who love you. The players who do all of that are the ones who show up to July showcases looking sharp."
@@ -3287,7 +3287,7 @@ const months = [
       { title: "Week 1 — Weight Room: Hit It Hard", content: "Your rest is over. This is where the real work begins.\n\n🏋️ MON · TUE · THU · FRI — Weight Room: Heavy compound lifts. Squats, deadlifts, bench press, rows, pull-ups. Build your legs and posterior chain. Progressive overload every week. Track your numbers.\n⚾ MON–SAT — Hitting (Wood Bat, Every Day): All swings are with wood from now through December. Tee, soft toss, front toss — wood only. Minimum 50 swings daily.\n🤸 WED — Active recovery: stretching, mobility, light cardio.\n😴 SUNDAY — Rest. Family. Absolutely non-negotiable. Your body needs this day." },
       { title: "Week 2 — Speed and Explosion", content: "Explosion is bat speed. Explosion is arm strength. Build it now.\n\n🏋️ MON · TUE · THU · FRI — Weight Room: Add box jumps, broad jumps, med ball rotational work alongside compound lifts. Train like an athlete.\n⚾ MON–SAT — Hitting (Wood Bat, Every Day): 75 swings. Film your sessions. Send to your instructor. Implement feedback the next day — not next week, the next day.\n🏃 WED — Sprint work: 10-yard, 30-yard, 60-yard dashes. Time yourself. Track it. You should be getting faster.\n😴 SUNDAY — Rest. Family dinner. Church. Something that fills you up." },
       { title: "Week 3 — Wood Bats Every Single Day", content: "The players who swing wood every day in August show up to March with a different bat path than everyone else.\n\n🏋️ MON · TUE · THU · FRI — Weight Room: Same program. Progressive overload — add weight each week.\n⚾ MON–SAT — Hitting (Wood Bat, Every Day): 75–100 swings. Tee one day, soft toss the next, front toss the next. Rotate. Never mindless reps.\n🤸 WED — Mobility, flexibility, arm care maintenance.\n😴 SUNDAY — Rest. Your body is working harder right now than at any other point in the year. Sunday is how you keep doing it." },
-      { title: "Week 4 — Reflect on Last Season", content: "Pull your game journals from this past season. Top 3 improvements. Top 2 things to fix. Write it down and bring it to your instructor.\n\n🏋️ MON · TUE · THU · FRI — Weight Room: Best week of the month. Try to hit a personal best on one lift.\n⚾ MON–SAT — Hitting (Wood Bat, Every Day): 100 swings. Film your best session of the week. This is August work — it shows up in March.\n📚 — School is starting back up. Pull your grades from day one. No grades, no baseball.\n😴 SUNDAY — Family. Rest. Reflect on what you are building." }
+      { title: "Week 4 — Reflect on Last Season", content: "Pull your game journals from this past season. Top 3 improvements. Top 2 things to fix. Write it down and bring it to your instructor.\n\n🏋️ MON · TUE · THU · FRI — Weight Room: Best week of the month. Try to hit a personal best on one lift.\n⚾ MON–SAT — Hitting (Wood Bat, Every Day): 100 swings. Film your best session of the week. This is August work — it shows up in March.\n📚 — School is starting back up. Pull your grades from day one. No grades, no game.\n😴 SUNDAY — Family. Rest. Reflect on what you are building." }
     ],
     note: "August is when the separation happens. Everyone rests when the season ends. The players who get back in the weight room and pick up a wood bat in August are the ones who show up to opening day looking like a different player. Hit every day. Lift four days a week. Rest on Sunday. Repeat."
   },
@@ -3308,7 +3308,7 @@ const months = [
     weeks: [
       { title: "Week 1 — Peak Month: Weight Room Hard", content: "Your heaviest lifts of the entire off-season happen in October. This is the window — take advantage of it.\n\n🏋️ MON · TUE · THU · FRI — Weight Room: Max effort. Heaviest squats, deadlifts, bench, rows of the off-season. Recruit a training partner — push each other to places you would not go alone.\n⚾ MON–SAT — Hitting (Wood Bat, Every Day): 100 swings. High-rep sessions. These October swings become March batting averages.\n🤸 WED — Mobility, ladder drills, position-specific footwork.\n😴 SUNDAY — Rest. Family. October Sundays are special — the weather is turning and the people who love you want to spend time with you." },
       { title: "Week 2 — Explosion and Footwork", content: "Strength is built. Now make it athletic.\n\n🏋️ MON · TUE · THU · FRI — Weight Room: Add plyometric work — box jumps, broad jumps, lateral bounds — alongside compound lifts.\n⚾ MON–SAT — Hitting (Wood Bat, Every Day): Film every session this week. Identify one mechanical thing to fix and work on it every day.\n🏃 WED — Ladder drills 3x. Infielders: DP footwork and range. Outfielders: drop-step and first-step reads. Pitchers: hip and core explosion.\n😴 SUNDAY — Rest and family. Always." },
-      { title: "Week 3 — Wood Bats + Instructional Work", content: "October swings are investments in March results. Treat every swing that way.\n\n🏋️ MON · TUE · THU · FRI — Weight Room: Try to hit a personal best this week on your strongest lift.\n⚾ MON–SAT — Hitting (Wood Bat, Every Day): Book a lesson with your instructor this week. Bring what you have been working on. Implement feedback immediately.\n📚 — Mid-terms are here. Pull every grade. No grades, no baseball — handle it before it becomes a problem.\n😴 SUNDAY — Rest. Family. Lunch somewhere good." },
+      { title: "Week 3 — Wood Bats + Instructional Work", content: "October swings are investments in March results. Treat every swing that way.\n\n🏋️ MON · TUE · THU · FRI — Weight Room: Try to hit a personal best this week on your strongest lift.\n⚾ MON–SAT — Hitting (Wood Bat, Every Day): Book a lesson with your instructor this week. Bring what you have been working on. Implement feedback immediately.\n📚 — Mid-terms are here. Pull every grade. No grades, no game — handle it before it becomes a problem.\n😴 SUNDAY — Rest. Family. Lunch somewhere good." },
       { title: "Week 4 — Build Toward November", content: "October ends and November shifts gears — but you finish October strong.\n\n🏋️ MON · TUE · THU · FRI — Weight Room: Strongest week of the month. Leave nothing in the tank.\n⚾ MON–SAT — Hitting (Wood Bat, Every Day): 100 swings. Strong finish to peak month. Film your best session.\n📋 — What did you build in October? Write it down. Strength numbers, swing reps, miles run. See the work on paper.\n😴 SUNDAY — Rest and family. You put in your hardest month of the off-season. This Sunday, you earned the couch." }
     ],
     note: "Most players are asleep in October. That is your advantage. Peak strength month — push the weight room like it is your job. Swing wood every day. And give Sunday to your family, your faith, and your rest. That is the full picture of what it takes to show up in March looking like a different player."
@@ -4355,7 +4355,7 @@ function buildCalendar() {
               <input type="number" step="0.1" min="0" max="4" placeholder="0.0" style="width:80px; margin-bottom:0; padding:6px 10px; font-size:13px;">
             </div>
             <div style="align-self:flex-end;">
-              <div style="font-family:'Barlow Condensed',sans-serif; font-size:11px; letter-spacing:1px; color:var(--grey); padding-bottom:6px;">No Grades, No Baseball.</div>
+              <div style="font-family:'Barlow Condensed',sans-serif; font-size:11px; letter-spacing:1px; color:var(--grey); padding-bottom:6px;">No Grades, No Game.</div>
             </div>
           </div>
         </div>
@@ -6538,7 +6538,7 @@ const YBG_QUOTES = [
   { q: "The best hitters I ever coached failed 7 out of 10 times. They kept swinging.",             a: "The Grind" },
   { q: "A great teammate is worth more than a great player. Be both.",                              a: "The Grind" },
   { q: "Your mental game is your biggest advantage. Protect it. Train it.",                         a: "The Grind" },
-  { q: "No grades, no baseball. That is not a threat — that is a gift.",                            a: "The Grind" },
+  { q: "No grades, no game. That is not a threat — that is a gift.",                                a: "The Grind" },
   { q: "Scouts watch how you run to first base after a groundout. Run hard. Always.",               a: "The Grind" },
   { q: "You are not too good for the basics. Nobody is.",                                           a: "The Grind" },
   { q: "Sleep is a performance tool. Treat it like one.",                                           a: "The Grind" },
@@ -7156,20 +7156,20 @@ function checkGradeNag() {
   const LAST_KEY = 'ybg_grade_check_last';
   const last = parseInt(localStorage.getItem(LAST_KEY) || '0', 10);
   const now = Date.now();
-  const SEVEN_DAYS = 7 * 24 * 60 * 60 * 1000;
+  const SIX_WEEKS = 42 * 24 * 60 * 60 * 1000;
 
-  // First-time users: wait 2 days of app use before first nag (not immediate)
+  // First-time users: wait 1 week of app use before first nag (not immediate)
   const firstUseKey = 'ybg_first_use';
   let firstUse = parseInt(localStorage.getItem(firstUseKey) || '0', 10);
   if (!firstUse) {
     localStorage.setItem(firstUseKey, String(now));
     firstUse = now;
   }
-  const TWO_DAYS = 2 * 24 * 60 * 60 * 1000;
-  if (!last && (now - firstUse) < TWO_DAYS) return;
+  const ONE_WEEK = 7 * 24 * 60 * 60 * 1000;
+  if (!last && (now - firstUse) < ONE_WEEK) return;
 
-  // Show nag every 7 days
-  if (!last || (now - last) > SEVEN_DAYS) {
+  // Show nag every 6 weeks (matches a typical school grading period)
+  if (!last || (now - last) > SIX_WEEKS) {
     setTimeout(showGradeNag, 1500); // slight delay so page is rendered first
   }
 }
@@ -7223,7 +7223,7 @@ function selectGradeNagOption(btn) {
     if (val === 'all-a')    text = '🏆 <strong>That\'s it.</strong> The field is where you play. The classroom is where you earn the field. Keep stacking.';
     if (val === 'a-b')      text = '✅ <strong>Solid.</strong> Don\'t get comfortable — pick one class this week and push it up.';
     if (val === 'slipping') text = '⚠️ <strong>Catch it now.</strong> Talk to that teacher before Friday. A 15-minute check-in saves a whole semester.';
-    if (val === 'help')     text = '🆘 <strong>Ask for help today.</strong> Not next week. Talk to your teacher, a parent, or your coach. No grades, no baseball — but nobody expects you to figure it out alone.';
+    if (val === 'help')     text = '🆘 <strong>Ask for help today.</strong> Not next week. Talk to your teacher, a parent, or your coach. No grades, no game — but nobody expects you to figure it out alone.';
     msg.innerHTML = text;
     msg.style.display = 'block';
   }
