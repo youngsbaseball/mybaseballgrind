@@ -4,12 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>MyGrind — Start Your Journey</title>
-<meta name="theme-color" content="#0A0A0A">
+<meta name="theme-color" content="#1E1A17318">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@700&family=Barlow:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-body { background: #0A0A0A; color: #F5F5F5; font-family: 'Barlow', Arial, sans-serif; font-size: 16px; min-height: 100vh; }
+body { background: #181614; color: #F5F0EB; font-family: 'Barlow', Arial, sans-serif; font-size: 16px; min-height: 100vh; }
 
 /* ── SCREENS ── */
 .screen { display: none; flex-direction: column; min-height: 100vh; padding: 0 0 80px; }
@@ -17,49 +17,49 @@ body { background: #0A0A0A; color: #F5F5F5; font-family: 'Barlow', Arial, sans-s
 .screen-body { padding: 24px 24px 0; flex: 1; }
 
 /* ── PROGRESS BAR ── */
-.prog-wrap { padding: 14px 24px 0; background: #0A0A0A; position: sticky; top: 0; z-index: 10; }
-.prog-track { height: 3px; background: #222; border-radius: 2px; overflow: hidden; }
+.prog-wrap { padding: 14px 24px 0; background: #181614; position: sticky; top: 0; z-index: 10; }
+.prog-track { height: 3px; background: #2A2622; border-radius: 2px; overflow: hidden; }
 .prog-fill { height: 100%; background: #C9A84C; border-radius: 2px; transition: width 0.4s ease; }
 .prog-label { display: flex; justify-content: space-between; margin-top: 5px; padding-bottom: 10px; }
-.prog-step { font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #555; }
+.prog-step { font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #6B5E52; }
 
 /* ── TYPE ── */
 .badge { font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: #C9A84C; margin-bottom: 5px; }
-h1 { font-family: 'Bebas Neue', Arial, sans-serif; font-size: 34px; letter-spacing: 1.5px; line-height: 1.1; color: #F5F5F5; margin-bottom: 8px; }
+h1 { font-family: 'Bebas Neue', Arial, sans-serif; font-size: 34px; letter-spacing: 1.5px; line-height: 1.1; color: #F5F0EB; margin-bottom: 8px; }
 h1 span { color: #C9A84C; }
-.sub { font-size: 15px; color: #999; line-height: 1.7; margin-bottom: 18px; }
+.sub { font-size: 15px; color: #A89880; line-height: 1.7; margin-bottom: 18px; }
 .gold-bar { width: 36px; height: 3px; background: #C9A84C; margin-bottom: 14px; }
 
 /* ── OPTION BUTTONS ── */
-.opt { display: block; width: 100%; background: #1A1A1A; border: 1px solid #2E2E2E; border-radius: 6px; padding: 14px 16px; font-family: 'Barlow', Arial, sans-serif; font-size: 16px; color: #CCC; text-align: left; cursor: pointer; margin-bottom: 8px; transition: border-color 0.15s, background 0.15s, color 0.15s; -webkit-user-select: none; user-select: none; }
+.opt { display: block; width: 100%; background: #231F1C; border: 1px solid #3D3530; border-radius: 6px; padding: 14px 16px; font-family: 'Barlow', Arial, sans-serif; font-size: 16px; color: #D4C8BC; font-weight: 500; text-align: left; cursor: pointer; margin-bottom: 8px; transition: border-color 0.15s, background 0.15s, color 0.15s; -webkit-user-select: none; user-select: none; }
 .opt:active { border-color: #C9A84C; background: rgba(201,168,76,0.1); color: #C9A84C; }
 .opt.selected { border-color: #C9A84C; background: rgba(201,168,76,0.1); color: #C9A84C; }
 .opt.selected::after { content: ' ✓'; float: right; }
 
 /* ── SPORT CARDS ── */
-.sport-card { display: flex; align-items: center; gap: 16px; background: #1A1A1A; border: 2px solid #2E2E2E; border-radius: 10px; padding: 18px 20px; cursor: pointer; margin-bottom: 10px; transition: all 0.2s; -webkit-user-select: none; user-select: none; }
+.sport-card { display: flex; align-items: center; gap: 16px; background: #231F1C; border: 2px solid #3D3530; border-radius: 10px; padding: 18px 20px; cursor: pointer; margin-bottom: 10px; transition: all 0.2s; -webkit-user-select: none; user-select: none; }
 .sport-card:active { border-color: #C9A84C; background: rgba(201,168,76,0.08); }
 .sport-emoji { font-size: 36px; line-height: 1; flex-shrink: 0; }
-.sport-name { font-family: 'Bebas Neue', Arial, sans-serif; font-size: 26px; letter-spacing: 1.5px; color: #F5F5F5; }
-.sport-desc { font-size: 14px; color: #666; margin-top: 2px; }
+.sport-name { font-family: 'Bebas Neue', Arial, sans-serif; font-size: 26px; letter-spacing: 1.5px; color: #F5F0EB; }
+.sport-desc { font-size: 14px; color: #A89880; margin-top: 2px; }
 
 /* ── CARDS ── */
-.card { background: #1A1A1A; border: 1px solid #2E2E2E; border-radius: 8px; padding: 16px; margin-bottom: 12px; }
+.card { background: #231F1C; border: 1px solid #3D3530; border-radius: 8px; padding: 16px; margin-bottom: 12px; color: #D4C8BC; }
 .card-gold { background: linear-gradient(135deg,#1A1400,#0E0C00); border-color: #9A7A30; }
 .card-title { font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #C9A84C; margin-bottom: 10px; }
 
 /* ── EMAIL ── */
-.field-label { display: block; font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #777; margin-bottom: 6px; }
-input[type=email] { width: 100%; background: #1A1A1A; border: 1px solid #2E2E2E; border-radius: 4px; color: #F5F5F5; font-size: 17px; padding: 14px 14px; outline: none; margin-bottom: 6px; transition: border-color 0.2s; }
+.field-label { display: block; font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #A89880; margin-bottom: 6px; }
+input[type=email] { width: 100%; background: #231F1C; border: 1px solid #3D3530; border-radius: 4px; color: #F5F0EB; font-size: 17px; padding: 14px 14px; outline: none; margin-bottom: 6px; transition: border-color 0.2s; }
 input[type=email]:focus { border-color: #C9A84C; }
-.field-note { font-size: 14px; color: #555; margin-bottom: 14px; line-height: 1.5; }
+.field-note { font-size: 14px; color: #6B5E52; margin-bottom: 14px; line-height: 1.5; }
 
 /* ── REVIEWS ── */
 .stars { color: #FFD700; font-size: 14px; letter-spacing: 1px; }
-.review { background: #1A1A1A; border: 1px solid #2E2E2E; border-radius: 6px; padding: 12px 14px; margin-bottom: 8px; }
-.review-text { font-size: 15px; color: #CCC; font-style: italic; line-height: 1.6; margin-bottom: 5px; }
+.review { background: #231F1C; border: 1px solid #3D3530; border-radius: 6px; padding: 12px 14px; margin-bottom: 8px; }
+.review-text { font-size: 15px; color: #D4C8BC; font-style: italic; line-height: 1.6; margin-bottom: 5px; }
 .review-name { font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #C9A84C; }
-.ph { background: rgba(201,168,76,0.05); border: 1px dashed #3A2E00; border-radius: 4px; padding: 6px 12px; font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: #5A4A20; text-align: center; margin-bottom: 8px; }
+.ph { background: rgba(201,168,76,0.08); border: 1px dashed #4A3A10; border-radius: 4px; padding: 6px 12px; font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: #5A4A20; text-align: center; margin-bottom: 8px; }
 
 /* ── VS COMPARISON ── */
 .vs { display: flex; gap: 8px; margin-bottom: 12px; }
@@ -67,28 +67,28 @@ input[type=email]:focus { border-color: #C9A84C; }
 .vs-bad { background: rgba(192,57,43,0.08); border: 1px solid #4A1A1A; }
 .vs-good { background: rgba(39,174,96,0.08); border: 1px solid #1A4A1A; }
 .vs-title { font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
-.vs-line { font-size: 14px; color: #CCC; margin-bottom: 5px; line-height: 1.6; }
+.vs-line { font-size: 14px; color: #D4C8BC; margin-bottom: 5px; line-height: 1.6; }
 
 /* ── PLAN CARDS ── */
-.plan { border: 1px solid #2E2E2E; border-radius: 8px; padding: 14px 16px; margin-bottom: 8px; cursor: pointer; transition: border-color 0.2s; overflow: hidden; }
+.plan { border: 1px solid #3D3530; border-radius: 8px; padding: 14px 16px; margin-bottom: 8px; cursor: pointer; transition: border-color 0.2s; overflow: hidden; }
 .plan.featured { border: 2px solid #C9A84C; }
-.plan-name { font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 17px; font-weight: 700; letter-spacing: 1px; color: #F5F5F5; }
+.plan-name { font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 17px; font-weight: 700; letter-spacing: 1px; color: #F5F0EB; }
 .plan-badge { display: inline-block; background: rgba(201,168,76,0.15); color: #C9A84C; font-size: 10px; font-weight: 700; letter-spacing: 1px; padding: 2px 8px; border-radius: 10px; margin-left: 6px; font-family: 'Barlow Condensed', Arial, sans-serif; text-transform: uppercase; }
-.plan-price { font-size: 14px; color: #555; margin-top: 3px; }
+.plan-price { font-size: 14px; color: #6B5E52; margin-top: 3px; }
 .plan-amount { font-family: 'Bebas Neue', Arial, sans-serif; font-size: 26px; color: #C9A84C; float: right; margin-top: -22px; }
 
 /* ── BUTTONS ── */
 .cta { display: block; width: 100%; background: #C9A84C; color: #080808; border: none; border-radius: 6px; padding: 16px; font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 17px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; margin-top: 8px; transition: opacity 0.2s; -webkit-user-select: none; user-select: none; }
 .cta:active { opacity: 0.85; }
-.skip { display: block; text-align: center; font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 12px; letter-spacing: 1px; color: #444; margin-top: 12px; cursor: pointer; padding: 8px; }
-.skip:active { color: #777; }
+.skip { display: block; text-align: center; font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 12px; letter-spacing: 1px; color: #4B3E35; margin-top: 12px; cursor: pointer; padding: 8px; }
+.skip:active { color: #A89880; }
 
 /* ── BOTTOM NAV ── */
-.bnav { position: fixed; bottom: 0; left: 0; right: 0; background: #0A0A0A; border-top: 1px solid #1E1E1E; display: flex; align-items: center; justify-content: space-between; padding: 10px 24px; padding-bottom: max(10px, env(safe-area-inset-bottom)); z-index: 100; }
-.back-btn { font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 13px; letter-spacing: 1px; text-transform: uppercase; color: #555; background: none; border: none; cursor: pointer; padding: 8px 0; min-width: 60px; }
-.back-btn:active { color: #888; }
+.bnav { position: fixed; bottom: 0; left: 0; right: 0; background: #181614; border-top: 1px solid #2E2824; display: flex; align-items: center; justify-content: space-between; padding: 10px 24px; padding-bottom: max(10px, env(safe-area-inset-bottom)); z-index: 100; }
+.back-btn { font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 13px; letter-spacing: 1px; text-transform: uppercase; color: #6B5E52; background: none; border: none; cursor: pointer; padding: 8px 0; min-width: 60px; }
+.back-btn:active { color: #A89880; }
 .dots { display: flex; gap: 5px; align-items: center; }
-.dot { width: 6px; height: 6px; border-radius: 50%; background: #222; transition: background 0.3s; }
+.dot { width: 6px; height: 6px; border-radius: 50%; background: #2A2622; transition: background 0.3s; }
 .dot.on { background: #C9A84C; }
 .next-btn { background: #C9A84C; color: #080808; border: none; border-radius: 4px; padding: 9px 20px; font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 13px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; min-width: 80px; -webkit-user-select: none; user-select: none; }
 .next-btn:active { opacity: 0.85; }
@@ -98,13 +98,13 @@ input[type=email]:focus { border-color: #C9A84C; }
 .sday { flex: 1; height: 32px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 1px; }
 .sday.done { background: rgba(201,168,76,0.12); color: #C9A84C; border: 1px solid #9A7A30; }
 .sday.today { background: #C9A84C; color: #080808; }
-.sday.empty { background: #1A1A1A; color: #333; }
+.sday.empty { background: #231F1C; color: #374151; }
 
 /* ── STAT MINIS ── */
 .stat-row { display: flex; gap: 6px; margin-bottom: 14px; }
-.stat-mini { flex: 1; background: #1A1A1A; border-radius: 4px; padding: 10px 6px; text-align: center; }
+.stat-mini { flex: 1; background: #231F1C; border-radius: 4px; padding: 10px 6px; text-align: center; }
 .stat-num { font-family: 'Bebas Neue', Arial, sans-serif; font-size: 26px; color: #C9A84C; line-height: 1; }
-.stat-lbl { font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: #555; margin-top: 3px; }
+.stat-lbl { font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: #6B5E52; margin-top: 3px; }
 </style>
 </head>
 <body>
@@ -119,21 +119,21 @@ input[type=email]:focus { border-color: #C9A84C; }
     <h1 style="font-size:36px;margin-bottom:10px;">The grind you put<br>in writing <span>pays off</span></h1>
     <p class="sub" style="max-width:300px;margin-bottom:24px;">Players who journal their training are 3× more likely to reach their goals. Built by Coach Young — 20+ years of player development.</p>
     <div style="width:100%;max-width:340px;margin-bottom:24px;">
-      <div style="display:flex;align-items:center;gap:12px;background:#1A1A1A;border:1px solid #2E2E2E;border-radius:6px;padding:12px 14px;margin-bottom:8px;text-align:left;">
+      <div style="display:flex;align-items:center;gap:12px;background:#231F1C;border:1px solid #3D3530;border-radius:6px;padding:12px 14px;margin-bottom:8px;text-align:left;">
         <span style="font-size:22px;">📓</span>
-        <div><div style="font-size:13px;font-weight:500;color:#F5F5F5;">Journal every session</div><div style="font-size:12px;color:#666;">Log what you did, what clicked, what to fix</div></div>
+        <div><div style="font-size:13px;font-weight:500;color:#F5F0EB;">Journal every session</div><div style="font-size:12px;color:#666;">Log what you did, what clicked, what to fix</div></div>
       </div>
-      <div style="display:flex;align-items:center;gap:12px;background:#1A1A1A;border:1px solid #2E2E2E;border-radius:6px;padding:12px 14px;margin-bottom:8px;text-align:left;">
+      <div style="display:flex;align-items:center;gap:12px;background:#231F1C;border:1px solid #3D3530;border-radius:6px;padding:12px 14px;margin-bottom:8px;text-align:left;">
         <span style="font-size:22px;">📊</span>
-        <div><div style="font-size:13px;font-weight:500;color:#F5F5F5;">Auto-track your stats</div><div style="font-size:12px;color:#666;">AVG, OBP, SLG, ERA — calculated automatically</div></div>
+        <div><div style="font-size:13px;font-weight:500;color:#F5F0EB;">Auto-track your stats</div><div style="font-size:12px;color:#666;">AVG, OBP, SLG, ERA — calculated automatically</div></div>
       </div>
-      <div style="display:flex;align-items:center;gap:12px;background:#1A1A1A;border:1px solid #2E2E2E;border-radius:6px;padding:12px 14px;text-align:left;">
+      <div style="display:flex;align-items:center;gap:12px;background:#231F1C;border:1px solid #3D3530;border-radius:6px;padding:12px 14px;text-align:left;">
         <span style="font-size:22px;">📅</span>
-        <div><div style="font-size:13px;font-weight:500;color:#F5F5F5;">12-month training plan</div><div style="font-size:12px;color:#666;">Coach-built drills matched to your position</div></div>
+        <div><div style="font-size:13px;font-weight:500;color:#F5F0EB;">12-month training plan</div><div style="font-size:12px;color:#666;">Coach-built drills matched to your position</div></div>
       </div>
     </div>
     <button class="cta" style="max-width:340px;" onclick="go(1)">Get Started →</button>
-    <div class="trial-badge" style="margin-top:14px;background:rgba(201,168,76,0.1);border:1px solid #9A7A30;border-radius:6px;padding:10px 20px;text-align:center;"><div style="font-family:'Bebas Neue',Arial,sans-serif;font-size:22px;color:#C9A84C;letter-spacing:2px;">7-DAY FREE TRIAL</div><div style="font-size:13px;color:#888;margin-top:2px;">No credit card required · Cancel anytime</div></div>
+    <div class="trial-badge" style="margin-top:14px;background:rgba(201,168,76,0.1);border:1px solid #9A7A30;border-radius:6px;padding:10px 20px;text-align:center;"><div style="font-family:'Bebas Neue',Arial,sans-serif;font-size:22px;color:#C9A84C;letter-spacing:2px;">7-DAY FREE TRIAL</div><div style="font-size:13px;color:#A89880;margin-top:2px;">No credit card required · Cancel anytime</div></div>
   </div>
 </div>
 
@@ -192,7 +192,7 @@ input[type=email]:focus { border-color: #C9A84C; }
     <h1>What position<br><span>do you play?</span></h1>
     <div class="gold-bar"></div>
     <p class="sub">Select all that apply — many players cover multiple positions.</p>
-    <div style="display:inline-block;background:#1A1A1A;border:1px solid #2E2E2E;border-radius:20px;padding:4px 12px;font-family:'Barlow Condensed',Arial,sans-serif;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#555;margin-bottom:12px;">✓ Select all that apply</div>
+    <div style="display:inline-block;background:#231F1C;border:1px solid #3D3530;border-radius:20px;padding:4px 12px;font-family:'Barlow Condensed',Arial,sans-serif;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#555;margin-bottom:12px;">✓ Select all that apply</div>
     <div id="posGrid"></div>
   </div>
   <div class="bnav"><button class="back-btn" onclick="go(2)">← Back</button><div class="dots" id="d3"></div><button class="next-btn" id="n3" onclick="goNext(3,4)" disabled style="opacity:0.3;">Next →</button></div>
@@ -245,7 +245,7 @@ input[type=email]:focus { border-color: #C9A84C; }
     <h1>What are you<br><span>working toward?</span></h1>
     <div class="gold-bar"></div>
     <p class="sub">Pick everything that applies — most players have more than one goal.</p>
-    <div style="display:inline-block;background:#1A1A1A;border:1px solid #2E2E2E;border-radius:20px;padding:4px 12px;font-family:'Barlow Condensed',Arial,sans-serif;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#555;margin-bottom:12px;">✓ Select all that apply</div>
+    <div style="display:inline-block;background:#231F1C;border:1px solid #3D3530;border-radius:20px;padding:4px 12px;font-family:'Barlow Condensed',Arial,sans-serif;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#555;margin-bottom:12px;">✓ Select all that apply</div>
     <button class="opt" onclick="toggle(this,'goal','Make a travel team')">🏆 &nbsp;Make a travel / select team</button>
     <button class="opt" onclick="toggle(this,'goal','Improve specific skills')">📈 &nbsp;Improve specific skills</button>
     <button class="opt" onclick="toggle(this,'goal','Get recruited to college')">🎓 &nbsp;Get recruited to college</button>
@@ -267,7 +267,7 @@ input[type=email]:focus { border-color: #C9A84C; }
     <h1>Where do you<br><span>struggle most?</span></h1>
     <div class="gold-bar"></div>
     <p class="sub">Select all that apply — the journal is your private space, no judgment.</p>
-    <div style="display:inline-block;background:#1A1A1A;border:1px solid #2E2E2E;border-radius:20px;padding:4px 12px;font-family:'Barlow Condensed',Arial,sans-serif;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#555;margin-bottom:12px;">✓ Select all that apply</div>
+    <div style="display:inline-block;background:#231F1C;border:1px solid #3D3530;border-radius:20px;padding:4px 12px;font-family:'Barlow Condensed',Arial,sans-serif;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#555;margin-bottom:12px;">✓ Select all that apply</div>
     <button class="opt" onclick="toggle(this,'struggle','Hitting — consistency and approach')">🏏 &nbsp;Hitting — consistency and approach</button>
     <button class="opt" onclick="toggle(this,'struggle','Pitching — command and confidence')">⚾ &nbsp;Pitching — command and confidence</button>
     <button class="opt" onclick="toggle(this,'struggle','Fielding — footwork and hands')">🧤 &nbsp;Fielding — footwork and hands</button>
@@ -288,7 +288,7 @@ input[type=email]:focus { border-color: #C9A84C; }
     <h1>What has your coach<br><span>told you to work on?</span></h1>
     <div class="gold-bar"></div>
     <p class="sub">Select all that apply — we'll build these into your first journal goals.</p>
-    <div style="display:inline-block;background:#1A1A1A;border:1px solid #2E2E2E;border-radius:20px;padding:4px 12px;font-family:'Barlow Condensed',Arial,sans-serif;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#555;margin-bottom:12px;">✓ Select all that apply</div>
+    <div style="display:inline-block;background:#231F1C;border:1px solid #3D3530;border-radius:20px;padding:4px 12px;font-family:'Barlow Condensed',Arial,sans-serif;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#555;margin-bottom:12px;">✓ Select all that apply</div>
     <button class="opt" onclick="toggle(this,'coachFeedback','My bat path and swing mechanics')">🏏 &nbsp;My bat path and swing mechanics</button>
     <button class="opt" onclick="toggle(this,'coachFeedback','My footwork and fielding range')">🧤 &nbsp;My footwork and fielding range</button>
     <button class="opt" onclick="toggle(this,'coachFeedback','My throwing mechanics or arm strength')">💪 &nbsp;My throwing mechanics or arm strength</button>
@@ -349,14 +349,14 @@ input[type=email]:focus { border-color: #C9A84C; }
     <p class="sub" id="s11sub">Here's what MyGrind built based on your answers.</p>
     <div class="card card-gold" style="margin-bottom:12px;">
       <div class="card-title" id="planTitle">Your Personalized Plan</div>
-      <div style="font-size:13px;color:#CCC;line-height:2.1;" id="planItems">Loading...</div>
+      <div style="font-size:13px;color:#D4C8BC;line-height:2.1;" id="planItems">Loading...</div>
     </div>
     <div class="card" style="margin-bottom:12px;">
       <div class="card-title">Example Journal Entry</div>
-      <div style="font-size:13px;color:#CCC;line-height:1.8;">
-        <div style="padding:5px 0;border-bottom:1px solid #2E2E2E;">🟡 <strong style="color:#F5F5F5;">Drill:</strong> <span id="exDrill">Tee work — inside pitch, 40 reps</span></div>
-        <div style="padding:5px 0;border-bottom:1px solid #2E2E2E;">🟡 <strong style="color:#F5F5F5;">Feel:</strong> Making contact but pulling off the ball</div>
-        <div style="padding:5px 0;">🟡 <strong style="color:#F5F5F5;">Fix:</strong> Stay back, shoulder level through contact</div>
+      <div style="font-size:13px;color:#D4C8BC;line-height:1.8;">
+        <div style="padding:5px 0;border-bottom:1px solid #3D3530;">🟡 <strong style="color:#F5F0EB;">Drill:</strong> <span id="exDrill">Tee work — inside pitch, 40 reps</span></div>
+        <div style="padding:5px 0;border-bottom:1px solid #3D3530;">🟡 <strong style="color:#F5F0EB;">Feel:</strong> Making contact but pulling off the ball</div>
+        <div style="padding:5px 0;">🟡 <strong style="color:#F5F0EB;">Fix:</strong> Stay back, shoulder level through contact</div>
       </div>
     </div>
     <div class="streak-row">
@@ -384,14 +384,14 @@ input[type=email]:focus { border-color: #C9A84C; }
     <div class="gold-bar"></div>
     <div class="card" style="margin-bottom:12px;">
       <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
-        <div style="font-family:'Bebas Neue',Arial,sans-serif;font-size:48px;color:#F5F5F5;line-height:1;">4.9</div>
+        <div style="font-family:'Bebas Neue',Arial,sans-serif;font-size:48px;color:#F5F0EB;line-height:1;">4.9</div>
         <div>
           <div class="stars">★★★★★</div>
           <!-- UPDATE ratingCount with real number once you have beta reviews -->
           <div style="font-size:11px;color:#444;letter-spacing:1px;font-family:'Barlow Condensed',Arial,sans-serif;text-transform:uppercase;margin-top:3px;" id="ratingCount">Early Access · Beta Ratings</div>
         </div>
       </div>
-      <div style="height:1px;background:#2E2E2E;margin-bottom:12px;"></div>
+      <div style="height:1px;background:#3D3530;margin-bottom:12px;"></div>
 
       <!-- REVIEW 1 — REPLACE WITH REAL BETA PLAYER QUOTE -->
       <div class="ph">⭐ Beta Player — Replace with real quote</div>
@@ -420,7 +420,7 @@ input[type=email]:focus { border-color: #C9A84C; }
 
     <div style="background:rgba(201,168,76,0.06);border-left:3px solid #C9A84C;padding:12px 14px;border-radius:0 4px 4px 0;margin-bottom:16px;">
       <div style="font-family:'Barlow Condensed',Arial,sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#C9A84C;margin-bottom:5px;">Coach Young — 20+ Years · Trained alongside Reggie Smith</div>
-      <div style="font-size:13px;color:#CCC;font-style:italic;line-height:1.6;">"The players who keep records always outpace the ones who don't — no matter the talent level. That's not an opinion. That's 20 years of watching kids work."</div>
+      <div style="font-size:13px;color:#D4C8BC;font-style:italic;line-height:1.6;">"The players who keep records always outpace the ones who don't — no matter the talent level. That's not an opinion. That's 20 years of watching kids work."</div>
     </div>
   </div>
   <div class="bnav"><button class="back-btn" onclick="go(11)">← Back</button><div class="dots" id="d12"></div><button class="next-btn" onclick="go(13)">Next →</button></div>
@@ -455,10 +455,10 @@ input[type=email]:focus { border-color: #C9A84C; }
     </div>
     <div class="card" style="text-align:center;padding:16px;margin-bottom:14px;">
       <div style="font-family:'Bebas Neue',Arial,sans-serif;font-size:32px;color:#C9A84C;line-height:1;margin-bottom:4px;">$0.17 <span style="font-size:18px;color:#555;">/day</span></div>
-      <div style="font-size:13px;color:#666;line-height:1.6;">Less than one minute of a private lesson.<br><strong style="color:#F5F5F5;">More than any lesson you will ever forget.</strong></div>
+      <div style="font-size:13px;color:#666;line-height:1.6;">Less than one minute of a private lesson.<br><strong style="color:#F5F0EB;">More than any lesson you will ever forget.</strong></div>
     </div>
     <div class="card card-gold" style="margin-bottom:8px;">
-      <div style="font-size:13px;color:#CCC;line-height:2.1;">
+      <div style="font-size:13px;color:#D4C8BC;line-height:2.1;">
         <div><span style="color:#C9A84C;font-weight:700;">✓</span> &nbsp;Full personalized plan unlocked</div>
         <div><span style="color:#C9A84C;font-weight:700;">✓</span> &nbsp;Daily journal prompts activated</div>
         <div><span style="color:#C9A84C;font-weight:700;">✓</span> &nbsp;12-month training calendar included</div>
@@ -490,24 +490,24 @@ input[type=email]:focus { border-color: #C9A84C; }
     </div>
 
     <div class="plan" id="planMonthly" onclick="pickPlan('monthly')">
-      <div class="plan-amount" style="color:#F5F5F5;">$8.99<span style="font-size:14px;color:#666;">/mo</span></div>
+      <div class="plan-amount" style="color:#F5F0EB;">$8.99<span style="font-size:14px;color:#666;">/mo</span></div>
       <div class="plan-name">Monthly</div>
       <div class="plan-price">Billed $8.99/mo · Cancel anytime</div>
     </div>
 
     <!-- PAYWALL REVIEW — UPDATE WITH REAL BETA QUOTE -->
-    <div style="display:flex;align-items:center;gap:10px;margin:10px 0 12px;background:#1A1A1A;border:1px solid #2E2E2E;border-radius:6px;padding:10px 12px;">
+    <div style="display:flex;align-items:center;gap:10px;margin:10px 0 12px;background:#231F1C;border:1px solid #3D3530;border-radius:6px;padding:10px 12px;">
       <div class="stars">★★★★★</div>
       <div>
-        <div style="font-size:12px;color:#CCC;font-style:italic;" id="pwReview">"Wish I had this when I started — keeps everything in one place."</div>
+        <div style="font-size:12px;color:#D4C8BC;font-style:italic;" id="pwReview">"Wish I had this when I started — keeps everything in one place."</div>
         <div style="font-family:'Barlow Condensed',Arial,sans-serif;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#C9A84C;margin-top:2px;" id="pwReviewName">Beta Player · SCV</div>
       </div>
     </div>
 
-    <div style="background:#1A1A1A;border:1px solid #2E2E2E;border-radius:6px;padding:12px;text-align:center;margin-bottom:12px;"><div style="font-family:'Bebas Neue',Arial,sans-serif;font-size:20px;color:#C9A84C;letter-spacing:1px;">FREE FOR 7 DAYS</div><div style="font-size:13px;color:#777;margin-top:3px;">We'll remind you 24 hours before the trial ends.<br>No surprise charges. Cancel with one tap.</div></div>
+    <div style="background:#231F1C;border:1px solid #3D3530;border-radius:6px;padding:12px;text-align:center;margin-bottom:12px;"><div style="font-family:'Bebas Neue',Arial,sans-serif;font-size:20px;color:#C9A84C;letter-spacing:1px;">FREE FOR 7 DAYS</div><div style="font-size:13px;color:#777;margin-top:3px;">We'll remind you 24 hours before the trial ends.<br>No surprise charges. Cancel with one tap.</div></div>
     <button class="cta" id="trialCTA" onclick="startTrial()">⚾ &nbsp;Start My Free Trial →</button>
     <div class="skip" onclick="skipTrial()">Continue with limited access</div>
-    <div style="text-align:center;font-size:10px;color:#2E2E2E;margin-top:10px;padding-bottom:20px;">Secure checkout via Stripe · coach@youngsbaseball.com</div>
+    <div style="text-align:center;font-size:10px;color:#3D3530;margin-top:10px;padding-bottom:20px;">Secure checkout via Stripe · coach@youngsbaseball.com</div>
   </div>
 </div>
 
@@ -659,7 +659,7 @@ function buildDots(s) {
 function setSport(s, el) {
   d.sport = s;
   document.querySelectorAll('.sport-card').forEach(function(c) {
-    c.style.borderColor = '#2E2E2E'; c.style.background = '#1A1A1A';
+    c.style.borderColor = '#3D3530'; c.style.background = '#231F1C';
   });
   var accent = s === 'softball' ? '#D4547A' : '#C9A84C';
   el.style.borderColor = accent;
@@ -748,7 +748,7 @@ function checkEmail() {
   var inp = document.getElementById('emailInput');
   var val = inp ? inp.value.trim() : '';
   document.getElementById('emailErr').style.display = 'none';
-  inp.style.borderColor = val ? '#C9A84C' : '#2E2E2E';
+  inp.style.borderColor = val ? '#C9A84C' : '#3D3530';
 }
 
 function emailNext() {
@@ -824,10 +824,10 @@ function pickPlan(p) {
   var mon = document.getElementById('planMonthly');
   if (p === 'annual') {
     if (ann) ann.style.border = '2px solid ' + accent;
-    if (mon) mon.style.border = '1px solid #2E2E2E';
+    if (mon) mon.style.border = '1px solid #3D3530';
   } else {
     if (mon) mon.style.border = '2px solid ' + accent;
-    if (ann) ann.style.border = '1px solid #2E2E2E';
+    if (ann) ann.style.border = '1px solid #3D3530';
   }
 }
 
