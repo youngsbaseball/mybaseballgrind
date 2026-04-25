@@ -527,6 +527,58 @@ var d = {
 };
 var cur = 0;
 
+
+// ══ MAILCHIMP INTEGRATION ═════════════════════════════════════
+// Sends player email to MyGrind Waitlist audience automatically
+function subscribeToMailchimp(email, sport, goal) {
+  if (!email || !email.includes('@')) return;
+
+  var ACCOUNT = '73280b4c02e9bc56c7e633892';
+  var LIST    = 'a7d801599a';
+  var SERVER  = 'us8';
+  var TAG     = '2216797';
+
+  var goalStr = Array.isArray(goal) ? goal.join(', ') : (goal || '');
+  var sportStr = sport || '';
+
+  // Build JSONP URL — works from browser without CORS issues
+  var url = 'https://' + SERVER + '.list-manage.com/subscribe/post-json?' +
+    'u=' + ACCOUNT +
+    '&id=' + LIST +
+    '&EMAIL=' + encodeURIComponent(email) +
+    '&MERGE1=' + encodeURIComponent(sportStr) +
+    '&MERGE2=' + encodeURIComponent(goalStr) +
+    '&tags=' + TAG +
+    '&c=mcCallback_' + Date.now();
+
+  // JSONP — inject script tag to bypass CORS
+  var cbName = 'mcCallback_' + Date.now();
+  window[cbName] = function(data) {
+    if (data && data.result === 'success') {
+      console.log('[MyGrind] Mailchimp: ' + email + ' added to MyGrind Waitlist');
+    } else if (data && data.msg) {
+      // Already subscribed is fine — not an error
+      if (data.msg.indexOf('already subscribed') !== -1) {
+        console.log('[MyGrind] Mailchimp: already subscribed');
+      }
+    }
+    // Clean up
+    try { delete window[cbName]; } catch(e) {}
+  };
+
+  url = url.replace('mcCallback_' + Date.now().toString().slice(0,-1), cbName);
+
+  var script = document.createElement('script');
+  script.src = url;
+  script.onerror = function() {
+    try { document.body.removeChild(script); } catch(e) {}
+  };
+  document.body.appendChild(script);
+  setTimeout(function() {
+    try { document.body.removeChild(script); } catch(e) {}
+  }, 5000);
+}
+
 // ══ GUARD — only redirect if paid ════════════════
 (function() {
   try {
@@ -827,6 +879,11 @@ function writeToApp() {
     localStorage.setItem(ok, '1');
     localStorage.setItem('ybg_onboarding_sport', d.sport);
   } catch(e) {}
+
+  // Send email to Mailchimp MyGrind Waitlist
+  if (d.email) {
+    subscribeToMailchimp(d.email, d.sport, d.goal);
+  }
 }
 
 function fingerprint() {
