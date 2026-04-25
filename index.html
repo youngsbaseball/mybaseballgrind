@@ -1328,13 +1328,6 @@ function dismissIosBanner() {
       </div>
     </div>
 
-    <!-- ── DAILY QUOTE (rotates each day) ── -->
-    <div id="daily-quote-card" class="card" style="margin-bottom:20px; background:linear-gradient(135deg,#1A1400,#0E0C00); border-left:4px solid var(--gold); padding:18px 20px;">
-      <div style="font-family:'Barlow Condensed'; font-size:10px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:var(--grey); margin-bottom:8px;">🎯 Today's Grind</div>
-      <div id="daily-quote-text" style="font-family:Georgia,serif; font-size:15px; font-style:italic; color:var(--light); line-height:1.6;"></div>
-      <div id="daily-quote-author" style="font-family:'Barlow Condensed'; font-size:11px; letter-spacing:1.5px; color:var(--gold); margin-top:10px; text-align:right; text-transform:uppercase;"></div>
-    </div>
-
     <!-- ── MILESTONE CELEBRATION (hidden by default, shown when hit) ── -->
     <div id="milestone-card" class="card" style="display:none; margin-bottom:20px; background:linear-gradient(135deg,#C9A84C 0%,#8B6F2F 100%); border:2px solid #FFD966; padding:20px; text-align:center;">
       <div id="milestone-emoji" style="font-size:40px; line-height:1; margin-bottom:8px;">🔥</div>
@@ -1449,6 +1442,13 @@ function dismissIosBanner() {
       </div>
       <div id="arm-care-list"></div>
       <div id="arm-care-progress" style="font-family:'Barlow Condensed'; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--grey); text-align:center; margin-top:10px;"></div>
+    </div>
+
+    <!-- ── DAILY QUOTE (rotates each day) — bigger format for journal ── -->
+    <div id="daily-quote-card" class="card" style="margin-bottom:20px; background:linear-gradient(135deg,#1A1400,#0E0C00); border-left:4px solid var(--gold); padding:24px 26px;">
+      <div style="font-family:'Barlow Condensed'; font-size:12px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:var(--gold); margin-bottom:14px; text-align:center;">🎯 Today's Grind</div>
+      <div id="daily-quote-text" style="font-family:Georgia,serif; font-size:20px; font-style:italic; color:var(--white); line-height:1.6; text-align:center;"></div>
+      <div id="daily-quote-author" style="font-family:'Barlow Condensed'; font-size:13px; letter-spacing:2px; color:var(--gold); margin-top:14px; text-align:center; text-transform:uppercase;"></div>
     </div>
 
     <div class="card">
@@ -6819,7 +6819,7 @@ function buildWeeklyRecap() {
     '</div>' +
     '<div style="font-size:13px; color:var(--light);">' +
       '⚾ Games: <strong style="color:var(--gold);">' + games + '</strong> &nbsp;·&nbsp; ' +
-      '🥎 Practices: <strong style="color:var(--gold);">' + practices + '</strong> &nbsp;·&nbsp; ' +
+      '🏏 Practices: <strong style="color:var(--gold);">' + practices + '</strong> &nbsp;·&nbsp; ' +
       '💭 Reflections: <strong style="color:var(--gold);">' + reflections + '</strong>' +
     '</div>' +
     '<div style="font-size:13px; color:var(--light); margin-top:6px;">' +
