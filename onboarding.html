@@ -106,6 +106,20 @@ input[type=email]:focus { border-color: #C9A84C; }
 .stat-num { font-family: 'Bebas Neue', Arial, sans-serif; font-size: 26px; color: #C9A84C; line-height: 1; }
 .stat-lbl { font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: #6B5E52; margin-top: 3px; }
 </style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+<script>
+const firebaseConfig = {
+  apiKey:            "AIzaSyBEftxaT0v6gHYW1dz_THm-JbLQ4CaOI9c",
+  authDomain:        "my-grind-b8486.firebaseapp.com",
+  projectId:         "my-grind-b8486",
+  storageBucket:     "my-grind-b8486.firebasestorage.app",
+  messagingSenderId: "627787811658",
+  appId:             "1:627787811658:web:2558d568cd92822db90fb3"
+};
+if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+</script>
 </head>
 <body>
 
@@ -579,6 +593,41 @@ function subscribeToMailchimp(email, sport, goal) {
   }, 5000);
 }
 
+
+// ══ FIREBASE AUTH IN ONBOARDING ══════════════════════════════════
+function fbSignUpOnboarding(email, password, sport, goal) {
+  if (!email || !password) return Promise.resolve(null);
+  var name = sport ? sport.charAt(0).toUpperCase() + sport.slice(1) + ' Player' : 'Player';
+  return firebase.auth().createUserWithEmailAndPassword(email, password)
+    .then(function(cred) {
+      var user = cred.user;
+      return user.updateProfile({ displayName: name }).then(function() {
+        // Save initial profile to Firestore
+        return firebase.firestore().collection('users').doc(user.uid).set({
+          profile: {
+            sport:  sport,
+            goal:   Array.isArray(goal) ? goal.join(', ') : goal,
+            email:  email,
+            name:   name,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+          },
+          goals: Array.isArray(goal)
+            ? goal.map(function(g,i) { return { id: Date.now()+i, text: g, done: false }; })
+            : [{ id: Date.now(), text: goal, done: false }],
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+      });
+    })
+    .catch(function(e) {
+      // If email already exists — sign in instead
+      if (e.code === 'auth/email-already-in-use') {
+        return firebase.auth().signInWithEmailAndPassword(email, password)
+          .catch(function() { return null; });
+      }
+      return null;
+    });
+}
+
 // ══ GUARD — only redirect if paid ════════════════
 (function() {
   try {
@@ -883,6 +932,18 @@ function writeToApp() {
   // Send email to Mailchimp MyGrind Waitlist
   if (d.email) {
     subscribeToMailchimp(d.email, d.sport, d.goal);
+  }
+
+  // Create Firebase account (email + auto-generated password based on fingerprint)
+  if (d.email) {
+    var autoPass = 'MG-' + fingerprint() + '-2026';
+    fbSignUpOnboarding(d.email, autoPass, d.sport, d.goal)
+      .then(function(result) {
+        if (result) console.log('[Firebase] Account created for', d.email);
+      })
+      .catch(function(e) { console.warn('[Firebase] Account creation:', e); });
+    // Store password locally so app can auto-sign-in
+    try { localStorage.setItem('ybg_fb_pass', autoPass); } catch(e) {}
   }
 }
 
