@@ -1351,9 +1351,97 @@ function dismissIosBanner() {
       <div style="padding:18px 20px;">
         <div id="goals-list"></div>
 
+        <!-- ── PRESET GOALS — Quick-pick chips ── -->
+        <div style="margin-top:20px; padding:14px; background:rgba(201,168,76,0.04); border:1px solid var(--gold-dark); border-radius:4px;">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; flex-wrap:wrap; gap:6px;">
+            <div style="font-family:'Barlow Condensed'; font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--gold);">⚡ Quick-Pick Goals</div>
+            <div style="font-family:'Barlow'; font-size:11px; color:var(--grey);">Tap to add</div>
+          </div>
+          <div id="goal-presets-chips" style="display:flex; flex-wrap:wrap; gap:6px;"></div>
+
+          <!-- Full preset menu dropdown -->
+          <div style="margin-top:12px;">
+            <select id="goal-preset-menu" onchange="addPresetGoalFromMenu(this)" style="width:100%; font-size:14px; padding:11px; background:#111; border:1px solid var(--border); color:var(--light); border-radius:3px;">
+              <option value="">📋 Browse Full Goal Menu — pick to add…</option>
+              <optgroup label="🏆 Team Accolades">
+                <option value="Make All-Stars|team">Make All-Stars</option>
+                <option value="Make All-League|team">Make All-League</option>
+                <option value="Make All-Conference|team">Make All-Conference</option>
+                <option value="Make All-Region|team">Make All-Region</option>
+                <option value="Make All-State|team">Make All-State</option>
+                <option value="Make All-American|team">Make All-American</option>
+                <option value="Win Team MVP|team">Win Team MVP</option>
+                <option value="Win League/Conference Championship|team">Win League/Conference Championship</option>
+                <option value="Win State Championship|team">Win State Championship</option>
+              </optgroup>
+              <optgroup label="🎯 Roster &amp; Travel">
+                <option value="Make the Travel Team|team">Make the Travel Team</option>
+                <option value="Make Varsity|team">Make Varsity</option>
+                <option value="Earn a Starting Spot|team">Earn a Starting Spot</option>
+                <option value="Make Showcase Team Roster|team">Make Showcase Team Roster</option>
+                <option value="Get Invited to a National Tournament|team">Get Invited to a National Tournament</option>
+                <option value="Be Named Team Captain|team">Be Named Team Captain</option>
+              </optgroup>
+              <optgroup label="🎓 College &amp; Recruitment">
+                <option value="Get D1 College Looks|mental">Get D1 College Looks</option>
+                <option value="Earn a College Roster Spot|mental">Earn a College Roster Spot</option>
+                <option value="Get a Scholarship Offer|mental">Get a Scholarship Offer</option>
+                <option value="Commit to a College|mental">Commit to a College</option>
+                <option value="Build a Recruiting Highlight Reel|mental">Build a Recruiting Highlight Reel</option>
+                <option value="Attend 3 College Showcases|mental">Attend 3 College Showcases</option>
+                <option value="Get on a Scout's Radar|mental">Get on a Scout's Radar</option>
+              </optgroup>
+              <optgroup label="🏏 Hitting Milestones">
+                <option value="Hit .300 or Better This Season|hitting">Hit .300 or Better This Season</option>
+                <option value="Hit .350 or Better This Season|hitting">Hit .350 or Better This Season</option>
+                <option value="Hit .400 or Better This Season|hitting">Hit .400 or Better This Season</option>
+                <option value="Hit My First Home Run|hitting">Hit My First Home Run</option>
+                <option value="Reach OBP of .450+|hitting">Reach OBP of .450+</option>
+                <option value="Cut Strikeouts in Half|hitting">Cut Strikeouts in Half</option>
+                <option value="100 Daily Tee Swings — Every Day|hitting">100 Daily Tee Swings — Every Day</option>
+              </optgroup>
+              <optgroup label="⚾ Pitching Milestones">
+                <option value="Throw a No-Hitter|pitching">Throw a No-Hitter</option>
+                <option value="Earn ERA Under 2.50|pitching">Earn ERA Under 2.50</option>
+                <option value="Hit 80+ MPH on the Mound|pitching">Hit 80+ MPH on the Mound</option>
+                <option value="Hit 85+ MPH on the Mound|pitching">Hit 85+ MPH on the Mound</option>
+                <option value="Hit 90+ MPH on the Mound|pitching">Hit 90+ MPH on the Mound</option>
+                <option value="Strikeouts 50%+ of Batters Faced|pitching">Strikeouts 50%+ of Batters Faced</option>
+              </optgroup>
+              <optgroup label="🧤 Fielding Milestones">
+                <option value="Fielding Percentage .950+|fielding">Fielding Percentage .950+</option>
+                <option value="Make Zero Errors All Season|fielding">Make Zero Errors All Season</option>
+                <option value="Master Two New Defensive Positions|fielding">Master Two New Defensive Positions</option>
+              </optgroup>
+              <optgroup label="💪 Strength &amp; Speed">
+                <option value="Run a Sub-7.0 60-Yard|strength">Run a Sub-7.0 60-Yard</option>
+                <option value="Run a Sub-6.7 60-Yard|strength">Run a Sub-6.7 60-Yard</option>
+                <option value="Add 10 lbs of Lean Muscle|strength">Add 10 lbs of Lean Muscle</option>
+                <option value="Hit a Personal Best on Squat|strength">Hit a Personal Best on Squat</option>
+                <option value="Hit a Personal Best on Bench|strength">Hit a Personal Best on Bench</option>
+                <option value="Stay Injury-Free All Season|strength">Stay Injury-Free All Season</option>
+              </optgroup>
+              <optgroup label="📚 Academics">
+                <option value="Maintain 3.5+ GPA|academics">Maintain 3.5+ GPA</option>
+                <option value="Maintain 4.0 GPA|academics">Maintain 4.0 GPA</option>
+                <option value="Make Honor Roll|academics">Make Honor Roll</option>
+                <option value="Score 1200+ on SAT|academics">Score 1200+ on SAT</option>
+                <option value="Score 25+ on ACT|academics">Score 25+ on ACT</option>
+              </optgroup>
+              <optgroup label="🧠 Mental Game">
+                <option value="Journal Every Day for the Season|mental">Journal Every Day for the Season</option>
+                <option value="Build a 30-Day Streak|mental">Build a 30-Day Streak</option>
+                <option value="Be a Better Teammate Every Day|mental">Be a Better Teammate Every Day</option>
+                <option value="Lead My Team By Example|mental">Lead My Team By Example</option>
+              </optgroup>
+            </select>
+          </div>
+        </div>
+
+        <!-- ── CUSTOM GOAL ── -->
         <div class="form-row" style="margin-top:18px;">
           <div>
-            <label style="font-family:'Barlow Condensed'; font-size:12px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--gold);">New Goal</label>
+            <label style="font-family:'Barlow Condensed'; font-size:12px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--gold);">Or Write Your Own</label>
             <input type="text" id="goal-text" placeholder="e.g. Hit .350 this season" style="font-size:15px; padding:12px;">
           </div>
           <div>
@@ -4972,9 +5060,87 @@ function loadGrades() {
   } catch(e) {}
 }
 
+// ─── PRESET GOALS ─────────────────────────────────────────
+// Top dream goals shown as quick-pick chips above the custom input.
+// The full menu (organized by category) lives in the dropdown.
+// Format: { label, cat } — matches the goal category system.
+const GOAL_PRESET_CHIPS = [
+  { label: '🏆 Make All-Stars',           cat: 'team' },
+  { label: '🥇 Make All-League',          cat: 'team' },
+  { label: '🌟 Make All-Conference',      cat: 'team' },
+  { label: '✈️ Make Travel Team',         cat: 'team' },
+  { label: '⚾ Make Varsity',             cat: 'team' },
+  { label: '🎓 Get D1 Looks',             cat: 'mental' },
+  { label: '📚 Maintain 3.5+ GPA',        cat: 'academics' }
+];
+
+// Render the quick-pick chips. Each chip is one tap to add the goal.
+function renderGoalPresetChips() {
+  const container = document.getElementById('goal-presets-chips');
+  if (!container) return;
+  container.innerHTML = GOAL_PRESET_CHIPS.map(function(p) {
+    const safeLabel = p.label.replace(/'/g, "\\'");
+    return '<button onclick="addPresetGoal(\'' + safeLabel + '\',\'' + p.cat + '\')" ' +
+           'style="background:rgba(201,168,76,0.08); border:1px solid var(--gold-dark); color:var(--gold); ' +
+           'font-family:\'Barlow Condensed\',sans-serif; font-size:12px; font-weight:700; letter-spacing:1px; ' +
+           'padding:8px 12px; border-radius:20px; cursor:pointer; transition:all 0.15s;" ' +
+           'onmouseover="this.style.background=\'rgba(201,168,76,0.18)\'; this.style.color=\'#E8C96A\';" ' +
+           'onmouseout="this.style.background=\'rgba(201,168,76,0.08)\'; this.style.color=\'var(--gold)\';">' +
+           p.label + '</button>';
+  }).join('');
+}
+
+// Add a preset goal directly (used by quick-pick chips).
+// Strips emoji prefix from the label so the saved goal text stays clean.
+function addPresetGoal(label, cat) {
+  // Remove leading emoji + space (e.g. "🏆 Make All-Stars" → "Make All-Stars")
+  const cleanText = String(label).replace(/^[^\w]+\s*/, '').trim();
+  if (!cleanText) return;
+
+  // Prevent duplicates — if the same goal already exists, just nudge the user
+  const exists = state.goals.some(function(g) {
+    return g.text.toLowerCase() === cleanText.toLowerCase();
+  });
+  if (exists) {
+    alert('You already have "' + cleanText + '" set as a goal.');
+    return;
+  }
+
+  state.goals.push({
+    id:   Date.now(),
+    text: cleanText,
+    cat:  cat,
+    done: false
+  });
+  try { saveState(); } catch(e) {}
+  renderAll();
+  try { ybgHaptic && ybgHaptic(15); } catch(e) {}
+}
+
+// Handle dropdown menu selection. Format: "Goal Text|category"
+function addPresetGoalFromMenu(selectEl) {
+  const value = selectEl.value;
+  if (!value) return;
+  const parts = value.split('|');
+  const text = parts[0];
+  const cat  = parts[1] || 'mental';
+  addPresetGoal(text, cat);
+  // Reset dropdown to default option after selection
+  selectEl.value = '';
+}
+
 function addGoal() {
   const text = document.getElementById('goal-text').value.trim();
   if (!text) { alert('Please enter a goal.'); return; }
+
+  // Prevent duplicates so a player can't accidentally add the same goal twice
+  const exists = state.goals.some(function(g) {
+    return g.text.toLowerCase() === text.toLowerCase();
+  });
+  if (exists) {
+    alert('You already have "' + text + '" set as a goal.');
+    return;
+  }
 
   state.goals.push({
     id: Date.now(),
@@ -4984,17 +5150,20 @@ function addGoal() {
   });
 
   document.getElementById('goal-text').value = '';
+  try { saveState(); } catch(e) {}
   renderAll();
 }
 
 function toggleGoal(id) {
   const goal = state.goals.find(g => g.id === id);
   if (goal) goal.done = !goal.done;
+  try { saveState(); } catch(e) {}
   renderAll();
 }
 
 function deleteGoal(id) {
   state.goals = state.goals.filter(g => g.id !== id);
+  try { saveState(); } catch(e) {}
   renderAll();
 }
 
@@ -5096,6 +5265,7 @@ function renderAll() {
   renderEntries();
   renderPlayers();
   renderGoals();
+  try { renderGoalPresetChips(); } catch(e) {}
   // Null-safe updates — the dashboard cards may not all be on this page
   const _entriesEl = document.getElementById('dash-entries');
   const _goalsEl   = document.getElementById('dash-goals');
