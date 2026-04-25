@@ -61,7 +61,7 @@
     --card: #242830;
     --card2: #2C3038;
     --border: #383E48;
-    --grey: #888;
+    --grey: #9BA3AF;
     --light: #D8DDE5;
     --white: #F0F4FA;
     --red: #C0392B;
@@ -148,7 +148,7 @@
   .header-date {
     font-family: 'Barlow Condensed', sans-serif;
     font-size: 13px;
-    color: var(--grey);
+    color: #9BA3AF;
     letter-spacing: 1px;
     text-transform: uppercase;
   }
@@ -171,9 +171,9 @@
 
   .tab-btn {
     padding: 8px 18px;
-    border: 1px solid var(--border);
+    border: 1px solid #383E48;
     background: transparent;
-    color: var(--grey);
+    color: #9BA3AF;
     font-family: 'Barlow Condensed', sans-serif;
     font-size: 13px;
     font-weight: 600;
@@ -223,8 +223,9 @@
   .section-title span { color: var(--gold); }
 
   .section-sub {
+    color: #9BA3AF;
     font-family: 'Barlow Condensed', sans-serif;
-    color: var(--grey);
+    color: #9BA3AF;
     font-size: 13px;
     letter-spacing: 2px;
     text-transform: uppercase;
@@ -241,7 +242,8 @@
   /* ── CARDS ── */
   .card {
     background: var(--card);
-    border: 1px solid var(--border);
+    border: 1px solid #383E48;
+    color: var(--light);
     border-radius: 4px;
     padding: 24px;
     margin-bottom: 20px;
@@ -265,7 +267,7 @@
     font-weight: 600;
     letter-spacing: 1.5px;
     text-transform: uppercase;
-    color: var(--grey);
+    color: #9BA3AF;
     margin-bottom: 6px;
   }
 
@@ -280,7 +282,7 @@
   textarea {
     width: 100%;
     background: var(--card2);
-    border: 1px solid var(--border);
+    border: 1px solid #383E48;
     color: var(--white);
     font-family: 'Barlow', sans-serif;
     font-size: 15px;
@@ -328,7 +330,7 @@
   /* ── DASHBOARD ── */
   .stat-card {
     background: var(--card);
-    border: 1px solid var(--border);
+    border: 1px solid #383E48;
     border-left: 3px solid var(--gold);
     padding: 20px;
     border-radius: 2px;
@@ -346,14 +348,14 @@
     font-size: 11px;
     letter-spacing: 2px;
     text-transform: uppercase;
-    color: var(--grey);
+    color: #9BA3AF;
     margin-top: 4px;
   }
 
   /* ── MONTH CARD ── */
   .month-card {
     background: var(--card);
-    border: 1px solid var(--border);
+    border: 1px solid #383E48;
     border-radius: 4px;
     overflow: hidden;
     margin-bottom: 16px;
@@ -447,7 +449,7 @@
   /* ── JOURNAL ENTRIES ── */
   .entry-card {
     background: var(--card);
-    border: 1px solid var(--border);
+    border: 1px solid #383E48;
     border-radius: 4px;
     padding: 20px 24px;
     margin-bottom: 14px;
@@ -481,7 +483,7 @@
 
   .type-game { background: rgba(39,174,96,0.15); color: var(--green); }
   .type-practice { background: rgba(201,168,76,0.15); color: var(--gold); }
-  .type-reflection { background: rgba(136,136,136,0.15); color: var(--grey); }
+  .type-reflection { background: rgba(136,136,136,0.15); color: #9BA3AF; }
 
   .entry-title {
     font-family: 'Barlow Condensed', sans-serif;
@@ -510,7 +512,7 @@
     font-size: 12px;
     letter-spacing: 1px;
     text-transform: uppercase;
-    color: var(--grey);
+    color: #9BA3AF;
   }
 
   .entry-stat span { color: var(--white); font-weight: 600; }
@@ -518,7 +520,7 @@
   /* ── PLAYER TRACKER ── */
   .player-card {
     background: var(--card);
-    border: 1px solid var(--border);
+    border: 1px solid #383E48;
     border-radius: 4px;
     padding: 20px 24px;
     margin-bottom: 14px;
@@ -536,7 +538,7 @@
     font-size: 12px;
     letter-spacing: 1px;
     text-transform: uppercase;
-    color: var(--grey);
+    color: #9BA3AF;
     margin-bottom: 16px;
   }
 
@@ -601,14 +603,14 @@
     font-size: 12px;
     letter-spacing: 2px;
     text-transform: uppercase;
-    color: var(--grey);
+    color: #9BA3AF;
   }
 
   /* ── TOGGLE ARROW ── */
   .toggle-arrow {
     width: 28px;
     height: 28px;
-    border: 1px solid var(--border);
+    border: 1px solid #383E48;
     border-radius: 2px;
     display: flex;
     align-items: center;
@@ -643,7 +645,7 @@
   .empty-state {
     text-align: center;
     padding: 60px 24px;
-    color: var(--grey);
+    color: #9BA3AF;
   }
 
   .empty-icon { font-size: 48px; margin-bottom: 16px; }
@@ -656,7 +658,8 @@
     margin-bottom: 8px;
   }
 
-  .empty-state p { font-size: 14px; line-height: 1.6; }
+  .empty-state p {
+    color: #9BA3AF; font-size: 14px; line-height: 1.6; }
 
   /* ── FORM ROW ── */
   .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
@@ -668,7 +671,7 @@
     font-size: 11px;
     letter-spacing: 1.5px;
     text-transform: uppercase;
-    color: var(--grey);
+    color: #9BA3AF;
     text-align: center;
     padding: 8px;
   }
@@ -694,7 +697,7 @@
     margin-top: 2px;
   }
 
-  .checklist-item.checked { color: var(--grey); text-decoration: line-through; }
+  .checklist-item.checked { color: #9BA3AF; text-decoration: line-through; }
   input[type="range"] { accent-color: var(--gold); }
 
 /* ── VOICE INPUT ── */
@@ -857,7 +860,7 @@ function dismissIosBanner() {
         <div style="font-family:'Bebas Neue',cursive; font-size:22px; letter-spacing:2px; color:#F4F4F4;">SHARE <span style="color:#C9A84C;">MY GRIND</span></div>
         <div style="font-family:'Barlow Condensed',sans-serif; font-size:11px; letter-spacing:2px; text-transform:uppercase; color:#555;">7-Day Free Trial · No Credit Card</div>
       </div>
-      <button onclick="closeShareModal()" style="background:rgba(255,255,255,0.08); border:none; color:#888; width:32px; height:32px; border-radius:50%; font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center; line-height:1;">✕</button>
+      <button onclick="closeShareModal()" style="background:rgba(255,255,255,0.08); border:none; color:#9BA3AF; width:32px; height:32px; border-radius:50%; font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center; line-height:1;">✕</button>
     </div>
 
     <!-- Platform label -->
@@ -983,7 +986,7 @@ function dismissIosBanner() {
     <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
       <div>
         <div id="team-modal-title" style="font-family:'Bebas Neue'; font-size:24px; letter-spacing:2px; color:#C9A84C; line-height:1;">CREATE YOUR TEAM</div>
-        <div style="font-family:'Barlow'; font-size:12px; color:#888; margin-top:2px;">Set the colors, share the code, build the roster.</div>
+        <div style="font-family:'Barlow'; font-size:12px; color:#9BA3AF; margin-top:2px;">Set the colors, share the code, build the roster.</div>
       </div>
       <button onclick="closeTeamCreateModal()" style="background:transparent; border:none; color:#666; font-size:24px; cursor:pointer; padding:0; line-height:1;">✕</button>
     </div>
@@ -992,7 +995,7 @@ function dismissIosBanner() {
       <div id="tc-preview-strip" style="position:absolute; top:0; left:0; right:0; height:4px; background:#C9A84C;"></div>
       <div id="tc-preview-logo" style="width:64px; height:64px; border-radius:50%; margin:0 auto 10px; display:flex; align-items:center; justify-content:center; font-family:'Bebas Neue'; font-size:22px; font-weight:900; background:#C9A84C; color:#161920; box-shadow:0 0 0 2px #161920, 0 0 0 4px #C9A84C;">YBG</div>
       <div id="tc-preview-name" style="font-family:'Bebas Neue'; font-size:22px; letter-spacing:2px; color:#F4F4F4;">TEAM NAME</div>
-      <div id="tc-preview-loc" style="font-family:'Barlow Condensed'; font-size:11px; letter-spacing:2px; color:#888; text-transform:uppercase; margin-top:2px;">City · State</div>
+      <div id="tc-preview-loc" style="font-family:'Barlow Condensed'; font-size:11px; letter-spacing:2px; color:#9BA3AF; text-transform:uppercase; margin-top:2px;">City · State</div>
     </div>
 
     <label style="display:block; font-family:'Barlow Condensed'; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:#AAA; margin-bottom:6px;">Team Name *</label>
@@ -1015,14 +1018,14 @@ function dismissIosBanner() {
     <label style="display:block; font-family:'Barlow Condensed'; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:#AAA; margin-bottom:6px;">Team Colors *</label>
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;">
       <div>
-        <div style="font-family:'Barlow'; font-size:11px; color:#888; margin-bottom:4px;">Primary</div>
+        <div style="font-family:'Barlow'; font-size:11px; color:#9BA3AF; margin-bottom:4px;">Primary</div>
         <div style="display:flex; align-items:center; gap:8px; background:#242830; border:1px solid #2A2A2A; padding:6px 10px; border-radius:4px;">
           <input type="color" id="tc-primary" value="#C9A84C" oninput="updateTeamPreview()" style="width:36px; height:36px; border:none; background:none; cursor:pointer; padding:0;">
           <span id="tc-primary-hex" style="font-family:monospace; font-size:12px; color:#F4F4F4;">#C9A84C</span>
         </div>
       </div>
       <div>
-        <div style="font-family:'Barlow'; font-size:11px; color:#888; margin-bottom:4px;">Accent</div>
+        <div style="font-family:'Barlow'; font-size:11px; color:#9BA3AF; margin-bottom:4px;">Accent</div>
         <div style="display:flex; align-items:center; gap:8px; background:#242830; border:1px solid #2A2A2A; padding:6px 10px; border-radius:4px;">
           <input type="color" id="tc-accent" value="#161920" oninput="updateTeamPreview()" style="width:36px; height:36px; border:none; background:none; cursor:pointer; padding:0;">
           <span id="tc-accent-hex" style="font-family:monospace; font-size:12px; color:#F4F4F4;">#161920</span>
@@ -1031,7 +1034,7 @@ function dismissIosBanner() {
     </div>
 
     <div style="margin-bottom:16px;">
-      <div style="font-family:'Barlow'; font-size:11px; color:#888; margin-bottom:6px;">Or pick a preset:</div>
+      <div style="font-family:'Barlow'; font-size:11px; color:#9BA3AF; margin-bottom:6px;">Or pick a preset:</div>
       <div style="display:flex; gap:6px; flex-wrap:wrap;">
         <button onclick="setTeamPreset('#C9A84C','#161920')" title="YBG Gold/Black" style="width:36px; height:24px; background:linear-gradient(90deg,#C9A84C 50%, #161920 50%); border:1px solid #444; border-radius:3px; cursor:pointer;"></button>
         <button onclick="setTeamPreset('#CE1126','#FFFFFF')" title="Red/White" style="width:36px; height:24px; background:linear-gradient(90deg,#CE1126 50%, #FFFFFF 50%); border:1px solid #444; border-radius:3px; cursor:pointer;"></button>
@@ -1066,7 +1069,7 @@ function dismissIosBanner() {
     <div style="text-align:center; margin-bottom:16px;">
       <div id="tj-logo" style="width:72px; height:72px; border-radius:50%; margin:0 auto 12px; display:flex; align-items:center; justify-content:center; font-family:'Bebas Neue'; font-size:24px; font-weight:900;">YBG</div>
       <div id="tj-name" style="font-family:'Bebas Neue'; font-size:24px; letter-spacing:2px; color:#F4F4F4;">TEAM NAME</div>
-      <div id="tj-loc" style="font-family:'Barlow Condensed'; font-size:11px; letter-spacing:2px; color:#888; text-transform:uppercase; margin-top:2px;"></div>
+      <div id="tj-loc" style="font-family:'Barlow Condensed'; font-size:11px; letter-spacing:2px; color:#9BA3AF; text-transform:uppercase; margin-top:2px;"></div>
       <div id="tj-coach" style="font-family:'Barlow'; font-size:13px; color:#C9A84C; margin-top:10px;"></div>
     </div>
     <div style="background:#181B22; border-left:3px solid #C9A84C; padding:12px 14px; margin-bottom:18px; font-family:'Barlow'; font-size:12px; color:#AAA; line-height:1.6;">
@@ -1219,7 +1222,7 @@ function dismissIosBanner() {
 
       <!-- SELF MODE (default) -->
       <div id="mode-self">
-        <label style="display:block; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#888; margin-bottom:6px;">Your Email Address</label>
+        <label style="display:block; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#9BA3AF; margin-bottom:6px;">Your Email Address</label>
         <input type="email" id="user-email-input" placeholder="yourname@email.com" autocomplete="email" style="width:100%; background:#1C2028; border:1px solid #383E48; color:#F4F4F4; font-family:'Barlow',sans-serif; font-size:15px; padding:13px 14px; border-radius:2px; outline:none; margin-bottom:6px; box-sizing:border-box;" onfocus="this.style.borderColor='#C9A84C'" onblur="this.style.borderColor='#383E48'">
         <div style="font-family:'Barlow',sans-serif; font-size:12px; color:#444; line-height:1.5; margin-bottom:14px;">This email locks the app to your device.</div>
       </div>
@@ -1229,7 +1232,7 @@ function dismissIosBanner() {
         <div style="background:rgba(201,168,76,0.06); border:1px solid #2C3038; border-radius:2px; padding:12px 14px; margin-bottom:14px; font-size:12px; color:#BBBBBB; line-height:1.6;">
           Enter your email as the <strong style="color:#F4F4F4;">buyer</strong>, and the player's email below.
         </div>
-        <label style="display:block; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#888; margin-bottom:6px;">Your Email <span style="color:#444;">(Buyer)</span></label>
+        <label style="display:block; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#9BA3AF; margin-bottom:6px;">Your Email <span style="color:#444;">(Buyer)</span></label>
         <input type="email" id="purchaser-email-input" placeholder="parent@email.com" autocomplete="email" style="width:100%; background:#1C2028; border:1px solid #383E48; color:#F4F4F4; font-family:'Barlow',sans-serif; font-size:15px; padding:13px 14px; border-radius:2px; outline:none; margin-bottom:14px; box-sizing:border-box;" onfocus="this.style.borderColor='#C9A84C'" onblur="this.style.borderColor='#383E48'">
         <label style="display:block; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#C9A84C; margin-bottom:6px;">⚾ Player Email <span style="color:#555; font-weight:400;">(Who Gets Access)</span></label>
         <div id="gift-players-list">
@@ -1249,7 +1252,7 @@ function dismissIosBanner() {
 
       <!-- SECONDARY LINKS -->
       <div style="display:flex; gap:8px; margin-bottom:18px;">
-        <button id="welcome-toggle-gift" onclick="toggleWelcomeMode()" style="flex:1; background:transparent; color:#888; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:10px 8px; border:1px solid #222; border-radius:2px; cursor:pointer;" onmouseover="this.style.color='#C9A84C'; this.style.borderColor='#303540';" onmouseout="this.style.color='#888'; this.style.borderColor='#222';">
+        <button id="welcome-toggle-gift" onclick="toggleWelcomeMode()" style="flex:1; background:transparent; color:#9BA3AF; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:10px 8px; border:1px solid #222; border-radius:2px; cursor:pointer;" onmouseover="this.style.color='#C9A84C'; this.style.borderColor='#303540';" onmouseout="this.style.color='#888'; this.style.borderColor='#222';">
           👨‍👩‍👧 &nbsp;Buying for Someone Else?
         </button>
         <button onclick="goToPurchase('monthly')" style="flex:1; background:transparent; color:#666; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:10px 8px; border:1px solid #222; border-radius:2px; cursor:pointer;" onmouseover="this.style.color='#C9A84C'; this.style.borderColor='#303540';" onmouseout="this.style.color='#666'; this.style.borderColor='#222';">
@@ -1698,22 +1701,13 @@ main { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important;
         <input type="text" id="j-title" placeholder="e.g. End of Week Reflection">
       </div>
       <label id="j-what-label">What did I work on today?</label>
-      <div class="voice-field-wrap">
-        <textarea id="j-what" placeholder="What drills, reps, or skills did I focus on? What felt good?" style="padding-right:50px;"></textarea>
-        <button class="mic-btn" onclick="startVoice('j-what',this)" title="Tap to speak">🎤</button>
-      </div>
+      <textarea id="j-what" inputmode="text" placeholder="What drills, reps, or skills did I focus on? What felt good?"></textarea>
       <label id="j-tomorrow-label">What am I taking into the next practice or game?</label>
-      <div class="voice-field-wrap">
-        <textarea id="j-tomorrow" placeholder="What is one thing I want to carry forward and keep working on?" style="padding-right:50px;"></textarea>
-        <button class="mic-btn" onclick="startVoice('j-tomorrow',this)" title="Tap to speak">🎤</button>
-      </div>
+      <textarea id="j-tomorrow" inputmode="text" placeholder="What is one thing I want to carry forward and keep working on?"></textarea>
       <!-- Reflection-only third prompt -->
       <div id="j-reflect-extra" style="display:none;">
         <label>How do I need to prepare for next week?</label>
-        <div class="voice-field-wrap">
-        <textarea id="j-prepare" placeholder="What do I need to work on? What is my focus going into next practice or game?" style="padding-right:50px;"></textarea>
-        <button class="mic-btn" onclick="startVoice('j-prepare',this)" title="Tap to speak">🎤</button>
-      </div>
+        <textarea id="j-prepare" inputmode="text" placeholder="What do I need to work on? What is my focus going into next practice or game?"></textarea>
       </div>
 
       <!-- ══ PRACTICE REP COUNTER — shows when type = Practice ══ -->
@@ -3961,10 +3955,10 @@ function showGiftProgressBanner(currentIdx, total, playerEmails, purchaserEmail)
     '<div style="font-size:13px; color:#BBBBBB; margin-bottom:10px;">' +
       'Checking out for <strong style="color:#F4F4F4;">' + emailDisplay + '</strong>' +
     '</div>' +
-    '<div style="font-family:\'Barlow Condensed\',sans-serif; font-size:11px; letter-spacing:1.5px; color:#888; text-transform:uppercase; margin-bottom:12px;">' +
+    '<div style="font-family:\'Barlow Condensed\',sans-serif; font-size:11px; letter-spacing:1.5px; color:#9BA3AF; text-transform:uppercase; margin-bottom:12px;">' +
       'Stripe opened in a new tab · same card will pre-fill · return here after each payment' +
     '</div>' +
-    '<button onclick="dismissGiftBanner()" style="background:transparent; color:#888; border:1px solid #333; ' +
+    '<button onclick="dismissGiftBanner()" style="background:transparent; color:#9BA3AF; border:1px solid #333; ' +
       'font-family:\'Barlow Condensed\',sans-serif; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; ' +
       'padding:7px 14px; border-radius:2px; cursor:pointer;">Close Banner</button>';
   banner.style.display = 'block';
@@ -7237,11 +7231,11 @@ function exportJournalPDF() {
   html += '.summary { background:#FAF5E3; border-left:4px solid #C9A84C; padding:16px 20px; margin:20px 0; }';
   html += '.summary strong { color:#161920; }';
   html += '.entry { border-left:3px solid #C9A84C; padding:12px 18px; margin:14px 0; background:#FAFAFA; page-break-inside:avoid; }';
-  html += '.entry .meta { font-size:12px; color:#888; font-family:Arial,sans-serif; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }';
+  html += '.entry .meta { font-size:12px; color:#9BA3AF; font-family:Arial,sans-serif; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }';
   html += '.entry .title { font-weight:bold; font-size:17px; color:#161920; margin-bottom:8px; }';
   html += '.entry p { margin:8px 0; }';
-  html += '.entry .label { font-family:Arial,sans-serif; font-size:11px; color:#888; text-transform:uppercase; letter-spacing:1px; margin-top:8px; }';
-  html += '.footer { text-align:center; color:#888; font-size:12px; margin-top:40px; border-top:1px solid #ccc; padding-top:16px; }';
+  html += '.entry .label { font-family:Arial,sans-serif; font-size:11px; color:#9BA3AF; text-transform:uppercase; letter-spacing:1px; margin-top:8px; }';
+  html += '.footer { text-align:center; color:#9BA3AF; font-size:12px; margin-top:40px; border-top:1px solid #ccc; padding-top:16px; }';
   html += '.print-btn { position:fixed; top:10px; right:10px; background:#C9A84C; color:#161920; font-family:Arial,sans-serif; font-weight:bold; padding:10px 18px; border:none; border-radius:4px; cursor:pointer; font-size:14px; }';
   html += '@media print { .print-btn { display:none; } }';
   html += '</style></head><body>';
@@ -9027,7 +9021,7 @@ setTimeout(function() {
     <div style="font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#C9A84C;margin-bottom:16px;">Today's Grind</div>
 
     <!-- Quote -->
-    <div id="qotd-text" style="font-family:Georgia,serif;font-size:22px;font-style:italic;color:#F5F5F5;line-height:1.6;margin-bottom:16px;"></div>
+    <div id="qotd-text" style="font-family:Georgia,serif;font-size:22px;font-style:italic;color:#F0F4FA;line-height:1.6;margin-bottom:16px;"></div>
     <div id="qotd-author" style="font-family:'Barlow Condensed',sans-serif;font-size:13px;letter-spacing:2px;text-transform:uppercase;color:#C9A84C;margin-bottom:32px;"></div>
 
     <!-- CTA -->
@@ -9206,7 +9200,7 @@ window.addEventListener('load', function() {
   <div style="max-width:380px;width:100%;background:#1C2028;border:1px solid #383E48;border-radius:12px;padding:28px 24px;text-align:center;">
     <div style="font-size:48px;margin-bottom:12px;">🔥</div>
     <div style="font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#C9A84C;margin-bottom:8px;">3-Day Streak</div>
-    <div style="font-family:'Bebas Neue',cursive;font-size:28px;letter-spacing:1.5px;color:#F5F5F5;margin-bottom:10px;">You're Building the Habit</div>
+    <div style="font-family:'Bebas Neue',cursive;font-size:28px;letter-spacing:1.5px;color:#F0F4FA;margin-bottom:10px;">You're Building the Habit</div>
     <div style="font-size:15px;color:#AAA;line-height:1.7;margin-bottom:20px;">3 days logged. That's not luck — that's discipline. Coach Young wants to hear how MyGrind is working for you.</div>
 
     <div style="color:#FFD700;font-size:28px;letter-spacing:4px;margin-bottom:16px;">★★★★★</div>
