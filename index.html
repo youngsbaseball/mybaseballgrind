@@ -3483,7 +3483,8 @@ function checkAccess() {
   if (status === 'trial')        { showTrialBanner(); return; }
   if (status === 'expired')      { showPaywall(); return; }
   if (status === 'wrong_device') { showBlocked('This app is registered to a different device.\n\nContact coach@youngsbaseball.com'); return; }
-  showTrialWelcome();
+  // No trial found — send to onboarding instead of showing old in-app welcome
+  window.location.href =  + onboard_url + ;
 }
 
 function hideOverlay() {
