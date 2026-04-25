@@ -191,7 +191,8 @@ input[type=email]:focus { border-color: #C9A84C; }
     <div class="badge">About You</div>
     <h1>What position<br><span>do you play?</span></h1>
     <div class="gold-bar"></div>
-    <p class="sub">Your daily drill prompts are built around your position.</p>
+    <p class="sub">Select all that apply — many players cover multiple positions.</p>
+    <div style="display:inline-block;background:#1A1A1A;border:1px solid #2E2E2E;border-radius:20px;padding:4px 12px;font-family:'Barlow Condensed',Arial,sans-serif;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#555;margin-bottom:12px;">✓ Select all that apply</div>
     <div id="posGrid"></div>
   </div>
   <div class="bnav"><button class="back-btn" onclick="go(2)">← Back</button><div class="dots" id="d3"></div><button class="next-btn" id="n3" onclick="goNext(3,4)" disabled style="opacity:0.3;">Next →</button></div>
@@ -264,13 +265,14 @@ input[type=email]:focus { border-color: #C9A84C; }
     <div class="badge">Your Journey</div>
     <h1>Where do you<br><span>struggle most?</span></h1>
     <div class="gold-bar"></div>
-    <p class="sub">Honest answers here. The journal is your private space — no judgment.</p>
-    <button class="opt" onclick="pick(this,'struggle','Hitting — consistency and approach')">🏏 &nbsp;Hitting — consistency and approach</button>
-    <button class="opt" onclick="pick(this,'struggle','Pitching — command and confidence')">⚾ &nbsp;Pitching — command and confidence</button>
-    <button class="opt" onclick="pick(this,'struggle','Fielding — footwork and hands')">🧤 &nbsp;Fielding — footwork and hands</button>
-    <button class="opt" onclick="pick(this,'struggle','Mental game — pressure and focus')">🧠 &nbsp;Mental game — pressure and focus</button>
-    <button class="opt" onclick="pick(this,'struggle','Consistency — staying locked in daily')">🔄 &nbsp;Consistency — staying locked in daily</button>
-    <button class="opt" onclick="pick(this,'struggle','Speed and athleticism')">🏃 &nbsp;Speed and athleticism</button>
+    <p class="sub">Select all that apply — the journal is your private space, no judgment.</p>
+    <div style="display:inline-block;background:#1A1A1A;border:1px solid #2E2E2E;border-radius:20px;padding:4px 12px;font-family:'Barlow Condensed',Arial,sans-serif;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#555;margin-bottom:12px;">✓ Select all that apply</div>
+    <button class="opt" onclick="toggle(this,'struggle','Hitting — consistency and approach')">🏏 &nbsp;Hitting — consistency and approach</button>
+    <button class="opt" onclick="toggle(this,'struggle','Pitching — command and confidence')">⚾ &nbsp;Pitching — command and confidence</button>
+    <button class="opt" onclick="toggle(this,'struggle','Fielding — footwork and hands')">🧤 &nbsp;Fielding — footwork and hands</button>
+    <button class="opt" onclick="toggle(this,'struggle','Mental game — pressure and focus')">🧠 &nbsp;Mental game — pressure and focus</button>
+    <button class="opt" onclick="toggle(this,'struggle','Consistency — staying locked in daily')">🔄 &nbsp;Consistency — staying locked in daily</button>
+    <button class="opt" onclick="toggle(this,'struggle','Speed and athleticism')">🏃 &nbsp;Speed and athleticism</button>
   </div>
   <div class="bnav"><button class="back-btn" onclick="go(6)">← Back</button><div class="dots" id="d7"></div><button class="next-btn" id="n7" onclick="goNext(7,8)" disabled style="opacity:0.3;">Next →</button></div>
 </div>
@@ -284,14 +286,15 @@ input[type=email]:focus { border-color: #C9A84C; }
     <div class="badge">Your Journey</div>
     <h1>What has your coach<br><span>told you to work on?</span></h1>
     <div class="gold-bar"></div>
-    <p class="sub">If you have heard it more than once, it belongs in your journal.</p>
-    <button class="opt" onclick="pick(this,'coachFeedback','My bat path and swing mechanics')">🏏 &nbsp;My bat path and swing mechanics</button>
-    <button class="opt" onclick="pick(this,'coachFeedback','My footwork and fielding range')">🧤 &nbsp;My footwork and fielding range</button>
-    <button class="opt" onclick="pick(this,'coachFeedback','My throwing mechanics or arm strength')">💪 &nbsp;My throwing mechanics or arm strength</button>
-    <button class="opt" onclick="pick(this,'coachFeedback','My pitch command and location')">🎯 &nbsp;My pitch command and location</button>
-    <button class="opt" onclick="pick(this,'coachFeedback','My attitude and coachability')">🤝 &nbsp;My attitude and coachability</button>
-    <button class="opt" onclick="pick(this,'coachFeedback','My speed off the base or first step')">🏃 &nbsp;My speed off the base or first step</button>
-    <button class="opt" onclick="pick(this,'coachFeedback','Nothing specific yet')">❓ &nbsp;Nothing specific yet</button>
+    <p class="sub">Select all that apply — we'll build these into your first journal goals.</p>
+    <div style="display:inline-block;background:#1A1A1A;border:1px solid #2E2E2E;border-radius:20px;padding:4px 12px;font-family:'Barlow Condensed',Arial,sans-serif;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#555;margin-bottom:12px;">✓ Select all that apply</div>
+    <button class="opt" onclick="toggle(this,'coachFeedback','My bat path and swing mechanics')">🏏 &nbsp;My bat path and swing mechanics</button>
+    <button class="opt" onclick="toggle(this,'coachFeedback','My footwork and fielding range')">🧤 &nbsp;My footwork and fielding range</button>
+    <button class="opt" onclick="toggle(this,'coachFeedback','My throwing mechanics or arm strength')">💪 &nbsp;My throwing mechanics or arm strength</button>
+    <button class="opt" onclick="toggle(this,'coachFeedback','My pitch command and location')">🎯 &nbsp;My pitch command and location</button>
+    <button class="opt" onclick="toggle(this,'coachFeedback','My attitude and coachability')">🤝 &nbsp;My attitude and coachability</button>
+    <button class="opt" onclick="toggle(this,'coachFeedback','My speed off the base or first step')">🏃 &nbsp;My speed off the base or first step</button>
+    <button class="opt" onclick="toggle(this,'coachFeedback','Nothing specific yet')">❓ &nbsp;Nothing specific yet</button>
   </div>
   <div class="bnav"><button class="back-btn" onclick="go(7)">← Back</button><div class="dots" id="d8"></div><button class="next-btn" id="n8" onclick="goNext(8,9)" disabled style="opacity:0.3;">Next →</button></div>
 </div>
@@ -517,8 +520,8 @@ var TOTAL_STEPS    = 13; // steps 1–13 shown in progress
 
 // ══ STATE ═════════════════════════════════════════
 var d = {
-  sport: 'baseball', age: '', position: '', level: '',
-  team: '', goal: '', struggle: '', coachFeedback: '',
+  sport: 'baseball', age: '', position: [], level: '',
+  team: '', goal: '', struggle: [], coachFeedback: [],
   trainingDays: '', email: '', plan: 'annual'
 };
 var cur = 0;
@@ -596,21 +599,56 @@ function setSport(s, el) {
   setTimeout(function() { go(2); }, 300);
 }
 
-// ══ GENERIC OPTION PICKER ══════════════════════════
+// ══ SINGLE SELECT ═════════════════════════════════
 function pick(el, key, val) {
   d[key] = val;
-  // Highlight in the same screen
   var opts = el.closest('.screen-body').querySelectorAll('.opt');
   opts.forEach(function(b) { b.classList.remove('selected'); });
   el.classList.add('selected');
-  // Enable next button
+  enableNext(el);
+}
+
+// ══ MULTI SELECT ═══════════════════════════════════
+function toggle(el, key, val) {
+  // Ensure array
+  if (!Array.isArray(d[key])) d[key] = [];
+
+  var idx = d[key].indexOf(val);
+  if (idx === -1) {
+    // Add — but if "Nothing specific yet" is picked, clear others
+    if (val === 'Nothing specific yet') {
+      d[key] = [val];
+      // Deselect all others
+      var opts = el.closest('.screen-body').querySelectorAll('.opt');
+      opts.forEach(function(b) { b.classList.remove('selected'); });
+    } else {
+      // Remove "Nothing specific yet" if it was selected
+      var nothingIdx = d[key].indexOf('Nothing specific yet');
+      if (nothingIdx !== -1) d[key].splice(nothingIdx, 1);
+      var opts = el.closest('.screen-body').querySelectorAll('.opt');
+      opts.forEach(function(b) {
+        if (b.textContent.includes('Nothing specific yet')) b.classList.remove('selected');
+      });
+      d[key].push(val);
+    }
+    el.classList.add('selected');
+  } else {
+    // Remove — deselect
+    d[key].splice(idx, 1);
+    el.classList.remove('selected');
+  }
+
+  // Enable next if at least one selected
+  if (d[key].length > 0) enableNext(el);
+}
+
+function enableNext(el) {
   var screenNum = el.closest('.screen').id.replace('s','');
   var nextBtn = document.getElementById('n' + screenNum);
   if (nextBtn) {
     nextBtn.disabled = false;
     nextBtn.style.opacity = '1';
-    var accent = d.sport === 'softball' ? '#D4547A' : '#C9A84C';
-    nextBtn.style.background = accent;
+    nextBtn.style.background = d.sport === 'softball' ? '#D4547A' : '#C9A84C';
   }
 }
 
@@ -666,17 +704,19 @@ function buildPlan() {
   var sub = document.getElementById('s11sub');
   if (sub) sub.textContent = 'Based on your answers — here\'s what MyGrind built for you, ' + (d.age || 'player') + '.';
 
+  var posLabel = Array.isArray(d.position) && d.position.length ? d.position.join(' / ') : (d.position || 'your position');
   var drills = d.sport === 'softball'
     ? 'Fastpitch drills + circle change work — 3x/week'
-    : 'Position drills for ' + (d.position || 'your position') + ' — 3x/week';
+    : 'Position drills for ' + posLabel + ' — 3x/week';
 
-  var coachLine = d.coachFeedback && d.coachFeedback !== 'Nothing specific yet'
-    ? '✅ Focus area: ' + d.coachFeedback
+  var coachArr = Array.isArray(d.coachFeedback) ? d.coachFeedback.filter(function(x){return x !== 'Nothing specific yet';}) : [];
+  var coachLine = coachArr.length
+    ? '✅ Coach focus: ' + coachArr.slice(0,2).join(', ')
     : '✅ Goal milestone tracker';
 
   var items = document.getElementById('planItems');
   if (items) items.innerHTML =
-    '<div>✅ Daily journal prompts for ' + (d.position || 'your position') + '</div>' +
+    '<div>✅ Daily journal prompts for ' + posLabel + '</div>' +
     '<div>✅ ' + drills + '</div>' +
     '<div>✅ Weekly progress snapshot</div>' +
     '<div>✅ Goal: <em style="color:#C9A84C;">' + (d.goal || 'Your goal') + '</em></div>' +
@@ -745,10 +785,16 @@ function writeToApp() {
   var fp   = fingerprint();
   var now  = Date.now();
   var access  = { email: d.email, fingerprint: fp, trialStart: now, paid: false, sport: d.sport, goal: d.goal, mode: 'onboarding' };
-  var profile = { sport: d.sport, age: d.age, position: d.position, level: d.level, team: d.team, bio: d.sport + ' · ' + d.age + ' · Goal: ' + d.goal, savedAt: new Date().toISOString() };
+  var posStr = Array.isArray(d.position) ? d.position.join(', ') : d.position;
+  var profile = { sport: d.sport, age: d.age, position: posStr, level: d.level, team: d.team, bio: d.sport + ' · ' + d.age + ' · Goal: ' + d.goal, savedAt: new Date().toISOString() };
   var state   = { goals: [], entries: [], players: [] };
   if (d.goal) state.goals.push({ id: now, text: d.goal, cat: 'mental', done: false });
-  if (d.coachFeedback && d.coachFeedback !== 'Nothing specific yet') state.goals.push({ id: now+1, text: 'Coach feedback: ' + d.coachFeedback, cat: 'mental', done: false });
+  var coachItems = Array.isArray(d.coachFeedback) ? d.coachFeedback : (d.coachFeedback ? [d.coachFeedback] : []);
+  coachItems.forEach(function(fb, i) {
+    if (fb && fb !== 'Nothing specific yet') {
+      state.goals.push({ id: now + i + 1, text: 'Coach feedback: ' + fb, cat: 'mental', done: false });
+    }
+  });
   try {
     var ak = isSb ? 'ybg_softball_access'   : 'ybg_access';
     var pk = isSb ? 'ybg_softball_profile'   : 'ybg_profile';
