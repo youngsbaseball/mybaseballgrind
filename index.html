@@ -1699,8 +1699,8 @@ function dismissIosBanner() {
         </div>
       </div>
       <div id="j-title-wrapper" style="display:none;">
-        <label id="j-title-label">Title / Opponent / Event</label>
-        <input type="text" id="j-title" placeholder="e.g. vs Valencia HS – W 6-4">
+        <label id="j-title-label">Title</label>
+        <input type="text" id="j-title" placeholder="e.g. End of Week Reflection">
       </div>
       <label id="j-what-label">What did I work on today?</label>
       <textarea id="j-what" placeholder="What drills, reps, or skills did I focus on? What felt good?"></textarea>
@@ -1890,31 +1890,6 @@ function dismissIosBanner() {
         </div>
       </div>
 
-      <!-- ── MEDIA UPLOAD ── -->
-      <!-- TEMPORARILY DISABLED during beta. Reason: localStorage's 5-10MB quota can't hold
-           realistic photo/video base64. The previous code stripped dataUrls on save to stay
-           under quota, but that meant uploads appeared to work then showed as placeholders
-           after reopen — bad UX. Real media support arrives with cloud storage (Firebase
-           Storage / Cloudinary) post-beta. Elements are kept in DOM (display:none) so
-           existing JS functions don't throw. -->
-      <div style="margin-bottom:20px;">
-        <label>📸 &nbsp;Photos & Videos</label>
-        <div style="background:var(--card2); border:1px dashed var(--border); border-radius:4px; padding:22px; text-align:center;">
-          <div style="font-size:28px; margin-bottom:6px; opacity:0.5;">📸 🎥</div>
-          <div style="font-family:'Barlow Condensed'; font-size:13px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--gold);">Photo & Video Upload — Coming Soon</div>
-          <div style="font-family:'Barlow'; font-size:12px; color:var(--grey); margin-top:6px; line-height:1.5;">We're building cloud storage so your photos and videos persist across devices. Available in the next major update.</div>
-        </div>
-        <!-- Hidden legacy elements — kept so existing JS (handleDrop, renderMediaPreview) doesn't throw -->
-        <div id="media-drop-zone" style="display:none;"
-          onclick="document.getElementById('media-file-input').click()"
-          ondragover="handleDragOver(event)"
-          ondragleave="handleDragLeave(event)"
-          ondrop="handleDrop(event)"></div>
-        <input type="file" id="media-file-input" multiple accept="image/*" style="display:none;" onchange="handleFileSelect(event)">
-        <div id="media-preview-grid" style="display:none;"></div>
-      </div>
-
-      
       <!-- ── INSTRUCTOR SESSION ── -->
       <div id="j-instructor-section" style="display:none; background:rgba(168,217,123,0.05); border:1px solid #2A3A2A; border-radius:3px; padding:16px; margin-bottom:20px;">
         <div style="font-family:'Barlow Condensed'; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#A8D97B; margin-bottom:6px;">🎓 &nbsp;Instructor Session</div>
@@ -1983,6 +1958,30 @@ function dismissIosBanner() {
           <textarea id="j-comment-text" placeholder="e.g. Coach told me to stay back on off-speed pitches. Mom said she was proud of how I handled the strikeout..." style="min-height:80px; margin-bottom:0;"></textarea>
         </div>
         <div style="font-family:'Barlow'; font-size:12px; color:var(--grey); margin-top:6px; line-height:1.5;">💡 This is your space to capture feedback from the people coaching you. Write it in their words so you can come back to it.</div>
+      </div>
+
+      <!-- ── MEDIA UPLOAD (moved to bottom of form) ── -->
+      <!-- TEMPORARILY DISABLED during beta. Reason: localStorage's 5-10MB quota can't hold
+           realistic photo/video base64. The previous code stripped dataUrls on save to stay
+           under quota, but that meant uploads appeared to work then showed as placeholders
+           after reopen — bad UX. Real media support arrives with cloud storage (Firebase
+           Storage / Cloudinary) post-beta. Elements are kept in DOM (display:none) so
+           existing JS functions don't throw. -->
+      <div style="margin-bottom:20px;">
+        <label>📸 &nbsp;Photos & Videos</label>
+        <div style="background:var(--card2); border:1px dashed var(--border); border-radius:4px; padding:22px; text-align:center;">
+          <div style="font-size:28px; margin-bottom:6px; opacity:0.5;">📸 🎥</div>
+          <div style="font-family:'Barlow Condensed'; font-size:13px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--gold);">Photo & Video Upload — Coming Soon</div>
+          <div style="font-family:'Barlow'; font-size:12px; color:var(--grey); margin-top:6px; line-height:1.5;">We're building cloud storage so your photos and videos persist across devices. Available in the next major update.</div>
+        </div>
+        <!-- Hidden legacy elements — kept so existing JS (handleDrop, renderMediaPreview) doesn't throw -->
+        <div id="media-drop-zone" style="display:none;"
+          onclick="document.getElementById('media-file-input').click()"
+          ondragover="handleDragOver(event)"
+          ondragleave="handleDragLeave(event)"
+          ondrop="handleDrop(event)"></div>
+        <input type="file" id="media-file-input" multiple accept="image/*" style="display:none;" onchange="handleFileSelect(event)">
+        <div id="media-preview-grid" style="display:none;"></div>
       </div>
 
       <button class="btn btn-gold" onclick="saveEntry()">📓 &nbsp;Save Entry</button>
