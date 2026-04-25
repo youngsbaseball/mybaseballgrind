@@ -3484,7 +3484,7 @@ function checkAccess() {
   if (status === 'expired')      { showPaywall(); return; }
   if (status === 'wrong_device') { showBlocked('This app is registered to a different device.\n\nContact coach@youngsbaseball.com'); return; }
   // No trial found — send to onboarding instead of showing old in-app welcome
-  window.location.href =  + onboard_url + ;
+  window.location.href = 'https://youngsbaseball.github.io/mybaseballgrind/onboarding.html';
 }
 
 function hideOverlay() {
