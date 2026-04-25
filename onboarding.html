@@ -7,7 +7,10 @@
 <meta name="theme-color" content="#0A0A0A">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet"></noscript>
 <style>
 /* ── TOKENS ─────────────────────────────────────────── */
 :root {
@@ -30,11 +33,11 @@
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html, body {
-  background: var(--black);
-  color: var(--white);
-  font-family: 'Barlow', sans-serif;
+  background: #0A0A0A;
+  color: #F5F5F5;
+  font-family: 'Barlow', Arial, sans-serif;
   height: 100%;
-  overflow: hidden;
+  margin: 0;
 }
 body::before {
   content: '';
@@ -81,14 +84,18 @@ body::before {
 .screens { flex: 1; overflow: hidden; position: relative; }
 .screen {
   position: absolute; inset: 0;
-  display: flex; flex-direction: column;
+  display: none;
+  flex-direction: column;
   padding: 22px 22px 16px;
   overflow-y: auto;
-  opacity: 0; pointer-events: none;
-  transform: translateX(36px);
-  transition: opacity 0.32s ease, transform 0.32s ease;
+  opacity: 0;
+  transition: opacity 0.28s ease;
 }
-.screen.active { opacity: 1; pointer-events: all; transform: translateX(0); }
+.screen.active { display: flex; opacity: 1; pointer-events: all; }
+.screen.exit    { display: flex; opacity: 0; pointer-events: none; }
+/* s0 always visible — no JS needed */
+#s0 { display: flex !important; opacity: 1 !important; pointer-events: all !important; }
+#s0.exit { opacity: 0 !important; }
 .screen.exit { opacity: 0; transform: translateX(-36px); }
 /* ── TYPE ───────────────────────────────────────────── */
 .slabel {
@@ -314,8 +321,8 @@ input:focus { border-color: var(--gold); }
 .d4  { animation-delay: 0.45s; opacity: 0; }
 </style>
 </head>
-<body style="opacity:0;animation:fadeIn 0.3s ease 0.1s forwards;">
-<style>@keyframes fadeIn{to{opacity:1}}</style>
+<body>
+
 
 <!-- PROGRESS BAR -->
 <div class="prog-wrap" id="progWrap" style="display:none;">
@@ -665,9 +672,11 @@ function goTo(n) {
   const from = document.getElementById('s' + cur);
   const to   = document.getElementById('s' + n);
   if (!to) return;
+  // Hide current
   from.classList.remove('active');
-  from.classList.add('exit');
-  setTimeout(function() { from.classList.remove('exit'); }, 340);
+  from.style.display = 'none';
+  // Show next
+  to.style.display = 'flex';
   to.classList.add('active');
   cur = n;
   updateUI();
@@ -984,23 +993,19 @@ function launchApp() {
   window.location.href = isSoftball ? SOFTBALL_APP_URL : BASEBALL_APP_URL;
 }
 
-// ══ GUARD: skip onboarding if already done ════════════════
+// ══ GUARD: skip onboarding only if PAID ════════════════════
 (function() {
-  // Define URLs inside the guard so they are available immediately
   var BB_URL = 'https://youngsbaseball.github.io/mybaseballgrind';
   var SB_URL = 'https://youngsbaseball.github.io/mybaseballgrind/softball.html';
   try {
-    var bbDone = localStorage.getItem('ybg_onboarded')          === '1';
-    var sbDone = localStorage.getItem('ybg_softball_onboarded') === '1';
-    if (bbDone) {
-      var acc = JSON.parse(localStorage.getItem('ybg_access') || '{}');
-      if (acc.trialStart || acc.paid) { window.location.href = BB_URL; return; }
-    }
-    if (sbDone && !bbDone) {
-      var sacc = JSON.parse(localStorage.getItem('ybg_softball_access') || '{}');
-      if (sacc.trialStart || sacc.paid) { window.location.href = SB_URL; return; }
-    }
+    // Only redirect if user has actually PAID — not just started a trial
+    // This lets beta testers and returning users re-run onboarding freely
+    var acc  = JSON.parse(localStorage.getItem('ybg_access') || '{}');
+    var sacc = JSON.parse(localStorage.getItem('ybg_softball_access') || '{}');
+    if (acc.paid  === true) { window.location.href = BB_URL; return; }
+    if (sacc.paid === true) { window.location.href = SB_URL; return; }
   } catch(e) {}
+  // Always show onboarding if not paid
 })();
 
 // ══ BACK BUTTON SUPPORT ═══════════════════════════════════
