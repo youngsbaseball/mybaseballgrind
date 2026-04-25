@@ -4434,6 +4434,23 @@ function saveEntry() {
     comments:  []
   };
 
+  // Capture Practice rep counter values when entry type is 'practice'
+  if (type === 'practice') {
+    const swings  = parseInt(document.getElementById('jr-swings')?.value)  || 0;
+    const gb      = parseInt(document.getElementById('jr-gb')?.value)      || 0;
+    const throws  = parseInt(document.getElementById('jr-throws')?.value)  || 0;
+    const pitches = parseInt(document.getElementById('jr-pitches')?.value) || 0;
+    if (swings > 0 || gb > 0 || throws > 0 || pitches > 0) {
+      entry.reps = {
+        swings:  swings,
+        gb:      gb,
+        throws:  throws,
+        pitches: pitches,
+        total:   swings + gb + throws + pitches
+      };
+    }
+  }
+
   // Capture Instructor session data when entry type is 'instructor'
   if (type === 'instructor') {
     const instName     = document.getElementById('j-inst-name')?.value.trim()     || '';
@@ -4770,6 +4787,45 @@ function renderEntries() {
                 `).join('')}
               </div>
               ${e.gameStats.era ? `<div style="margin-top:4px; font-family:'Barlow Condensed'; font-size:11px; color:var(--grey);">ERA: <span style="color:#5DADE2; font-weight:700;">${e.gameStats.era}</span></div>` : ''}
+            </div>
+          ` : ''}
+        </div>
+      ` : ''}
+
+      <!-- PRACTICE REP COUNTER BOX -->
+      ${e.reps ? `
+        <div style="margin:12px 0; background:linear-gradient(135deg,#1A1500,#141400); border:1px solid var(--gold-dark); border-radius:3px; padding:14px 16px;">
+          <div style="font-family:'Barlow Condensed'; font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--gold); margin-bottom:10px;">🔢 Practice Reps</div>
+          <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:3px;">
+            ${[
+              ['🏏 SWINGS', e.reps.swings],
+              ['⚾ GBs',    e.reps.gb],
+              ['🎯 THROWS', e.reps.throws],
+              ['⚾ PITCHES', e.reps.pitches]
+            ].map(([label, val]) => `
+              <div style="background:var(--card2); padding:8px 4px; text-align:center; border-radius:2px;">
+                <div style="font-family:'Bebas Neue'; font-size:22px; color:${val > 0 ? 'var(--white)' : 'var(--border)'}; line-height:1;">${val || '-'}</div>
+                <div style="font-family:'Barlow Condensed'; font-size:9px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--grey);">${label}</div>
+              </div>
+            `).join('')}
+          </div>
+          <div style="margin-top:10px; padding-top:8px; border-top:1px solid var(--border); text-align:center; font-family:'Barlow Condensed'; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--grey);">
+            Total reps: <span style="color:var(--gold); font-family:'Bebas Neue'; font-size:18px; letter-spacing:1px;">${e.reps.total}</span>
+          </div>
+        </div>
+      ` : ''}
+
+      <!-- INSTRUCTOR SESSION BOX -->
+      ${e.instructor ? `
+        <div style="margin:12px 0; background:rgba(168,217,123,0.05); border:1px solid #2A3A2A; border-radius:3px; padding:14px 16px;">
+          <div style="font-family:'Barlow Condensed'; font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#A8D97B; margin-bottom:10px;">🎓 Instructor Session</div>
+          ${e.instructor.name ? `<div style="font-family:'Barlow'; font-size:14px; color:var(--white); font-weight:600; margin-bottom:6px;">${e.instructor.name}</div>` : ''}
+          ${e.instructor.focus ? `<div style="font-family:'Barlow Condensed'; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:#A8D97B; margin-bottom:8px;">Focus: ${e.instructor.focus}</div>` : ''}
+          ${e.instructor.notes ? `<div style="font-family:'Barlow'; font-size:13px; color:var(--light); line-height:1.6; margin-bottom:8px; padding:8px 10px; background:rgba(0,0,0,0.2); border-left:2px solid #5A8A3A; border-radius:2px;">${e.instructor.notes}</div>` : ''}
+          ${(e.instructor.duration || e.instructor.next) ? `
+            <div style="display:flex; gap:14px; flex-wrap:wrap; font-family:'Barlow Condensed'; font-size:11px; letter-spacing:1px; text-transform:uppercase; color:var(--grey); padding-top:8px; border-top:1px solid var(--border);">
+              ${e.instructor.duration ? `<div>⏱ <span style="color:var(--light);">${e.instructor.duration} min</span></div>` : ''}
+              ${e.instructor.next ? `<div>📅 Next: <span style="color:var(--light);">${e.instructor.next}</span></div>` : ''}
             </div>
           ` : ''}
         </div>
