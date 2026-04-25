@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>MyGrind — Start Your Grind</title>
+<meta name="theme-color" content="#0A0A0A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold: #C9A84C;
+  --gold-light: #E8C96A;
+  --gold-dark: #9A7A30;
+  --black: #0A0A0A;
+  --dark: #141414;
+  --card: #1A1A1A;
+  --card2: #222222;
+  --border: #2E2E2E;
+  --grey: #888;
+  --light: #CCCCCC;
+  --white: #F5F5F5;
+  --green: #27AE60;
+  --red: #C0392B;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  background: var(--black);
+  color: var(--white);
+  font-family: 'Barlow', sans-serif;
+  height: 100%;
+  overflow: hidden;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent, transparent 30px,
+    rgba(201,168,76,0.03) 30px,
+    rgba(201,168,76,0.03) 31px
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* PHONE FRAME */
+.phone {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  max-width: 420px;
+  margin: 0 auto;
+  z-index: 1;
+}
+
+/* PROGRESS BAR */
+.progress-wrap {
+  padding: 14px 20px 0;
+  background: var(--black);
+  flex-shrink: 0;
+}
+.progress-track {
+  height: 3px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold-dark), var(--gold));
+  border-radius: 2px;
+  transition: width 0.4s ease;
+}
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 6px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--grey);
+}
+
+/* SCREENS */
+.screens {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+.screen {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 24px 20px;
+  overflow-y: auto;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(40px);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+.screen.active {
+  opacity: 1;
+  pointer-events: all;
+  transform: translateX(0);
+}
+.screen.exit {
+  opacity: 0;
+  transform: translateX(-40px);
+}
+
+/* LABELS & TITLES */
+.slabel {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 6px;
+}
+.stitle {
+  font-family: 'Bebas Neue', cursive;
+  font-size: 32px;
+  letter-spacing: 2px;
+  line-height: 1.1;
+  color: var(--white);
+  margin-bottom: 8px;
+}
+.ssub {
+  font-size: 14px;
+  color: var(--light);
+  line-height: 1.7;
+  margin-bottom: 20px;
+}
+.gold-line {
+  width: 48px; height: 3px;
+  background: var(--gold);
+  margin-bottom: 18px;
+}
+
+/* OPTIONS */
+.opt-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+.opt-grid.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.opt-btn {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 13px 14px;
+  cursor: pointer;
+  font-family: 'Barlow', sans-serif;
+  font-size: 14px;
+  color: var(--light);
+  text-align: left;
+  transition: border-color 0.2s, background 0.2s, color 0.2s;
+  line-height: 1.3;
+}
+.opt-btn:hover { border-color: var(--gold-dark); }
+.opt-btn.selected {
+  border-color: var(--gold);
+  background: rgba(201,168,76,0.1);
+  color: var(--gold);
+  font-weight: 500;
+}
+.opt-btn .opt-icon {
+  display: block;
+  font-size: 18px;
+  margin-bottom: 4px;
+}
+
+/* CARDS */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 16px 18px;
+  margin-bottom: 14px;
+}
+.card-gold {
+  background: linear-gradient(135deg, #1A1400, #0E0C00);
+  border-color: var(--gold-dark);
+}
+.card-green {
+  background: rgba(39,174,96,0.06);
+  border-color: #1A4A1A;
+}
+.card-red {
+  background: rgba(192,57,43,0.06);
+  border-color: #4A1A1A;
+}
+
+/* FEATURE ROWS */
+.feat-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  margin-bottom: 14px;
+}
+.feat-icon {
+  width: 34px; height: 34px;
+  background: rgba(201,168,76,0.12);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  font-size: 16px;
+}
+.feat-text strong {
+  display: block;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: var(--white);
+  margin-bottom: 2px;
+}
+.feat-text span {
+  font-size: 12px;
+  color: var(--grey);
+  line-height: 1.5;
+}
+
+/* JOURNAL PREVIEW */
+.journal-line {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+  color: var(--light);
+  line-height: 1.5;
+}
+.journal-line:last-child { border-bottom: none; }
+.jdot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--gold);
+  margin-top: 5px;
+  flex-shrink: 0;
+}
+.jdot.red { background: var(--red); }
+
+/* STREAK PREVIEW */
+.streak-row {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+.sday {
+  flex: 1;
+  height: 36px;
+  border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.sday.done { background: rgba(201,168,76,0.12); color: var(--gold); border: 1px solid var(--gold-dark); }
+.sday.today { background: var(--gold); color: #0D0D0D; }
+.sday.empty { background: var(--card2); color: var(--border); }
+
+/* STAT CARDS */
+.stat-mini-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  margin-bottom: 14px;
+}
+.stat-mini {
+  background: var(--card2);
+  border-radius: 4px;
+  padding: 12px 8px;
+  text-align: center;
+}
+.stat-mini .num {
+  font-family: 'Bebas Neue', cursive;
+  font-size: 28px;
+  color: var(--gold);
+  line-height: 1;
+}
+.stat-mini .lbl {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--grey);
+  margin-top: 4px;
+}
+
+/* VS COMPARISON */
+.vs-row { display: flex; gap: 8px; margin-bottom: 12px; }
+.vs-col {
+  flex: 1;
+  border-radius: 6px;
+  padding: 14px 12px;
+}
+.vs-col .vs-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.vs-line {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: 12px;
+  line-height: 1.5;
+  margin-bottom: 7px;
+}
+.vs-line span { font-size: 10px; font-weight: 700; }
+
+/* TESTIMONY */
+.tq {
+  border-left: 3px solid var(--gold);
+  padding: 12px 14px;
+  background: rgba(201,168,76,0.04);
+  border-radius: 0 4px 4px 0;
+  margin-bottom: 10px;
+}
+.tq-text {
+  font-size: 13px;
+  color: var(--light);
+  line-height: 1.6;
+  font-style: italic;
+  margin-bottom: 6px;
+}
+.tq-name {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+/* INPUT */
+.field-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--grey);
+  display: block;
+  margin-bottom: 6px;
+}
+input[type="email"], input[type="text"] {
+  width: 100%;
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--white);
+  font-family: 'Barlow', sans-serif;
+  font-size: 15px;
+  padding: 13px 14px;
+  border-radius: 4px;
+  outline: none;
+  transition: border-color 0.2s;
+  margin-bottom: 8px;
+}
+input:focus { border-color: var(--gold); }
+.field-note {
+  font-size: 12px;
+  color: var(--grey);
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+.error-msg {
+  display: none;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: #E57373;
+  background: rgba(192,57,43,0.1);
+  border: 1px solid rgba(192,57,43,0.3);
+  border-radius: 3px;
+  padding: 10px 12px;
+  margin-bottom: 12px;
+}
+
+/* PLAN CARDS */
+.plan-card {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 14px 16px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  position: relative;
+}
+.plan-card.featured { border: 2px solid var(--gold); }
+.plan-name {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--white);
+}
+.plan-price {
+  font-size: 13px;
+  color: var(--grey);
+  margin-top: 3px;
+}
+.plan-badge {
+  display: inline-block;
+  background: rgba(201,168,76,0.15);
+  color: var(--gold);
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 10px;
+  margin-left: 8px;
+}
+
+/* BUTTONS */
+.cta {
+  width: 100%;
+  background: var(--gold);
+  color: #080808;
+  border: none;
+  border-radius: 4px;
+  padding: 15px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  margin-top: auto;
+  transition: opacity 0.2s;
+}
+.cta:hover { opacity: 0.88; }
+.cta-outline {
+  width: 100%;
+  background: transparent;
+  color: var(--gold);
+  border: 1px solid var(--gold-dark);
+  border-radius: 4px;
+  padding: 13px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.cta-outline:hover { background: rgba(201,168,76,0.08); }
+.skip-link {
+  text-align: center;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: var(--grey);
+  margin-top: 10px;
+  cursor: pointer;
+}
+.skip-link:hover { color: var(--light); }
+
+/* NAV BAR */
+.nav-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px;
+  background: var(--black);
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.back-btn {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--grey);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px 0;
+  min-width: 60px;
+}
+.back-btn:hover { color: var(--light); }
+.step-counter {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  color: var(--grey);
+}
+.next-btn {
+  background: var(--gold);
+  color: #080808;
+  border: none;
+  border-radius: 3px;
+  padding: 8px 18px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  min-width: 80px;
+}
+.next-btn:hover { opacity: 0.88; }
+
+/* PILL TAG */
+.pill {
+  display: inline-block;
+  background: rgba(201,168,76,0.12);
+  color: var(--gold);
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin-bottom: 12px;
+}
+
+/* COACH QUOTE */
+.coach-quote {
+  background: rgba(201,168,76,0.06);
+  border: 1px solid var(--gold-dark);
+  border-left: 3px solid var(--gold);
+  border-radius: 0 4px 4px 0;
+  padding: 14px 16px;
+  margin-bottom: 14px;
+}
+.coach-quote .cq-who {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 6px;
+}
+.coach-quote .cq-text {
+  font-size: 13px;
+  color: var(--light);
+  line-height: 1.6;
+  font-style: italic;
+}
+
+/* CHECKLIST ITEMS */
+.check-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+  color: var(--light);
+  line-height: 1.5;
+}
+.check-item:last-child { border-bottom: none; }
+.check-dot { font-size: 12px; margin-top: 2px; flex-shrink: 0; }
+
+/* SUCCESS SCREEN */
+.success-icon {
+  width: 72px; height: 72px;
+  background: rgba(39,174,96,0.12);
+  border: 2px solid #27AE60;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 32px;
+  margin: 0 auto 20px;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.anim { animation: fadeUp 0.5s ease forwards; }
+.anim-d1 { animation-delay: 0.1s; opacity: 0; }
+.anim-d2 { animation-delay: 0.2s; opacity: 0; }
+.anim-d3 { animation-delay: 0.3s; opacity: 0; }
+.anim-d4 { animation-delay: 0.4s; opacity: 0; }
+.anim-d5 { animation-delay: 0.5s; opacity: 0; }
+</style>
+</head>
+<body>
+
+<!-- PROGRESS BAR -->
+<div class="progress-wrap" id="progressWrap" style="display:none;">
+  <div class="progress-track">
+    <div class="progress-fill" id="progressFill" style="width:0%"></div>
+  </div>
+  <div class="progress-label">
+    <span id="progressStep">Step 1 of 13</span>
+    <span>MyGrind</span>
+  </div>
+</div>
+
+<!-- SCREENS -->
+<div class="screens" id="screensEl">
+
+<!-- ══ SCREEN 0: WELCOME ══════════════════════════════════ -->
+<div class="screen active" id="s0">
+  <div style="text-align:center; padding-top:20px;">
+    <div style="width:68px;height:68px;background:var(--gold);clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',cursive;font-size:26px;color:#080808;margin:0 auto 16px;">YBG</div>
+    <div class="slabel" style="text-align:center;">MyGrind Baseball Journal</div>
+    <div style="font-family:'Bebas Neue',cursive;font-size:34px;letter-spacing:2px;line-height:1.1;margin-bottom:8px;">THE GRIND YOU PUT IN<br><span style="color:var(--gold);">WRITING</span> PAYS OFF</div>
+    <div style="font-size:14px;color:var(--grey);line-height:1.7;margin-bottom:24px;max-width:320px;margin-left:auto;margin-right:auto;">Players who journal their training are 3x more likely to reach their goals. Nothing you work on disappears when you write it down.</div>
+  </div>
+  <div class="feat-row anim anim-d1">
+    <div class="feat-icon">📓</div>
+    <div class="feat-text"><strong>Journal every session</strong><span>Log what you did, what clicked, what to fix</span></div>
+  </div>
+  <div class="feat-row anim anim-d2">
+    <div class="feat-icon">📈</div>
+    <div class="feat-text"><strong>Track your progress</strong><span>See your growth week by week, month by month</span></div>
+  </div>
+  <div class="feat-row anim anim-d3">
+    <div class="feat-icon">⚾</div>
+    <div class="feat-text"><strong>Follow a real plan</strong><span>Coach-built workouts matched to your position</span></div>
+  </div>
+  <button class="cta anim anim-d4" onclick="next()">Start My Grind →</button>
+  <div style="text-align:center;font-size:12px;color:var(--grey);margin-top:12px;">7-Day Free Trial · No Credit Card</div>
+</div>
+
+<!-- ══ SCREEN 1: THE PROBLEM ══════════════════════════════ -->
+<div class="screen" id="s1">
+  <div class="slabel">The real problem</div>
+  <div class="stitle">Hard work without records disappears</div>
+  <div class="gold-line"></div>
+  <div class="ssub">Most players train hard. But without writing it down, they can't see what's working — and coaches can't either.</div>
+  <div class="card card-red">
+    <div class="journal-line"><div class="jdot red"></div><div>You finish a great bullpen session — by next week, you can't remember what clicked</div></div>
+    <div class="journal-line"><div class="jdot red"></div><div>You're working hard but don't know if you're actually improving</div></div>
+    <div class="journal-line"><div class="jdot red"></div><div>You lose motivation because you can't see your own progress</div></div>
+    <div class="journal-line"><div class="jdot red"></div><div>Coaches ask what you've been working on — and you can only guess</div></div>
+    <div class="journal-line"><div class="jdot red"></div><div>Private lessons cost $80–$150/hr and you forget half of it within a week</div></div>
+  </div>
+  <div class="coach-quote">
+    <div class="cq-who">Coach Young — 20+ Years of Player Development</div>
+    <div class="cq-text">"The players who get recruited, make travel teams, and level up fastest are the ones who treat their training like a job — and keep receipts."</div>
+  </div>
+</div>
+
+<!-- ══ SCREEN 2: THE SOLUTION ═════════════════════════════ -->
+<div class="screen" id="s2">
+  <div class="slabel">The MyGrind way</div>
+  <div class="stitle">Journal it. Track it. Own it.</div>
+  <div class="gold-line"></div>
+  <div class="ssub">Your journal is your proof of work. Your progress chart is your motivation. Together — they keep you consistent.</div>
+  <div class="journal-line"><div class="jdot"></div><div><strong style="color:var(--white);">After every session</strong> — log what you did, how many reps, how you felt, what to fix</div></div>
+  <div class="journal-line"><div class="jdot"></div><div><strong style="color:var(--white);">Every week</strong> — see a visual snapshot of your consistency and skill growth</div></div>
+  <div class="journal-line"><div class="jdot"></div><div><strong style="color:var(--white);">Every month</strong> — compare where you started vs. where you are now</div></div>
+  <div class="journal-line"><div class="jdot"></div><div><strong style="color:var(--white);">At tryouts or showcases</strong> — show up with documented proof of your grind</div></div>
+  <div style="margin-top:20px;" class="coach-quote">
+    <div class="cq-who">Coach Young says:</div>
+    <div class="cq-text">"I've coached for 20+ years alongside Reggie Smith. The players who keep records always outpace the ones who don't — no matter the talent level."</div>
+  </div>
+</div>
+
+<!-- ══ SCREEN 3: GOAL SELECTION ═══════════════════════════ -->
+<div class="screen" id="s3">
+  <div class="slabel">Step 1 — Your Goal</div>
+  <div class="stitle">What are you working toward?</div>
+  <div class="gold-line"></div>
+  <div class="ssub">This shapes your plan and what you'll be journaling for.</div>
+  <div class="opt-grid" id="goalOpts">
+    <div class="opt-btn" onclick="selectOpt('goalOpts',this,'goal','Make a travel team')">Make a travel team</div>
+    <div class="opt-btn" onclick="selectOpt('goalOpts',this,'goal','Improve specific skills')">Improve specific skills</div>
+    <div class="opt-btn" onclick="selectOpt('goalOpts',this,'goal','Get recruited to college')">Get recruited to college</div>
+    <div class="opt-btn" onclick="selectOpt('goalOpts',this,'goal','Stay sharp in the off-season')">Stay sharp in the off-season</div>
+    <div class="opt-btn" onclick="selectOpt('goalOpts',this,'goal','Build consistent habits')">Build consistent habits</div>
+    <div class="opt-btn" onclick="selectOpt('goalOpts',this,'goal','Just love the game')">Just love the game</div>
+  </div>
+</div>
+
+<!-- ══ SCREEN 4: PLAYER PROFILE ══════════════════════════ -->
+<div class="screen" id="s4">
+  <div class="slabel">Step 2 — Who's Using MyGrind</div>
+  <div class="stitle">Tell us about yourself</div>
+  <div class="gold-line"></div>
+  <div class="ssub">We'll build your journal and plan around your age and role.</div>
+  <div class="opt-grid" id="roleOpts">
+    <div class="opt-btn" onclick="selectOpt('roleOpts',this,'role','Player (ages 10–12)')">Player (ages 10–12)</div>
+    <div class="opt-btn" onclick="selectOpt('roleOpts',this,'role','Player (ages 13–16)')">Player (ages 13–16)</div>
+    <div class="opt-btn" onclick="selectOpt('roleOpts',this,'role','Player (ages 17–18)')">Player (ages 17–18)</div>
+    <div class="opt-btn" onclick="selectOpt('roleOpts',this,'role','Parent tracking my player')">Parent tracking my player</div>
+    <div class="opt-btn" onclick="selectOpt('roleOpts',this,'role','Coach')">Coach</div>
+  </div>
+</div>
+
+<!-- ══ SCREEN 5: POSITION ════════════════════════════════ -->
+<div class="screen" id="s5">
+  <div class="slabel">Step 3 — Position</div>
+  <div class="stitle">What's your position?</div>
+  <div class="gold-line"></div>
+  <div class="ssub">Your journal prompts and drills are built around your role on the field.</div>
+  <div class="opt-grid two-col" id="posOpts">
+    <div class="opt-btn" onclick="selectOpt('posOpts',this,'position','Pitcher')">⚾ Pitcher</div>
+    <div class="opt-btn" onclick="selectOpt('posOpts',this,'position','Catcher')">🎯 Catcher</div>
+    <div class="opt-btn" onclick="selectOpt('posOpts',this,'position','Infield')">🧤 Infield</div>
+    <div class="opt-btn" onclick="selectOpt('posOpts',this,'position','Outfield')">🏃 Outfield</div>
+    <div class="opt-btn" onclick="selectOpt('posOpts',this,'position','Utility')">⚡ Utility</div>
+    <div class="opt-btn" onclick="selectOpt('posOpts',this,'position','Not sure yet')">❓ Not sure yet</div>
+  </div>
+</div>
+
+<!-- ══ SCREEN 6: EXPERIENCE ══════════════════════════════ -->
+<div class="screen" id="s6">
+  <div class="slabel">Step 4 — Experience Level</div>
+  <div class="stitle">Where are you right now?</div>
+  <div class="gold-line"></div>
+  <div class="ssub">Be honest — your journal baseline starts here. Growth is only visible when you know your starting point.</div>
+  <div class="opt-grid" id="levelOpts">
+    <div class="opt-btn" onclick="selectOpt('levelOpts',this,'level','Beginner')">Beginner — just starting out</div>
+    <div class="opt-btn" onclick="selectOpt('levelOpts',this,'level','Recreational')">Recreational — playing for fun</div>
+    <div class="opt-btn" onclick="selectOpt('levelOpts',this,'level','Competitive')">Competitive — travel or school ball</div>
+    <div class="opt-btn" onclick="selectOpt('levelOpts',this,'level','Elite')">Elite — varsity, showcase, or beyond</div>
+  </div>
+</div>
+
+<!-- ══ SCREEN 7: JOURNAL PREVIEW ════════════════════════ -->
+<div class="screen" id="s7">
+  <div class="slabel">This is your journal</div>
+  <div class="stitle">After every session, you log it</div>
+  <div class="gold-line"></div>
+  <div class="ssub">Each entry builds your personal training record — visible to you, shareable with coaches.</div>
+  <div class="card card-gold">
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:10px;">Example Entry — Tuesday Workout</div>
+    <div class="journal-line"><div class="jdot"></div><div><strong style="color:var(--white);">Drill:</strong> Tee work — inside pitch, 40 reps</div></div>
+    <div class="journal-line"><div class="jdot"></div><div><strong style="color:var(--white);">Feel:</strong> Making contact but pulling off the ball</div></div>
+    <div class="journal-line"><div class="jdot"></div><div><strong style="color:var(--white);">Focus next time:</strong> Keep back shoulder level through contact</div></div>
+    <div class="journal-line"><div class="jdot"></div><div><strong style="color:var(--white);">Coach note:</strong> Good effort — stay on the ball longer</div></div>
+  </div>
+  <div style="font-size:13px;color:var(--grey);line-height:1.7;">Takes 2 minutes. But 30 days of this? That's a record of exactly who you are as a player — and proof of everything you've put in.</div>
+</div>
+
+<!-- ══ SCREEN 8: PROGRESS PREVIEW ═══════════════════════ -->
+<div class="screen" id="s8">
+  <div class="slabel">This is your progress</div>
+  <div class="stitle">Your grind made visible</div>
+  <div class="gold-line"></div>
+  <div class="ssub">Every entry feeds your dashboard. Seeing your own consistency changes how you train.</div>
+  <div style="margin-bottom:10px;">
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--grey);margin-bottom:8px;">This week's streak</div>
+    <div class="streak-row">
+      <div class="sday done">M</div>
+      <div class="sday done">T</div>
+      <div class="sday done">W</div>
+      <div class="sday done">T</div>
+      <div class="sday today">F</div>
+      <div class="sday empty">S</div>
+      <div class="sday empty">S</div>
+    </div>
+  </div>
+  <div class="stat-mini-row">
+    <div class="stat-mini"><div class="num">14</div><div class="lbl">Sessions</div></div>
+    <div class="stat-mini"><div class="num">87%</div><div class="lbl">Plan Done</div></div>
+    <div class="stat-mini"><div class="num">+12</div><div class="lbl">Skill Pts</div></div>
+  </div>
+  <div style="font-size:13px;color:var(--grey);line-height:1.7;">Players who hit 80%+ plan completion in their first 30 days are <strong style="color:var(--white);">4x more likely</strong> to reach their primary goal.</div>
+</div>
+
+<!-- ══ SCREEN 9: YOUR PLAN ═══════════════════════════════ -->
+<div class="screen" id="s9">
+  <div class="slabel">Your plan is ready</div>
+  <div class="stitle">Here's what MyGrind built for you</div>
+  <div class="gold-line"></div>
+  <div class="card card-gold">
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;color:var(--white);margin-bottom:10px;" id="planTitle">Your Personalized Plan</div>
+    <div style="font-size:13px;color:var(--light);line-height:1.9;" id="planItems">
+      <div>✅ Daily journal prompts for your position</div>
+      <div>✅ Position-specific drills — 3x/week</div>
+      <div>✅ Weekly progress snapshot</div>
+      <div>✅ Monthly skill comparison review</div>
+      <div>✅ Goal milestone tracker</div>
+      <div>✅ Shareable training report for coaches</div>
+    </div>
+  </div>
+  <div style="font-size:13px;color:var(--grey);line-height:1.7;">Players who journal and follow this plan see measurable skill improvement within <strong style="color:var(--white);">21 days</strong> — not because of talent, because of consistency you can see.</div>
+</div>
+
+<!-- ══ SCREEN 10: SOCIAL PROOF ═══════════════════════════ -->
+<div class="screen" id="s10">
+  <div class="slabel">Real players. Real results.</div>
+  <div class="stitle">The journal changes everything</div>
+  <div class="gold-line"></div>
+  <div class="tq">
+    <div class="tq-text">"I made the travel team after 6 weeks. I showed my coach my MyGrind log and he could see I'd put in the work every single day."</div>
+    <div class="tq-name">Marcus T., 14 — Infielder, SCV</div>
+  </div>
+  <div class="tq">
+    <div class="tq-text">"My son went from not knowing what to work on to having a full plan with notes. The progress chart keeps him motivated without me having to push."</div>
+    <div class="tq-name">Parent of Jake R., 13 — Pitcher</div>
+  </div>
+  <div class="tq">
+    <div class="tq-text">"Seeing 30 days of entries stacked up — that's when it hit me. I'd never trained this consistently in my life. The app holds you accountable."</div>
+    <div class="tq-name">Tyler M., 16 — Outfielder</div>
+  </div>
+  <div style="font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--grey);text-align:center;">Joined by 1,200+ players across the country</div>
+</div>
+
+<!-- ══ SCREEN 11: COST COMPARISON ════════════════════════ -->
+<div class="screen" id="s11">
+  <div class="slabel">The real cost comparison</div>
+  <div class="stitle">What does not journaling actually cost?</div>
+  <div class="gold-line"></div>
+  <div class="vs-row">
+    <div class="vs-col card-red">
+      <div class="vs-title" style="color:#E57373;">Without MyGrind</div>
+      <div class="vs-line"><span style="color:#E57373;">✕</span> Private lessons $80–$150/hr — and you forget half by next week</div>
+      <div class="vs-line"><span style="color:#E57373;">✕</span> No record of what was taught</div>
+      <div class="vs-line"><span style="color:#E57373;">✕</span> Coaches guess your work ethic</div>
+      <div class="vs-line"><span style="color:#E57373;">✕</span> Motivation fades without proof</div>
+      <div class="vs-line"><span style="color:#E57373;">✕</span> Missed teams, missed opportunities</div>
+    </div>
+    <div class="vs-col card-green">
+      <div class="vs-title" style="color:#58D68D;">With MyGrind</div>
+      <div class="vs-line"><span style="color:#27AE60;">✓</span> Less than $0.17/day</div>
+      <div class="vs-line"><span style="color:#27AE60;">✓</span> Every session documented</div>
+      <div class="vs-line"><span style="color:#27AE60;">✓</span> Show coaches your receipts</div>
+      <div class="vs-line"><span style="color:#27AE60;">✓</span> Streaks keep you consistent</div>
+      <div class="vs-line"><span style="color:#27AE60;">✓</span> Progress you can see</div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:4px;">
+    <div style="font-size:13px;color:var(--light);line-height:1.7;">One missed spot on a travel team because a coach couldn't see your work ethic costs more than a year of MyGrind. <strong style="color:var(--white);">$4.99/mo vs. $80–$150/hr lessons you'll forget by next week.</strong></div>
+  </div>
+</div>
+
+<!-- ══ SCREEN 12: PRE-PAYWALL BRIDGE ════════════════════ -->
+<div class="screen" id="s12">
+  <div class="slabel">Almost there</div>
+  <div class="stitle">Your plan is built. Your journal is ready.</div>
+  <div class="gold-line"></div>
+  <div class="ssub">Start your 7-day free trial — no charge until day 8, and we'll remind you before it ends.</div>
+  <div class="card card-gold">
+    <div style="font-size:13px;color:var(--light);line-height:1.9;">
+      <div><span style="color:var(--gold);font-weight:500;">✓</span> Full personalized plan unlocked</div>
+      <div><span style="color:var(--gold);font-weight:500;">✓</span> Daily journal prompts activated</div>
+      <div><span style="color:var(--gold);font-weight:500;">✓</span> Progress dashboard ready</div>
+      <div><span style="color:var(--gold);font-weight:500;">✓</span> Coach-shareable training report</div>
+      <div><span style="color:var(--gold);font-weight:500;">✓</span> Cancel anytime before day 8 — no charge</div>
+    </div>
+  </div>
+  <div style="font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--grey);text-align:center;margin-bottom:14px;">The players who start today are the ones coaches notice in 30 days.</div>
+</div>
+
+<!-- ══ SCREEN 13: EMAIL + PAYWALL ════════════════════════ -->
+<div class="screen" id="s13">
+  <div class="slabel">Start your free trial</div>
+  <div class="stitle">7 days free.<br>Then choose your plan.</div>
+  <div class="gold-line"></div>
+  <span class="pill">No charge until day 8 · Cancel anytime</span>
+
+  <label class="field-label">Your Email Address</label>
+  <input type="email" id="emailInput" placeholder="yourname@email.com" autocomplete="email">
+  <div class="field-note">This email locks the app to your account and device.</div>
+  <div class="error-msg" id="emailError">Please enter a valid email address.</div>
+
+  <div class="plan-card featured" onclick="selectPlan('annual')">
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <div>
+        <div class="plan-name">Annual <span class="plan-badge">Best Value</span></div>
+        <div class="plan-price">Billed $59.99/year — save 40%</div>
+        <div style="font-size:11px;color:var(--grey);margin-top:3px;">Less than $0.17 per day</div>
+      </div>
+      <div style="font-family:'Bebas Neue',cursive;font-size:24px;color:var(--gold);">$4.99<span style="font-size:14px;color:var(--grey);">/mo</span></div>
+    </div>
+  </div>
+
+  <div class="plan-card" onclick="selectPlan('monthly')">
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <div>
+        <div class="plan-name">Monthly</div>
+        <div class="plan-price">Billed month to month — flexible</div>
+      </div>
+      <div style="font-family:'Bebas Neue',cursive;font-size:24px;color:var(--white);">$8.99<span style="font-size:14px;color:var(--grey);">/mo</span></div>
+    </div>
+  </div>
+
+  <div style="font-size:11px;color:var(--grey);text-align:center;margin-bottom:14px;line-height:1.6;">We'll send you a reminder before your trial ends. No surprise charges.</div>
+
+  <button class="cta" onclick="beginTrial()">⚾ &nbsp;Start My Free Trial →</button>
+  <div class="skip-link" onclick="beginTrialFree()">Continue with limited access</div>
+</div>
+
+</div><!-- /screens -->
+
+<!-- NAV BAR (hidden on s0 and s13) -->
+<div class="nav-bar" id="navBar" style="display:none;">
+  <button class="back-btn" onclick="prev()">← Back</button>
+  <span class="step-counter" id="stepCounter">1 of 13</span>
+  <button class="next-btn" onclick="next()">Next →</button>
+</div>
+
+<script>
+// ── ONBOARDING STATE ──────────────────────────────────────
+const TOTAL = 14; // screens 0–13
+let cur = 0;
+
+const data = {
+  goal: '',
+  role: '',
+  position: '',
+  level: '',
+  email: '',
+  plan: 'annual'
+};
+
+// ── NAVIGATION ────────────────────────────────────────────
+function goTo(n) {
+  if (n < 0 || n >= TOTAL) return;
+  const from = document.getElementById('s' + cur);
+  const to   = document.getElementById('s' + n);
+  if (!to) return;
+
+  from.classList.remove('active');
+  from.classList.add('exit');
+  setTimeout(function() { from.classList.remove('exit'); }, 360);
+
+  to.classList.add('active');
+  cur = n;
+  updateUI();
+
+  // Update plan display when reaching s9
+  if (n === 9) updatePlanDisplay();
+}
+
+function next() {
+  if (cur === 13) return;
+  goTo(cur + 1);
+}
+
+function prev() {
+  if (cur === 0) return;
+  goTo(cur - 1);
+}
+
+function updateUI() {
+  const progressWrap = document.getElementById('progressWrap');
+  const navBar = document.getElementById('navBar');
+  const fill   = document.getElementById('progressFill');
+  const step   = document.getElementById('progressStep');
+  const counter= document.getElementById('stepCounter');
+
+  // s0 = welcome, no UI chrome
+  // s13 = paywall, no nav bar
+  if (cur === 0) {
+    progressWrap.style.display = 'none';
+    navBar.style.display = 'none';
+    return;
+  }
+
+  progressWrap.style.display = 'block';
+  const pct = Math.round((cur / (TOTAL - 1)) * 100);
+  fill.style.width = pct + '%';
+  step.textContent = 'Step ' + cur + ' of ' + (TOTAL - 1);
+  counter.textContent = cur + ' of ' + (TOTAL - 1);
+
+  // s13 = paywall — hide nav bar, user uses buttons on screen
+  navBar.style.display = (cur === 13) ? 'none' : 'flex';
+}
+
+// ── OPTION SELECTION ──────────────────────────────────────
+function selectOpt(gridId, el, key, val) {
+  document.querySelectorAll('#' + gridId + ' .opt-btn').forEach(function(b) {
+    b.classList.remove('selected');
+  });
+  el.classList.add('selected');
+  data[key] = val;
+  // Auto-advance after short delay
+  setTimeout(next, 350);
+}
+
+function selectPlan(plan) {
+  data.plan = plan;
+  document.querySelectorAll('.plan-card').forEach(function(c) {
+    c.classList.remove('featured');
+    c.style.borderWidth = '1px';
+  });
+  if (plan === 'annual') {
+    document.querySelectorAll('.plan-card')[0].classList.add('featured');
+    document.querySelectorAll('.plan-card')[0].style.borderWidth = '2px';
+  } else {
+    document.querySelectorAll('.plan-card')[1].classList.add('featured');
+    document.querySelectorAll('.plan-card')[1].style.borderWidth = '2px';
+  }
+}
+
+// ── PLAN DISPLAY (screen 9) ───────────────────────────────
+function updatePlanDisplay() {
+  const pos   = data.position || 'Player';
+  const level = data.level    || 'Competitive';
+  const goal  = data.goal     || 'Improve specific skills';
+
+  const titleEl = document.getElementById('planTitle');
+  const itemsEl = document.getElementById('planItems');
+  if (!titleEl || !itemsEl) return;
+
+  titleEl.textContent = level + ' ' + pos + ' — Journal Plan';
+
+  let drillLine = '3x/week drills — position-specific';
+  if (pos === 'Pitcher') drillLine = '3x/week pitching mechanics + arm care';
+  if (pos === 'Catcher') drillLine = '3x/week blocking, framing + pop time';
+  if (pos === 'Outfield') drillLine = '3x/week routes, reads + throwing mechanics';
+
+  itemsEl.innerHTML =
+    '<div>✅ Daily journal prompts for ' + pos.toLowerCase() + 's</div>' +
+    '<div>✅ ' + drillLine + '</div>' +
+    '<div>✅ Weekly progress snapshot</div>' +
+    '<div>✅ Monthly skill comparison review</div>' +
+    '<div>✅ Goal tracker: <em style="color:var(--gold);">' + goal + '</em></div>' +
+    '<div>✅ Shareable training report for coaches</div>';
+}
+
+// ── TRIAL + WRITE TO APP ──────────────────────────────────
+function getDeviceFingerprint() {
+  const nav = window.navigator;
+  const raw = [nav.userAgent, nav.language, screen.width + 'x' + screen.height, screen.colorDepth, new Date().getTimezoneOffset(), nav.hardwareConcurrency || '', nav.platform || ''].join('|');
+  let hash = 0;
+  for (let i = 0; i < raw.length; i++) { hash = ((hash << 5) - hash) + raw.charCodeAt(i); hash |= 0; }
+  return Math.abs(hash).toString(36);
+}
+
+function isValidEmail(e) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
+}
+
+function beginTrial() {
+  const emailEl = document.getElementById('emailInput');
+  const errEl   = document.getElementById('emailError');
+  const email   = (emailEl.value || '').trim().toLowerCase();
+
+  if (!isValidEmail(email)) {
+    errEl.style.display = 'block';
+    emailEl.focus();
+    return;
+  }
+  errEl.style.display = 'none';
+  data.email = email;
+
+  writeToApp(true);
+  goToPaywall();
+}
+
+function beginTrialFree() {
+  const email = (document.getElementById('emailInput').value || '').trim().toLowerCase();
+  if (email && isValidEmail(email)) { data.email = email; }
+  writeToApp(false);
+  launchApp();
+}
+
+// ── THE CORE FUNCTION — writes all onboarding answers into the app ────
+function writeToApp(goToStripe) {
+  const email = data.email;
+  const fp    = getDeviceFingerprint();
+
+  // 1. ybg_access — trial access record (same format the app reads)
+  const accessRecord = {
+    email:         email || '',
+    purchaserEmail:email || '',
+    fingerprint:   fp,
+    trialStart:    Date.now(),
+    paid:          false,
+    registeredAt:  new Date().toISOString(),
+    mode:          'onboarding',
+    onboardingData: {
+      goal:     data.goal,
+      role:     data.role,
+      position: data.position,
+      level:    data.level
+    }
+  };
+  try { localStorage.setItem('ybg_access', JSON.stringify(accessRecord)); } catch(e) {}
+
+  // 2. ybg_profile — pre-fills the My Profile tab
+  const posMap = {
+    'Pitcher':  'P',
+    'Catcher':  'C',
+    'Infield':  'SS',
+    'Outfield': 'CF',
+    'Utility':  'DH',
+    'Not sure yet': ''
+  };
+  const posCode = posMap[data.position] || '';
+
+  // Extract age range from role string
+  let age = '';
+  if (data.role.includes('10–12')) age = '11';
+  if (data.role.includes('13–16')) age = '14';
+  if (data.role.includes('17–18')) age = '17';
+
+  const profile = {
+    name:   '',
+    pos:    posCode,
+    age:    age,
+    grade:  '',
+    school: '',
+    bats:   '',
+    gpa:    '',
+    season: 'Spring 2026',
+    sixty:  '',
+    velo:   '',
+    bio:    'Goal: ' + data.goal,
+    savedAt: new Date().toISOString()
+  };
+  try { localStorage.setItem('ybg_profile', JSON.stringify(profile)); } catch(e) {}
+
+  // Restore position checkboxes — the app stores a hidden input value
+  // We also set a separate key so the app can restore checkboxes on load
+  if (posCode) {
+    try { localStorage.setItem('ybg_profile_positions_raw', posCode); } catch(e) {}
+  }
+
+  // 3. ybg_state — pre-populate a starter goal from their onboarding answer
+  let existingState = {};
+  try {
+    const raw = localStorage.getItem('ybg_state');
+    if (raw) existingState = JSON.parse(raw);
+  } catch(e) {}
+
+  if (!existingState.goals) existingState.goals = [];
+  if (!existingState.entries) existingState.entries = [];
+  if (!existingState.players) existingState.players = [];
+  if (!existingState.gpa) existingState.gpa = { current: null, target: null };
+
+  // Add their goal from onboarding as their first goal in the app
+  if (data.goal && !existingState.goals.some(function(g) { return g.text === data.goal; })) {
+    existingState.goals.push({
+      id:   Date.now(),
+      text: data.goal,
+      cat:  goalToCat(data.goal),
+      done: false
+    });
+  }
+
+  try { localStorage.setItem('ybg_state', JSON.stringify(existingState)); } catch(e) {}
+
+  // 4. Mark onboarding complete so the app never redirects here again
+  try { localStorage.setItem('ybg_onboarded', '1'); } catch(e) {}
+  try { localStorage.setItem('ybg_onboarding_plan', data.plan); } catch(e) {}
+}
+
+function goalToCat(goal) {
+  goal = (goal || '').toLowerCase();
+  if (goal.includes('travel') || goal.includes('varsity') || goal.includes('team')) return 'team';
+  if (goal.includes('recruit') || goal.includes('college')) return 'mental';
+  if (goal.includes('skill') || goal.includes('improve')) return 'hitting';
+  if (goal.includes('habit') || goal.includes('consistent')) return 'mental';
+  return 'mental';
+}
+
+// ── ROUTING ───────────────────────────────────────────────
+const STRIPE_ANNUAL_URL  = 'https://buy.stripe.com/aFa6oJ7LY2Vv0umeDn4gg00';
+const STRIPE_MONTHLY_URL = 'https://buy.stripe.com/6oUbJ3aYaanX4KC0Mx4gg01';
+const APP_URL = 'https://youngsbaseball.github.io/mybaseballgrind';
+
+function goToPaywall() {
+  const base = data.plan === 'annual' ? STRIPE_ANNUAL_URL : STRIPE_MONTHLY_URL;
+  const email = data.email;
+  const url = email ? base + '?prefilled_email=' + encodeURIComponent(email) : base;
+  window.open(url, '_blank');
+
+  // After Stripe opens, redirect them to the app
+  setTimeout(launchApp, 800);
+}
+
+function launchApp() {
+  window.location.href = APP_URL;
+}
+
+// ── GUARD: redirect if already onboarded ──────────────────
+(function() {
+  try {
+    // Already onboarded → go straight to app
+    if (localStorage.getItem('ybg_onboarded') === '1') {
+      const acc = JSON.parse(localStorage.getItem('ybg_access') || '{}');
+      // Only skip onboarding if they have a valid trial or paid access
+      if (acc.trialStart || acc.paid) {
+        window.location.href = APP_URL;
+      }
+    }
+  } catch(e) {}
+})();
+
+// ── BACK BUTTON SUPPORT ───────────────────────────────────
+window.addEventListener('popstate', function() { if (cur > 0) { history.pushState(null, '', ''); prev(); } });
+history.pushState(null, '', '');
+</script>
+</body>
+</html>
