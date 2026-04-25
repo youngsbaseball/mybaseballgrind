@@ -833,6 +833,11 @@ function dismissIosBanner() {
   localStorage.setItem('ybg_ios_dismissed', '1');
 }
 </script>
+<!-- ══ FIREBASE INTEGRATION ══════════════════════════════════════ -->
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics-compat.js"></script>
 </head>
 <body>
 
@@ -4589,6 +4594,15 @@ function removeMedia(i) {
 
 // ── SAVE ENTRY ────────────────────────────────────────
 function saveEntry() {
+  // Firebase cloud save hook — runs after local save
+  setTimeout(function() {
+    try {
+      var s = JSON.parse(localStorage.getItem('ybg_state') || '{}');
+      var latest = (s.entries || [])[0];
+      if (latest && typeof fbSaveEntry === 'function') fbSaveEntry(latest);
+    } catch(e) {}
+  }, 500);
+  // Original saveEntry below
   const date     = document.getElementById('j-date').value;
   const type     = document.getElementById('j-type').value;
   const title    = document.getElementById('j-title').value.trim();
@@ -5845,6 +5859,13 @@ function savePositions() {
 }
 
 function saveProfile() {
+  // Firebase cloud save
+  setTimeout(function() {
+    try {
+      var p = JSON.parse(localStorage.getItem('ybg_profile') || '{}');
+      if (typeof fbSaveProfile === 'function') fbSaveProfile(p);
+    } catch(e) {}
+  }, 300);
   const profile = {
     name:   document.getElementById('pl-name')?.value   || '',
     pos:    document.getElementById('pl-pos')?.value    || '',
@@ -9329,6 +9350,133 @@ function hideVoiceToast() {
   var t = document.getElementById('voice-toast');
   if (t) t.classList.remove('show');
 }
+</script>
+<script>
+// ══ FIREBASE CONFIG & INIT ════════════════════════════════════════
+const firebaseConfig = {
+  apiKey:            "AIzaSyBEftxaT0v6gHYW1dz_THm-JbLQ4CaOI9c",
+  authDomain:        "my-grind-b8486.firebaseapp.com",
+  projectId:         "my-grind-b8486",
+  storageBucket:     "my-grind-b8486.firebasestorage.app",
+  messagingSenderId: "627787811658",
+  appId:             "1:627787811658:web:2558d568cd92822db90fb3",
+  measurementId:     "G-5HLS0F06CQ"
+};
+firebase.initializeApp(firebaseConfig);
+const db   = firebase.firestore();
+const auth = firebase.auth();
+
+// ══ AUTH STATE ════════════════════════════════════════════════════
+var fbUser = null;
+auth.onAuthStateChanged(function(user) {
+  fbUser = user;
+  if (user) {
+    console.log('[Firebase] Signed in:', user.email);
+    syncFromCloud(user.uid);
+  }
+});
+
+// ══ AUTH FUNCTIONS ════════════════════════════════════════════════
+function fbSignUp(email, password, name) {
+  return auth.createUserWithEmailAndPassword(email, password)
+    .then(function(c) {
+      return c.user.updateProfile({ displayName: name || '' }).then(function() { return c.user; });
+    });
+}
+function fbSignIn(email, password) { return auth.signInWithEmailAndPassword(email, password); }
+function fbSignOut() { return auth.signOut().then(function() { fbUser = null; }); }
+
+// ══ FIRESTORE SAVES ═══════════════════════════════════════════════
+function fbSaveProfile(data) {
+  if (!fbUser) return;
+  db.collection('users').doc(fbUser.uid)
+    .set({ profile: data, updatedAt: firebase.firestore.FieldValue.serverTimestamp() }, { merge: true })
+    .catch(function(e) { console.warn('[FB] profile:', e); });
+}
+function fbSaveEntry(entry) {
+  if (!fbUser || !entry) return;
+  var id = String(entry.id || Date.now());
+  db.collection('users').doc(fbUser.uid).collection('entries').doc(id)
+    .set(Object.assign({}, entry, { uid: fbUser.uid, savedAt: firebase.firestore.FieldValue.serverTimestamp() }), { merge: true })
+    .catch(function(e) { console.warn('[FB] entry:', e); });
+}
+function fbSaveState(state) {
+  if (!fbUser) return;
+  db.collection('users').doc(fbUser.uid)
+    .set({ goals: state.goals || [], updatedAt: firebase.firestore.FieldValue.serverTimestamp() }, { merge: true })
+    .catch(function(e) { console.warn('[FB] state:', e); });
+}
+
+// ══ SYNC CLOUD → LOCAL ════════════════════════════════════════════
+function syncFromCloud(uid) {
+  db.collection('users').doc(uid).get().then(function(doc) {
+    if (!doc.exists) return;
+    var data = doc.data();
+    try {
+      if (data.profile) {
+        var lp = JSON.parse(localStorage.getItem('ybg_profile') || '{}');
+        localStorage.setItem('ybg_profile', JSON.stringify(Object.assign({}, data.profile, lp)));
+        if (typeof loadProfile === 'function') loadProfile();
+      }
+      if (data.goals && data.goals.length) {
+        var ls = JSON.parse(localStorage.getItem('ybg_state') || '{}');
+        if (!ls.goals || !ls.goals.length) {
+          ls.goals = data.goals;
+          localStorage.setItem('ybg_state', JSON.stringify(ls));
+        }
+      }
+    } catch(e) {}
+  }).catch(function(e) { console.warn('[FB] sync profile:', e); });
+
+  db.collection('users').doc(uid).collection('entries')
+    .orderBy('savedAt','desc').limit(100).get()
+    .then(function(snap) {
+      if (snap.empty) return;
+      var cloud = [];
+      snap.forEach(function(d) { cloud.push(d.data()); });
+      try {
+        var ls = JSON.parse(localStorage.getItem('ybg_state') || '{}');
+        var map = {};
+        (ls.entries || []).forEach(function(e) { if (e.id) map[e.id] = e; });
+        cloud.forEach(function(e) { if (e.id) map[e.id] = e; });
+        ls.entries = Object.values(map).sort(function(a,b) { return b.date > a.date ? 1 : -1; });
+        localStorage.setItem('ybg_state', JSON.stringify(ls));
+        if (typeof renderEntries === 'function') renderEntries();
+        console.log('[Firebase] Synced', cloud.length, 'entries');
+      } catch(e) {}
+    }).catch(function(e) { console.warn('[FB] sync entries:', e); });
+}
+
+// ══ SYNC LOCAL → CLOUD ════════════════════════════════════════════
+function syncToCloud() {
+  if (!fbUser) return;
+  try {
+    fbSaveProfile(JSON.parse(localStorage.getItem('ybg_profile') || '{}'));
+    var s = JSON.parse(localStorage.getItem('ybg_state') || '{}');
+    fbSaveState(s);
+    (s.entries || []).slice(0,10).forEach(function(e) { fbSaveEntry(e); });
+  } catch(e) { console.warn('[FB] syncToCloud:', e); }
+}
+
+console.log('[Firebase] Ready — my-grind-b8486');
+</script>
+
+<script>
+// ══ AUTO SIGN-IN ON APP LOAD ══════════════════════════════════════
+window.addEventListener('load', function() {
+  setTimeout(function() {
+    if (fbUser) return; // already signed in
+    try {
+      var acc  = JSON.parse(localStorage.getItem('ybg_access') || '{}');
+      var pass = localStorage.getItem('ybg_fb_pass');
+      if (acc.email && pass) {
+        fbSignIn(acc.email, pass)
+          .then(function() { console.log('[Firebase] Auto signed in'); })
+          .catch(function(e) { console.warn('[Firebase] Auto sign-in failed:', e.message); });
+      }
+    } catch(e) {}
+  }, 1500);
+});
 </script>
 <script src="mg-config.js"></script>
 </body>
