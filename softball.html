@@ -3488,10 +3488,10 @@ function checkAccess() {
   if (status === 'creator')      { removeBanner(); return; }
   if (status === 'paid')         { removeBanner(); return; }
   if (status === 'trial')        { showTrialBanner(); return; }
-  if (status === 'expired')      { window.location.href = 'https://youngsbaseball.github.io/mybaseballgrind/onboarding.html'; return; }
+  if (status === 'expired')      { window.location.href = 'https://mygrindapp.com'; return; }
   // wrong_device check disabled
   // No trial found — send to onboarding instead of showing old in-app welcome
-  window.location.href = 'https://youngsbaseball.github.io/mybaseballgrind/onboarding.html';
+  window.location.href = 'https://mygrindapp.com';
 }
 
 function hideOverlay() {
@@ -3519,7 +3519,7 @@ function showPaywall() {
     localStorage.setItem(ak, JSON.stringify(acc));
     localStorage.removeItem(ok);
   } catch(e) {}
-  window.location.href = 'https://youngsbaseball.github.io/mybaseballgrind/onboarding.html';
+  window.location.href = 'https://mygrindapp.com';
 }
 
 function showBlocked(msg) {
@@ -4283,7 +4283,7 @@ function startCountdown() {
   setInterval(() => {
     if (isCreator()) return;
     const status = validateSession();
-    if (status === 'expired')           { window.location.href = 'https://youngsbaseball.github.io/mybaseballgrind/onboarding.html'; }
+    if (status === 'expired')           { window.location.href = 'https://mygrindapp.com'; }
     // wrong_device check disabled
     else if (status === 'trial')        showTrialBanner();
   }, 1000 * 60 * 60);
