@@ -314,7 +314,8 @@ input:focus { border-color: var(--gold); }
 .d4  { animation-delay: 0.45s; opacity: 0; }
 </style>
 </head>
-<body>
+<body style="opacity:0;animation:fadeIn 0.3s ease 0.1s forwards;">
+<style>@keyframes fadeIn{to{opacity:1}}</style>
 
 <!-- PROGRESS BAR -->
 <div class="prog-wrap" id="progWrap" style="display:none;">
@@ -985,30 +986,21 @@ function launchApp() {
 
 // ══ GUARD: skip onboarding if already done ════════════════
 (function() {
+  // Define URLs inside the guard so they are available immediately
+  var BB_URL = 'https://youngsbaseball.github.io/mybaseballgrind';
+  var SB_URL = 'https://youngsbaseball.github.io/mybaseballgrind/softball.html';
   try {
-    // Check both baseball and softball onboarded flags
     var bbDone = localStorage.getItem('ybg_onboarded')          === '1';
     var sbDone = localStorage.getItem('ybg_softball_onboarded') === '1';
-
-    // If both done — go to baseball app by default
-    // (returning users bypass onboarding entirely)
     if (bbDone) {
       var acc = JSON.parse(localStorage.getItem('ybg_access') || '{}');
-      if (acc.trialStart || acc.paid) {
-        window.location.href = BASEBALL_APP_URL;
-      }
+      if (acc.trialStart || acc.paid) { window.location.href = BB_URL; return; }
     }
     if (sbDone && !bbDone) {
       var sacc = JSON.parse(localStorage.getItem('ybg_softball_access') || '{}');
-      if (sacc.trialStart || sacc.paid) {
-        window.location.href = SOFTBALL_APP_URL;
-      }
+      if (sacc.trialStart || sacc.paid) { window.location.href = SB_URL; return; }
     }
   } catch(e) {}
-
-  // Define APP URLs early for the guard
-  var BASEBALL_APP_URL = 'https://youngsbaseball.github.io/mybaseballgrind';
-  var SOFTBALL_APP_URL = 'https://youngsbaseball.github.io/mybaseballgrind/softball.html';
 })();
 
 // ══ BACK BUTTON SUPPORT ═══════════════════════════════════
