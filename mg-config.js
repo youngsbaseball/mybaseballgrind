@@ -13,7 +13,7 @@
 
   // ── URLS ─────────────────────────────────────────────────────────
   var APP_URL     = 'https://youngsbaseball.github.io/mybaseballgrind';
-  var ONBOARD_URL = 'https://youngsbaseball.github.io/mybaseballgrind/onboarding.html';
+  var ONBOARD_URL = 'https://mygrindapp.com';
 
   // Override the global constants the app uses for QR + sharing
   // New users → onboarding.html (journals story + paywall)
@@ -166,7 +166,7 @@
       var spans = panel.querySelectorAll('div[style*="Bebas Neue"]');
       spans.forEach(function(s) {
         if (s.textContent && s.textContent.includes('youngsbaseball.github.io')) {
-          s.textContent = 'youngsbaseball.github.io/mybaseballgrind/onboarding.html';
+          s.textContent = 'mygrindapp.com';
         }
       });
     });
