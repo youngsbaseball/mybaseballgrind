@@ -3434,9 +3434,9 @@ function saveAccessState(s) { store('access', s); }
 function validateSession() {
   if (isCreator()) return 'creator';
   const state = getAccessState();
-  if (!state.email) return 'no_email';
+  // Email not required to access app
   const fp = getDeviceFingerprint();
-  if (state.fingerprint && state.fingerprint !== fp) return 'wrong_device';
+  // Device fingerprint check disabled — users may switch devices freely
   if (state.paid) return 'paid';
   if (state.trialStart) {
     const elapsed = (Date.now() - state.trialStart) / (1000 * 60 * 60 * 24);
@@ -3482,7 +3482,7 @@ function checkAccess() {
   if (status === 'paid')         { removeBanner(); return; }
   if (status === 'trial')        { showTrialBanner(); return; }
   if (status === 'expired')      { showPaywall(); return; }
-  if (status === 'wrong_device') { showBlocked('This app is registered to a different device.\n\nContact coach@youngsbaseball.com'); return; }
+  // wrong_device check disabled
   // No trial found — send to onboarding instead of showing old in-app welcome
   window.location.href = 'https://youngsbaseball.github.io/mybaseballgrind/onboarding.html';
 }
@@ -4269,7 +4269,7 @@ function startCountdown() {
     if (isCreator()) return;
     const status = validateSession();
     if (status === 'expired')           showPaywall();
-    else if (status === 'wrong_device') showBlocked('Device mismatch detected.');
+    // wrong_device check disabled
     else if (status === 'trial')        showTrialBanner();
   }, 1000 * 60 * 60);
 }
