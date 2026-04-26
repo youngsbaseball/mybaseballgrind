@@ -10,80 +10,56 @@
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 body { background: #181614; color: #F5F0EB; font-family: 'Barlow', Arial, sans-serif; font-size: 16px; min-height: 100vh; }
-
-/* ── SCREENS ── */
 .screen { display: none; flex-direction: column; min-height: 100vh; padding: 0 0 80px; }
 .screen.on { display: flex; }
 .screen-body { padding: 24px 24px 0; flex: 1; }
-
-/* ── PROGRESS BAR ── */
 .prog-wrap { padding: 14px 24px 0; background: #181614; position: sticky; top: 0; z-index: 10; }
 .prog-track { height: 3px; background: #2A2622; border-radius: 2px; overflow: hidden; }
 .prog-fill { height: 100%; background: #C9A84C; border-radius: 2px; transition: width 0.4s ease; }
 .prog-label { display: flex; justify-content: space-between; margin-top: 5px; padding-bottom: 10px; }
 .prog-step { font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #6B5E52; }
-
-/* ── TYPE ── */
 .badge { font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: #C9A84C; margin-bottom: 5px; }
 h1 { font-family: 'Bebas Neue', Arial, sans-serif; font-size: 34px; letter-spacing: 1.5px; line-height: 1.1; color: #F5F0EB; margin-bottom: 8px; }
 h1 span { color: #C9A84C; }
 .sub { font-size: 15px; color: #A89880; line-height: 1.7; margin-bottom: 18px; }
 .gold-bar { width: 36px; height: 3px; background: #C9A84C; margin-bottom: 14px; }
-
-/* ── OPTION BUTTONS ── */
 .opt { display: block; width: 100%; background: #231F1C; border: 1px solid #3D3530; border-radius: 6px; padding: 14px 16px; font-family: 'Barlow', Arial, sans-serif; font-size: 16px; color: #D4C8BC; font-weight: 500; text-align: left; cursor: pointer; margin-bottom: 8px; transition: border-color 0.15s, background 0.15s, color 0.15s; -webkit-user-select: none; user-select: none; }
 .opt:active { border-color: #C9A84C; background: rgba(201,168,76,0.1); color: #C9A84C; }
 .opt.selected { border-color: #C9A84C; background: rgba(201,168,76,0.1); color: #C9A84C; }
 .opt.selected::after { content: ' ✓'; float: right; }
-
-/* ── SPORT CARDS ── */
 .sport-card { display: flex; align-items: center; gap: 16px; background: #231F1C; border: 2px solid #3D3530; border-radius: 10px; padding: 18px 20px; cursor: pointer; margin-bottom: 10px; transition: all 0.2s; -webkit-user-select: none; user-select: none; }
 .sport-card:active { border-color: #C9A84C; background: rgba(201,168,76,0.08); }
 .sport-emoji { font-size: 36px; line-height: 1; flex-shrink: 0; }
 .sport-name { font-family: 'Bebas Neue', Arial, sans-serif; font-size: 26px; letter-spacing: 1.5px; color: #F5F0EB; }
 .sport-desc { font-size: 14px; color: #A89880; margin-top: 2px; }
-
-/* ── CARDS ── */
 .card { background: #231F1C; border: 1px solid #3D3530; border-radius: 8px; padding: 16px; margin-bottom: 12px; color: #D4C8BC; }
 .card-gold { background: linear-gradient(135deg,#1A1400,#0E0C00); border-color: #9A7A30; }
 .card-title { font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #C9A84C; margin-bottom: 10px; }
-
-/* ── EMAIL ── */
 .field-label { display: block; font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #A89880; margin-bottom: 6px; }
 input[type=email] { width: 100%; background: #231F1C; border: 1px solid #3D3530; border-radius: 4px; color: #F5F0EB; font-size: 17px; padding: 14px 14px; outline: none; margin-bottom: 6px; transition: border-color 0.2s; }
 input[type=email]:focus { border-color: #C9A84C; }
 .field-note { font-size: 14px; color: #6B5E52; margin-bottom: 14px; line-height: 1.5; }
-
-/* ── REVIEWS ── */
 .stars { color: #FFD700; font-size: 14px; letter-spacing: 1px; }
 .review { background: #231F1C; border: 1px solid #3D3530; border-radius: 6px; padding: 12px 14px; margin-bottom: 8px; }
 .review-text { font-size: 15px; color: #D4C8BC; font-style: italic; line-height: 1.6; margin-bottom: 5px; }
 .review-name { font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #C9A84C; }
 .ph { background: rgba(201,168,76,0.08); border: 1px dashed #4A3A10; border-radius: 4px; padding: 6px 12px; font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: #5A4A20; text-align: center; margin-bottom: 8px; }
-
-/* ── VS COMPARISON ── */
 .vs { display: flex; gap: 8px; margin-bottom: 12px; }
 .vs-col { flex: 1; border-radius: 6px; padding: 12px; }
 .vs-bad { background: rgba(192,57,43,0.08); border: 1px solid #4A1A1A; }
 .vs-good { background: rgba(39,174,96,0.08); border: 1px solid #1A4A1A; }
 .vs-title { font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
 .vs-line { font-size: 14px; color: #D4C8BC; margin-bottom: 5px; line-height: 1.6; }
-
-/* ── PLAN CARDS ── */
 .plan { border: 1px solid #3D3530; border-radius: 8px; padding: 14px 16px; margin-bottom: 8px; cursor: pointer; transition: border-color 0.2s; overflow: hidden; }
 .plan.featured { border: 2px solid #C9A84C; }
 .plan-name { font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 17px; font-weight: 700; letter-spacing: 1px; color: #F5F0EB; }
 .plan-badge { display: inline-block; background: rgba(201,168,76,0.15); color: #C9A84C; font-size: 10px; font-weight: 700; letter-spacing: 1px; padding: 2px 8px; border-radius: 10px; margin-left: 6px; font-family: 'Barlow Condensed', Arial, sans-serif; text-transform: uppercase; }
 .plan-price { font-size: 14px; color: #6B5E52; margin-top: 3px; }
 .plan-amount { font-family: 'Bebas Neue', Arial, sans-serif; font-size: 26px; color: #C9A84C; float: right; margin-top: -22px; }
-
-/* ── BUTTONS ── */
 .cta { display: block; width: 100%; background: #C9A84C; color: #080808; border: none; border-radius: 6px; padding: 16px; font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 17px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; margin-top: 8px; transition: opacity 0.2s; -webkit-user-select: none; user-select: none; }
 .cta:active { opacity: 0.85; }
 .skip { display: block; text-align: center; font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 12px; letter-spacing: 1px; color: #4B3E35; margin-top: 12px; cursor: pointer; padding: 8px; }
 .skip:active { color: #A89880; }
-
-/* ── BOTTOM NAV ── */
 .bnav { position: fixed; bottom: 0; left: 0; right: 0; background: #181614; border-top: 1px solid #2E2824; display: flex; align-items: center; justify-content: space-between; padding: 10px 24px; padding-bottom: max(10px, env(safe-area-inset-bottom)); z-index: 100; }
 .back-btn { font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 13px; letter-spacing: 1px; text-transform: uppercase; color: #6B5E52; background: none; border: none; cursor: pointer; padding: 8px 0; min-width: 60px; }
 .back-btn:active { color: #A89880; }
@@ -92,15 +68,11 @@ input[type=email]:focus { border-color: #C9A84C; }
 .dot.on { background: #C9A84C; }
 .next-btn { background: #C9A84C; color: #080808; border: none; border-radius: 4px; padding: 9px 20px; font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 13px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; min-width: 80px; -webkit-user-select: none; user-select: none; }
 .next-btn:active { opacity: 0.85; }
-
-/* ── STREAK PREVIEW ── */
 .streak-row { display: flex; gap: 5px; margin-bottom: 14px; }
 .sday { flex: 1; height: 32px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 1px; }
 .sday.done { background: rgba(201,168,76,0.12); color: #C9A84C; border: 1px solid #9A7A30; }
 .sday.today { background: #C9A84C; color: #080808; }
 .sday.empty { background: #231F1C; color: #374151; }
-
-/* ── STAT MINIS ── */
 .stat-row { display: flex; gap: 6px; margin-bottom: 14px; }
 .stat-mini { flex: 1; background: #231F1C; border-radius: 4px; padding: 10px 6px; text-align: center; }
 .stat-num { font-family: 'Bebas Neue', Arial, sans-serif; font-size: 26px; color: #C9A84C; line-height: 1; }
@@ -111,21 +83,19 @@ input[type=email]:focus { border-color: #C9A84C; }
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 <script>
 const firebaseConfig = {
-  apiKey:            "AIzaSyBEftxaT0v6gHYW1dz_THm-JbLQ4CaOI9c",
-  authDomain:        "my-grind-b8486.firebaseapp.com",
-  projectId:         "my-grind-b8486",
-  storageBucket:     "my-grind-b8486.firebasestorage.app",
+  apiKey: "AIzaSyBEftxaT0v6gHYW1dz_THm-JbLQ4CaOI9c",
+  authDomain: "my-grind-b8486.firebaseapp.com",
+  projectId: "my-grind-b8486",
+  storageBucket: "my-grind-b8486.firebasestorage.app",
   messagingSenderId: "627787811658",
-  appId:             "1:627787811658:web:2558d568cd92822db90fb3"
+  appId: "1:627787811658:web:2558d568cd92822db90fb3"
 };
-if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+if (typeof firebase !== 'undefined' && !firebase.apps.length) firebase.initializeApp(firebaseConfig);
 </script>
 </head>
 <body>
 
-<!-- ════════════════════════════════════════════════
-     S0 — WELCOME
-════════════════════════════════════════════════ -->
+<!-- S0 — WELCOME -->
 <div class="screen on" id="s0">
   <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:40px 24px;text-align:center;">
     <div style="width:64px;height:64px;background:#C9A84C;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',Arial,sans-serif;font-size:22px;color:#080808;margin-bottom:18px;">YBG</div>
@@ -147,13 +117,11 @@ if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
       </div>
     </div>
     <button class="cta" style="max-width:340px;" onclick="go(1)">Get Started →</button>
-    <div class="trial-badge" style="margin-top:14px;background:rgba(201,168,76,0.1);border:1px solid #9A7A30;border-radius:6px;padding:10px 20px;text-align:center;"><div style="font-family:'Bebas Neue',Arial,sans-serif;font-size:22px;color:#C9A84C;letter-spacing:2px;">7-DAY FREE TRIAL</div><div style="font-size:13px;color:#A89880;margin-top:2px;">No credit card required · Cancel anytime</div></div>
+    <div class="trial-badge" style="margin-top:14px;background:rgba(201,168,76,0.1);border:1px solid #9A7A30;border-radius:6px;padding:10px 20px;text-align:center;"><div style="font-family:'Bebas Neue',Arial,sans-serif;font-size:22px;color:#C9A84C;letter-spacing:2px;">14-DAY FREE TRIAL</div><div style="font-size:13px;color:#A89880;margin-top:2px;">No credit card required · Cancel anytime</div></div>
   </div>
 </div>
 
-<!-- ════════════════════════════════════════════════
-     S1 — SPORT
-════════════════════════════════════════════════ -->
+<!-- S1 — SPORT -->
 <div class="screen" id="s1">
   <div class="prog-wrap"><div class="prog-track"><div class="prog-fill" style="width:7%"></div></div><div class="prog-label"><span class="prog-step">Step 1 of 13</span><span class="prog-step" id="sportLabel">MyGrind</span></div></div>
   <div class="screen-body">
@@ -161,25 +129,14 @@ if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
     <h1>What sport are you<br><span>training for?</span></h1>
     <div class="gold-bar"></div>
     <p class="sub">Your journal, drills, and positions are all built around your sport.</p>
-    <div class="sport-card" onclick="setSport('baseball',this)">
-      <div class="sport-emoji">⚾</div>
-      <div><div class="sport-name">Baseball</div><div class="sport-desc">Travel ball, high school, college, or rec league</div></div>
-    </div>
-    <div class="sport-card" onclick="setSport('softball',this)">
-      <div class="sport-emoji">🥎</div>
-      <div><div class="sport-name">Softball</div><div class="sport-desc">Fastpitch, travel ball, high school, or rec league</div></div>
-    </div>
-    <div class="sport-card" onclick="setSport('both',this)">
-      <div class="sport-emoji" style="font-size:26px;">⚾🥎</div>
-      <div><div class="sport-name">Both</div><div class="sport-desc">I play or train for both sports</div></div>
-    </div>
+    <div class="sport-card" onclick="setSport('baseball',this)"><div class="sport-emoji">⚾</div><div><div class="sport-name">Baseball</div><div class="sport-desc">Travel ball, high school, college, or rec league</div></div></div>
+    <div class="sport-card" onclick="setSport('softball',this)"><div class="sport-emoji">🥎</div><div><div class="sport-name">Softball</div><div class="sport-desc">Fastpitch, travel ball, high school, or rec league</div></div></div>
+    <div class="sport-card" onclick="setSport('both',this)"><div class="sport-emoji" style="font-size:26px;">⚾🥎</div><div><div class="sport-name">Both</div><div class="sport-desc">I play or train for both sports</div></div></div>
   </div>
   <div class="bnav"><button class="back-btn" onclick="go(0)">← Back</button><div class="dots" id="d1"></div><div style="min-width:60px;"></div></div>
 </div>
 
-<!-- ════════════════════════════════════════════════
-     S2 — AGE / GRADE
-════════════════════════════════════════════════ -->
+<!-- S2 — AGE -->
 <div class="screen" id="s2">
   <div class="prog-wrap"><div class="prog-track"><div class="prog-fill" style="width:14%"></div></div><div class="prog-label"><span class="prog-step">Step 2 of 13</span><span class="prog-step" id="sportLabel2"></span></div></div>
   <div class="screen-body">
@@ -196,9 +153,7 @@ if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
   <div class="bnav"><button class="back-btn" onclick="go(1)">← Back</button><div class="dots" id="d2"></div><button class="next-btn" id="n2" onclick="goNext(2,3)" disabled style="opacity:0.3;">Next →</button></div>
 </div>
 
-<!-- ════════════════════════════════════════════════
-     S3 — POSITION
-════════════════════════════════════════════════ -->
+<!-- S3 — POSITION -->
 <div class="screen" id="s3">
   <div class="prog-wrap"><div class="prog-track"><div class="prog-fill" style="width:21%"></div></div><div class="prog-label"><span class="prog-step">Step 3 of 13</span><span class="prog-step" id="sportLabel3"></span></div></div>
   <div class="screen-body">
@@ -212,9 +167,7 @@ if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
   <div class="bnav"><button class="back-btn" onclick="go(2)">← Back</button><div class="dots" id="d3"></div><button class="next-btn" id="n3" onclick="goNext(3,4)" disabled style="opacity:0.3;">Next →</button></div>
 </div>
 
-<!-- ════════════════════════════════════════════════
-     S4 — EXPERIENCE LEVEL
-════════════════════════════════════════════════ -->
+<!-- S4 — LEVEL -->
 <div class="screen" id="s4">
   <div class="prog-wrap"><div class="prog-track"><div class="prog-fill" style="width:28%"></div></div><div class="prog-label"><span class="prog-step">Step 4 of 13</span><span class="prog-step" id="sportLabel4"></span></div></div>
   <div class="screen-body">
@@ -231,9 +184,7 @@ if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
   <div class="bnav"><button class="back-btn" onclick="go(3)">← Back</button><div class="dots" id="d4"></div><button class="next-btn" id="n4" onclick="goNext(4,5)" disabled style="opacity:0.3;">Next →</button></div>
 </div>
 
-<!-- ════════════════════════════════════════════════
-     S5 — CURRENT TEAM
-════════════════════════════════════════════════ -->
+<!-- S5 — TEAM -->
 <div class="screen" id="s5">
   <div class="prog-wrap"><div class="prog-track"><div class="prog-fill" style="width:35%"></div></div><div class="prog-label"><span class="prog-step">Step 5 of 13</span><span class="prog-step" id="sportLabel5"></span></div></div>
   <div class="screen-body">
@@ -249,9 +200,7 @@ if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
   <div class="bnav"><button class="back-btn" onclick="go(4)">← Back</button><div class="dots" id="d5"></div><button class="next-btn" id="n5" onclick="goNext(5,6)" disabled style="opacity:0.3;">Next →</button></div>
 </div>
 
-<!-- ════════════════════════════════════════════════
-     S6 — GOAL
-════════════════════════════════════════════════ -->
+<!-- S6 — GOAL -->
 <div class="screen" id="s6">
   <div class="prog-wrap"><div class="prog-track"><div class="prog-fill" style="width:42%"></div></div><div class="prog-label"><span class="prog-step">Step 6 of 13</span><span class="prog-step" id="sportLabel6"></span></div></div>
   <div class="screen-body">
@@ -271,9 +220,7 @@ if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
   <div class="bnav"><button class="back-btn" onclick="go(5)">← Back</button><div class="dots" id="d6"></div><button class="next-btn" id="n6" onclick="goNext(6,7)" disabled style="opacity:0.3;">Next →</button></div>
 </div>
 
-<!-- ════════════════════════════════════════════════
-     S7 — STRUGGLE AREA
-════════════════════════════════════════════════ -->
+<!-- S7 — STRUGGLE -->
 <div class="screen" id="s7">
   <div class="prog-wrap"><div class="prog-track"><div class="prog-fill" style="width:50%"></div></div><div class="prog-label"><span class="prog-step">Step 7 of 13</span><span class="prog-step" id="sportLabel7"></span></div></div>
   <div class="screen-body">
@@ -292,9 +239,7 @@ if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
   <div class="bnav"><button class="back-btn" onclick="go(6)">← Back</button><div class="dots" id="d7"></div><button class="next-btn" id="n7" onclick="goNext(7,8)" disabled style="opacity:0.3;">Next →</button></div>
 </div>
 
-<!-- ════════════════════════════════════════════════
-     S8 — COACH FEEDBACK
-════════════════════════════════════════════════ -->
+<!-- S8 — COACH FEEDBACK -->
 <div class="screen" id="s8">
   <div class="prog-wrap"><div class="prog-track"><div class="prog-fill" style="width:57%"></div></div><div class="prog-label"><span class="prog-step">Step 8 of 13</span><span class="prog-step" id="sportLabel8"></span></div></div>
   <div class="screen-body">
@@ -314,9 +259,7 @@ if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
   <div class="bnav"><button class="back-btn" onclick="go(7)">← Back</button><div class="dots" id="d8"></div><button class="next-btn" id="n8" onclick="goNext(8,9)" disabled style="opacity:0.3;">Next →</button></div>
 </div>
 
-<!-- ════════════════════════════════════════════════
-     S9 — TRAINING DAYS
-════════════════════════════════════════════════ -->
+<!-- S9 — TRAINING DAYS -->
 <div class="screen" id="s9">
   <div class="prog-wrap"><div class="prog-track"><div class="prog-fill" style="width:64%"></div></div><div class="prog-label"><span class="prog-step">Step 9 of 13</span><span class="prog-step" id="sportLabel9"></span></div></div>
   <div class="screen-body">
@@ -333,9 +276,7 @@ if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
   <div class="bnav"><button class="back-btn" onclick="go(8)">← Back</button><div class="dots" id="d9"></div><button class="next-btn" id="n9" onclick="goNext(9,10)" disabled style="opacity:0.3;">Next →</button></div>
 </div>
 
-<!-- ════════════════════════════════════════════════
-     S10 — EMAIL
-════════════════════════════════════════════════ -->
+<!-- S10 — EMAIL -->
 <div class="screen" id="s10">
   <div class="prog-wrap"><div class="prog-track"><div class="prog-fill" style="width:71%"></div></div><div class="prog-label"><span class="prog-step">Step 10 of 13</span><span class="prog-step" id="sportLabel10"></span></div></div>
   <div class="screen-body">
@@ -351,9 +292,7 @@ if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
   <div class="bnav"><button class="back-btn" onclick="go(9)">← Back</button><div class="dots" id="d10"></div><button class="next-btn" id="n10" onclick="emailNext()">Next →</button></div>
 </div>
 
-<!-- ════════════════════════════════════════════════
-     S11 — PLAN PREVIEW
-════════════════════════════════════════════════ -->
+<!-- S11 — PLAN PREVIEW -->
 <div class="screen" id="s11">
   <div class="prog-wrap"><div class="prog-track"><div class="prog-fill" style="width:78%"></div></div><div class="prog-label"><span class="prog-step">Step 11 of 13</span><span class="prog-step" id="sportLabel11"></span></div></div>
   <div class="screen-body">
@@ -373,11 +312,7 @@ if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         <div style="padding:5px 0;">🟡 <strong style="color:#F5F0EB;">Fix:</strong> Stay back, shoulder level through contact</div>
       </div>
     </div>
-    <div class="streak-row">
-      <div class="sday done">M</div><div class="sday done">T</div><div class="sday done">W</div>
-      <div class="sday done">T</div><div class="sday today">F</div>
-      <div class="sday empty">S</div><div class="sday empty">S</div>
-    </div>
+    <div class="streak-row"><div class="sday done">M</div><div class="sday done">T</div><div class="sday done">W</div><div class="sday done">T</div><div class="sday today">F</div><div class="sday empty">S</div><div class="sday empty">S</div></div>
     <div class="stat-row">
       <div class="stat-mini"><div class="stat-num">14</div><div class="stat-lbl">Sessions</div></div>
       <div class="stat-mini"><div class="stat-num">87%</div><div class="stat-lbl">Plan Done</div></div>
@@ -387,9 +322,7 @@ if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
   <div class="bnav"><button class="back-btn" onclick="go(10)">← Back</button><div class="dots" id="d11"></div><button class="next-btn" onclick="go(12)">Next →</button></div>
 </div>
 
-<!-- ════════════════════════════════════════════════
-     S12 — REVIEWS
-════════════════════════════════════════════════ -->
+<!-- S12 — REVIEWS -->
 <div class="screen" id="s12">
   <div class="prog-wrap"><div class="prog-track"><div class="prog-fill" style="width:85%"></div></div><div class="prog-label"><span class="prog-step">Step 12 of 13</span><span class="prog-step" id="sportLabel12"></span></div></div>
   <div class="screen-body">
@@ -399,39 +332,16 @@ if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
     <div class="card" style="margin-bottom:12px;">
       <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
         <div style="font-family:'Bebas Neue',Arial,sans-serif;font-size:48px;color:#F5F0EB;line-height:1;">4.9</div>
-        <div>
-          <div class="stars">★★★★★</div>
-          <!-- UPDATE ratingCount with real number once you have beta reviews -->
-          <div style="font-size:11px;color:#444;letter-spacing:1px;font-family:'Barlow Condensed',Arial,sans-serif;text-transform:uppercase;margin-top:3px;" id="ratingCount">Early Access · Beta Ratings</div>
-        </div>
+        <div><div class="stars">★★★★★</div><div style="font-size:11px;color:#444;letter-spacing:1px;font-family:'Barlow Condensed',Arial,sans-serif;text-transform:uppercase;margin-top:3px;" id="ratingCount">Early Access · Beta Ratings</div></div>
       </div>
       <div style="height:1px;background:#3D3530;margin-bottom:12px;"></div>
-
-      <!-- REVIEW 1 — REPLACE WITH REAL BETA PLAYER QUOTE -->
       <div class="ph">⭐ Beta Player — Replace with real quote</div>
-      <div class="review">
-        <div class="stars" style="margin-bottom:5px;">★★★★★</div>
-        <div class="review-text" id="r1">"This is exactly what I needed. I finally know what I'm working on every single day."</div>
-        <div class="review-name" id="r1n">Player Name · Age · Position · City</div>
-      </div>
-
-      <!-- REVIEW 2 — REPLACE WITH REAL PARENT QUOTE -->
+      <div class="review"><div class="stars" style="margin-bottom:5px;">★★★★★</div><div class="review-text" id="r1">"This is exactly what I needed. I finally know what I'm working on every single day."</div><div class="review-name" id="r1n">Player Name · Age · Position · City</div></div>
       <div class="ph">👨‍👩‍👧 Parent Review — Replace with real quote</div>
-      <div class="review">
-        <div class="stars" style="margin-bottom:5px;">★★★★★</div>
-        <div class="review-text" id="r2">"My son has never been this consistent. The journal keeps him accountable without me having to push."</div>
-        <div class="review-name" id="r2n">Parent of [Player Name] · Age</div>
-      </div>
-
-      <!-- REVIEW 3 — REPLACE OR REMOVE -->
+      <div class="review"><div class="stars" style="margin-bottom:5px;">★★★★★</div><div class="review-text" id="r2">"My son has never been this consistent. The journal keeps him accountable without me having to push."</div><div class="review-name" id="r2n">Parent of [Player Name] · Age</div></div>
       <div class="ph">⭐ Optional 3rd Review — Replace or remove</div>
-      <div class="review">
-        <div class="stars" style="margin-bottom:5px;">★★★★★</div>
-        <div class="review-text" id="r3">"Seeing 30 days of entries stacked up — I had never trained this consistently in my life."</div>
-        <div class="review-name" id="r3n">Player Name · Age · Position</div>
-      </div>
+      <div class="review"><div class="stars" style="margin-bottom:5px;">★★★★★</div><div class="review-text" id="r3">"Seeing 30 days of entries stacked up — I had never trained this consistently in my life."</div><div class="review-name" id="r3n">Player Name · Age · Position</div></div>
     </div>
-
     <div style="background:rgba(201,168,76,0.06);border-left:3px solid #C9A84C;padding:12px 14px;border-radius:0 4px 4px 0;margin-bottom:16px;">
       <div style="font-family:'Barlow Condensed',Arial,sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#C9A84C;margin-bottom:5px;">Coach Young — 20+ Years · Trained alongside Reggie Smith</div>
       <div style="font-size:13px;color:#D4C8BC;font-style:italic;line-height:1.6;">"The players who keep records always outpace the ones who don't — no matter the talent level. That's not an opinion. That's 20 years of watching kids work."</div>
@@ -440,14 +350,12 @@ if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
   <div class="bnav"><button class="back-btn" onclick="go(11)">← Back</button><div class="dots" id="d12"></div><button class="next-btn" onclick="go(13)">Next →</button></div>
 </div>
 
-<!-- ════════════════════════════════════════════════
-     S13 — COST COMPARISON + BRIDGE
-════════════════════════════════════════════════ -->
+<!-- S13 — VALUE -->
 <div class="screen" id="s13">
   <div class="prog-wrap"><div class="prog-track"><div class="prog-fill" style="width:92%"></div></div><div class="prog-label"><span class="prog-step">Step 13 of 13</span><span class="prog-step" id="sportLabel13"></span></div></div>
   <div class="screen-body">
     <div class="badge">The Value</div>
-    <h1>Less than a pack<br>of <span>gum per day</span></h1>
+    <h1>Less than a coffee<br>per <span>week</span></h1>
     <div class="gold-bar"></div>
     <div class="vs">
       <div class="vs-col vs-bad">
@@ -460,7 +368,7 @@ if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
       </div>
       <div class="vs-col vs-good">
         <div class="vs-title" style="color:#58D68D;">With MyGrind</div>
-        <div class="vs-line">✓ Less than $0.17/day</div>
+        <div class="vs-line">✓ Less than $0.27/day on annual</div>
         <div class="vs-line">✓ Every session documented</div>
         <div class="vs-line">✓ Show coaches your receipts</div>
         <div class="vs-line">✓ Streaks keep you consistent</div>
@@ -468,8 +376,8 @@ if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
       </div>
     </div>
     <div class="card" style="text-align:center;padding:16px;margin-bottom:14px;">
-      <div style="font-family:'Bebas Neue',Arial,sans-serif;font-size:32px;color:#C9A84C;line-height:1;margin-bottom:4px;">$0.17 <span style="font-size:18px;color:#555;">/day</span></div>
-      <div style="font-size:13px;color:#666;line-height:1.6;">Less than one minute of a private lesson.<br><strong style="color:#F5F0EB;">More than any lesson you will ever forget.</strong></div>
+      <div style="font-family:'Bebas Neue',Arial,sans-serif;font-size:32px;color:#C9A84C;line-height:1;margin-bottom:4px;">$0.27 <span style="font-size:18px;color:#555;">/day</span></div>
+      <div style="font-size:13px;color:#666;line-height:1.6;">Less than a few minutes of a private lesson.<br><strong style="color:#F5F0EB;">More than any lesson you will ever forget.</strong></div>
     </div>
     <div class="card card-gold" style="margin-bottom:8px;">
       <div style="font-size:13px;color:#D4C8BC;line-height:2.1;">
@@ -477,48 +385,38 @@ if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         <div><span style="color:#C9A84C;font-weight:700;">✓</span> &nbsp;Daily journal prompts activated</div>
         <div><span style="color:#C9A84C;font-weight:700;">✓</span> &nbsp;12-month training calendar included</div>
         <div><span style="color:#C9A84C;font-weight:700;">✓</span> &nbsp;Shareable training report for coaches</div>
-        <div><span style="color:#C9A84C;font-weight:700;">✓</span> &nbsp;Cancel anytime before day 8</div>
+        <div><span style="color:#C9A84C;font-weight:700;">✓</span> &nbsp;Cancel anytime before day 15</div>
       </div>
     </div>
   </div>
   <div class="bnav"><button class="back-btn" onclick="go(12)">← Back</button><div class="dots" id="d13"></div><button class="next-btn" onclick="go(14)">See Plans →</button></div>
 </div>
 
-<!-- ════════════════════════════════════════════════
-     S14 — PAYWALL
-════════════════════════════════════════════════ -->
+<!-- S14 — PAYWALL -->
 <div class="screen" id="s14">
   <div class="prog-wrap"><div class="prog-track"><div class="prog-fill" style="width:100%"></div></div><div class="prog-label"><span class="prog-step">Almost done!</span><span class="prog-step" id="sportLabel14"></span></div></div>
   <div class="screen-body">
     <div style="text-align:center;margin-bottom:16px;">
       <div class="badge" style="text-align:center;">Start Your Free Trial</div>
-      <h1 style="font-size:28px;">7 days free.<br>Then choose your plan.</h1>
-      <div style="display:inline-block;background:rgba(201,168,76,0.12);border:1px solid #9A7A30;color:#C9A84C;font-family:'Barlow Condensed',Arial,sans-serif;font-size:14px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:8px 18px;border-radius:6px;margin-top:10px;">✓ &nbsp;No charge until day 8 · Cancel anytime</div>
+      <h1 style="font-size:28px;">14 days free.<br>Then choose your plan.</h1>
+      <div style="display:inline-block;background:rgba(201,168,76,0.12);border:1px solid #9A7A30;color:#C9A84C;font-family:'Barlow Condensed',Arial,sans-serif;font-size:14px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:8px 18px;border-radius:6px;margin-top:10px;">✓ &nbsp;No charge until day 15 · Cancel anytime</div>
     </div>
-
     <div class="plan featured" id="planAnnual" onclick="pickPlan('annual')">
-      <div class="plan-amount">$4.99<span style="font-size:14px;color:#666;">/mo</span></div>
-      <div class="plan-name">Annual <span class="plan-badge">Best Value</span></div>
-      <div class="plan-price">Billed $59.99/year — save 40%</div>
-      <div style="font-size:11px;color:#444;margin-top:2px;">Less than $0.17 per day</div>
+      <div class="plan-amount">$8.25<span style="font-size:14px;color:#666;">/mo</span></div>
+      <div class="plan-name">MyGrind Annual <span class="plan-badge">Best Value</span></div>
+      <div class="plan-price">Billed $99/year — save 17%</div>
+      <div style="font-size:11px;color:#444;margin-top:2px;">Less than $0.27 per day</div>
     </div>
-
     <div class="plan" id="planMonthly" onclick="pickPlan('monthly')">
-      <div class="plan-amount" style="color:#F5F0EB;">$8.99<span style="font-size:14px;color:#666;">/mo</span></div>
-      <div class="plan-name">Monthly</div>
-      <div class="plan-price">Billed $8.99/mo · Cancel anytime</div>
+      <div class="plan-amount" style="color:#F5F0EB;">$9.99<span style="font-size:14px;color:#666;">/mo</span></div>
+      <div class="plan-name">MyGrind Monthly</div>
+      <div class="plan-price">Billed $9.99/mo · Cancel anytime</div>
     </div>
-
-    <!-- PAYWALL REVIEW — UPDATE WITH REAL BETA QUOTE -->
     <div style="display:flex;align-items:center;gap:10px;margin:10px 0 12px;background:#231F1C;border:1px solid #3D3530;border-radius:6px;padding:10px 12px;">
       <div class="stars">★★★★★</div>
-      <div>
-        <div style="font-size:12px;color:#D4C8BC;font-style:italic;" id="pwReview">"Wish I had this when I started — keeps everything in one place."</div>
-        <div style="font-family:'Barlow Condensed',Arial,sans-serif;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#C9A84C;margin-top:2px;" id="pwReviewName">Beta Player · SCV</div>
-      </div>
+      <div><div style="font-size:12px;color:#D4C8BC;font-style:italic;" id="pwReview">"Wish I had this when I started — keeps everything in one place."</div><div style="font-family:'Barlow Condensed',Arial,sans-serif;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#C9A84C;margin-top:2px;" id="pwReviewName">Beta Player · SCV</div></div>
     </div>
-
-    <div style="background:#231F1C;border:1px solid #3D3530;border-radius:6px;padding:12px;text-align:center;margin-bottom:12px;"><div style="font-family:'Bebas Neue',Arial,sans-serif;font-size:20px;color:#C9A84C;letter-spacing:1px;">FREE FOR 7 DAYS</div><div style="font-size:13px;color:#777;margin-top:3px;">We'll remind you 24 hours before the trial ends.<br>No surprise charges. Cancel with one tap.</div></div>
+    <div style="background:#231F1C;border:1px solid #3D3530;border-radius:6px;padding:12px;text-align:center;margin-bottom:12px;"><div style="font-family:'Bebas Neue',Arial,sans-serif;font-size:20px;color:#C9A84C;letter-spacing:1px;">FREE FOR 14 DAYS</div><div style="font-size:13px;color:#777;margin-top:3px;">We'll remind you 24 hours before the trial ends.<br>No surprise charges. Cancel with one tap.</div></div>
     <button class="cta" id="trialCTA" onclick="startTrial()">⚾ &nbsp;Start My Free Trial →</button>
     <div class="skip" onclick="skipTrial()">Continue with limited access</div>
     <div style="text-align:center;font-size:10px;color:#3D3530;margin-top:10px;padding-bottom:20px;">Secure checkout via Stripe · coach@mygrindapp.com</div>
@@ -526,273 +424,170 @@ if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
 </div>
 
 <script>
-// ══ CONFIG ════════════════════════════════════════
-var BB_URL         = 'https://youngsbaseball.github.io/mybaseballgrind';
-var SB_URL         = 'https://youngsbaseball.github.io/mybaseballgrind/softball.html';
-var STRIPE_ANNUAL  = 'https://buy.stripe.com/4gM5kFgiu53D1yq8eZ4gg04';
-var STRIPE_MONTHLY = 'https://buy.stripe.com/8x2bJ32rEcw50um1QB4gg03';
-var TOTAL_STEPS    = 13; // steps 1–13 shown in progress
+var BB_URL = 'https://youngsbaseball.github.io/mybaseballgrind';
+var SB_URL = 'https://youngsbaseball.github.io/mybaseballgrind/softball.html';
+var STRIPE_ANNUAL  = 'https://buy.stripe.com/28EdRb5DQanXfpg0Mx4gg05';
+var STRIPE_MONTHLY = 'https://buy.stripe.com/4gM7sN2rE9jT5OG3YJ4gg06';
+var TOTAL_STEPS = 13;
 
-// ══ STATE ═════════════════════════════════════════
-var d = {
-  sport: 'baseball', age: '', position: [], level: '',
-  team: '', goal: [], struggle: [], coachFeedback: [],
-  trainingDays: '', email: '', plan: 'annual'
-};
+var d = { sport:'baseball', age:'', position:[], level:'', team:'', goal:[], struggle:[], coachFeedback:[], trainingDays:'', email:'', plan:'annual' };
 var cur = 0;
 
-
-// ══ MAILCHIMP INTEGRATION ═════════════════════════════════════
-// Sends player email to MyGrind Waitlist audience automatically
 function subscribeToMailchimp(email, sport, goal) {
   if (!email || !email.includes('@')) return;
-
-  var ACCOUNT = '73280b4c02e9bc56c7e633892';
-  var LIST    = 'a7d801599a';
-  var SERVER  = 'us8';
-  var TAG     = '2216797';
-
-  var goalStr = Array.isArray(goal) ? goal.join(', ') : (goal || '');
+  var ACCOUNT='73280b4c02e9bc56c7e633892', LIST='a7d801599a', SERVER='us8', TAG='2216797';
+  var goalStr = Array.isArray(goal) ? goal.join(', ') : (goal||'');
   var sportStr = sport || '';
-
-  // Build JSONP URL — works from browser without CORS issues
-  var url = 'https://' + SERVER + '.list-manage.com/subscribe/post-json?' +
-    'u=' + ACCOUNT +
-    '&id=' + LIST +
-    '&EMAIL=' + encodeURIComponent(email) +
-    '&MERGE1=' + encodeURIComponent(sportStr) +
-    '&MERGE2=' + encodeURIComponent(goalStr) +
-    '&tags=' + TAG +
-    '&c=mcCallback_' + Date.now();
-
-  // JSONP — inject script tag to bypass CORS
-  var cbName = 'mcCallback_' + Date.now();
+  var url = 'https://'+SERVER+'.list-manage.com/subscribe/post-json?u='+ACCOUNT+'&id='+LIST+'&EMAIL='+encodeURIComponent(email)+'&MERGE1='+encodeURIComponent(sportStr)+'&MERGE2='+encodeURIComponent(goalStr)+'&tags='+TAG+'&c=mcCallback_'+Date.now();
+  var cbName = 'mcCallback_'+Date.now();
   window[cbName] = function(data) {
-    if (data && data.result === 'success') {
-      console.log('[MyGrind] Mailchimp: ' + email + ' added to MyGrind Waitlist');
-    } else if (data && data.msg) {
-      // Already subscribed is fine — not an error
-      if (data.msg.indexOf('already subscribed') !== -1) {
-        console.log('[MyGrind] Mailchimp: already subscribed');
-      }
-    }
-    // Clean up
+    if (data && data.result === 'success') console.log('[MyGrind] Mailchimp:', email);
     try { delete window[cbName]; } catch(e) {}
   };
-
-  url = url.replace('mcCallback_' + Date.now().toString().slice(0,-1), cbName);
-
+  url = url.replace('mcCallback_'+Date.now().toString().slice(0,-1), cbName);
   var script = document.createElement('script');
   script.src = url;
-  script.onerror = function() {
-    try { document.body.removeChild(script); } catch(e) {}
-  };
+  script.onerror = function() { try { document.body.removeChild(script); } catch(e) {} };
   document.body.appendChild(script);
-  setTimeout(function() {
-    try { document.body.removeChild(script); } catch(e) {}
-  }, 5000);
+  setTimeout(function() { try { document.body.removeChild(script); } catch(e) {} }, 5000);
 }
 
-
-// ══ FIREBASE AUTH IN ONBOARDING ══════════════════════════════════
 function fbSignUpOnboarding(email, password, sport, goal) {
   if (!email || !password) return Promise.resolve(null);
-  var name = sport ? sport.charAt(0).toUpperCase() + sport.slice(1) + ' Player' : 'Player';
+  if (typeof firebase === 'undefined') { console.warn('[Firebase] Not loaded'); return Promise.resolve(null); }
+  var name = sport ? sport.charAt(0).toUpperCase()+sport.slice(1)+' Player' : 'Player';
   return firebase.auth().createUserWithEmailAndPassword(email, password)
     .then(function(cred) {
       var user = cred.user;
       return user.updateProfile({ displayName: name }).then(function() {
-        // Save initial profile to Firestore
         return firebase.firestore().collection('users').doc(user.uid).set({
-          profile: {
-            sport:  sport,
-            goal:   Array.isArray(goal) ? goal.join(', ') : goal,
-            email:  email,
-            name:   name,
-            createdAt: firebase.firestore.FieldValue.serverTimestamp()
-          },
-          goals: Array.isArray(goal)
-            ? goal.map(function(g,i) { return { id: Date.now()+i, text: g, done: false }; })
-            : [{ id: Date.now(), text: goal, done: false }],
+          profile: { sport:sport, goal:Array.isArray(goal)?goal.join(', '):goal, email:email, name:name, createdAt:firebase.firestore.FieldValue.serverTimestamp() },
+          goals: Array.isArray(goal) ? goal.map(function(g,i){return {id:Date.now()+i,text:g,done:false};}) : [{id:Date.now(),text:goal,done:false}],
           createdAt: firebase.firestore.FieldValue.serverTimestamp()
         });
       });
     })
     .catch(function(e) {
-      // If email already exists — sign in instead
-      if (e.code === 'auth/email-already-in-use') {
-        return firebase.auth().signInWithEmailAndPassword(email, password)
-          .catch(function() { return null; });
-      }
+      if (e.code === 'auth/email-already-in-use') return firebase.auth().signInWithEmailAndPassword(email, password).catch(function(){return null;});
       return null;
     });
 }
 
-// ══ GUARD — only redirect if paid ════════════════
 (function() {
   try {
-    var a  = JSON.parse(localStorage.getItem('ybg_access') || '{}');
-    var sa = JSON.parse(localStorage.getItem('ybg_softball_access') || '{}');
-    if (a.paid  === true) { window.location.href = BB_URL; return; }
-    if (sa.paid === true) { window.location.href = SB_URL; return; }
-
-    // Returning expired user — personalize welcome screen
-    var isExpired = (a.trialExpired === true) || (sa.trialExpired === true);
+    var a = JSON.parse(localStorage.getItem('ybg_access')||'{}');
+    var sa = JSON.parse(localStorage.getItem('ybg_softball_access')||'{}');
+    if (a.paid===true) { window.location.href = BB_URL; return; }
+    if (sa.paid===true) { window.location.href = SB_URL; return; }
+    var isExpired = (a.trialExpired===true)||(sa.trialExpired===true);
     if (isExpired) {
       setTimeout(function() {
-        var h1    = document.querySelector('#s0 h1');
-        var sub   = document.querySelector('#s0 .sub');
-        var btn   = document.querySelector('#s0 .cta');
-        var badge = document.querySelector('#s0 .trial-badge');
-        if (h1)    h1.innerHTML = "Welcome back. <span>Your grind isn't finished.</span>";
-        if (sub)   sub.textContent = "Your 7-day trial ended — your progress is saved. Choose a plan and pick up right where you left off.";
-        if (btn)   btn.textContent = "See My Plan Options →";
+        var h1=document.querySelector('#s0 h1'), sub=document.querySelector('#s0 .sub'), btn=document.querySelector('#s0 .cta'), badge=document.querySelector('#s0 .trial-badge');
+        if (h1) h1.innerHTML = "Welcome back. <span>Your grind isn't finished.</span>";
+        if (sub) sub.textContent = "Your 14-day trial ended — your progress is saved. Choose a plan and pick up right where you left off.";
+        if (btn) btn.textContent = "See My Plan Options →";
         if (badge) badge.style.display = 'none';
       }, 120);
     }
   } catch(e) {}
 })();
 
-// ══ NAVIGATION ════════════════════════════════════
 function go(n) {
-  document.getElementById('s' + cur).classList.remove('on');
+  document.getElementById('s'+cur).classList.remove('on');
   cur = n;
-  var el = document.getElementById('s' + cur);
-  el.classList.add('on');
-  window.scrollTo(0, 0);
+  document.getElementById('s'+cur).classList.add('on');
+  window.scrollTo(0,0);
   updateSportLabels();
   buildDots(cur);
-  if (cur === 3)  buildPositions();
-  if (cur === 11) buildPlan();
+  if (cur===3) buildPositions();
+  if (cur===11) buildPlan();
 }
+function goNext(from, to) { go(to); }
 
-function goNext(from, to) {
-  go(to);
-}
-
-// ══ SPORT LABELS ══════════════════════════════════
 function updateSportLabels() {
-  var label = d.sport === 'softball' ? '🥎 Softball' : d.sport === 'both' ? '⚾🥎 Both' : '⚾ Baseball';
-  var accent = d.sport === 'softball' ? '#D4547A' : '#C9A84C';
-  // Update all sport label spans
-  for (var i = 1; i <= 14; i++) {
-    var el = document.getElementById('sportLabel' + (i > 1 ? i : ''));
+  var label = d.sport==='softball' ? '🥎 Softball' : d.sport==='both' ? '⚾🥎 Both' : '⚾ Baseball';
+  var accent = d.sport==='softball' ? '#D4547A' : '#C9A84C';
+  for (var i=1; i<=14; i++) {
+    var el = document.getElementById('sportLabel'+(i>1?i:''));
     if (el) el.textContent = label;
   }
-  // Update all accent colors
-  document.querySelectorAll('.prog-fill').forEach(function(el) { el.style.background = accent; });
-  document.querySelectorAll('.next-btn:not([disabled])').forEach(function(el) { el.style.background = accent; });
-  document.querySelectorAll('.cta').forEach(function(el) { el.style.background = accent; });
-  document.querySelectorAll('.gold-bar').forEach(function(el) { el.style.background = accent; });
-  document.querySelectorAll('.badge').forEach(function(el) { el.style.color = accent; });
-  document.querySelectorAll('.dot.on').forEach(function(el) { el.style.background = accent; });
+  document.querySelectorAll('.prog-fill').forEach(function(el){el.style.background=accent;});
+  document.querySelectorAll('.next-btn:not([disabled])').forEach(function(el){el.style.background=accent;});
+  document.querySelectorAll('.cta').forEach(function(el){el.style.background=accent;});
+  document.querySelectorAll('.gold-bar').forEach(function(el){el.style.background=accent;});
+  document.querySelectorAll('.badge').forEach(function(el){el.style.color=accent;});
+  document.querySelectorAll('.dot.on').forEach(function(el){el.style.background=accent;});
 }
 
-// ══ DOTS ══════════════════════════════════════════
 function buildDots(s) {
-  var accent = d.sport === 'softball' ? '#D4547A' : '#C9A84C';
-  for (var i = 1; i <= 14; i++) {
-    var el = document.getElementById('d' + i);
+  var accent = d.sport==='softball' ? '#D4547A' : '#C9A84C';
+  for (var i=1; i<=14; i++) {
+    var el = document.getElementById('d'+i);
     if (!el) continue;
     el.innerHTML = '';
-    for (var j = 1; j <= TOTAL_STEPS; j++) {
+    for (var j=1; j<=TOTAL_STEPS; j++) {
       var dot = document.createElement('div');
-      dot.className = 'dot' + (j < s ? ' on' : '');
-      if (j < s) dot.style.background = accent;
+      dot.className = 'dot'+(j<s?' on':'');
+      if (j<s) dot.style.background = accent;
       el.appendChild(dot);
     }
   }
 }
 
-// ══ SPORT SELECTION ═══════════════════════════════
 function setSport(s, el) {
   d.sport = s;
-  document.querySelectorAll('.sport-card').forEach(function(c) {
-    c.style.borderColor = '#3D3530'; c.style.background = '#231F1C';
-  });
-  var accent = s === 'softball' ? '#D4547A' : '#C9A84C';
+  document.querySelectorAll('.sport-card').forEach(function(c){c.style.borderColor='#3D3530';c.style.background='#231F1C';});
+  var accent = s==='softball' ? '#D4547A' : '#C9A84C';
   el.style.borderColor = accent;
-  el.style.background  = s === 'softball' ? 'rgba(212,84,122,0.08)' : 'rgba(201,168,76,0.08)';
-  setTimeout(function() { go(2); }, 300);
+  el.style.background = s==='softball' ? 'rgba(212,84,122,0.08)' : 'rgba(201,168,76,0.08)';
+  setTimeout(function(){go(2);}, 300);
 }
 
-// ══ SINGLE SELECT ═════════════════════════════════
 function pick(el, key, val) {
   d[key] = val;
-  var opts = el.closest('.screen-body').querySelectorAll('.opt');
-  opts.forEach(function(b) { b.classList.remove('selected'); });
+  el.closest('.screen-body').querySelectorAll('.opt').forEach(function(b){b.classList.remove('selected');});
   el.classList.add('selected');
   enableNext(el);
 }
 
-// ══ MULTI SELECT ═══════════════════════════════════
 function toggle(el, key, val) {
-  // Ensure array
   if (!Array.isArray(d[key])) d[key] = [];
-
   var idx = d[key].indexOf(val);
   if (idx === -1) {
-    // Add — but if "Nothing specific yet" is picked, clear others
     if (val === 'Nothing specific yet') {
       d[key] = [val];
-      // Deselect all others
-      var opts = el.closest('.screen-body').querySelectorAll('.opt');
-      opts.forEach(function(b) { b.classList.remove('selected'); });
+      el.closest('.screen-body').querySelectorAll('.opt').forEach(function(b){b.classList.remove('selected');});
     } else {
-      // Remove "Nothing specific yet" if it was selected
-      var nothingIdx = d[key].indexOf('Nothing specific yet');
-      if (nothingIdx !== -1) d[key].splice(nothingIdx, 1);
-      var opts = el.closest('.screen-body').querySelectorAll('.opt');
-      opts.forEach(function(b) {
-        if (b.textContent.includes('Nothing specific yet')) b.classList.remove('selected');
-      });
+      var nIdx = d[key].indexOf('Nothing specific yet');
+      if (nIdx !== -1) d[key].splice(nIdx, 1);
+      el.closest('.screen-body').querySelectorAll('.opt').forEach(function(b){if (b.textContent.includes('Nothing specific yet')) b.classList.remove('selected');});
       d[key].push(val);
     }
     el.classList.add('selected');
   } else {
-    // Remove — deselect
     d[key].splice(idx, 1);
     el.classList.remove('selected');
   }
-
-  // Enable next if at least one selected
   if (d[key].length > 0) enableNext(el);
 }
 
 function enableNext(el) {
-  var screenNum = el.closest('.screen').id.replace('s','');
-  var nextBtn = document.getElementById('n' + screenNum);
-  if (nextBtn) {
-    nextBtn.disabled = false;
-    nextBtn.style.opacity = '1';
-    nextBtn.style.background = d.sport === 'softball' ? '#D4547A' : '#C9A84C';
+  var n = el.closest('.screen').id.replace('s','');
+  var btn = document.getElementById('n'+n);
+  if (btn) {
+    btn.disabled = false;
+    btn.style.opacity = '1';
+    btn.style.background = d.sport==='softball' ? '#D4547A' : '#C9A84C';
   }
 }
 
-// ══ POSITIONS ══════════════════════════════════════
 function buildPositions() {
-  var bb = [
-    {e:'⚾', l:'Pitcher'}, {e:'🎯', l:'Catcher'},
-    {e:'1️⃣', l:'First Base'}, {e:'2️⃣', l:'Second Base'},
-    {e:'3️⃣', l:'Third Base'}, {e:'⚡', l:'Shortstop'},
-    {e:'🏃', l:'Outfield'}, {e:'🔄', l:'Utility / DH'},
-    {e:'❓', l:'Not sure yet'}
-  ];
-  var sb = [
-    {e:'🥎', l:'Pitcher'}, {e:'🎯', l:'Catcher'},
-    {e:'1️⃣', l:'First Base'}, {e:'2️⃣', l:'Second Base'},
-    {e:'3️⃣', l:'Third Base'}, {e:'⚡', l:'Shortstop'},
-    {e:'🏃', l:'Outfield'}, {e:'🏃‍♀️', l:'Slapper'},
-    {e:'🔄', l:'DP / Flex'}, {e:'❓', l:'Not sure yet'}
-  ];
-  var positions = d.sport === 'softball' ? sb : bb;
-  var grid = document.getElementById('posGrid');
-  grid.innerHTML = positions.map(function(p) {
-    return '<button class="opt" onclick="toggle(this,\'position\',\'' + p.l + '\')">' + p.e + ' &nbsp;' + p.l + '</button>';
-  }).join('');
+  var bb = [{e:'⚾',l:'Pitcher'},{e:'🎯',l:'Catcher'},{e:'1️⃣',l:'First Base'},{e:'2️⃣',l:'Second Base'},{e:'3️⃣',l:'Third Base'},{e:'⚡',l:'Shortstop'},{e:'🏃',l:'Outfield'},{e:'🔄',l:'Utility / DH'},{e:'❓',l:'Not sure yet'}];
+  var sb = [{e:'🥎',l:'Pitcher'},{e:'🎯',l:'Catcher'},{e:'1️⃣',l:'First Base'},{e:'2️⃣',l:'Second Base'},{e:'3️⃣',l:'Third Base'},{e:'⚡',l:'Shortstop'},{e:'🏃',l:'Outfield'},{e:'🏃‍♀️',l:'Slapper'},{e:'🔄',l:'DP / Flex'},{e:'❓',l:'Not sure yet'}];
+  var positions = d.sport==='softball' ? sb : bb;
+  document.getElementById('posGrid').innerHTML = positions.map(function(p){return '<button class="opt" onclick="toggle(this,\'position\',\''+p.l+'\')">'+p.e+' &nbsp;'+p.l+'</button>';}).join('');
 }
 
-// ══ EMAIL ══════════════════════════════════════════
 function checkEmail() {
   var inp = document.getElementById('emailInput');
   var val = inp ? inp.value.trim() : '';
@@ -812,36 +607,19 @@ function emailNext() {
   go(11);
 }
 
-// ══ PLAN PREVIEW ══════════════════════════════════
 function buildPlan() {
-  var sportLabel = d.sport === 'softball' ? 'Softball' : 'Baseball';
+  var sportLabel = d.sport==='softball' ? 'Softball' : 'Baseball';
   var t = document.getElementById('planTitle');
   var goalLabel = Array.isArray(d.goal) ? d.goal.join(' + ') : (d.goal || 'Your Goal');
-  if (t) t.textContent = sportLabel + ' Player Plan — ' + goalLabel;
-
+  if (t) t.textContent = sportLabel+' Player Plan — '+goalLabel;
   var sub = document.getElementById('s11sub');
-  if (sub) sub.textContent = 'Based on your answers — here\'s what MyGrind built for you, ' + (d.age || 'player') + '.';
-
-  var posLabel = Array.isArray(d.position) && d.position.length ? d.position.join(' / ') : (d.position || 'your position');
-  var drills = d.sport === 'softball'
-    ? 'Fastpitch drills + circle change work — 3x/week'
-    : 'Position drills for ' + posLabel + ' — 3x/week';
-
-  var coachArr = Array.isArray(d.coachFeedback) ? d.coachFeedback.filter(function(x){return x !== 'Nothing specific yet';}) : [];
-  var coachLine = coachArr.length
-    ? '✅ Coach focus: ' + coachArr.slice(0,2).join(', ')
-    : '✅ Goal milestone tracker';
-
+  if (sub) sub.textContent = 'Based on your answers — here\'s what MyGrind built for you, '+(d.age||'player')+'.';
+  var posLabel = Array.isArray(d.position) && d.position.length ? d.position.join(' / ') : (d.position||'your position');
+  var drills = d.sport==='softball' ? 'Fastpitch drills + circle change work — 3x/week' : 'Position drills for '+posLabel+' — 3x/week';
+  var coachArr = Array.isArray(d.coachFeedback) ? d.coachFeedback.filter(function(x){return x!=='Nothing specific yet';}) : [];
+  var coachLine = coachArr.length ? '✅ Coach focus: '+coachArr.slice(0,2).join(', ') : '✅ Goal milestone tracker';
   var items = document.getElementById('planItems');
-  if (items) items.innerHTML =
-    '<div>✅ Daily journal prompts for ' + posLabel + '</div>' +
-    '<div>✅ ' + drills + '</div>' +
-    '<div>✅ Weekly progress snapshot</div>' +
-    '<div>✅ Goal: <em style="color:#C9A84C;">' + goalLabel + '</em></div>' +
-    '<div>' + coachLine + '</div>' +
-    '<div>✅ Shareable training report for coaches</div>';
-
-  // Example drill based on struggle
+  if (items) items.innerHTML = '<div>✅ Daily journal prompts for '+posLabel+'</div><div>✅ '+drills+'</div><div>✅ Weekly progress snapshot</div><div>✅ Goal: <em style="color:#C9A84C;">'+goalLabel+'</em></div><div>'+coachLine+'</div><div>✅ Shareable training report for coaches</div>';
   var drill = document.getElementById('exDrill');
   if (drill) {
     if (d.struggle && d.struggle.includes('Hitting')) drill.textContent = 'Tee work — inside pitch, 50 reps';
@@ -850,99 +628,61 @@ function buildPlan() {
     else if (d.struggle && d.struggle.includes('Mental')) drill.textContent = 'Visualization — full at-bat routine, 5 min';
     else drill.textContent = 'Tee work — inside pitch, 40 reps';
   }
-
-  // Personalize paywall CTA
   var cta = document.getElementById('trialCTA');
   if (cta) {
-    var emoji = d.sport === 'softball' ? '🥎' : '⚾';
-    var txt = emoji + '  Start My Free Trial →';
+    var emoji = d.sport==='softball' ? '🥎' : '⚾';
+    var txt = emoji+'  Start My Free Trial →';
     var goals = Array.isArray(d.goal) ? d.goal : [d.goal];
-    if (goals.includes('Make a travel team'))       txt = emoji + '  Start Making the Team →';
-    if (goals.includes('Get recruited to college')) txt = emoji + '  Start My Recruiting Journey →';
-    if (goals.includes('Earn a starting spot'))     txt = emoji + '  Start Earning My Spot →';
-    if (goals.includes('Build consistent habits'))  txt = emoji + '  Start Building My Habit →';
+    if (goals.includes('Make a travel team')) txt = emoji+'  Start Making the Team →';
+    if (goals.includes('Get recruited to college')) txt = emoji+'  Start My Recruiting Journey →';
+    if (goals.includes('Earn a starting spot')) txt = emoji+'  Start Earning My Spot →';
+    if (goals.includes('Build consistent habits')) txt = emoji+'  Start Building My Habit →';
     cta.textContent = txt;
   }
 }
 
-// ══ PLAN PICKER ════════════════════════════════════
 function pickPlan(p) {
   d.plan = p;
-  var accent = d.sport === 'softball' ? '#D4547A' : '#C9A84C';
-  var ann = document.getElementById('planAnnual');
-  var mon = document.getElementById('planMonthly');
-  if (p === 'annual') {
-    if (ann) ann.style.border = '2px solid ' + accent;
-    if (mon) mon.style.border = '1px solid #3D3530';
-  } else {
-    if (mon) mon.style.border = '2px solid ' + accent;
-    if (ann) ann.style.border = '1px solid #3D3530';
-  }
+  var accent = d.sport==='softball' ? '#D4547A' : '#C9A84C';
+  var ann = document.getElementById('planAnnual'), mon = document.getElementById('planMonthly');
+  if (p === 'annual') { if (ann) ann.style.border = '2px solid '+accent; if (mon) mon.style.border = '1px solid #3D3530'; }
+  else { if (mon) mon.style.border = '2px solid '+accent; if (ann) ann.style.border = '1px solid #3D3530'; }
 }
 
-// ══ TRIAL ══════════════════════════════════════════
 function startTrial() {
   writeToApp();
-  var url = d.plan === 'annual' ? STRIPE_ANNUAL : STRIPE_MONTHLY;
-  if (d.email) url += '?prefilled_email=' + encodeURIComponent(d.email);
+  var url = d.plan==='annual' ? STRIPE_ANNUAL : STRIPE_MONTHLY;
+  if (d.email) url += '?prefilled_email='+encodeURIComponent(d.email);
   window.open(url, '_blank');
   setTimeout(launchApp, 900);
 }
 
-function skipTrial() {
-  writeToApp();
-  launchApp();
-}
+function skipTrial() { writeToApp(); launchApp(); }
+function launchApp() { window.location.href = d.sport==='softball' ? SB_URL : BB_URL; }
 
-function launchApp() {
-  window.location.href = d.sport === 'softball' ? SB_URL : BB_URL;
-}
-
-// ══ WRITE TO APP ════════════════════════════════════
 function writeToApp() {
-  var isSb = d.sport === 'softball';
-  var fp   = fingerprint();
-  var now  = Date.now();
-  var access  = { email: d.email, fingerprint: fp, trialStart: now, paid: false, sport: d.sport, goal: d.goal, mode: 'onboarding' };
+  var isSb = d.sport==='softball';
+  var fp = fingerprint(), now = Date.now();
+  var access = { email:d.email, fingerprint:fp, trialStart:now, paid:false, sport:d.sport, goal:d.goal, mode:'onboarding' };
   var posStr = Array.isArray(d.position) ? d.position.join(', ') : d.position;
-  var profile = { sport: d.sport, age: d.age, position: posStr, level: d.level, team: d.team, bio: d.sport + ' · ' + d.age + ' · Goal: ' + (Array.isArray(d.goal) ? d.goal.join(', ') : d.goal), savedAt: new Date().toISOString() };
-  var state   = { goals: [], entries: [], players: [] };
-  var goalArr = Array.isArray(d.goal) ? d.goal : (d.goal ? [d.goal] : []);
-  goalArr.forEach(function(g, i) {
-    if (g) state.goals.push({ id: now + i, text: g, cat: 'mental', done: false });
-  });
-  var coachItems = Array.isArray(d.coachFeedback) ? d.coachFeedback : (d.coachFeedback ? [d.coachFeedback] : []);
-  coachItems.forEach(function(fb, i) {
-    if (fb && fb !== 'Nothing specific yet') {
-      state.goals.push({ id: now + i + 1, text: 'Coach feedback: ' + fb, cat: 'mental', done: false });
-    }
-  });
+  var profile = { sport:d.sport, age:d.age, position:posStr, level:d.level, team:d.team, bio:d.sport+' · '+d.age+' · Goal: '+(Array.isArray(d.goal)?d.goal.join(', '):d.goal), savedAt:new Date().toISOString() };
+  var state = { goals:[], entries:[], players:[] };
+  var goalArr = Array.isArray(d.goal) ? d.goal : (d.goal?[d.goal]:[]);
+  goalArr.forEach(function(g,i){ if (g) state.goals.push({id:now+i,text:g,cat:'mental',done:false}); });
+  var coachItems = Array.isArray(d.coachFeedback) ? d.coachFeedback : (d.coachFeedback?[d.coachFeedback]:[]);
+  coachItems.forEach(function(fb,i){ if (fb && fb!=='Nothing specific yet') state.goals.push({id:now+i+1,text:'Coach feedback: '+fb,cat:'mental',done:false}); });
   try {
-    var ak = isSb ? 'ybg_softball_access'   : 'ybg_access';
-    var pk = isSb ? 'ybg_softball_profile'   : 'ybg_profile';
-    var sk = isSb ? 'ybg_softball_state'     : 'ybg_state';
-    var ok = isSb ? 'ybg_softball_onboarded' : 'ybg_onboarded';
+    var ak = isSb?'ybg_softball_access':'ybg_access', pk = isSb?'ybg_softball_profile':'ybg_profile', sk = isSb?'ybg_softball_state':'ybg_state', ok = isSb?'ybg_softball_onboarded':'ybg_onboarded';
     localStorage.setItem(ak, JSON.stringify(access));
     localStorage.setItem(pk, JSON.stringify(profile));
     localStorage.setItem(sk, JSON.stringify(state));
     localStorage.setItem(ok, '1');
     localStorage.setItem('ybg_onboarding_sport', d.sport);
   } catch(e) {}
-
-  // Send email to Mailchimp MyGrind Waitlist
+  if (d.email) subscribeToMailchimp(d.email, d.sport, d.goal);
   if (d.email) {
-    subscribeToMailchimp(d.email, d.sport, d.goal);
-  }
-
-  // Create Firebase account (email + auto-generated password based on fingerprint)
-  if (d.email) {
-    var autoPass = 'MG-' + fingerprint() + '-2026';
-    fbSignUpOnboarding(d.email, autoPass, d.sport, d.goal)
-      .then(function(result) {
-        if (result) console.log('[Firebase] Account created for', d.email);
-      })
-      .catch(function(e) { console.warn('[Firebase] Account creation:', e); });
-    // Store password locally so app can auto-sign-in
+    var autoPass = 'MG-'+fingerprint()+'-2026';
+    fbSignUpOnboarding(d.email, autoPass, d.sport, d.goal).then(function(r){if(r) console.log('[Firebase] Account created');}).catch(function(e){console.warn('[Firebase]', e);});
     try { localStorage.setItem('ybg_fb_pass', autoPass); } catch(e) {}
   }
 }
@@ -951,13 +691,12 @@ function fingerprint() {
   try {
     var raw = [navigator.userAgent, screen.width, screen.height, new Date().getTimezoneOffset()].join('|');
     var h = 0;
-    for (var i = 0; i < raw.length; i++) { h = ((h << 5) - h) + raw.charCodeAt(i); h |= 0; }
+    for (var i=0; i<raw.length; i++) { h = ((h<<5)-h)+raw.charCodeAt(i); h |= 0; }
     return Math.abs(h).toString(36);
   } catch(e) { return 'x'; }
 }
 
-// ══ BACK BUTTON SUPPORT ════════════════════════════
-window.addEventListener('popstate', function() { if (cur > 0) { history.pushState(null,'',''); go(cur - 1); } });
+window.addEventListener('popstate', function(){ if (cur>0) { history.pushState(null,'',''); go(cur-1); } });
 history.pushState(null, '', '');
 </script>
 </body>
