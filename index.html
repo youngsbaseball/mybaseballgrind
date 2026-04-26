@@ -1206,6 +1206,12 @@ function dismissIosBanner() {
       <div style="text-align:center; font-family:'Barlow Condensed',sans-serif; font-size:11px; letter-spacing:1px; color:#333; border-top:1px solid #1E1E1E; padding-top:16px;">
         Pricing shown when trial ends · coach@mygrindapp.com
         <br><br>
+        <span onclick="openPrivacyModal()" style="color:#666; cursor:pointer; text-decoration:underline; padding:0 8px;">Privacy Policy</span>
+        ·
+        <span onclick="openTermsModal()" style="color:#666; cursor:pointer; text-decoration:underline; padding:0 8px;">Terms of Service</span>
+        <br><br>
+        <span style="color:#222; font-size:10px;">© 2026 MyGrind · A Young's Baseball Group product</span>
+        <br><br>
         <span onclick="unlockCreator()" style="color:#1A1A1A; cursor:pointer; font-size:10px; user-select:none;" title="Creator Access">⚾</span>
       </div>
 
@@ -8877,6 +8883,154 @@ setTimeout(function() {
 setTimeout(function() {
   try { refreshTeamPanel(); } catch(e) {}
 }, 300);
+
+// ─── LEGAL MODALS (Privacy Policy & Terms of Service) ──────
+function openPrivacyModal() {
+  var modal = document.getElementById('privacy-modal');
+  if (modal) {
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+}
+function closePrivacyModal(event) {
+  if (event && event.target.id !== 'privacy-modal' && !event.target.classList.contains('legal-close-btn')) return;
+  var modal = document.getElementById('privacy-modal');
+  if (modal) {
+    modal.style.display = 'none';
+    document.body.style.overflow = '';
+  }
+}
+function openTermsModal() {
+  var modal = document.getElementById('terms-modal');
+  if (modal) {
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+}
+function closeTermsModal(event) {
+  if (event && event.target.id !== 'terms-modal' && !event.target.classList.contains('legal-close-btn')) return;
+  var modal = document.getElementById('terms-modal');
+  if (modal) {
+    modal.style.display = 'none';
+    document.body.style.overflow = '';
+  }
+}
+// ESC key closes either modal
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    closePrivacyModal({target:{id:'privacy-modal'}});
+    closeTermsModal({target:{id:'terms-modal'}});
+  }
+});
 </script>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- PRIVACY POLICY MODAL                                         -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div id="privacy-modal" onclick="closePrivacyModal(event)" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.92); z-index:99999; align-items:center; justify-content:center; padding:20px; backdrop-filter:blur(8px); overflow-y:auto;">
+  <div style="background:#0A0A0A; border:1px solid #C9A84C; border-radius:6px; max-width:760px; width:100%; max-height:90vh; overflow-y:auto; padding:32px; font-family:'Barlow',sans-serif; line-height:1.7; color:#E0DACB; position:relative;">
+    <button class="legal-close-btn" onclick="closePrivacyModal({target:{id:'privacy-modal'}})" style="position:sticky; top:0; float:right; background:#C9A84C; color:#080808; border:none; width:32px; height:32px; border-radius:50%; font-size:16px; font-weight:bold; cursor:pointer; margin-bottom:8px; z-index:10;">×</button>
+    <h1 style="font-family:'Bebas Neue',sans-serif; font-size:32px; letter-spacing:2px; color:#C9A84C; margin:0 0 8px; border-bottom:2px solid #C9A84C; padding-bottom:12px;">MyGrind Privacy Policy</h1>
+    <p style="color:#888; font-style:italic; margin:0 0 24px; font-size:13px;">Effective Date: April 25, 2026 | Last Updated: April 25, 2026</p>
+    <div style="background:#1A1A1A; border-left:4px solid #C9A84C; padding:18px; margin:0 0 24px; border-radius:4px;">
+      <h3 style="color:#C9A84C; margin:0 0 12px; font-size:15px;">📋 Plain-English Summary</h3>
+      <p style="margin:0 0 10px; font-size:14px;"><strong style="color:#F5EFE0;">Who we are:</strong> MyGrind is a youth baseball and softball training app operated by Young's Baseball Group, LLC.</p>
+      <p style="margin:0 0 10px; font-size:14px;"><strong style="color:#F5EFE0;">Who uses MyGrind:</strong> Parents and legal guardians (18+) create accounts and add player profiles for their children ages 13–17. Players 18+ may create their own accounts.</p>
+      <p style="margin:0 0 10px; font-size:14px;"><strong style="color:#F5EFE0;">What we collect:</strong> Account info (name, email, payment), and player training data (workouts, goals, stats). We never sell your data.</p>
+      <p style="margin:0; font-size:14px;"><strong style="color:#F5EFE0;">Your rights:</strong> Review, edit, or delete your information anytime by emailing <a href="mailto:coach@mygrindapp.com" style="color:#C9A84C;">coach@mygrindapp.com</a>.</p>
+    </div>
+    <h2 style="color:#C9A84C; font-size:20px; margin:24px 0 10px;">1. Introduction</h2>
+    <p>MyGrind ("we," "us," "our," or the "Service") is a web-based training and development platform for youth baseball and softball players, operated by Young's Baseball Group, LLC ("Company") based in Santa Clarita, California. This Privacy Policy explains how we collect, use, share, and protect information when you use mygrindapp.com (the "Service").</p>
+    <p>By using MyGrind, you agree to this Privacy Policy. If you do not agree, please do not use the Service.</p>
+    <h2 style="color:#C9A84C; font-size:20px; margin:24px 0 10px;">2. Who Can Use MyGrind</h2>
+    <p>MyGrind is designed for use by:</p>
+    <ul style="padding-left:24px;">
+      <li><strong>Parents and legal guardians</strong> who are at least 18 years old, who create and own accounts on behalf of their player(s).</li>
+      <li><strong>Players ages 13 through 17</strong>, who use MyGrind through profiles created and owned by their parent or legal guardian.</li>
+      <li><strong>Players age 18 or older</strong>, who may create their own accounts independently.</li>
+    </ul>
+    <p><strong style="color:#F5EFE0;">MyGrind is not intended for and does not knowingly collect information from children under 13 years of age.</strong></p>
+    <h2 style="color:#C9A84C; font-size:20px; margin:24px 0 10px;">3. Information We Collect</h2>
+    <h3 style="color:#F5EFE0; font-size:16px; margin:16px 0 8px;">3.1 Information from Parents/Account Holders</h3>
+    <ul style="padding-left:24px;">
+      <li>Full name, email address, optional phone number</li>
+      <li>Account password (stored encrypted)</li>
+      <li>Payment information (processed by Stripe — we never store full credit card numbers)</li>
+    </ul>
+    <h3 style="color:#F5EFE0; font-size:16px; margin:16px 0 8px;">3.2 Information About Players</h3>
+    <p>Parents provide: first name (or nickname), age, sport (baseball or softball), position(s), team name (optional). Players generate: workout logs, performance statistics, goals and progress data, streaks and achievements.</p>
+    <h2 style="color:#C9A84C; font-size:20px; margin:24px 0 10px;">4. How We Use Information</h2>
+    <p>To create and manage accounts, provide training tracking, process subscription payments through Stripe, send service emails, improve features, prevent fraud, and comply with legal obligations.</p>
+    <h2 style="color:#C9A84C; font-size:20px; margin:24px 0 10px;">5. How We Share Information</h2>
+    <p>We <strong style="color:#F5EFE0;">do not sell</strong> your information. We share only with: Stripe (payments), Mailchimp (email), and our hosting provider, plus as required by law.</p>
+    <h2 style="color:#C9A84C; font-size:20px; margin:24px 0 10px;">6. Parental Rights and Controls</h2>
+    <p>As account holder, the parent has full control: review all player data, update or delete information, delete the player profile or entire account, refuse further data collection, and export player data. To exercise these rights, email <a href="mailto:coach@mygrindapp.com" style="color:#C9A84C;">coach@mygrindapp.com</a>.</p>
+    <h2 style="color:#C9A84C; font-size:20px; margin:24px 0 10px;">7. California Residents — Your CCPA Rights</h2>
+    <p>California residents have the Right to Know, Right to Delete, Right to Correct, Right to Opt-Out (we don't sell data), Right to Non-Discrimination, and Right to Limit Use of sensitive personal information. Email <a href="mailto:coach@mygrindapp.com" style="color:#C9A84C;">coach@mygrindapp.com</a> with subject "CCPA Request."</p>
+    <h2 style="color:#C9A84C; font-size:20px; margin:24px 0 10px;">8. Data Security</h2>
+    <p>We use HTTPS/SSL encryption, encrypted password storage, secure payment processing through Stripe (PCI-DSS compliant), and regular security reviews.</p>
+    <h2 style="color:#C9A84C; font-size:20px; margin:24px 0 10px;">9. Data Retention</h2>
+    <p>We retain account and player information for as long as the account is active. Upon deletion, we remove or anonymize information within 30 days, except where required for legal, tax, or fraud-prevention purposes.</p>
+    <h2 style="color:#C9A84C; font-size:20px; margin:24px 0 10px;">10. Cookies and Tracking</h2>
+    <p>MyGrind uses essential cookies only. We do not use third-party advertising cookies or behavioral tracking.</p>
+    <h2 style="color:#C9A84C; font-size:20px; margin:24px 0 10px;">11. Children's Privacy (Under 13)</h2>
+    <p>MyGrind is not directed to children under 13. We do not knowingly collect personal information from children under 13.</p>
+    <h2 style="color:#C9A84C; font-size:20px; margin:24px 0 10px;">12. Changes to This Privacy Policy</h2>
+    <p>We may update this Privacy Policy from time to time. Material changes will be communicated via email and posted on the Service.</p>
+    <h2 style="color:#C9A84C; font-size:20px; margin:24px 0 10px;">13. Contact Us</h2>
+    <p><strong style="color:#F5EFE0;">MyGrind</strong><br>A product of Young's Baseball Group, LLC<br>Santa Clarita, California<br>Email: <a href="mailto:coach@mygrindapp.com" style="color:#C9A84C;">coach@mygrindapp.com</a><br>Website: <a href="https://mygrindapp.com" style="color:#C9A84C;">mygrindapp.com</a></p>
+    <button class="legal-close-btn" onclick="closePrivacyModal({target:{id:'privacy-modal'}})" style="display:block; margin:32px auto 0; background:#C9A84C; color:#080808; border:none; padding:12px 32px; font-family:'Barlow Condensed',sans-serif; font-size:14px; font-weight:800; letter-spacing:2px; text-transform:uppercase; border-radius:3px; cursor:pointer;">Close</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- TERMS OF SERVICE MODAL                                       -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div id="terms-modal" onclick="closeTermsModal(event)" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.92); z-index:99999; align-items:center; justify-content:center; padding:20px; backdrop-filter:blur(8px); overflow-y:auto;">
+  <div style="background:#0A0A0A; border:1px solid #C9A84C; border-radius:6px; max-width:760px; width:100%; max-height:90vh; overflow-y:auto; padding:32px; font-family:'Barlow',sans-serif; line-height:1.7; color:#E0DACB; position:relative;">
+    <button class="legal-close-btn" onclick="closeTermsModal({target:{id:'terms-modal'}})" style="position:sticky; top:0; float:right; background:#C9A84C; color:#080808; border:none; width:32px; height:32px; border-radius:50%; font-size:16px; font-weight:bold; cursor:pointer; margin-bottom:8px; z-index:10;">×</button>
+    <h1 style="font-family:'Bebas Neue',sans-serif; font-size:32px; letter-spacing:2px; color:#C9A84C; margin:0 0 8px; border-bottom:2px solid #C9A84C; padding-bottom:12px;">MyGrind Terms of Service</h1>
+    <p style="color:#888; font-style:italic; margin:0 0 24px; font-size:13px;">Effective Date: April 25, 2026 | Last Updated: April 25, 2026</p>
+    <div style="background:#1A1A1A; border-left:4px solid #C9A84C; padding:18px; margin:0 0 24px; border-radius:4px;">
+      <h3 style="color:#C9A84C; margin:0 0 12px; font-size:15px;">📋 Plain-English Summary</h3>
+      <p style="margin:0 0 10px; font-size:14px;"><strong style="color:#F5EFE0;">Who can use MyGrind:</strong> Adults 18 and older may create accounts. Players ages 13–17 use MyGrind through profiles created by their parent or legal guardian.</p>
+      <p style="margin:0 0 10px; font-size:14px;"><strong style="color:#F5EFE0;">What you're paying for:</strong> A subscription to a youth baseball/softball training app. Plans auto-renew. You can cancel anytime.</p>
+      <p style="margin:0; font-size:14px;"><strong style="color:#F5EFE0;">If something goes wrong:</strong> Disputes are governed by California law. Contact <a href="mailto:coach@mygrindapp.com" style="color:#C9A84C;">coach@mygrindapp.com</a> first — we'll work to resolve issues directly.</p>
+    </div>
+    <h2 style="color:#C9A84C; font-size:20px; margin:24px 0 10px;">1. Agreement to Terms</h2>
+    <p>These Terms of Service ("Terms") govern your access to and use of MyGrind, located at mygrindapp.com (the "Service"), operated by Young's Baseball Group, LLC, based in Santa Clarita, California. By creating an account or using the Service, you agree to these Terms and our Privacy Policy.</p>
+    <h2 style="color:#C9A84C; font-size:20px; margin:24px 0 10px;">2. Eligibility</h2>
+    <p><strong style="color:#F5EFE0;">2.1 Account Holders Must Be 18+.</strong> You must be at least 18 years old to create a MyGrind account. By creating an account, you represent that you are at least 18, have legal authority to enter these Terms, and if creating profiles for player(s) under 18, you are the parent or legal guardian.</p>
+    <p><strong style="color:#F5EFE0;">2.2 Players Under 18.</strong> Players ages 13 through 17 may use the Service only through a profile created and managed by their parent or legal guardian. Players under 13 are not permitted to use the Service.</p>
+    <h2 style="color:#C9A84C; font-size:20px; margin:24px 0 10px;">3. Parent / Guardian Responsibility</h2>
+    <p>If you create a player profile for a player under 18, you (the parent or legal guardian) are <strong style="color:#F5EFE0;">fully responsible</strong> for all charges, your player's use of the Service, reviewing your player's data, and ensuring information accuracy.</p>
+    <h2 style="color:#C9A84C; font-size:20px; margin:24px 0 10px;">4. Subscriptions, Billing, and Trials</h2>
+    <p><strong style="color:#F5EFE0;">14-Day Free Trial:</strong> MyGrind offers a 14-day free trial for new accounts. No credit card required during trial.</p>
+    <p><strong style="color:#F5EFE0;">Subscription Plans:</strong> Current plans and prices are listed on the Service. We reserve the right to modify pricing with at least 30 days' notice to existing subscribers.</p>
+    <p><strong style="color:#F5EFE0;">Auto-Renewal:</strong> Subscriptions automatically renew at the end of each billing period at the then-current rate, unless you cancel before the renewal date.</p>
+    <p><strong style="color:#F5EFE0;">Cancellation:</strong> You may cancel at any time through account settings or by emailing <a href="mailto:coach@mygrindapp.com" style="color:#C9A84C;">coach@mygrindapp.com</a>. Cancellation takes effect at the end of the current billing period.</p>
+    <p><strong style="color:#F5EFE0;">Payment Processing:</strong> All payments are processed by Stripe, Inc. We do not store full credit card numbers on our servers.</p>
+    <h2 style="color:#C9A84C; font-size:20px; margin:24px 0 10px;">5. Acceptable Use</h2>
+    <p>You agree not to: use the Service unlawfully, share account credentials outside immediate family, create multiple accounts to circumvent fees, upload harmful content, gain unauthorized access, use bots/scrapers, or reverse-engineer the Service.</p>
+    <h2 style="color:#C9A84C; font-size:20px; margin:24px 0 10px;">6. Intellectual Property</h2>
+    <p>All content provided by MyGrind — logos, branding, designs, software, training methodologies, written materials, and the MyGrind name — is the property of Young's Baseball Group, LLC and is protected by copyright and trademark laws.</p>
+    <h2 style="color:#C9A84C; font-size:20px; margin:24px 0 10px;">7. Disclaimers</h2>
+    <p><strong style="color:#F5EFE0;">Not Medical or Professional Advice:</strong> MyGrind provides general training tracking and educational content. <strong style="color:#F5EFE0;">It is not medical, athletic, or professional advice.</strong> Always consult a qualified physician, athletic trainer, or coach before beginning any training program.</p>
+    <p><strong style="color:#F5EFE0;">Service Provided "As Is":</strong> The Service is provided "as is" without warranties of any kind.</p>
+    <p><strong style="color:#F5EFE0;">No Guarantee of Athletic Outcomes:</strong> Use of MyGrind does not guarantee any specific athletic improvement, scholarship offer, or other result.</p>
+    <h2 style="color:#C9A84C; font-size:20px; margin:24px 0 10px;">8. Limitation of Liability</h2>
+    <p>To the maximum extent permitted by law, Young's Baseball Group, LLC will not be liable for indirect, incidental, consequential, or punitive damages. Our total liability for any claim arising out of these Terms or the Service will not exceed the amount you paid us in the 12 months preceding the claim, or $100, whichever is greater.</p>
+    <h2 style="color:#C9A84C; font-size:20px; margin:24px 0 10px;">9. Termination</h2>
+    <p>We may suspend or terminate your account at any time if you violate these Terms. You may terminate your account at any time by canceling your subscription and emailing <a href="mailto:coach@mygrindapp.com" style="color:#C9A84C;">coach@mygrindapp.com</a>.</p>
+    <h2 style="color:#C9A84C; font-size:20px; margin:24px 0 10px;">10. Governing Law and Disputes</h2>
+    <p>These Terms are governed by California law. Before filing any formal claim, you agree to first contact us at <a href="mailto:coach@mygrindapp.com" style="color:#C9A84C;">coach@mygrindapp.com</a> for at least 30 days. Any disputes that cannot be resolved informally will be brought exclusively in the state or federal courts located in Los Angeles County, California.</p>
+    <h2 style="color:#C9A84C; font-size:20px; margin:24px 0 10px;">11. Changes to These Terms</h2>
+    <p>We may update these Terms from time to time. Material changes will be communicated via email at least 30 days before taking effect.</p>
+    <h2 style="color:#C9A84C; font-size:20px; margin:24px 0 10px;">12. Contact Us</h2>
+    <p><strong style="color:#F5EFE0;">MyGrind</strong><br>A product of Young's Baseball Group, LLC<br>Santa Clarita, California<br>Email: <a href="mailto:coach@mygrindapp.com" style="color:#C9A84C;">coach@mygrindapp.com</a><br>Website: <a href="https://mygrindapp.com" style="color:#C9A84C;">mygrindapp.com</a></p>
+    <button class="legal-close-btn" onclick="closeTermsModal({target:{id:'terms-modal'}})" style="display:block; margin:32px auto 0; background:#C9A84C; color:#080808; border:none; padding:12px 32px; font-family:'Barlow Condensed',sans-serif; font-size:14px; font-weight:800; letter-spacing:2px; text-transform:uppercase; border-radius:3px; cursor:pointer;">Close</button>
+  </div>
+</div>
+
 </body>
 </html>
