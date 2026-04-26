@@ -9059,5 +9059,150 @@ document.addEventListener('keydown', function(e) {
   </div>
 </div>
 
+<!-- ═══════════════════════════════════════════════════════════
+     SWIPE BETWEEN TABS — Mobile Navigation Enhancement
+     Added April 26, 2026 — Lets users swipe left/right on phone
+     to navigate between Profile → Dashboard → Journal → etc.
+═══════════════════════════════════════════════════════════ -->
+<script>
+(function() {
+  'use strict';
+
+  // Tab order matches the bottom nav buttons (left to right)
+  var TAB_ORDER = ['players', 'dashboard', 'journal', 'calendar', 'team', 'stats', 'share', 'settings'];
+
+  // Swipe detection thresholds
+  var MIN_SWIPE_DISTANCE  = 60;   // pixels — minimum horizontal distance
+  var MAX_VERTICAL_OFFSET = 80;   // pixels — max vertical movement allowed (else it's a scroll)
+  var MAX_SWIPE_DURATION  = 600;  // ms — must complete swipe within this time
+
+  var touchStartX = 0;
+  var touchStartY = 0;
+  var touchStartTime = 0;
+  var swipeActive = false;
+
+  // Get the currently active panel name from the DOM
+  function getActivePanel() {
+    for (var i = 0; i < TAB_ORDER.length; i++) {
+      var el = document.getElementById('panel-' + TAB_ORDER[i]);
+      if (el && el.classList.contains('active')) return TAB_ORDER[i];
+    }
+    return null;
+  }
+
+  // Switch to next tab (swipe left)
+  function nextTab() {
+    var current = getActivePanel();
+    if (!current) return;
+    var idx = TAB_ORDER.indexOf(current);
+    if (idx < 0 || idx >= TAB_ORDER.length - 1) return; // already at last tab
+    if (typeof window.showPanel === 'function') {
+      window.showPanel(TAB_ORDER[idx + 1]);
+    }
+  }
+
+  // Switch to previous tab (swipe right)
+  function prevTab() {
+    var current = getActivePanel();
+    if (!current) return;
+    var idx = TAB_ORDER.indexOf(current);
+    if (idx <= 0) return; // already at first tab
+    if (typeof window.showPanel === 'function') {
+      window.showPanel(TAB_ORDER[idx - 1]);
+    }
+  }
+
+  // Check if the touch target is inside something that should NOT trigger swipe
+  function isInsideExcludedElement(target) {
+    if (!target) return false;
+    var node = target;
+    var maxDepth = 10; // walk up the tree
+    while (node && maxDepth-- > 0) {
+      if (!node.tagName) { node = node.parentNode; continue; }
+      var tag = node.tagName.toLowerCase();
+      // Don't swipe when interacting with form fields, buttons, scrollable elements, modals
+      if (tag === 'input' || tag === 'textarea' || tag === 'select' || tag === 'button') return true;
+      if (tag === 'a') return true;
+      // Don't swipe inside the bottom nav itself
+      if (node.classList && (
+        node.classList.contains('nav-tabs') ||
+        node.classList.contains('bnav') ||
+        node.id === 'privacy-modal' ||
+        node.id === 'terms-modal'
+      )) return true;
+      // Don't swipe inside elements that scroll horizontally
+      var style = window.getComputedStyle ? window.getComputedStyle(node) : null;
+      if (style && (style.overflowX === 'auto' || style.overflowX === 'scroll')) return true;
+      node = node.parentNode;
+    }
+    return false;
+  }
+
+  // Touch start — record position
+  function onTouchStart(e) {
+    if (!e.touches || e.touches.length !== 1) {
+      swipeActive = false;
+      return;
+    }
+    if (isInsideExcludedElement(e.target)) {
+      swipeActive = false;
+      return;
+    }
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+    touchStartTime = Date.now();
+    swipeActive = true;
+  }
+
+  // Touch end — check if it qualifies as a swipe
+  function onTouchEnd(e) {
+    if (!swipeActive) return;
+    swipeActive = false;
+    if (!e.changedTouches || e.changedTouches.length === 0) return;
+
+    var endX = e.changedTouches[0].clientX;
+    var endY = e.changedTouches[0].clientY;
+    var deltaX = endX - touchStartX;
+    var deltaY = endY - touchStartY;
+    var duration = Date.now() - touchStartTime;
+
+    // Must be quick enough
+    if (duration > MAX_SWIPE_DURATION) return;
+    // Must be primarily horizontal (not a vertical scroll)
+    if (Math.abs(deltaY) > MAX_VERTICAL_OFFSET) return;
+    // Must travel far enough to count as a swipe
+    if (Math.abs(deltaX) < MIN_SWIPE_DISTANCE) return;
+    // Must be more horizontal than vertical
+    if (Math.abs(deltaX) < Math.abs(deltaY) * 1.5) return;
+
+    if (deltaX < 0) {
+      nextTab();   // swiped LEFT (finger moved right→left) → next tab
+    } else {
+      prevTab();   // swiped RIGHT (finger moved left→right) → previous tab
+    }
+  }
+
+  // Cancel if touch is interrupted
+  function onTouchCancel() {
+    swipeActive = false;
+  }
+
+  // Wait for DOM ready, then attach listeners to <main>
+  function initSwipe() {
+    var mainEl = document.querySelector('main');
+    var target = mainEl || document.body;
+    target.addEventListener('touchstart', onTouchStart, { passive: true });
+    target.addEventListener('touchend', onTouchEnd, { passive: true });
+    target.addEventListener('touchcancel', onTouchCancel, { passive: true });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initSwipe);
+  } else {
+    initSwipe();
+  }
+})();
+</script>
+
 </body>
 </html>
