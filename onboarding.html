@@ -350,46 +350,43 @@ if (typeof firebase !== 'undefined' && !firebase.apps.length) firebase.initializ
   <div class="bnav"><button class="back-btn" onclick="go(11)">← Back</button><div class="dots" id="d12"></div><button class="next-btn" onclick="go(13)">Next →</button></div>
 </div>
 
-<!-- S13 — VALUE -->
+<!-- S13 — VALUE (PARENT-FOCUSED) -->
 <div class="screen" id="s13">
   <div class="prog-wrap"><div class="prog-track"><div class="prog-fill" style="width:92%"></div></div><div class="prog-label"><span class="prog-step">Step 13 of 13</span><span class="prog-step" id="sportLabel13"></span></div></div>
   <div class="screen-body">
-    <div class="badge">The Value</div>
-    <h1>Less than a coffee<br>per <span>week</span></h1>
+    <div class="badge" style="font-size:13px;">The Investment</div>
+    <h1 style="font-size:32px;line-height:1.15;">One private lesson costs<br><span>$80&ndash;$150</span></h1>
     <div class="gold-bar"></div>
-    <div class="vs">
-      <div class="vs-col vs-bad">
-        <div class="vs-title" style="color:#E57373;">Without MyGrind</div>
-        <div class="vs-line">✕ Lessons $80–$150/hr — forgotten next week</div>
-        <div class="vs-line">✕ No record of what you worked on</div>
-        <div class="vs-line">✕ Coaches guess your work ethic</div>
-        <div class="vs-line">✕ No visible progress</div>
-        <div class="vs-line">✕ Missed teams & opportunities</div>
-      </div>
-      <div class="vs-col vs-good">
-        <div class="vs-title" style="color:#58D68D;">With MyGrind</div>
-        <div class="vs-line">✓ Less than $0.27/day on annual</div>
-        <div class="vs-line">✓ Every session documented</div>
-        <div class="vs-line">✓ Show coaches your receipts</div>
-        <div class="vs-line">✓ Streaks keep you consistent</div>
-        <div class="vs-line">✓ Progress you can actually see</div>
+    <p class="sub" style="font-size:17px;line-height:1.6;color:#C5B59A;margin-bottom:20px;">MyGrind for an entire year supports their development every single day &mdash; for less than the cost of a single lesson.</p>
+
+    <!-- BIG PRICE CARD -->
+    <div class="card card-gold" style="text-align:center;padding:28px 20px;margin-bottom:16px;">
+      <div style="font-family:'Barlow Condensed',Arial,sans-serif;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#C9A84C;margin-bottom:10px;">MyGrind Annual</div>
+      <div style="font-family:'Bebas Neue',Arial,sans-serif;font-size:72px;color:#F5EFE0;line-height:1;letter-spacing:1px;margin-bottom:6px;">$99<span style="font-size:28px;color:#A89880;">/year</span></div>
+      <div style="font-size:16px;color:#A89880;line-height:1.5;margin-top:8px;">That's <strong style="color:#F5EFE0;">$8.25 a month.</strong></div>
+      <div style="font-size:15px;color:#A89880;line-height:1.6;margin-top:6px;">Less than a single private lesson &mdash; and it supports them all year.</div>
+    </div>
+
+    <!-- WHAT'S INCLUDED CARD -->
+    <div class="card" style="padding:20px;margin-bottom:14px;">
+      <div style="font-family:'Barlow Condensed',Arial,sans-serif;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#C9A84C;margin-bottom:14px;">What's Included</div>
+      <div style="font-size:16px;color:#E0DACB;line-height:2.2;">
+        <div><span style="color:#C9A84C;font-weight:700;font-size:18px;">&#10003;</span> &nbsp;Daily training journal</div>
+        <div><span style="color:#C9A84C;font-weight:700;font-size:18px;">&#10003;</span> &nbsp;Stats that auto-calculate</div>
+        <div><span style="color:#C9A84C;font-weight:700;font-size:18px;">&#10003;</span> &nbsp;12-month coach-built training plan</div>
+        <div><span style="color:#C9A84C;font-weight:700;font-size:18px;">&#10003;</span> &nbsp;Goal tracking parents can see</div>
+        <div><span style="color:#C9A84C;font-weight:700;font-size:18px;">&#10003;</span> &nbsp;Progress reports for coaches</div>
+        <div><span style="color:#C9A84C;font-weight:700;font-size:18px;">&#10003;</span> &nbsp;14-day free trial &mdash; no card required</div>
+        <div><span style="color:#C9A84C;font-weight:700;font-size:18px;">&#10003;</span> &nbsp;Cancel anytime &mdash; keep all the data</div>
       </div>
     </div>
-    <div class="card" style="text-align:center;padding:16px;margin-bottom:14px;">
-      <div style="font-family:'Bebas Neue',Arial,sans-serif;font-size:32px;color:#C9A84C;line-height:1;margin-bottom:4px;">$0.27 <span style="font-size:18px;color:#555;">/day</span></div>
-      <div style="font-size:13px;color:#666;line-height:1.6;">Less than a few minutes of a private lesson.<br><strong style="color:#F5F0EB;">More than any lesson you will ever forget.</strong></div>
-    </div>
-    <div class="card card-gold" style="margin-bottom:8px;">
-      <div style="font-size:13px;color:#D4C8BC;line-height:2.1;">
-        <div><span style="color:#C9A84C;font-weight:700;">✓</span> &nbsp;Full personalized plan unlocked</div>
-        <div><span style="color:#C9A84C;font-weight:700;">✓</span> &nbsp;Daily journal prompts activated</div>
-        <div><span style="color:#C9A84C;font-weight:700;">✓</span> &nbsp;12-month training calendar included</div>
-        <div><span style="color:#C9A84C;font-weight:700;">✓</span> &nbsp;Shareable training report for coaches</div>
-        <div><span style="color:#C9A84C;font-weight:700;">✓</span> &nbsp;Cancel anytime before day 15</div>
-      </div>
+
+    <!-- TRUST FOOTER -->
+    <div style="text-align:center;font-size:14px;color:#7A6F60;line-height:1.6;padding:8px 12px;margin-bottom:8px;">
+      Transparent pricing. No hidden fees.<br>Built by a coach with 20+ years of player development experience.
     </div>
   </div>
-  <div class="bnav"><button class="back-btn" onclick="go(12)">← Back</button><div class="dots" id="d13"></div><button class="next-btn" onclick="go(14)">See Plans →</button></div>
+  <div class="bnav"><button class="back-btn" onclick="go(12)">&larr; Back</button><div class="dots" id="d13"></div><button class="next-btn" onclick="go(14)">See Plans &rarr;</button></div>
 </div>
 
 <!-- S14 — PAYWALL -->
