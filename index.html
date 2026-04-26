@@ -773,6 +773,33 @@ function dismissIosBanner() {
   localStorage.setItem('ybg_ios_dismissed', '1');
 }
 </script>
+
+<!-- ═══════════════════════════════════════════════════════════
+     MOBILE READABILITY — Parent Phone Optimization (April 26, 2026)
+     Light +2px font bump on screens under 480px wide.
+     Designed to help parents on small phones read the app comfortably.
+═══════════════════════════════════════════════════════════ -->
+<style>
+@media screen and (max-width: 480px) {
+  /* Bump small fonts +2px for parent phone readability */
+  [style*="font-size:8px"] { font-size: 10px !important; }
+  [style*="font-size: 8px"] { font-size: 10px !important; }
+  [style*="font-size:9px"] { font-size: 11px !important; }
+  [style*="font-size: 9px"] { font-size: 11px !important; }
+  [style*="font-size:10px"] { font-size: 12px !important; }
+  [style*="font-size: 10px"] { font-size: 12px !important; }
+  [style*="font-size:11px"] { font-size: 13px !important; }
+  [style*="font-size: 11px"] { font-size: 13px !important; }
+  [style*="font-size:12px"] { font-size: 14px !important; }
+  [style*="font-size: 12px"] { font-size: 14px !important; }
+  [style*="font-size:13px"] { font-size: 15px !important; }
+  [style*="font-size: 13px"] { font-size: 15px !important; }
+
+  /* More breathing room for body text */
+  body { line-height: 1.6 !important; }
+}
+</style>
+
 </head>
 <body>
 
