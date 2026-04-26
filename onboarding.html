@@ -427,34 +427,53 @@ if (typeof firebase !== 'undefined' && !firebase.apps.length) firebase.initializ
   <div class="bnav"><button class="back-btn" onclick="go(12)">&larr; Back</button><div class="dots" id="d13"></div><button class="next-btn" onclick="go(14)">See Plans &rarr;</button></div>
 </div>
 
-<!-- S14 — PAYWALL -->
+<!-- S14 — PAYWALL (TRUE FREE TRIAL — No Card Required) -->
 <div class="screen" id="s14">
   <div class="prog-wrap"><div class="prog-track"><div class="prog-fill" style="width:100%"></div></div><div class="prog-label"><span class="prog-step">Almost done!</span><span class="prog-step" id="sportLabel14"></span></div></div>
   <div class="screen-body">
-    <div style="text-align:center;margin-bottom:16px;">
-      <div class="badge" style="text-align:center;">Start Your Free Trial</div>
-      <h1 style="font-size:28px;">14 days free.<br>Then choose your plan.</h1>
-      <div style="display:inline-block;background:rgba(201,168,76,0.12);border:1px solid #9A7A30;color:#C9A84C;font-family:'Barlow Condensed',Arial,sans-serif;font-size:14px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:8px 18px;border-radius:6px;margin-top:10px;">✓ &nbsp;No charge until day 15 · Cancel anytime</div>
+
+    <!-- HERO — NO CARD REQUIRED -->
+    <div style="text-align:center;margin-bottom:20px;">
+      <div class="badge" style="text-align:center;font-size:13px;">Start Your Free Trial</div>
+      <h1 style="font-size:32px;line-height:1.1;">14 days free.<br><span>No card required.</span></h1>
+      <div style="display:inline-block;background:rgba(201,168,76,0.12);border:1px solid #9A7A30;color:#C9A84C;font-family:'Barlow Condensed',Arial,sans-serif;font-size:14px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:10px 20px;border-radius:6px;margin-top:14px;">✓ &nbsp;Just start using it. Decide later.</div>
     </div>
-    <div class="plan featured" id="planAnnual" onclick="pickPlan('annual')">
+
+    <!-- PRIMARY CTA — START FREE -->
+    <button class="cta" id="trialCTA" onclick="startTrial()" style="font-size:18px;padding:18px;">⚾ &nbsp;Start My 14-Day Free Trial →</button>
+
+    <!-- TRUST FOOTER -->
+    <div style="text-align:center;font-size:14px;color:#A89880;line-height:1.7;margin:18px 0 24px;padding:0 8px;">
+      No credit card. No commitment.<br>We'll remind you near the end of your trial — and you can subscribe anytime if you love it.
+    </div>
+
+    <!-- DIVIDER -->
+    <div style="display:flex;align-items:center;gap:12px;margin:24px 0 18px;">
+      <div style="flex:1;height:1px;background:#3D3530;"></div>
+      <div style="font-family:'Barlow Condensed',Arial,sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#666;">Pricing After Trial</div>
+      <div style="flex:1;height:1px;background:#3D3530;"></div>
+    </div>
+
+    <!-- PLAN CARDS — INFORMATIONAL ONLY (No clicks needed yet) -->
+    <div class="plan featured" id="planAnnual" style="cursor:default;">
       <div class="plan-amount">$8.25<span style="font-size:14px;color:#666;">/mo</span></div>
       <div class="plan-name">MyGrind Annual <span class="plan-badge">Best Value</span></div>
       <div class="plan-price">Billed $99/year — save 17%</div>
-      <div style="font-size:11px;color:#444;margin-top:2px;">Less than $0.27 per day</div>
     </div>
-    <div class="plan" id="planMonthly" onclick="pickPlan('monthly')">
+    <div class="plan" id="planMonthly" style="cursor:default;">
       <div class="plan-amount" style="color:#F5F0EB;">$9.99<span style="font-size:14px;color:#666;">/mo</span></div>
       <div class="plan-name">MyGrind Monthly</div>
       <div class="plan-price">Billed $9.99/mo · Cancel anytime</div>
     </div>
-    <div style="display:flex;align-items:center;gap:10px;margin:10px 0 12px;background:#231F1C;border:1px solid #3D3530;border-radius:6px;padding:10px 12px;">
+
+    <!-- REVIEW -->
+    <div style="display:flex;align-items:center;gap:10px;margin:14px 0 12px;background:#231F1C;border:1px solid #3D3530;border-radius:6px;padding:12px 14px;">
       <div class="stars">★★★★★</div>
-      <div><div style="font-size:12px;color:#D4C8BC;font-style:italic;" id="pwReview">"Wish I had this when I started — keeps everything in one place."</div><div style="font-family:'Barlow Condensed',Arial,sans-serif;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#C9A84C;margin-top:2px;" id="pwReviewName">Beta Player · SCV</div></div>
+      <div><div style="font-size:14px;color:#D4C8BC;font-style:italic;" id="pwReview">"Wish I had this when I started — keeps everything in one place."</div><div style="font-family:'Barlow Condensed',Arial,sans-serif;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:#C9A84C;margin-top:3px;" id="pwReviewName">Beta Player · SCV</div></div>
     </div>
-    <div style="background:#231F1C;border:1px solid #3D3530;border-radius:6px;padding:12px;text-align:center;margin-bottom:12px;"><div style="font-family:'Bebas Neue',Arial,sans-serif;font-size:20px;color:#C9A84C;letter-spacing:1px;">FREE FOR 14 DAYS</div><div style="font-size:13px;color:#777;margin-top:3px;">We'll remind you 24 hours before the trial ends.<br>No surprise charges. Cancel with one tap.</div></div>
-    <button class="cta" id="trialCTA" onclick="startTrial()">⚾ &nbsp;Start My Free Trial →</button>
-    <div class="skip" onclick="skipTrial()">Continue with limited access</div>
-    <div style="text-align:center;font-size:10px;color:#3D3530;margin-top:10px;padding-bottom:20px;">Secure checkout via Stripe · coach@mygrindapp.com</div>
+
+    <!-- FOOTER -->
+    <div style="text-align:center;font-size:11px;color:#3D3530;margin-top:14px;padding-bottom:20px;">When you subscribe, secure checkout is via Stripe · coach@mygrindapp.com</div>
   </div>
 </div>
 
@@ -685,11 +704,11 @@ function pickPlan(p) {
 }
 
 function startTrial() {
+  // TRUE FREE TRIAL — No card required upfront
+  // App will prompt for payment near end of 14-day trial
+  // Pricing tabs in app always available for early subscription
   writeToApp();
-  var url = d.plan==='annual' ? STRIPE_ANNUAL : STRIPE_MONTHLY;
-  if (d.email) url += '?prefilled_email='+encodeURIComponent(d.email);
-  window.open(url, '_blank');
-  setTimeout(launchApp, 900);
+  launchApp();
 }
 
 function skipTrial() { writeToApp(); launchApp(); }
