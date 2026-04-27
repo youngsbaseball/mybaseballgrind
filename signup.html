@@ -14,6 +14,7 @@
      Screens: 8 total, Screen 7 has a fallback branch
      ─────────────────────────────────────────────────────────
      ROUND 1: Shell + Screen 1 (Welcome)
+     ROUND 2: Screen 2 (About You) — form, validation, phone formatting
      Future rounds will append <div class="screen"> blocks.
      ═══════════════════════════════════════════════════════════ -->
 
@@ -218,6 +219,80 @@ h1 span {
 .trust-strip span { color: #C9A84C; margin: 0 6px; }
 
 /* ═══════════════════════════════════════════════════════════
+   FORM FIELDS (Screen 2 onward)
+   ═══════════════════════════════════════════════════════════ */
+.form-stack {
+  text-align: left;
+  max-width: 360px;
+  margin: 0 auto 12px auto;
+}
+.field-block {
+  margin-bottom: 18px;
+}
+.field-label {
+  display: block;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  color: #A89880;
+  margin-bottom: 8px;
+}
+.field-label .req {
+  color: #C9A84C;
+  margin-left: 2px;
+}
+.field-input {
+  width: 100%;
+  background: #181818;
+  border: 1px solid #272727;
+  border-radius: 3px;
+  color: #F4F4F4;
+  font-family: 'Barlow', sans-serif;
+  font-size: 16px;             /* 16px prevents iOS zoom on focus */
+  font-weight: 400;
+  padding: 14px 16px;
+  transition: border-color 0.2s ease, background 0.2s ease;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.field-input::placeholder {
+  color: #4A4036;
+  font-weight: 300;
+}
+.field-input:focus {
+  outline: none;
+  border-color: #C9A84C;
+  background: #1C1C1C;
+}
+.field-input.invalid {
+  border-color: #8B3A33;
+}
+.field-input.valid {
+  border-color: rgba(201,168,76,0.5);
+}
+.field-helper {
+  margin-top: 6px;
+  font-size: 12px;
+  color: #6B5E52;
+  line-height: 1.4;
+}
+.field-helper.error {
+  color: #C8362F;
+  display: none;             /* shown only when .invalid */
+}
+.field-input.invalid + .field-helper { display: none; }
+.field-input.invalid ~ .field-helper.error { display: block; }
+
+/* Two-column row for first/last name */
+.field-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+/* ═══════════════════════════════════════════════════════════
    BOTTOM NAV (Back / Dots / Next)
    ═══════════════════════════════════════════════════════════ */
 .bnav {
@@ -420,7 +495,107 @@ h1 span {
      FUTURE SCREENS GO BELOW THIS LINE
      ═══════════════════════════════════════════════════════════ -->
 
-<!-- INSERT SCREEN 2 (About You) HERE — Round 2 -->
+<!-- ═══════════════════════════════════════════════════════════
+     SCREEN 2 — ABOUT YOU
+     ═══════════════════════════════════════════════════════════ -->
+<div class="screen" id="s2">
+
+  <div class="prog-wrap">
+    <div class="prog-track">
+      <div class="prog-fill" style="width: 25%"></div>
+    </div>
+    <div class="prog-label">
+      <span>Step 2 of 8</span>
+      <span>About You</span>
+    </div>
+  </div>
+
+  <div class="screen-body">
+    <div class="badge">About You</div>
+
+    <h1>
+      First,
+      <span>tell us about you.</span>
+    </h1>
+
+    <div class="gold-bar"></div>
+
+    <p class="sub">
+      This is your account. Your player gets their own profile in a minute.
+    </p>
+
+    <div class="form-stack">
+
+      <!-- First + Last name in a 2-col row -->
+      <div class="field-row-2">
+        <div class="field-block">
+          <label class="field-label" for="p_first">First Name<span class="req">*</span></label>
+          <input
+            type="text"
+            class="field-input"
+            id="p_first"
+            placeholder="Mike"
+            autocomplete="given-name"
+            autocapitalize="words"
+            oninput="onParentInput()">
+        </div>
+        <div class="field-block">
+          <label class="field-label" for="p_last">Last Name<span class="req">*</span></label>
+          <input
+            type="text"
+            class="field-input"
+            id="p_last"
+            placeholder="Young"
+            autocomplete="family-name"
+            autocapitalize="words"
+            oninput="onParentInput()">
+        </div>
+      </div>
+
+      <!-- Email -->
+      <div class="field-block">
+        <label class="field-label" for="p_email">Email<span class="req">*</span></label>
+        <input
+          type="email"
+          class="field-input"
+          id="p_email"
+          placeholder="you@email.com"
+          autocomplete="email"
+          inputmode="email"
+          oninput="onParentInput()">
+        <div class="field-helper">For receipts and your weekly progress digest.</div>
+        <div class="field-helper error">Please enter a valid email address.</div>
+      </div>
+
+      <!-- Phone (with live formatting) -->
+      <div class="field-block">
+        <label class="field-label" for="p_phone">Phone Number<span class="req">*</span></label>
+        <input
+          type="tel"
+          class="field-input"
+          id="p_phone"
+          placeholder="(555) 123-4567"
+          autocomplete="tel"
+          inputmode="tel"
+          maxlength="14"
+          oninput="onPhoneInput(this); onParentInput();">
+        <div class="field-helper">For trial reminders and account texts. We don't market to you.</div>
+        <div class="field-helper error">Please enter a 10-digit US phone number.</div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Bottom nav -->
+  <div class="bnav">
+    <button class="back-btn" onclick="go(1)">&larr; Back</button>
+    <div class="dots" id="d2"></div>
+    <button class="next-btn" id="n2" onclick="goNext(2, 3)" disabled>Next &rarr;</button>
+  </div>
+
+</div>
+
 <!-- INSERT SCREEN 3 (Your Family) HERE — Round 3 -->
 <!-- INSERT SCREEN 4 (Why MyGrind?) HERE — Round 4 -->
 <!-- INSERT SCREEN 5 (Pricing Preview) HERE — Round 5 -->
@@ -492,12 +667,112 @@ function go(n) {
     saveState();
     renderDots(n);
     window.scrollTo(0, 0);
+    // Per-screen activation hooks (each screen can register a restore fn)
+    onScreenActivated(n);
   }
+}
+
+// Screen activation dispatcher — restores form values, re-runs validators, etc.
+function onScreenActivated(n) {
+  if (n === 2) restoreParentFields();
+  // Future: if (n === 3) restoreFamilyFields(); etc.
 }
 
 function goNext(from, to) {
   // Optional hook for per-screen validation could go here later
   go(to);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SCREEN 2 — ABOUT YOU (form logic)
+   ───────────────────────────────────────────────────────────
+   - Live phone formatting as user types: (XXX) XXX-XXXX
+   - Real-time validation toggles .valid / .invalid on inputs
+   - Next button enabled only when all 4 fields pass
+   - Values saved to state on every keystroke (so back-nav restores)
+   ═══════════════════════════════════════════════════════════ */
+
+// ── Email regex — practical, not RFC-pedantic
+function isValidEmail(s) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test((s || '').trim());
+}
+
+// ── Phone — strip non-digits, require exactly 10
+function isValidPhone(s) {
+  const digits = (s || '').replace(/\D/g, '');
+  return digits.length === 10;
+}
+
+// ── Live phone formatter — turns "5551234567" into "(555) 123-4567"
+function formatPhone(digits) {
+  digits = digits.replace(/\D/g, '').slice(0, 10);
+  if (digits.length === 0) return '';
+  if (digits.length < 4)   return '(' + digits;
+  if (digits.length < 7)   return '(' + digits.slice(0,3) + ') ' + digits.slice(3);
+  return '(' + digits.slice(0,3) + ') ' + digits.slice(3,6) + '-' + digits.slice(6);
+}
+
+function onPhoneInput(input) {
+  const formatted = formatPhone(input.value);
+  input.value = formatted;
+}
+
+// ── Per-field validator — toggles .valid / .invalid classes
+function validateField(input, isValid) {
+  // Only show invalid AFTER the user has typed something AND moved on
+  // (no need to scream at empty fields they haven't reached yet)
+  const hasContent = input.value.trim().length > 0;
+  input.classList.remove('valid', 'invalid');
+  if (hasContent && isValid) input.classList.add('valid');
+  if (hasContent && !isValid) input.classList.add('invalid');
+}
+
+// ── Master handler — runs on every keystroke in any Screen 2 field
+function onParentInput() {
+  const first = document.getElementById('p_first');
+  const last  = document.getElementById('p_last');
+  const email = document.getElementById('p_email');
+  const phone = document.getElementById('p_phone');
+  if (!first || !last || !email || !phone) return;
+
+  // Save raw values to state (phone stored formatted; we'll digit-strip server-side later)
+  state.parent.firstName = first.value.trim();
+  state.parent.lastName  = last.value.trim();
+  state.parent.email     = email.value.trim();
+  state.parent.phone     = phone.value.trim();
+  saveState();
+
+  // Validate each field
+  const firstOk = first.value.trim().length >= 1;
+  const lastOk  = last.value.trim().length >= 1;
+  const emailOk = isValidEmail(email.value);
+  const phoneOk = isValidPhone(phone.value);
+
+  validateField(first, firstOk);
+  validateField(last,  lastOk);
+  validateField(email, emailOk);
+  validateField(phone, phoneOk);
+
+  // Enable Next only if everything passes
+  const next = document.getElementById('n2');
+  if (next) next.disabled = !(firstOk && lastOk && emailOk && phoneOk);
+}
+
+// ── Restore saved values when Screen 2 becomes active (e.g. user hit Back)
+function restoreParentFields() {
+  const first = document.getElementById('p_first');
+  const last  = document.getElementById('p_last');
+  const email = document.getElementById('p_email');
+  const phone = document.getElementById('p_phone');
+  if (!first || !last || !email || !phone) return;
+
+  if (state.parent.firstName) first.value = state.parent.firstName;
+  if (state.parent.lastName)  last.value  = state.parent.lastName;
+  if (state.parent.email)     email.value = state.parent.email;
+  if (state.parent.phone)     phone.value = state.parent.phone;
+
+  // Re-validate to set button state correctly
+  onParentInput();
 }
 
 /* ─── PROGRESS DOTS ─────────────────────────────────────────
@@ -530,7 +805,7 @@ window.addEventListener('DOMContentLoaded', () => {
   go(1);
 
   // Dev console hint
-  console.log('%c⚾ MyGrind Signup — Phase 2 (Round 1)', 'color: #C9A84C; font-weight: bold; font-size: 14px;');
+  console.log('%c⚾ MyGrind Signup — Phase 2 (Round 2)', 'color: #C9A84C; font-weight: bold; font-size: 14px;');
   console.log('%cState object available as window.mgState for debugging.', 'color: #888;');
   window.mgState = state;
 });
