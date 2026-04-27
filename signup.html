@@ -629,6 +629,27 @@ h1 span {
   color: #6B5E52;
   margin-bottom: 10px;
 }
+
+/* Multi-player total line — hidden when player count = 1, shown otherwise.
+   Slightly bolder than equiv so the parent's eye lands on the real total
+   they'll be billed (per Decision #1: $9.99/mo or $99/yr per player). */
+.price-card-total {
+  display: none;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #C9A84C;
+  margin-bottom: 10px;
+  padding: 6px 12px;
+  background: rgba(201,168,76,0.06);
+  border: 1px solid rgba(201,168,76,0.2);
+  border-radius: 2px;
+}
+.price-card-total.shown {
+  display: inline-block;
+}
 .price-card-tag {
   font-size: 13px;
   color: #A89880;
@@ -1691,6 +1712,7 @@ select.field-input {
         <div class="price-card-check">✓</div>
         <div class="price-card-name">MyGrind Annual</div>
         <div class="price-card-amount">$99<span class="per"> / year per player</span></div>
+        <div class="price-card-total" id="annual_total"></div>
         <div class="price-card-equiv">~ $8.25/mo · save 17%</div>
         <div class="price-card-tag">For families committed to the year</div>
       </button>
@@ -1699,6 +1721,7 @@ select.field-input {
         <div class="price-card-check">✓</div>
         <div class="price-card-name">MyGrind Monthly</div>
         <div class="price-card-amount">$9.99<span class="per"> / month per player</span></div>
+        <div class="price-card-total" id="monthly_total"></div>
         <div class="price-card-equiv">Cancel anytime</div>
         <div class="price-card-tag">Month to month, no commitment</div>
       </button>
@@ -2354,6 +2377,43 @@ function restorePlanSelection() {
   });
   const chosen = document.getElementById('plan_' + state.preferredPlan);
   if (chosen) chosen.classList.add('selected');
+
+  // Populate the multi-player total lines.
+  // Per Decision #1: $9.99/mo or $99/yr per player. For 2+ players we show
+  // the actual total below the per-player rate so parents see what they'll
+  // really pay (no surprise at billing time).
+  updateMultiPlayerTotals();
+}
+
+/* Updates the "Total: $XYZ for N players" lines on Screen 5's pricing cards.
+   Hidden when player count = 1 (per-player rate already equals total).
+   Shown for 2 and 3+ players with calculated totals. */
+function updateMultiPlayerTotals() {
+  const annualTotalEl  = document.getElementById('annual_total');
+  const monthlyTotalEl = document.getElementById('monthly_total');
+  if (!annualTotalEl || !monthlyTotalEl) return;
+
+  const count = state.playerCount || 1;
+
+  // Single player: hide both totals (per-player is the total)
+  if (count <= 1) {
+    annualTotalEl.classList.remove('shown');
+    monthlyTotalEl.classList.remove('shown');
+    return;
+  }
+
+  // Multi-player: compute totals and show
+  // Note: state.playerCount value of 3 represents "3 or more" per Screen 3.
+  // We display "3 players" in the preview; actual billing happens later
+  // (Phase 5+ Stripe checkout) where parent confirms exact count.
+  const annualTotal  = (count * 99).toFixed(0);   // $99/yr per player
+  const monthlyTotal = (count * 9.99).toFixed(2); // $9.99/mo per player
+
+  annualTotalEl.textContent  = 'Total: $' + annualTotal + '/yr for ' + count + ' players';
+  monthlyTotalEl.textContent = 'Total: $' + monthlyTotal + '/mo for ' + count + ' players';
+
+  annualTotalEl.classList.add('shown');
+  monthlyTotalEl.classList.add('shown');
 }
 
 /* ═══════════════════════════════════════════════════════════
