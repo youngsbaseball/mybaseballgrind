@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyGrind — Sign Up</title>
+
+<!-- Primary redirect — meta refresh (works even if JS is disabled) -->
+<meta http-equiv="refresh" content="0; url=signup.html">
+
+<!-- Backup redirect — JS (faster than meta refresh) -->
+<script>
+  // Preserve any query params (e.g. ?ref=token, ?utm_source=...)
+  // by passing them along to signup.html
+  var search = window.location.search || '';
+  var hash = window.location.hash || '';
+  window.location.replace('signup.html' + search + hash);
+</script>
+
+<style>
+  body {
+    background: #0A0A0A;
+    color: #C9A84C;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    text-align: center;
+    padding-top: 25vh;
+    margin: 0;
+  }
+  h1 {
+    font-size: 28px;
+    letter-spacing: 4px;
+    margin-bottom: 10px;
+  }
+  p { color: #888; font-size: 14px; margin-bottom: 18px; }
+  a {
+    color: #C9A84C;
+    border: 1px solid #C9A84C;
+    padding: 10px 22px;
+    text-decoration: none;
+    font-size: 14px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border-radius: 3px;
+    display: inline-block;
+  }
+  a:hover { background: rgba(201,168,76,0.1); }
+</style>
+</head>
+<body>
+
+<!-- Manual fallback — visible only if both meta refresh AND JS fail -->
+<h1>MY GRIND</h1>
+<p>Redirecting you to sign up…</p>
+<a href="signup.html">Continue to Sign Up &rarr;</a>
+
+</body>
+</html>
