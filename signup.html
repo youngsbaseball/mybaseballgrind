@@ -23,6 +23,8 @@
      ROUND 5: Screen 5 (Pricing Preview) — display-only pricing + promise block (Decision #8)
      ROUND 5.5: Pricing cards now selectable — Annual pre-selected (Decision #8 v2)
      ROUND 6: Screen 6 (Add Your Player) — multi-player loop + fallback branch
+     ROUND 7: Screen 7 (Invite Sent) — dynamic status cards + SMS preview + fallback handoff
+     ROUND 8: Screen 8 (Parent Dashboard) — first visit, trial banner, voluntary pay → PHASE 2 COMPLETE
      Future rounds will append <div class="screen"> blocks.
      ═══════════════════════════════════════════════════════════ -->
 
@@ -818,6 +820,362 @@ select.field-input {
 }
 
 /* ═══════════════════════════════════════════════════════════
+   SCREEN 7 — INVITE SENT / SETUP COMPLETE
+   ───────────────────────────────────────────────────────────
+   Per-player status cards with SMS preview bubbles (sent kids)
+   or hand-the-phone framing (fallback kids).
+   ═══════════════════════════════════════════════════════════ */
+
+/* Per-player status card — one per player */
+.status-card {
+  max-width: 360px;
+  margin: 0 auto 16px auto;
+  background: #181818;
+  border: 1px solid #272727;
+  border-radius: 4px;
+  padding: 18px 20px;
+  text-align: left;
+}
+.status-card-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.status-card-name {
+  font-family: 'Bebas Neue', cursive;
+  font-size: 18px;
+  letter-spacing: 1.5px;
+  color: #F4F4F4;
+  flex: 1;
+}
+.status-card-icon {
+  font-size: 16px;
+  line-height: 1;
+}
+.status-pill {
+  display: inline-block;
+  background: rgba(80, 200, 120, 0.12);
+  border: 1px solid rgba(80, 200, 120, 0.4);
+  border-radius: 20px;
+  padding: 3px 10px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.3px;
+  text-transform: uppercase;
+  color: #6FCC8E;
+}
+.status-pill.pending {
+  background: rgba(201,168,76,0.10);
+  border-color: rgba(201,168,76,0.4);
+  color: #C9A84C;
+}
+.status-meta {
+  font-size: 12px;
+  color: #6B5E52;
+  margin-bottom: 12px;
+  font-family: 'Barlow Condensed', sans-serif;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+.status-body {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #A89880;
+  margin-bottom: 12px;
+}
+
+/* SMS preview bubble — mimics iMessage on iOS */
+.sms-preview {
+  background: #0F0F0F;
+  border-radius: 8px;
+  padding: 12px 14px;
+  margin-top: 4px;
+}
+.sms-preview-meta {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: #6B5E52;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+}
+.sms-bubble {
+  background: #2C2C2E;
+  color: #E8E8EA;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 13px;
+  line-height: 1.45;
+  padding: 10px 14px;
+  border-radius: 18px;
+  border-bottom-left-radius: 4px;
+  max-width: 88%;
+  word-break: break-word;
+}
+
+/* What's-next reminder block */
+.next-block {
+  max-width: 360px;
+  margin: 12px auto 24px auto;
+  padding: 16px 20px;
+  background: rgba(201,168,76,0.04);
+  border: 1px solid rgba(201,168,76,0.2);
+  border-radius: 4px;
+  text-align: left;
+}
+.next-block-title {
+  font-family: 'Bebas Neue', cursive;
+  font-size: 14px;
+  letter-spacing: 1.5px;
+  color: #C9A84C;
+  margin-bottom: 8px;
+}
+.next-block-line {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #A89880;
+  margin-bottom: 4px;
+}
+.next-block-line:last-child { margin-bottom: 0; }
+.next-block-line strong { color: #D4C8B8; }
+
+/* Setup-required callout for fallback kids — slightly more prominent */
+.setup-required {
+  max-width: 360px;
+  margin: 0 auto 14px auto;
+  padding: 12px 16px;
+  background: rgba(201,168,76,0.06);
+  border-left: 3px solid #C9A84C;
+  border-radius: 2px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #D4C8B8;
+}
+.setup-required strong { color: #C9A84C; }
+
+/* ═══════════════════════════════════════════════════════════
+   SCREEN 8 — PARENT DASHBOARD (first visit empty state)
+   ───────────────────────────────────────────────────────────
+   Persistent trial banner, per-player placeholder cards with
+   "waiting for kid" status, voluntary pay button at bottom.
+   ═══════════════════════════════════════════════════════════ */
+
+/* Trial countdown banner — always visible at top, not dismissible */
+.trial-banner {
+  max-width: 360px;
+  margin: 0 auto 20px auto;
+  background: linear-gradient(90deg, rgba(201,168,76,0.12) 0%, rgba(201,168,76,0.06) 100%);
+  border: 1px solid rgba(201,168,76,0.4);
+  border-radius: 4px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+}
+.trial-banner-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+.trial-banner-text {
+  flex: 1;
+  font-size: 13px;
+  line-height: 1.4;
+  color: #D4C8B8;
+}
+.trial-banner-text strong {
+  color: #C9A84C;
+  font-family: 'Bebas Neue', cursive;
+  font-size: 16px;
+  letter-spacing: 1px;
+  display: block;
+  margin-bottom: 2px;
+}
+
+/* Per-player dashboard card — full layout but greyed until kid accepts */
+.dash-player-card {
+  max-width: 360px;
+  margin: 0 auto 16px auto;
+  background: #181818;
+  border: 1px solid #272727;
+  border-radius: 4px;
+  padding: 18px 20px;
+  text-align: left;
+}
+.dash-player-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #272727;
+}
+.dash-player-icon {
+  font-size: 18px;
+  line-height: 1;
+}
+.dash-player-name {
+  font-family: 'Bebas Neue', cursive;
+  font-size: 20px;
+  letter-spacing: 1.5px;
+  color: #F4F4F4;
+  flex: 1;
+}
+.dash-player-status {
+  display: inline-block;
+  background: rgba(201,168,76,0.10);
+  border: 1px solid rgba(201,168,76,0.4);
+  border-radius: 20px;
+  padding: 3px 10px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.3px;
+  text-transform: uppercase;
+  color: #C9A84C;
+}
+
+/* Greyed-out placeholder sections inside the player card */
+.dash-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid #1A1A1A;
+  opacity: 0.45;
+}
+.dash-section:last-child { border-bottom: none; }
+.dash-section-icon {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  background: #1E1E1E;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+.dash-section-body {
+  flex: 1;
+  min-width: 0;
+}
+.dash-section-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: #6B5E52;
+  margin-bottom: 2px;
+}
+.dash-section-value {
+  font-size: 13px;
+  color: #A89880;
+  line-height: 1.3;
+}
+.dash-section-lock {
+  flex-shrink: 0;
+  font-size: 13px;
+  color: #6B5E52;
+}
+
+/* Waiting message inside greyed card */
+.dash-waiting-msg {
+  margin-top: 12px;
+  padding: 10px 12px;
+  background: rgba(201,168,76,0.04);
+  border: 1px dashed rgba(201,168,76,0.25);
+  border-radius: 4px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #A89880;
+  text-align: center;
+}
+.dash-waiting-msg strong { color: #C9A84C; }
+
+/* Resend invite small action button */
+.dash-resend {
+  margin-top: 10px;
+  background: transparent;
+  border: 1px solid #3A3024;
+  border-radius: 3px;
+  padding: 6px 12px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: #C9A84C;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.dash-resend:hover {
+  background: rgba(201,168,76,0.06);
+  border-color: #C9A84C;
+}
+
+/* Voluntary pay button — gold, prominent, at bottom */
+.pay-now-btn {
+  display: block;
+  max-width: 360px;
+  margin: 24px auto 16px auto;
+  width: 100%;
+  background: #C9A84C;
+  color: #0A0A0A;
+  border: none;
+  border-radius: 3px;
+  padding: 14px 24px;
+  font-family: 'Bebas Neue', cursive;
+  font-size: 16px;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+.pay-now-btn:hover {
+  background: #D4B85A;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(201,168,76,0.25);
+}
+.pay-now-btn:active { transform: scale(0.99); }
+
+.pay-now-sub {
+  text-align: center;
+  font-size: 12px;
+  color: #6B5E52;
+  margin-bottom: 24px;
+  font-style: italic;
+}
+
+/* Dashboard footer — small links for share, settings, etc. */
+.dash-footer {
+  max-width: 360px;
+  margin: 0 auto 0 auto;
+  padding-top: 16px;
+  border-top: 1px solid #1A1A1A;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+}
+.dash-footer a {
+  color: #6B5E52;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+.dash-footer a:hover { color: #C9A84C; }
+
+/* Dashboard finishes the flow — no traditional bnav, hide the dots since
+   this is the destination, not a step */
+#s8 .bnav { display: none; }
+
+/* ═══════════════════════════════════════════════════════════
    BOTTOM NAV (Back / Dots / Next)
    ═══════════════════════════════════════════════════════════ */
 .bnav {
@@ -1486,8 +1844,137 @@ select.field-input {
 
 </div>
 
-<!-- INSERT SCREEN 7 (Invite Sent / Setup Complete) HERE — Round 7 -->
-<!-- INSERT SCREEN 8 (Parent Dashboard) HERE — Round 8 -->
+<!-- ═══════════════════════════════════════════════════════════
+     SCREEN 7 — INVITE SENT / SETUP COMPLETE
+     ───────────────────────────────────────────────────────────
+     Status cards rendered dynamically by JS based on state.players.
+     SMS-invited kids get an SMS preview bubble; fallback kids get
+     "hand the phone to set up" framing.
+     ═══════════════════════════════════════════════════════════ -->
+<div class="screen" id="s7">
+
+  <div class="prog-wrap">
+    <div class="prog-track">
+      <div class="prog-fill" style="width: 87.5%"></div>
+    </div>
+    <div class="prog-label">
+      <span>Step 7 of 8</span>
+      <span>Invites Sent</span>
+    </div>
+  </div>
+
+  <div class="screen-body">
+    <div class="badge">You're Set</div>
+
+    <h1 id="s7_headline">
+      You're set,
+      <span id="s7_parent_name">Coach.</span>
+    </h1>
+
+    <div class="gold-bar"></div>
+
+    <p class="sub" id="s7_subhead">
+      Here's what just happened.
+    </p>
+
+    <!-- Setup-required callout (shown only if any fallback kids) -->
+    <div class="setup-required" id="setup_required" style="display:none;">
+      <strong>One more step:</strong> <span id="setup_required_text"></span>
+    </div>
+
+    <!-- Status cards — populated dynamically by buildScreen7() -->
+    <div id="status_cards"></div>
+
+    <!-- What's next reminder block -->
+    <div class="next-block">
+      <div class="next-block-title">What's next</div>
+      <div class="next-block-line">
+        <strong>Days 12 & 14:</strong> we'll text and email a reminder before your trial ends.
+      </div>
+      <div class="next-block-line">
+        Pay anytime from your dashboard. <strong>No surprises.</strong>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bottom nav — CTA label set dynamically by buildScreen7() -->
+  <div class="bnav">
+    <button class="back-btn" onclick="onScreen7Back()">&larr; Back</button>
+    <div class="dots" id="d7"></div>
+    <button class="next-btn" id="n7" onclick="onScreen7Continue()">Continue &rarr;</button>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SCREEN 8 — PARENT DASHBOARD (first visit empty state)
+     ───────────────────────────────────────────────────────────
+     Final destination of Phase 2 signup flow. Persistent trial
+     banner at top, player placeholder cards built dynamically,
+     voluntary pay button, dashboard footer with share link.
+     ═══════════════════════════════════════════════════════════ -->
+<div class="screen" id="s8">
+
+  <div class="prog-wrap">
+    <div class="prog-track">
+      <div class="prog-fill" style="width: 100%"></div>
+    </div>
+    <div class="prog-label">
+      <span>You're in</span>
+      <span>Dashboard</span>
+    </div>
+  </div>
+
+  <div class="screen-body">
+
+    <!-- Persistent trial banner — always visible at top -->
+    <div class="trial-banner">
+      <div class="trial-banner-icon">⚾</div>
+      <div class="trial-banner-text">
+        <strong>14 Days Free</strong>
+        <span id="trial_days_text">14 days remaining · pay anytime from here</span>
+      </div>
+    </div>
+
+    <div class="badge">Your Dashboard</div>
+
+    <h1 id="s8_headline">
+      You're in,
+      <span id="s8_parent_name">Coach.</span>
+    </h1>
+
+    <div class="gold-bar"></div>
+
+    <p class="sub" id="s8_subhead">
+      <!-- Subhead set dynamically based on player count -->
+    </p>
+
+    <!-- Player cards — populated dynamically by buildScreen8() -->
+    <div id="dash_player_cards"></div>
+
+    <!-- Voluntary pay button -->
+    <button type="button" class="pay-now-btn" onclick="onPayNowClicked()">
+      Pay &amp; Continue Anytime
+    </button>
+    <p class="pay-now-sub">
+      No pressure. We'll remind you on day 12 if you'd rather wait.
+    </p>
+
+    <!-- Dashboard footer (placeholder links for future phases) -->
+    <div class="dash-footer">
+      <a href="#" onclick="event.preventDefault(); alert('Share feature coming in Phase 6.');">Share MyGrind</a>
+      <a href="#" onclick="event.preventDefault(); alert('Settings coming in Phase 6.');">Settings</a>
+    </div>
+
+  </div>
+
+  <!-- Bottom nav hidden via CSS — dashboard is destination, not a step -->
+  <div class="bnav">
+    <div class="dots" id="d8"></div>
+  </div>
+
+</div>
 
 </div><!-- /.app -->
 
@@ -1570,7 +2057,8 @@ function onScreenActivated(n) {
   if (n === 4) restoreGoals();
   if (n === 5) restorePlanSelection();
   if (n === 6) restorePlayerScreen();
-  // Future: if (n === 7) ... etc.
+  if (n === 7) buildScreen7();
+  if (n === 8) buildScreen8();
 }
 
 function goNext(from, to) {
@@ -2100,6 +2588,320 @@ function restorePlayerScreen() {
   loadPlayerSlot();
 }
 
+/* ═══════════════════════════════════════════════════════════
+   SCREEN 7 — INVITE SENT / SETUP COMPLETE
+   ───────────────────────────────────────────────────────────
+   Renders status cards based on state.players. SMS-invited kids
+   get a preview bubble; fallback kids get "hand the phone" framing.
+   ═══════════════════════════════════════════════════════════ */
+
+// Returns the SMS copy that would be sent to a player.
+// Sport-aware per Decision #7 v3:
+//  - 'baseball' or 'softball': sport-specific phrasing
+//  - 'both' (mixed-sport family): generic "baseball/softball"
+function buildSmsForPlayer(playerName) {
+  const parentFirst = (state.parent && state.parent.firstName) ? state.parent.firstName : 'your parent';
+  const familySport = state.familySport || 'both';
+
+  let sportPhrase;
+  if (familySport === 'baseball') {
+    sportPhrase = 'the baseball training app';
+  } else if (familySport === 'softball') {
+    sportPhrase = 'the softball training app';
+  } else {
+    sportPhrase = 'the baseball/softball training app';
+  }
+
+  return 'Hey ' + (playerName || 'there') + ', ' + parentFirst + ' just signed you up for MyGrind — ' + sportPhrase + ' I\'ve been talking about. Tap to start your profile (5 min): mygrind.app/start/abc123';
+}
+
+// Returns names of any fallback (no-phone) players, formatted for copy
+function getFallbackPlayerNames() {
+  if (!Array.isArray(state.players)) return [];
+  return state.players
+    .filter(p => p && p.fallback === true)
+    .map(p => (p.firstName || 'your player').trim());
+}
+
+// Format a list of names into natural English: "Lucas", "Lucas and Sofia",
+// "Lucas, Sofia, and Aiden"
+function formatNameList(names) {
+  if (names.length === 0) return '';
+  if (names.length === 1) return names[0];
+  if (names.length === 2) return names[0] + ' and ' + names[1];
+  return names.slice(0, -1).join(', ') + ', and ' + names[names.length - 1];
+}
+
+// Format a phone number stored as digits-only-ish back into pretty display
+function formatPhoneForDisplay(raw) {
+  if (!raw) return '';
+  // raw from state.players[i].phone is already in formatted (xxx) xxx-xxxx form
+  // because onPhoneInput formats live. If somehow not, we'll just return raw.
+  return raw;
+}
+
+// Build the per-player status card HTML
+function renderPlayerStatusCard(player, index) {
+  const name = (player.firstName || 'Your player').trim();
+  // Generic sport icon at this stage — kid hasn't picked yet (Decision #7 v3)
+  const sportIcon = '⚾🥎';
+
+  if (player.fallback) {
+    // Fallback (no phone) — hand the phone to set up
+    return (
+      '<div class="status-card">' +
+        '<div class="status-card-head">' +
+          '<span class="status-card-icon">' + sportIcon + '</span>' +
+          '<div class="status-card-name">' + name + '</div>' +
+          '<span class="status-pill pending">Hand off</span>' +
+        '</div>' +
+        '<div class="status-body">' +
+          'When ' + name + ' is ready, hand them your phone and we\'ll help them set up a 4-digit PIN.' +
+        '</div>' +
+      '</div>'
+    );
+  } else {
+    // SMS-invited — show preview bubble
+    const smsText = buildSmsForPlayer(name);
+    const phoneDisplay = formatPhoneForDisplay(player.phone);
+    return (
+      '<div class="status-card">' +
+        '<div class="status-card-head">' +
+          '<span class="status-card-icon">' + sportIcon + '</span>' +
+          '<div class="status-card-name">' + name + '</div>' +
+          '<span class="status-pill">Invite sent ✓</span>' +
+        '</div>' +
+        '<div class="status-meta">Sent to ' + phoneDisplay + '</div>' +
+        '<div class="sms-preview">' +
+          '<div class="sms-preview-meta">' +
+            '<span>From MyGrind</span>' +
+            '<span>just now</span>' +
+          '</div>' +
+          '<div class="sms-bubble">' + escapeHtml(smsText) + '</div>' +
+        '</div>' +
+      '</div>'
+    );
+  }
+}
+
+// Defensive HTML escape for the SMS preview text
+function escapeHtml(s) {
+  if (!s) return '';
+  return s
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+function buildScreen7() {
+  // Personalize headline with parent's first name
+  const parentNameSpan = document.getElementById('s7_parent_name');
+  if (parentNameSpan) {
+    const pn = (state.parent && state.parent.firstName) ? state.parent.firstName.trim() : '';
+    parentNameSpan.textContent = pn ? pn + '.' : 'Coach.';
+  }
+
+  // Build the status cards from state.players
+  const container = document.getElementById('status_cards');
+  if (container) {
+    container.innerHTML = '';
+    if (Array.isArray(state.players)) {
+      state.players.forEach((p, i) => {
+        if (p && (p.firstName || '').length > 0) {
+          container.innerHTML += renderPlayerStatusCard(p, i);
+        }
+      });
+    }
+  }
+
+  // Setup-required callout — only shown if any fallback kids
+  const fallbackNames = getFallbackPlayerNames();
+  const setupCallout = document.getElementById('setup_required');
+  const setupText    = document.getElementById('setup_required_text');
+  if (fallbackNames.length > 0) {
+    if (setupCallout) setupCallout.style.display = '';
+    if (setupText) {
+      setupText.textContent = 'we\'ll set up ' + formatNameList(fallbackNames) +
+        ' on this phone with a PIN. Tap below when ready.';
+    }
+  } else {
+    if (setupCallout) setupCallout.style.display = 'none';
+  }
+
+  // CTA label depends on whether we have fallback kids
+  const cta = document.getElementById('n7');
+  if (cta) {
+    if (fallbackNames.length > 0) {
+      const firstFallback = fallbackNames[0];
+      cta.innerHTML = 'Set Up ' + escapeHtml(firstFallback) + ' Now &rarr;';
+    } else {
+      cta.innerHTML = 'Continue to Dashboard &rarr;';
+    }
+  }
+}
+
+function onScreen7Continue() {
+  const fallbackNames = getFallbackPlayerNames();
+  if (fallbackNames.length > 0) {
+    // Route to onboarding.html for PIN setup of the first fallback kid.
+    // The kid-side flow in onboarding.html handles the PIN + sport selection.
+    // After they finish, they (or the parent) can return to Screen 8 dashboard.
+    // We pass the player's name and a flag so onboarding.html knows it's a fallback PIN setup.
+    const firstFallback = fallbackNames[0];
+    window.location.href = 'onboarding.html?fallback=1&name=' + encodeURIComponent(firstFallback);
+  } else {
+    // No fallback kids — go to parent dashboard (Screen 8)
+    go(8);
+  }
+}
+
+function onScreen7Back() {
+  // Back to Screen 6, last player slot
+  state.currentPlayerIndex = Math.max(0, (state.playerCount || 1) - 1);
+  saveState();
+  go(6);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SCREEN 8 — PARENT DASHBOARD (first visit empty state)
+   ───────────────────────────────────────────────────────────
+   Personalized welcome, persistent trial banner, per-player
+   placeholder cards, voluntary pay button. This is the END of
+   Phase 2 signup flow — Phases 5/6 will fill this with real data.
+   ═══════════════════════════════════════════════════════════ */
+
+// Build a single player card for the dashboard — full placeholder layout
+// with greyed-out sections for streak, journal, goals (per Decision lock:
+// "show full placeholder cards all greyed out").
+function renderDashPlayerCard(player, index) {
+  const name = (player.firstName || 'Your player').trim();
+  // Sport icon stays generic per Decision #7 v3 — kid hasn't picked yet
+  const sportIcon = '⚾🥎';
+
+  // Status pill differs based on fallback vs SMS-invited
+  let statusText;
+  let waitingMsg;
+  if (player.fallback) {
+    statusText = 'Awaiting setup';
+    waitingMsg = 'Hand the phone to <strong>' + escapeHtml(name) + '</strong> when ready. Their PIN gets created during their first login.';
+  } else {
+    statusText = 'Invite sent';
+    waitingMsg = 'Once <strong>' + escapeHtml(name) + '</strong> taps the link in their text and finishes their setup, their progress starts showing here.';
+  }
+
+  // Build the resend button only for SMS-invited kids (fallback kids don't have one)
+  const resendButton = player.fallback ? '' :
+    '<button type="button" class="dash-resend" onclick="onResendInvite(' + index + ')">Resend invite</button>';
+
+  return (
+    '<div class="dash-player-card">' +
+      '<div class="dash-player-head">' +
+        '<span class="dash-player-icon">' + sportIcon + '</span>' +
+        '<div class="dash-player-name">' + escapeHtml(name) + '</div>' +
+        '<span class="dash-player-status">' + escapeHtml(statusText) + '</span>' +
+      '</div>' +
+      // Greyed-out placeholder sections — locked until kid onboards
+      '<div class="dash-section">' +
+        '<div class="dash-section-icon">🔥</div>' +
+        '<div class="dash-section-body">' +
+          '<div class="dash-section-label">Current streak</div>' +
+          '<div class="dash-section-value">— days</div>' +
+        '</div>' +
+        '<div class="dash-section-lock">🔒</div>' +
+      '</div>' +
+      '<div class="dash-section">' +
+        '<div class="dash-section-icon">📊</div>' +
+        '<div class="dash-section-body">' +
+          '<div class="dash-section-label">Sessions logged</div>' +
+          '<div class="dash-section-value">0 sessions</div>' +
+        '</div>' +
+        '<div class="dash-section-lock">🔒</div>' +
+      '</div>' +
+      '<div class="dash-section">' +
+        '<div class="dash-section-icon">🎯</div>' +
+        '<div class="dash-section-body">' +
+          '<div class="dash-section-label">Goals being worked on</div>' +
+          '<div class="dash-section-value">Set during onboarding</div>' +
+        '</div>' +
+        '<div class="dash-section-lock">🔒</div>' +
+      '</div>' +
+      '<div class="dash-section">' +
+        '<div class="dash-section-icon">📓</div>' +
+        '<div class="dash-section-body">' +
+          '<div class="dash-section-label">Journal</div>' +
+          '<div class="dash-section-value">Private to player (per Coach Young)</div>' +
+        '</div>' +
+        '<div class="dash-section-lock">🔒</div>' +
+      '</div>' +
+      // Waiting message
+      '<div class="dash-waiting-msg">' + waitingMsg + '</div>' +
+      resendButton +
+    '</div>'
+  );
+}
+
+function buildScreen8() {
+  // Personalize headline with parent's first name
+  const parentNameSpan = document.getElementById('s8_parent_name');
+  if (parentNameSpan) {
+    const pn = (state.parent && state.parent.firstName) ? state.parent.firstName.trim() : '';
+    parentNameSpan.textContent = pn ? pn + '.' : 'Coach.';
+  }
+
+  // Personalize subhead based on player count
+  const sub = document.getElementById('s8_subhead');
+  if (sub) {
+    const players = Array.isArray(state.players) ? state.players.filter(p => p && p.firstName) : [];
+    if (players.length === 0) {
+      sub.textContent = 'Your dashboard is ready. Once your player gets started, their progress shows here.';
+    } else if (players.length === 1) {
+      sub.textContent = 'Your dashboard is ready. Once ' + players[0].firstName + ' gets started, their progress shows here.';
+    } else {
+      const names = players.map(p => p.firstName);
+      sub.textContent = 'Your dashboard is ready. Once ' + formatNameList(names) + ' get started, their progress shows here.';
+    }
+  }
+
+  // Build the player cards
+  const container = document.getElementById('dash_player_cards');
+  if (container) {
+    container.innerHTML = '';
+    if (Array.isArray(state.players)) {
+      state.players.forEach((p, i) => {
+        if (p && (p.firstName || '').length > 0) {
+          container.innerHTML += renderDashPlayerCard(p, i);
+        }
+      });
+    }
+  }
+
+  // Trial countdown — for now hardcoded to 14 since the trial just started
+  // (Phase 5 will compute this from state.startedAt vs current date)
+  const trialText = document.getElementById('trial_days_text');
+  if (trialText) {
+    trialText.textContent = '14 days remaining · pay anytime from here';
+  }
+}
+
+// Resend invite button handler (placeholder — Phase 3 wires this to Twilio)
+function onResendInvite(playerIndex) {
+  if (!Array.isArray(state.players)) return;
+  const player = state.players[playerIndex];
+  if (!player) return;
+  alert('Invite would be re-sent to ' + (player.firstName || 'your player') +
+        ' at ' + (player.phone || 'their phone') +
+        '.\n\n(Twilio integration ships in Phase 3 — for now this is a placeholder.)');
+}
+
+// Pay Now button handler (placeholder — Phase 5 wires this to Stripe)
+function onPayNowClicked() {
+  alert('Pay & Continue would launch the Stripe checkout flow with your selected plan (' +
+        (state.preferredPlan || 'annual') + ').' +
+        '\n\n(Stripe integration ships in Phase 5 — for now this is a placeholder.)');
+}
+
 /* ─── PROGRESS DOTS ─────────────────────────────────────────
    Renders dots for a given screen. Active screen = gold pill,
    completed screens = dim gold dots, future screens = dark dots.
@@ -2130,7 +2932,7 @@ window.addEventListener('DOMContentLoaded', () => {
   go(1);
 
   // Dev console hint
-  console.log('%c⚾ MyGrind Signup — Phase 2 (Round 6)', 'color: #C9A84C; font-weight: bold; font-size: 14px;');
+  console.log('%c⚾ MyGrind Signup — Phase 2 (Round 8 — COMPLETE)', 'color: #C9A84C; font-weight: bold; font-size: 14px;');
   console.log('%cState object available as window.mgState for debugging.', 'color: #888;');
   window.mgState = state;
 });
