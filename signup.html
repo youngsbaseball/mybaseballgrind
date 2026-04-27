@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>MyGrind — Sign Up Your Player</title>
+<meta name="description" content="Set up your player on MyGrind. 14 days free. No credit card. Cancel anytime.">
+
+<!-- ═══════════════════════════════════════════════════════════
+     MYGRIND 2.0 — PARENT SIGNUP FLOW
+     File: signup.html
+     Built: April 27, 2026
+     Phase: 2 (front-end only — no SMS, no persistence)
+     Screens: 8 total, Screen 7 has a fallback branch
+     ─────────────────────────────────────────────────────────
+     ROUND 1: Shell + Screen 1 (Welcome)
+     Future rounds will append <div class="screen"> blocks.
+     ═══════════════════════════════════════════════════════════ -->
+
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;500;600;700&family=Barlow:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* ═══════════════════════════════════════════════════════════
+   RESET + BASE
+   ═══════════════════════════════════════════════════════════ */
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+html, body {
+  background: #0A0A0A;
+  color: #F4F4F4;
+  font-family: 'Barlow', -apple-system, BlinkMacSystemFont, sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 0;
+  background:
+    radial-gradient(ellipse at top, rgba(201,168,76,0.04) 0%, transparent 50%),
+    #0A0A0A;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   APP CONTAINER
+   ═══════════════════════════════════════════════════════════ */
+.app {
+  width: 100%;
+  max-width: 480px;
+  min-height: 100vh;
+  background: #0A0A0A;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SCREEN SYSTEM — only one screen visible at a time
+   ═══════════════════════════════════════════════════════════ */
+.screen {
+  display: none;
+  flex-direction: column;
+  flex: 1;
+  min-height: 100vh;
+  padding: 0;
+  animation: fadeIn 0.35s ease;
+}
+.screen.active { display: flex; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   PROGRESS BAR (TOP)
+   ═══════════════════════════════════════════════════════════ */
+.prog-wrap {
+  padding: 18px 24px 0 24px;
+  background: #0A0A0A;
+}
+.prog-track {
+  height: 3px;
+  background: #1E1E1E;
+  border-radius: 2px;
+  overflow: hidden;
+}
+.prog-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #C9A84C, #E8C766);
+  border-radius: 2px;
+  transition: width 0.4s ease;
+}
+.prog-label {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #6B5E52;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SCREEN BODY
+   ═══════════════════════════════════════════════════════════ */
+.screen-body {
+  flex: 1;
+  padding: 32px 24px 100px 24px;
+  text-align: center;
+}
+
+.badge {
+  display: inline-block;
+  background: rgba(201,168,76,0.08);
+  border: 1px solid rgba(201,168,76,0.25);
+  color: #C9A84C;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 6px 14px;
+  border-radius: 2px;
+  margin-bottom: 20px;
+}
+
+h1 {
+  font-family: 'Bebas Neue', cursive;
+  font-size: 42px;
+  letter-spacing: 1px;
+  line-height: 1.05;
+  color: #F4F4F4;
+  margin-bottom: 14px;
+}
+h1 span {
+  color: #C9A84C;
+  display: block;
+}
+
+.gold-bar {
+  width: 56px;
+  height: 3px;
+  background: #C9A84C;
+  margin: 0 auto 18px auto;
+  border-radius: 2px;
+}
+
+.sub {
+  color: #A89880;
+  font-size: 15px;
+  line-height: 1.6;
+  margin-bottom: 28px;
+  max-width: 360px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   STEP CARDS (Screen 1's three-step explainer)
+   ═══════════════════════════════════════════════════════════ */
+.step-list {
+  text-align: left;
+  max-width: 360px;
+  margin: 0 auto 28px auto;
+}
+.step {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  background: #181818;
+  border: 1px solid #272727;
+  border-radius: 4px;
+  padding: 16px 18px;
+  margin-bottom: 10px;
+  transition: border-color 0.2s ease;
+}
+.step:hover { border-color: #3A3024; }
+.step-num {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  background: rgba(201,168,76,0.1);
+  border: 1px solid #9A7A30;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #C9A84C;
+  font-family: 'Bebas Neue', cursive;
+  font-size: 16px;
+  letter-spacing: 0;
+}
+.step-text {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #D4C8B8;
+  padding-top: 2px;
+}
+.step-text strong { color: #F4F4F4; font-weight: 600; }
+
+/* ═══════════════════════════════════════════════════════════
+   TRUST STRIP
+   ═══════════════════════════════════════════════════════════ */
+.trust-strip {
+  margin: 0 auto;
+  max-width: 360px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #555;
+  line-height: 1.8;
+}
+.trust-strip span { color: #C9A84C; margin: 0 6px; }
+
+/* ═══════════════════════════════════════════════════════════
+   BOTTOM NAV (Back / Dots / Next)
+   ═══════════════════════════════════════════════════════════ */
+.bnav {
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(180deg, transparent 0%, #0A0A0A 30%);
+  padding: 16px 24px 24px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.back-btn, .next-btn {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+  padding: 12px 18px;
+  border-radius: 2px;
+  transition: all 0.2s ease;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.back-btn {
+  background: transparent;
+  color: #6B5E52;
+  min-width: 80px;
+}
+.back-btn:hover { color: #A89880; }
+.back-btn:active { opacity: 0.7; }
+
+.next-btn {
+  background: linear-gradient(135deg, #C9A84C, #B89740);
+  color: #0A0A0A;
+  min-width: 100px;
+  box-shadow: 0 2px 12px rgba(201,168,76,0.2);
+}
+.next-btn:hover { box-shadow: 0 4px 18px rgba(201,168,76,0.35); }
+.next-btn:active { transform: translateY(1px); }
+.next-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* CTA buttons that take full attention (Screen 1 has one) */
+.cta-primary {
+  display: block;
+  width: 100%;
+  max-width: 320px;
+  margin: 0 auto 16px auto;
+  background: linear-gradient(135deg, #C9A84C, #B89740);
+  color: #0A0A0A;
+  font-family: 'Bebas Neue', cursive;
+  font-size: 22px;
+  letter-spacing: 2.5px;
+  border: none;
+  padding: 18px 24px;
+  border-radius: 2px;
+  cursor: pointer;
+  box-shadow: 0 4px 18px rgba(201,168,76,0.25);
+  transition: all 0.2s ease;
+}
+.cta-primary:hover { box-shadow: 0 6px 24px rgba(201,168,76,0.4); }
+.cta-primary:active { transform: translateY(1px); }
+
+/* ═══════════════════════════════════════════════════════════
+   DOTS (progress indicator at bottom)
+   ═══════════════════════════════════════════════════════════ */
+.dots {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #2A2A2A;
+  transition: all 0.3s ease;
+}
+.dot.active { background: #C9A84C; width: 18px; border-radius: 3px; }
+.dot.done { background: #6B5630; }
+
+/* ═══════════════════════════════════════════════════════════
+   MOBILE READABILITY (≤480px gets a small bump)
+   ═══════════════════════════════════════════════════════════ */
+@media (max-width: 480px) {
+  h1 { font-size: 38px; }
+  .sub { font-size: 16px; }
+  .step-text { font-size: 15px; }
+  .screen-body { padding: 28px 20px 100px 20px; }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   LOGO MARK (top of every screen)
+   ═══════════════════════════════════════════════════════════ */
+.logo-mark {
+  text-align: center;
+  padding: 24px 24px 0 24px;
+  font-family: 'Bebas Neue', cursive;
+  font-size: 20px;
+  letter-spacing: 4px;
+  color: #C9A84C;
+}
+.logo-mark .sm {
+  display: block;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 9px;
+  letter-spacing: 2.5px;
+  color: #555;
+  margin-top: 2px;
+  font-weight: 400;
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+
+<!-- ═══════════════════════════════════════════════════════════
+     LOGO MARK
+     ═══════════════════════════════════════════════════════════ -->
+<div class="logo-mark">
+  MY GRIND
+  <span class="sm">A YOUNG'S BASEBALL GROUP PRODUCT</span>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SCREEN 1 — WELCOME
+     ═══════════════════════════════════════════════════════════ -->
+<div class="screen active" id="s1">
+
+  <div class="prog-wrap">
+    <div class="prog-track">
+      <div class="prog-fill" style="width: 12.5%"></div>
+    </div>
+    <div class="prog-label">
+      <span>Step 1 of 8</span>
+      <span>Welcome</span>
+    </div>
+  </div>
+
+  <div class="screen-body">
+    <div class="badge">Welcome</div>
+
+    <h1>
+      Welcome.
+      <span>Let's get your player on track.</span>
+    </h1>
+
+    <div class="gold-bar"></div>
+
+    <p class="sub">
+      This takes about 3 minutes. We'll set up your account, then send your player an invite to their phone.
+    </p>
+
+    <!-- Three-step explainer -->
+    <div class="step-list">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-text"><strong>You sign up</strong> &mdash; no card, no charge.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-text"><strong>Your player gets a text</strong> with their personal link.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-text"><strong>They set up their profile and start logging</strong> &mdash; you watch their progress.</div>
+      </div>
+    </div>
+
+    <!-- Big CTA -->
+    <button class="cta-primary" onclick="goNext(1, 2)">Get Started &rarr;</button>
+
+    <!-- Trust strip -->
+    <div class="trust-strip">
+      14 Days Free <span>·</span> No Credit Card <span>·</span> Cancel Anytime
+    </div>
+  </div>
+
+  <!-- Bottom nav (no back on screen 1; dots only) -->
+  <div class="bnav">
+    <div style="min-width: 80px;"></div>
+    <div class="dots" id="d1"></div>
+    <div style="min-width: 100px;"></div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     FUTURE SCREENS GO BELOW THIS LINE
+     ═══════════════════════════════════════════════════════════ -->
+
+<!-- INSERT SCREEN 2 (About You) HERE — Round 2 -->
+<!-- INSERT SCREEN 3 (Your Family) HERE — Round 3 -->
+<!-- INSERT SCREEN 4 (Why MyGrind?) HERE — Round 4 -->
+<!-- INSERT SCREEN 5 (Pricing Preview) HERE — Round 5 -->
+<!-- INSERT SCREEN 6 (Add Your Player) HERE — Round 6 -->
+<!-- INSERT SCREEN 7 (Invite Sent / Setup Complete) HERE — Round 7 -->
+<!-- INSERT SCREEN 8 (Parent Dashboard) HERE — Round 8 -->
+
+</div><!-- /.app -->
+
+<script>
+/* ═══════════════════════════════════════════════════════════
+   MYGRIND 2.0 — PARENT SIGNUP NAVIGATION ENGINE
+   ─────────────────────────────────────────────────────────
+   Same pattern as existing onboarding.html — show/hide screens
+   by toggling .active class. Progress bar + dots reflect state.
+   ═══════════════════════════════════════════════════════════ */
+
+const TOTAL_SCREENS = 8;
+
+/* ─── PARENT SIGNUP STATE ──────────────────────────────────
+   Holds everything we collect across the 8 screens.
+   Persisted to localStorage so a refresh doesn't lose data.
+   This is front-end only for Phase 2 — Phase 3 wires it
+   to backend (Firebase + Twilio).
+   ───────────────────────────────────────────────────────── */
+const state = {
+  // Screen 2 — About You
+  parent: {
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: ''
+  },
+  // Screen 3 — Your Family
+  playerCount: null,        // 1, 2, or 3 (3 = "3 or more")
+  // Screen 4 — Why MyGrind?
+  goals: [],                // array of selected goal strings
+  // Screen 6 — Add Your Player (one entry per player)
+  players: [],              // [{ firstName, relationship, phone, fallbackPin }]
+  // Internal — not user-facing
+  currentScreen: 1,
+  startedAt: null
+};
+
+function saveState() {
+  try {
+    localStorage.setItem('mg_signup_state', JSON.stringify(state));
+  } catch(e) { /* no-op — private mode etc. */ }
+}
+
+function loadState() {
+  try {
+    const saved = localStorage.getItem('mg_signup_state');
+    if (!saved) return;
+    const parsed = JSON.parse(saved);
+    Object.assign(state, parsed);
+  } catch(e) { /* no-op */ }
+}
+
+/* ─── SCREEN NAVIGATION ───────────────────────────────────── */
+function go(n) {
+  // Hide all screens
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  // Show target
+  const target = document.getElementById('s' + n);
+  if (target) {
+    target.classList.add('active');
+    state.currentScreen = n;
+    saveState();
+    renderDots(n);
+    window.scrollTo(0, 0);
+  }
+}
+
+function goNext(from, to) {
+  // Optional hook for per-screen validation could go here later
+  go(to);
+}
+
+/* ─── PROGRESS DOTS ─────────────────────────────────────────
+   Renders dots for a given screen. Active screen = gold pill,
+   completed screens = dim gold dots, future screens = dark dots.
+   ───────────────────────────────────────────────────────── */
+function renderDots(currentScreen) {
+  for (let i = 1; i <= TOTAL_SCREENS; i++) {
+    const container = document.getElementById('d' + i);
+    if (!container) continue;
+    container.innerHTML = '';
+    for (let j = 1; j <= TOTAL_SCREENS; j++) {
+      const dot = document.createElement('div');
+      dot.className = 'dot';
+      if (j === currentScreen) dot.classList.add('active');
+      else if (j < currentScreen) dot.classList.add('done');
+      container.appendChild(dot);
+    }
+  }
+}
+
+/* ─── INIT ───────────────────────────────────────────────── */
+window.addEventListener('DOMContentLoaded', () => {
+  loadState();
+  if (!state.startedAt) {
+    state.startedAt = new Date().toISOString();
+    saveState();
+  }
+  // Always start at Screen 1 for now (Phase 2 — no resume logic yet)
+  go(1);
+
+  // Dev console hint
+  console.log('%c⚾ MyGrind Signup — Phase 2 (Round 1)', 'color: #C9A84C; font-weight: bold; font-size: 14px;');
+  console.log('%cState object available as window.mgState for debugging.', 'color: #888;');
+  window.mgState = state;
+});
+</script>
+
+</body>
+</html>
