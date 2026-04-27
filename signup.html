@@ -17,6 +17,8 @@
      ROUND 2: Screen 2 (About You) — form, validation, phone formatting
      ROUND 2.5: Phone formatter bug fixes (country code paste, mid-edit cursor)
      ROUND 3: Screen 3 (Your Family) — tap-card player count selector
+     ROUND 3.5: Brand pivot — YBG tagline removed (Decision #10, Pattern 3)
+     ROUND 3.7: Family sport added to Screen 3 (Decision #7 update)
      Future rounds will append <div class="screen"> blocks.
      ═══════════════════════════════════════════════════════════ -->
 
@@ -378,6 +380,77 @@ h1 span {
 .footnote strong { color: #C9A84C; font-weight: 600; }
 
 /* ═══════════════════════════════════════════════════════════
+   SPORT TILES (Screen 3 family-level sport selector)
+   ───────────────────────────────────────────────────────────
+   Compact 3-up grid that sits ABOVE the player-count tap-cards.
+   Smaller and icon-forward so the screen doesn't feel cluttered
+   with two stacked tap-card groups.
+   ═══════════════════════════════════════════════════════════ */
+.section-label {
+  max-width: 360px;
+  margin: 0 auto 10px auto;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  color: #A89880;
+  text-align: left;
+}
+
+.sport-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  max-width: 360px;
+  margin: 0 auto 24px auto;
+}
+.sport-tile {
+  background: #181818;
+  border: 1px solid #272727;
+  border-radius: 4px;
+  padding: 14px 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+  color: inherit;
+  font-family: inherit;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.sport-tile:hover {
+  border-color: #3A3024;
+  background: #1C1C1C;
+}
+.sport-tile:active { transform: scale(0.98); }
+.sport-tile.selected {
+  border-color: #C9A84C;
+  background: rgba(201,168,76,0.06);
+  box-shadow: 0 0 0 1px rgba(201,168,76,0.4);
+}
+.sport-tile-icon {
+  font-size: 24px;
+  line-height: 1;
+}
+.sport-tile-name {
+  font-family: 'Bebas Neue', cursive;
+  font-size: 14px;
+  letter-spacing: 1.2px;
+  color: #D4C8B8;
+}
+.sport-tile.selected .sport-tile-name { color: #C9A84C; }
+
+/* Subtle visual divider between the two question groups on Screen 3 */
+.section-divider {
+  max-width: 360px;
+  margin: 6px auto 18px auto;
+  height: 1px;
+  background: #1A1A1A;
+}
+
+/* ═══════════════════════════════════════════════════════════
    BOTTOM NAV (Back / Dots / Next)
    ═══════════════════════════════════════════════════════════ */
 .bnav {
@@ -507,10 +580,12 @@ h1 span {
 
 <!-- ═══════════════════════════════════════════════════════════
      LOGO MARK
+     Note: Per Decision #10 (April 27), MyGrind brand stands alone.
+     YBG tagline removed. Coach Young credibility lives on the
+     About page (built in Phase 5+), not on every signup screen.
      ═══════════════════════════════════════════════════════════ -->
 <div class="logo-mark">
   MY GRIND
-  <span class="sm">A YOUNG'S BASEBALL GROUP PRODUCT</span>
 </div>
 
 <!-- ═══════════════════════════════════════════════════════════
@@ -630,7 +705,7 @@ h1 span {
             type="text"
             class="field-input"
             id="p_last"
-            placeholder="Young"
+            placeholder="Smith"
             autocomplete="family-name"
             autocapitalize="words"
             oninput="onParentInput()">
@@ -683,6 +758,8 @@ h1 span {
 
 <!-- ═══════════════════════════════════════════════════════════
      SCREEN 3 — YOUR FAMILY
+     Asks TWO things: family-level sport + player count.
+     Both required before Next button enables.
      ═══════════════════════════════════════════════════════════ -->
 <div class="screen" id="s3">
 
@@ -700,19 +777,40 @@ h1 span {
     <div class="badge">Your Family</div>
 
     <h1>
-      How many players
-      <span>are you signing up?</span>
+      Tell us about
+      <span>your family.</span>
     </h1>
 
     <div class="gold-bar"></div>
 
     <p class="sub">
-      You can add more later, but tell us where to start.
+      Two quick questions and we'll dial things in.
     </p>
 
-    <!-- Three tap cards -->
+    <!-- ─── QUESTION 1: Sport ──────────────────────────── -->
+    <div class="section-label">What sport(s) do you play?</div>
+    <div class="sport-grid">
+      <button type="button" class="sport-tile" id="sp_baseball" onclick="selectFamilySport('baseball')">
+        <div class="sport-tile-icon">⚾</div>
+        <div class="sport-tile-name">Baseball</div>
+      </button>
+      <button type="button" class="sport-tile" id="sp_softball" onclick="selectFamilySport('softball')">
+        <div class="sport-tile-icon">🥎</div>
+        <div class="sport-tile-name">Softball</div>
+      </button>
+      <button type="button" class="sport-tile" id="sp_both" onclick="selectFamilySport('both')">
+        <div class="sport-tile-icon">⚾🥎</div>
+        <div class="sport-tile-name">Both</div>
+      </button>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- ─── QUESTION 2: Player count ──────────────────── -->
+    <div class="section-label">How many players are you signing up?</div>
+
     <button type="button" class="tap-card" id="pc_1" onclick="selectPlayerCount(1)">
-      <div class="tap-card-emoji">⚾</div>
+      <div class="tap-card-emoji">👤</div>
       <div class="tap-card-body">
         <div class="tap-card-title">One Player</div>
         <div class="tap-card-desc">Just my one.</div>
@@ -721,7 +819,7 @@ h1 span {
     </button>
 
     <button type="button" class="tap-card" id="pc_2" onclick="selectPlayerCount(2)">
-      <div class="tap-card-emoji">⚾⚾</div>
+      <div class="tap-card-emoji">👥</div>
       <div class="tap-card-body">
         <div class="tap-card-title">Two Players</div>
         <div class="tap-card-desc">Siblings — set them both up.</div>
@@ -730,10 +828,10 @@ h1 span {
     </button>
 
     <button type="button" class="tap-card" id="pc_3" onclick="selectPlayerCount(3)">
-      <div class="tap-card-emoji">⚾⚾⚾</div>
+      <div class="tap-card-emoji">👨‍👩‍👧‍👦</div>
       <div class="tap-card-body">
         <div class="tap-card-title">Three or More</div>
-        <div class="tap-card-desc">Big baseball family.</div>
+        <div class="tap-card-desc">Big family.</div>
       </div>
       <div class="tap-card-check">✓</div>
     </button>
@@ -786,11 +884,13 @@ const state = {
     phone: ''
   },
   // Screen 3 — Your Family
+  familySport: null,        // 'baseball' | 'softball' | 'both' (NEW April 27 PM)
   playerCount: null,        // 1, 2, or 3 (3 = "3 or more")
   // Screen 4 — Why MyGrind?
   goals: [],                // array of selected goal strings
   // Screen 6 — Add Your Player (one entry per player)
-  players: [],              // [{ firstName, relationship, phone, fallbackPin }]
+  players: [],              // [{ firstName, relationship, phone, fallbackPin, sport }]
+                            // sport defaults to familySport, parent can override per-kid
   // Internal — not user-facing
   currentScreen: 1,
   startedAt: null
@@ -968,19 +1068,42 @@ function restoreParentFields() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   SCREEN 3 — YOUR FAMILY (player count selection)
+   SCREEN 3 — YOUR FAMILY (sport + player count)
    ───────────────────────────────────────────────────────────
-   - User taps one of three cards (1, 2, or 3+ players)
-   - Selected card highlights gold, others reset
-   - state.playerCount stored as 1, 2, or 3 (where 3 means "3+")
-   - Next button enabled once a selection is made
+   - User answers TWO questions: family sport, player count
+   - state.familySport = 'baseball' | 'softball' | 'both' (Decision #7)
+   - state.playerCount = 1, 2, or 3 (where 3 means "3+")
+   - Next button enabled only when BOTH have been chosen
+   - Each selection clears the others in its group (single-select per group)
    ═══════════════════════════════════════════════════════════ */
+
+// ── Re-evaluate whether Next can be enabled (both questions answered)
+function checkScreen3Ready() {
+  const ready = !!state.familySport && !!state.playerCount;
+  const next = document.getElementById('n3');
+  if (next) next.disabled = !ready;
+}
+
+function selectFamilySport(sport) {
+  state.familySport = sport;
+  saveState();
+
+  // Visual: clear all sport tiles, then select the chosen one
+  ['sp_baseball', 'sp_softball', 'sp_both'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('selected');
+  });
+  const chosen = document.getElementById('sp_' + sport);
+  if (chosen) chosen.classList.add('selected');
+
+  checkScreen3Ready();
+}
 
 function selectPlayerCount(count) {
   state.playerCount = count;
   saveState();
 
-  // Visual: clear all, then add .selected to the chosen one
+  // Visual: clear all player count cards, then select the chosen one
   ['pc_1', 'pc_2', 'pc_3'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.classList.remove('selected');
@@ -988,26 +1111,34 @@ function selectPlayerCount(count) {
   const chosen = document.getElementById('pc_' + count);
   if (chosen) chosen.classList.add('selected');
 
-  // Enable Next
-  const next = document.getElementById('n3');
-  if (next) next.disabled = false;
+  checkScreen3Ready();
 }
 
 function restoreFamilyFields() {
-  // Clear all selections first (in case user navigated back and forth)
+  // Clear both groups first (in case user navigated back and forth)
+  ['sp_baseball', 'sp_softball', 'sp_both'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('selected');
+  });
   ['pc_1', 'pc_2', 'pc_3'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.classList.remove('selected');
   });
-  const next = document.getElementById('n3');
-  if (next) next.disabled = true;
 
-  // Restore previous selection if there was one
-  if (state.playerCount) {
-    const prev = document.getElementById('pc_' + state.playerCount);
-    if (prev) prev.classList.add('selected');
-    if (next) next.disabled = false;
+  // Restore previous sport selection if there was one
+  if (state.familySport) {
+    const sportEl = document.getElementById('sp_' + state.familySport);
+    if (sportEl) sportEl.classList.add('selected');
   }
+
+  // Restore previous player count selection if there was one
+  if (state.playerCount) {
+    const countEl = document.getElementById('pc_' + state.playerCount);
+    if (countEl) countEl.classList.add('selected');
+  }
+
+  // Re-evaluate Next button (could be off, on, or partially answered)
+  checkScreen3Ready();
 }
 
 /* ─── PROGRESS DOTS ─────────────────────────────────────────
@@ -1040,7 +1171,7 @@ window.addEventListener('DOMContentLoaded', () => {
   go(1);
 
   // Dev console hint
-  console.log('%c⚾ MyGrind Signup — Phase 2 (Round 3)', 'color: #C9A84C; font-weight: bold; font-size: 14px;');
+  console.log('%c⚾ MyGrind Signup — Phase 2 (Round 3.7)', 'color: #C9A84C; font-weight: bold; font-size: 14px;');
   console.log('%cState object available as window.mgState for debugging.', 'color: #888;');
   window.mgState = state;
 });
