@@ -704,8 +704,15 @@ function isValidPhone(s) {
 }
 
 // ── Live phone formatter — turns "5551234567" into "(555) 123-4567"
+//    Handles country-code prefix and cursor position to fix mid-edit jumping.
 function formatPhone(digits) {
-  digits = digits.replace(/\D/g, '').slice(0, 10);
+  digits = digits.replace(/\D/g, '');
+  // If user pasted "+1 555-123-4567" or autofill gave us "15551234567",
+  // strip the leading 1 so the area code lands in the right slot.
+  if (digits.length === 11 && digits.charAt(0) === '1') {
+    digits = digits.slice(1);
+  }
+  digits = digits.slice(0, 10);
   if (digits.length === 0) return '';
   if (digits.length < 4)   return '(' + digits;
   if (digits.length < 7)   return '(' + digits.slice(0,3) + ') ' + digits.slice(3);
@@ -713,8 +720,36 @@ function formatPhone(digits) {
 }
 
 function onPhoneInput(input) {
-  const formatted = formatPhone(input.value);
+  // Capture cursor position BEFORE we reformat — so we can restore it after.
+  // We track position by counting digits to the LEFT of the cursor in the
+  // raw input, then place the cursor at the same digit-position in the
+  // formatted output. This lets users edit mid-field without the cursor
+  // jumping to the end every keystroke.
+  const oldValue   = input.value;
+  const oldCursor  = input.selectionStart || 0;
+  const digitsLeftOfCursor = oldValue.slice(0, oldCursor).replace(/\D/g, '').length;
+
+  const formatted = formatPhone(oldValue);
   input.value = formatted;
+
+  // Walk through the formatted string and find where digit #N lives,
+  // then put the cursor right after it.
+  let newCursor = formatted.length;
+  let digitsSeen = 0;
+  for (let i = 0; i < formatted.length; i++) {
+    if (/\d/.test(formatted[i])) {
+      digitsSeen++;
+      if (digitsSeen === digitsLeftOfCursor) {
+        newCursor = i + 1;
+        break;
+      }
+    }
+  }
+  // Edge case: cursor was before any digit (e.g. start of field)
+  if (digitsLeftOfCursor === 0) newCursor = 0;
+
+  // setSelectionRange might fail on some input types — guard with try
+  try { input.setSelectionRange(newCursor, newCursor); } catch(e) {}
 }
 
 // ── Per-field validator — toggles .valid / .invalid classes
