@@ -15,6 +15,8 @@
      ─────────────────────────────────────────────────────────
      ROUND 1: Shell + Screen 1 (Welcome)
      ROUND 2: Screen 2 (About You) — form, validation, phone formatting
+     ROUND 2.5: Phone formatter bug fixes (country code paste, mid-edit cursor)
+     ROUND 3: Screen 3 (Your Family) — tap-card player count selector
      Future rounds will append <div class="screen"> blocks.
      ═══════════════════════════════════════════════════════════ -->
 
@@ -291,6 +293,89 @@ h1 span {
   grid-template-columns: 1fr 1fr;
   gap: 12px;
 }
+
+/* ═══════════════════════════════════════════════════════════
+   TAP CARDS (Screen 3 player count, future screens reuse)
+   ═══════════════════════════════════════════════════════════ */
+.tap-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  max-width: 360px;
+  margin: 0 auto 10px auto;
+  background: #181818;
+  border: 1px solid #272727;
+  border-radius: 4px;
+  padding: 18px 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+  color: inherit;
+  font-family: inherit;
+}
+.tap-card:hover {
+  border-color: #3A3024;
+  background: #1C1C1C;
+}
+.tap-card:active { transform: scale(0.99); }
+.tap-card.selected {
+  border-color: #C9A84C;
+  background: rgba(201,168,76,0.06);
+  box-shadow: 0 0 0 1px rgba(201,168,76,0.4);
+}
+.tap-card-emoji {
+  flex-shrink: 0;
+  font-size: 26px;
+  line-height: 1;
+  width: 40px;
+  text-align: center;
+}
+.tap-card-body { flex: 1; }
+.tap-card-title {
+  font-family: 'Bebas Neue', cursive;
+  font-size: 20px;
+  letter-spacing: 1.5px;
+  color: #F4F4F4;
+  margin-bottom: 2px;
+  line-height: 1.1;
+}
+.tap-card.selected .tap-card-title { color: #C9A84C; }
+.tap-card-desc {
+  font-size: 13px;
+  color: #8A7E70;
+  line-height: 1.4;
+}
+.tap-card-check {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  border: 1.5px solid #3A3024;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Bebas Neue', cursive;
+  font-size: 14px;
+  color: transparent;
+  transition: all 0.2s ease;
+}
+.tap-card.selected .tap-card-check {
+  background: #C9A84C;
+  border-color: #C9A84C;
+  color: #0A0A0A;
+}
+
+/* Footnote / sub-message under tap-cards */
+.footnote {
+  max-width: 360px;
+  margin: 14px auto 0 auto;
+  font-size: 13px;
+  color: #6B5E52;
+  line-height: 1.5;
+  text-align: center;
+}
+.footnote strong { color: #C9A84C; font-weight: 600; }
 
 /* ═══════════════════════════════════════════════════════════
    BOTTOM NAV (Back / Dots / Next)
@@ -596,7 +681,78 @@ h1 span {
 
 </div>
 
-<!-- INSERT SCREEN 3 (Your Family) HERE — Round 3 -->
+<!-- ═══════════════════════════════════════════════════════════
+     SCREEN 3 — YOUR FAMILY
+     ═══════════════════════════════════════════════════════════ -->
+<div class="screen" id="s3">
+
+  <div class="prog-wrap">
+    <div class="prog-track">
+      <div class="prog-fill" style="width: 37.5%"></div>
+    </div>
+    <div class="prog-label">
+      <span>Step 3 of 8</span>
+      <span>Your Family</span>
+    </div>
+  </div>
+
+  <div class="screen-body">
+    <div class="badge">Your Family</div>
+
+    <h1>
+      How many players
+      <span>are you signing up?</span>
+    </h1>
+
+    <div class="gold-bar"></div>
+
+    <p class="sub">
+      You can add more later, but tell us where to start.
+    </p>
+
+    <!-- Three tap cards -->
+    <button type="button" class="tap-card" id="pc_1" onclick="selectPlayerCount(1)">
+      <div class="tap-card-emoji">⚾</div>
+      <div class="tap-card-body">
+        <div class="tap-card-title">One Player</div>
+        <div class="tap-card-desc">Just my one.</div>
+      </div>
+      <div class="tap-card-check">✓</div>
+    </button>
+
+    <button type="button" class="tap-card" id="pc_2" onclick="selectPlayerCount(2)">
+      <div class="tap-card-emoji">⚾⚾</div>
+      <div class="tap-card-body">
+        <div class="tap-card-title">Two Players</div>
+        <div class="tap-card-desc">Siblings — set them both up.</div>
+      </div>
+      <div class="tap-card-check">✓</div>
+    </button>
+
+    <button type="button" class="tap-card" id="pc_3" onclick="selectPlayerCount(3)">
+      <div class="tap-card-emoji">⚾⚾⚾</div>
+      <div class="tap-card-body">
+        <div class="tap-card-title">Three or More</div>
+        <div class="tap-card-desc">Big baseball family.</div>
+      </div>
+      <div class="tap-card-check">✓</div>
+    </button>
+
+    <p class="footnote">
+      <strong>$9.99/mo per player</strong> after your free trial. Each player gets their own private journal and progress.
+    </p>
+
+  </div>
+
+  <!-- Bottom nav -->
+  <div class="bnav">
+    <button class="back-btn" onclick="go(2)">&larr; Back</button>
+    <div class="dots" id="d3"></div>
+    <button class="next-btn" id="n3" onclick="goNext(3, 4)" disabled>Next &rarr;</button>
+  </div>
+
+</div>
+
 <!-- INSERT SCREEN 4 (Why MyGrind?) HERE — Round 4 -->
 <!-- INSERT SCREEN 5 (Pricing Preview) HERE — Round 5 -->
 <!-- INSERT SCREEN 6 (Add Your Player) HERE — Round 6 -->
@@ -675,7 +831,8 @@ function go(n) {
 // Screen activation dispatcher — restores form values, re-runs validators, etc.
 function onScreenActivated(n) {
   if (n === 2) restoreParentFields();
-  // Future: if (n === 3) restoreFamilyFields(); etc.
+  if (n === 3) restoreFamilyFields();
+  // Future: if (n === 4) restoreGoals(); etc.
 }
 
 function goNext(from, to) {
@@ -810,6 +967,49 @@ function restoreParentFields() {
   onParentInput();
 }
 
+/* ═══════════════════════════════════════════════════════════
+   SCREEN 3 — YOUR FAMILY (player count selection)
+   ───────────────────────────────────────────────────────────
+   - User taps one of three cards (1, 2, or 3+ players)
+   - Selected card highlights gold, others reset
+   - state.playerCount stored as 1, 2, or 3 (where 3 means "3+")
+   - Next button enabled once a selection is made
+   ═══════════════════════════════════════════════════════════ */
+
+function selectPlayerCount(count) {
+  state.playerCount = count;
+  saveState();
+
+  // Visual: clear all, then add .selected to the chosen one
+  ['pc_1', 'pc_2', 'pc_3'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('selected');
+  });
+  const chosen = document.getElementById('pc_' + count);
+  if (chosen) chosen.classList.add('selected');
+
+  // Enable Next
+  const next = document.getElementById('n3');
+  if (next) next.disabled = false;
+}
+
+function restoreFamilyFields() {
+  // Clear all selections first (in case user navigated back and forth)
+  ['pc_1', 'pc_2', 'pc_3'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('selected');
+  });
+  const next = document.getElementById('n3');
+  if (next) next.disabled = true;
+
+  // Restore previous selection if there was one
+  if (state.playerCount) {
+    const prev = document.getElementById('pc_' + state.playerCount);
+    if (prev) prev.classList.add('selected');
+    if (next) next.disabled = false;
+  }
+}
+
 /* ─── PROGRESS DOTS ─────────────────────────────────────────
    Renders dots for a given screen. Active screen = gold pill,
    completed screens = dim gold dots, future screens = dark dots.
@@ -840,7 +1040,7 @@ window.addEventListener('DOMContentLoaded', () => {
   go(1);
 
   // Dev console hint
-  console.log('%c⚾ MyGrind Signup — Phase 2 (Round 2)', 'color: #C9A84C; font-weight: bold; font-size: 14px;');
+  console.log('%c⚾ MyGrind Signup — Phase 2 (Round 3)', 'color: #C9A84C; font-weight: bold; font-size: 14px;');
   console.log('%cState object available as window.mgState for debugging.', 'color: #888;');
   window.mgState = state;
 });
