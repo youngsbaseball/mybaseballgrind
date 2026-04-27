@@ -22,6 +22,7 @@
      ROUND 4: Screen 4 (Why MyGrind?) — multi-select goal toggles
      ROUND 5: Screen 5 (Pricing Preview) — display-only pricing + promise block (Decision #8)
      ROUND 5.5: Pricing cards now selectable — Annual pre-selected (Decision #8 v2)
+     ROUND 6: Screen 6 (Add Your Player) — multi-player loop + fallback branch
      Future rounds will append <div class="screen"> blocks.
      ═══════════════════════════════════════════════════════════ -->
 
@@ -707,6 +708,116 @@ h1 span {
 .promise-block-line strong { color: #F4F4F4; }
 
 /* ═══════════════════════════════════════════════════════════
+   PLAYER SLOT INDICATOR (Screen 6 — for multi-player flows)
+   ───────────────────────────────────────────────────────────
+   Small pill that appears next to the badge showing "1 OF 2"
+   etc. for multi-player flows. Hidden for single-player.
+   ═══════════════════════════════════════════════════════════ */
+.slot-indicator {
+  display: inline-block;
+  margin-left: 8px;
+  background: #1E1E1E;
+  border: 1px solid #3A3024;
+  border-radius: 2px;
+  padding: 5px 10px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #C9A84C;
+  vertical-align: middle;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   FALLBACK CHECKBOX (Screen 6 — "doesn't have own phone")
+   ═══════════════════════════════════════════════════════════ */
+.fallback-row {
+  max-width: 360px;
+  margin: 4px auto 18px auto;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+  padding: 10px 4px;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.fallback-row:hover .fallback-checkbox {
+  border-color: #3A3024;
+}
+.fallback-checkbox {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid #272727;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Bebas Neue', cursive;
+  font-size: 12px;
+  color: transparent;
+  background: #181818;
+  transition: all 0.2s ease;
+  margin-top: 1px;
+}
+.fallback-row.checked .fallback-checkbox {
+  background: #C9A84C;
+  border-color: #C9A84C;
+  color: #0A0A0A;
+}
+.fallback-label {
+  font-size: 13px;
+  line-height: 1.4;
+  color: #A89880;
+  text-align: left;
+}
+.fallback-row.checked .fallback-label {
+  color: #D4C8B8;
+}
+
+/* Reassurance message that appears when fallback is checked */
+.fallback-reassure {
+  display: none;
+  max-width: 360px;
+  margin: 0 auto 18px auto;
+  background: rgba(201,168,76,0.04);
+  border: 1px solid rgba(201,168,76,0.25);
+  border-radius: 4px;
+  padding: 14px 16px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #D4C8B8;
+  text-align: left;
+}
+.fallback-reassure.shown { display: block; animation: fadeIn 0.3s ease; }
+.fallback-reassure strong { color: #C9A84C; }
+
+/* Privacy note for the phone field — small reassurance */
+.privacy-note {
+  max-width: 360px;
+  margin: -8px auto 18px auto;
+  font-size: 12px;
+  color: #6B5E52;
+  line-height: 1.5;
+  text-align: center;
+  font-style: italic;
+}
+
+/* Native select styling to match field-input look */
+select.field-input {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23A89880' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
+  cursor: pointer;
+}
+
+/* ═══════════════════════════════════════════════════════════
    BOTTOM NAV (Back / Dots / Next)
    ═══════════════════════════════════════════════════════════ */
 .bnav {
@@ -1268,7 +1379,113 @@ h1 span {
 
 </div>
 
-<!-- INSERT SCREEN 6 (Add Your Player) HERE — Round 6 -->
+<!-- ═══════════════════════════════════════════════════════════
+     SCREEN 6 — ADD YOUR PLAYER (multi-player loop, fallback branch)
+     ───────────────────────────────────────────────────────────
+     This screen reloads itself for each player when player count > 1.
+     loadPlayerSlot(idx) handles re-initialization between loops.
+     ═══════════════════════════════════════════════════════════ -->
+<div class="screen" id="s6">
+
+  <div class="prog-wrap">
+    <div class="prog-track">
+      <div class="prog-fill" style="width: 75%"></div>
+    </div>
+    <div class="prog-label">
+      <span>Step 6 of 8</span>
+      <span id="s6_progress_label">Your Player</span>
+    </div>
+  </div>
+
+  <div class="screen-body">
+    <div>
+      <span class="badge">Your Player</span><span class="slot-indicator" id="s6_slot" style="display:none;"></span>
+    </div>
+
+    <h1>
+      Now let's set up
+      <span id="player_name_display">your player.</span>
+    </h1>
+
+    <div class="gold-bar"></div>
+
+    <p class="sub">
+      We'll text them their personal link. They take it from there.
+    </p>
+
+    <div class="form-stack">
+
+      <!-- Player first name -->
+      <div class="field-block">
+        <label class="field-label" for="player_first">Player's First Name<span class="req">*</span></label>
+        <input
+          type="text"
+          class="field-input"
+          id="player_first"
+          placeholder="Lucas"
+          autocomplete="off"
+          autocapitalize="words"
+          oninput="onPlayerInput()">
+        <div class="field-helper">First name or nickname is fine — whatever you call them.</div>
+      </div>
+
+      <!-- Relationship -->
+      <div class="field-block">
+        <label class="field-label" for="player_rel">Relationship<span class="req">*</span></label>
+        <select class="field-input" id="player_rel" onchange="onPlayerInput()">
+          <option value="">Choose one…</option>
+          <option value="Son">Son</option>
+          <option value="Daughter">Daughter</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+
+      <!-- Player phone (hidden when fallback is checked) -->
+      <div class="field-block" id="player_phone_block">
+        <label class="field-label" for="player_phone">Player's Phone Number<span class="req">*</span></label>
+        <input
+          type="tel"
+          class="field-input"
+          id="player_phone"
+          placeholder="(555) 123-4567"
+          autocomplete="off"
+          inputmode="tel"
+          maxlength="14"
+          oninput="onPhoneInput(this); onPlayerInput();">
+        <div class="field-helper">Where their invite text will go.</div>
+        <div class="field-helper error">Please enter a 10-digit US phone number.</div>
+      </div>
+
+      <!-- Fallback checkbox -->
+      <div class="fallback-row" id="fallback_row" onclick="toggleFallback()">
+        <div class="fallback-checkbox" id="fallback_check">✓</div>
+        <div class="fallback-label">
+          My player doesn't have their own phone
+        </div>
+      </div>
+
+      <!-- Reassurance shown when fallback is checked -->
+      <div class="fallback-reassure" id="fallback_reassure">
+        No problem. We'll set them up <strong>on your phone</strong>. They'll log in with a 4-digit PIN you create together. You'll be able to switch between your parent view and their player view from one device.
+      </div>
+
+      <p class="privacy-note" id="privacy_note">
+        Their phone number is only used to send the invite. We don't market to players, ever.
+      </p>
+
+    </div>
+
+  </div>
+
+  <!-- Bottom nav — button label changes based on multi-player state -->
+  <div class="bnav">
+    <button class="back-btn" onclick="onPlayerBack()">&larr; Back</button>
+    <div class="dots" id="d6"></div>
+    <button class="next-btn" id="n6" onclick="onPlayerContinue()" disabled>Continue &rarr;</button>
+  </div>
+
+</div>
+
 <!-- INSERT SCREEN 7 (Invite Sent / Setup Complete) HERE — Round 7 -->
 <!-- INSERT SCREEN 8 (Parent Dashboard) HERE — Round 8 -->
 
@@ -1306,8 +1523,9 @@ const state = {
   // Screen 5 — Pricing Preview (Decision #8 v2 — preferred plan selection)
   preferredPlan: 'annual',  // 'annual' | 'monthly' — Annual pre-selected by default
   // Screen 6 — Add Your Player (one entry per player)
-  players: [],              // [{ firstName, relationship, phone, fallbackPin, sport }]
+  players: [],              // [{ firstName, relationship, phone, fallback, sport }]
                             // sport defaults to familySport, parent can override per-kid
+  currentPlayerIndex: 0,    // Which player slot we're currently filling (0-indexed)
   // Internal — not user-facing
   currentScreen: 1,
   startedAt: null
@@ -1351,7 +1569,8 @@ function onScreenActivated(n) {
   if (n === 3) restoreFamilyFields();
   if (n === 4) restoreGoals();
   if (n === 5) restorePlanSelection();
-  // Future: if (n === 6) ... etc.
+  if (n === 6) restorePlayerScreen();
+  // Future: if (n === 7) ... etc.
 }
 
 function goNext(from, to) {
@@ -1649,6 +1868,238 @@ function restorePlanSelection() {
   if (chosen) chosen.classList.add('selected');
 }
 
+/* ═══════════════════════════════════════════════════════════
+   SCREEN 6 — ADD YOUR PLAYER (multi-player loop, fallback branch)
+   ───────────────────────────────────────────────────────────
+   Same screen instance reloaded once per player. Each player
+   slot is captured into state.players[idx] when parent taps
+   Continue. Fallback (no-phone) is per-player per Decision lock.
+   ═══════════════════════════════════════════════════════════ */
+
+// Returns "1 of 1", "1 of 2", "2 of 3" — reflects current slot for parent
+function getPlayerSlotLabel() {
+  const total = state.playerCount || 1;
+  const current = (state.currentPlayerIndex || 0) + 1;
+  return current + ' of ' + total;
+}
+
+// Sanitize a player object so it has the expected keys (defensive against
+// older localStorage entries that may not have all fields)
+function ensurePlayerSlot(idx) {
+  if (!Array.isArray(state.players)) state.players = [];
+  if (!state.players[idx]) {
+    state.players[idx] = {
+      firstName: '',
+      relationship: '',
+      phone: '',
+      fallback: false
+      // sport intentionally NOT set here — kid picks own sport in onboarding (Decision #7 v3)
+    };
+  }
+  return state.players[idx];
+}
+
+// Initialize the form for the player at currentPlayerIndex.
+// Pulls any saved data from state.players[idx] and populates fields.
+function loadPlayerSlot() {
+  const idx   = state.currentPlayerIndex || 0;
+  const total = state.playerCount || 1;
+  const player = ensurePlayerSlot(idx);
+
+  // Update slot indicator (only show pill for multi-player flows)
+  const slot = document.getElementById('s6_slot');
+  if (slot) {
+    if (total > 1) {
+      slot.textContent = 'Player ' + getPlayerSlotLabel();
+      slot.style.display = 'inline-block';
+    } else {
+      slot.style.display = 'none';
+    }
+  }
+
+  // Populate form fields with saved values (or empty for fresh slot)
+  const first = document.getElementById('player_first');
+  const rel   = document.getElementById('player_rel');
+  const phone = document.getElementById('player_phone');
+  if (first) first.value = player.firstName || '';
+  if (rel)   rel.value   = player.relationship || '';
+  if (phone) phone.value = player.phone || '';
+
+  // Reset visual states
+  if (first) first.classList.remove('valid', 'invalid');
+  if (rel)   rel.classList.remove('valid', 'invalid');
+  if (phone) phone.classList.remove('valid', 'invalid');
+
+  // Apply fallback state
+  applyFallbackVisuals(player.fallback === true);
+
+  // Update name preview
+  updatePlayerNameDisplay();
+
+  // Update Continue button label and enabled state
+  refreshPlayerContinue();
+}
+
+function applyFallbackVisuals(isFallback) {
+  const row       = document.getElementById('fallback_row');
+  const reassure  = document.getElementById('fallback_reassure');
+  const phoneBlk  = document.getElementById('player_phone_block');
+  const privacy   = document.getElementById('privacy_note');
+
+  if (isFallback) {
+    if (row)      row.classList.add('checked');
+    if (reassure) reassure.classList.add('shown');
+    if (phoneBlk) phoneBlk.style.display = 'none';
+    if (privacy)  privacy.style.display = 'none';
+  } else {
+    if (row)      row.classList.remove('checked');
+    if (reassure) reassure.classList.remove('shown');
+    if (phoneBlk) phoneBlk.style.display = '';
+    if (privacy)  privacy.style.display = '';
+  }
+}
+
+function toggleFallback() {
+  const idx = state.currentPlayerIndex || 0;
+  const player = ensurePlayerSlot(idx);
+  player.fallback = !player.fallback;
+
+  // If turning fallback ON, clear any phone they typed (it's irrelevant now)
+  if (player.fallback) {
+    player.phone = '';
+    const phone = document.getElementById('player_phone');
+    if (phone) {
+      phone.value = '';
+      phone.classList.remove('valid', 'invalid');
+    }
+  }
+
+  saveState();
+  applyFallbackVisuals(player.fallback);
+  refreshPlayerContinue();
+}
+
+// Live-update the H1 with the player's typed first name.
+// Falls back to "your player." when name is empty.
+function updatePlayerNameDisplay() {
+  const span = document.getElementById('player_name_display');
+  if (!span) return;
+  const first = document.getElementById('player_first');
+  const typed = first ? first.value.trim() : '';
+  if (typed.length > 0) {
+    span.textContent = typed + '.';
+  } else {
+    span.textContent = 'your player.';
+  }
+}
+
+// Validates the current player's fields and saves to state.
+// Called on every keystroke / select change.
+function onPlayerInput() {
+  const idx = state.currentPlayerIndex || 0;
+  const player = ensurePlayerSlot(idx);
+
+  const first = document.getElementById('player_first');
+  const rel   = document.getElementById('player_rel');
+  const phone = document.getElementById('player_phone');
+  if (!first || !rel || !phone) return;
+
+  // Save to state
+  player.firstName    = first.value.trim();
+  player.relationship = rel.value;
+  player.phone        = phone.value.trim();
+  saveState();
+
+  // Validate each field
+  const firstOk = first.value.trim().length >= 1;
+  const relOk   = rel.value.length > 0;
+  const phoneOk = player.fallback ? true : isValidPhone(phone.value);
+
+  // Apply visual states
+  validateField(first, firstOk);
+  // Select gets validated only if user has touched it (has a non-empty value)
+  if (rel.value.length > 0) {
+    rel.classList.remove('valid', 'invalid');
+    rel.classList.add('valid');
+  } else {
+    rel.classList.remove('valid', 'invalid');
+  }
+  if (!player.fallback) {
+    validateField(phone, phoneOk);
+  }
+
+  updatePlayerNameDisplay();
+  refreshPlayerContinue();
+}
+
+// Updates the Continue button label and disabled state based on current
+// player position (single vs. multi, last player vs. not, validation state).
+function refreshPlayerContinue() {
+  const next = document.getElementById('n6');
+  if (!next) return;
+
+  const idx    = state.currentPlayerIndex || 0;
+  const total  = state.playerCount || 1;
+  const player = ensurePlayerSlot(idx);
+
+  const firstOk = (player.firstName || '').length >= 1;
+  const relOk   = (player.relationship || '').length > 0;
+  const phoneOk = player.fallback ? true : isValidPhone(player.phone || '');
+
+  next.disabled = !(firstOk && relOk && phoneOk);
+
+  // Button label changes based on whether this is the last player
+  const isLast = (idx + 1 >= total);
+  if (isLast) {
+    next.innerHTML = 'Send All Invites &rarr;';
+  } else {
+    next.innerHTML = 'Continue &rarr;';
+  }
+}
+
+// Continue: advance to next player slot OR move to Screen 7
+function onPlayerContinue() {
+  const idx   = state.currentPlayerIndex || 0;
+  const total = state.playerCount || 1;
+
+  // The player data is already saved in state.players[idx] via onPlayerInput.
+  // Advance the index or move to the next screen.
+  if (idx + 1 < total) {
+    state.currentPlayerIndex = idx + 1;
+    saveState();
+    loadPlayerSlot(); // reload form for next player
+    window.scrollTo(0, 0);
+  } else {
+    // All players captured — go to Screen 7
+    go(7);
+  }
+}
+
+// Back: go back one player slot, OR back to Screen 5 if at first player
+function onPlayerBack() {
+  const idx = state.currentPlayerIndex || 0;
+  if (idx > 0) {
+    state.currentPlayerIndex = idx - 1;
+    saveState();
+    loadPlayerSlot();
+    window.scrollTo(0, 0);
+  } else {
+    go(5);
+  }
+}
+
+function restorePlayerScreen() {
+  // Default currentPlayerIndex to 0 if missing (fresh entry from Screen 5)
+  if (typeof state.currentPlayerIndex !== 'number') state.currentPlayerIndex = 0;
+  // Defensive: never let index go past playerCount-1
+  const total = state.playerCount || 1;
+  if (state.currentPlayerIndex >= total) state.currentPlayerIndex = total - 1;
+  if (state.currentPlayerIndex < 0)      state.currentPlayerIndex = 0;
+  saveState();
+
+  loadPlayerSlot();
+}
+
 /* ─── PROGRESS DOTS ─────────────────────────────────────────
    Renders dots for a given screen. Active screen = gold pill,
    completed screens = dim gold dots, future screens = dark dots.
@@ -1679,7 +2130,7 @@ window.addEventListener('DOMContentLoaded', () => {
   go(1);
 
   // Dev console hint
-  console.log('%c⚾ MyGrind Signup — Phase 2 (Round 5.5)', 'color: #C9A84C; font-weight: bold; font-size: 14px;');
+  console.log('%c⚾ MyGrind Signup — Phase 2 (Round 6)', 'color: #C9A84C; font-weight: bold; font-size: 14px;');
   console.log('%cState object available as window.mgState for debugging.', 'color: #888;');
   window.mgState = state;
 });
