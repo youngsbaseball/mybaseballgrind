@@ -20,6 +20,8 @@
      ROUND 3.5: Brand pivot — YBG tagline removed (Decision #10, Pattern 3)
      ROUND 3.7: Family sport added to Screen 3 (Decision #7 update)
      ROUND 4: Screen 4 (Why MyGrind?) — multi-select goal toggles
+     ROUND 5: Screen 5 (Pricing Preview) — display-only pricing + promise block (Decision #8)
+     ROUND 5.5: Pricing cards now selectable — Annual pre-selected (Decision #8 v2)
      Future rounds will append <div class="screen"> blocks.
      ═══════════════════════════════════════════════════════════ -->
 
@@ -539,6 +541,172 @@ h1 span {
 }
 
 /* ═══════════════════════════════════════════════════════════
+   PRICING CARDS (Screen 5 — selectable, Annual pre-selected)
+   ───────────────────────────────────────────────────────────
+   Per Decision #8 v2 (locked April 27 PM): cards capture a
+   preferred plan. Annual is pre-selected by default. Parent
+   can tap Monthly to switch. No payment collected — this is
+   a stated preference, not a purchase.
+   ═══════════════════════════════════════════════════════════ */
+.price-stack {
+  max-width: 360px;
+  margin: 0 auto 16px auto;
+}
+.price-card {
+  position: relative;
+  display: block;
+  width: 100%;
+  background: #181818;
+  border: 1px solid #272727;
+  border-radius: 4px;
+  padding: 22px 20px;
+  margin-bottom: 12px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: inherit;
+  font-family: inherit;
+}
+.price-card:hover {
+  border-color: #3A3024;
+  background: #1C1C1C;
+}
+.price-card:active { transform: scale(0.99); }
+.price-card.selected {
+  border: 1.5px solid #C9A84C;
+  background: linear-gradient(180deg, rgba(201,168,76,0.08) 0%, #181818 100%);
+  box-shadow: 0 0 0 1px rgba(201,168,76,0.4);
+}
+.price-card-pill {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #C9A84C;
+  color: #0A0A0A;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 2px;
+  white-space: nowrap;
+}
+.price-card-name {
+  font-family: 'Bebas Neue', cursive;
+  font-size: 22px;
+  letter-spacing: 2px;
+  color: #F4F4F4;
+  margin-bottom: 8px;
+}
+.price-card.selected .price-card-name {
+  color: #C9A84C;
+}
+.price-card-amount {
+  font-family: 'Bebas Neue', cursive;
+  font-size: 36px;
+  letter-spacing: 1px;
+  color: #C9A84C;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.price-card-amount .per {
+  font-family: 'Barlow', sans-serif;
+  font-size: 14px;
+  letter-spacing: 0;
+  color: #A89880;
+  font-weight: 400;
+}
+.price-card-equiv {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: #6B5E52;
+  margin-bottom: 10px;
+}
+.price-card-tag {
+  font-size: 13px;
+  color: #A89880;
+  font-style: italic;
+}
+
+/* Small "selected ✓" indicator for the chosen card (top-right corner) */
+.price-card-check {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 22px;
+  height: 22px;
+  border: 1.5px solid #3A3024;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Bebas Neue', cursive;
+  font-size: 14px;
+  color: transparent;
+  transition: all 0.2s ease;
+}
+.price-card.selected .price-card-check {
+  background: #C9A84C;
+  border-color: #C9A84C;
+  color: #0A0A0A;
+}
+
+/* Switch hint copy — just below pricing cards */
+.switch-hint {
+  text-align: center;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: #6B5E52;
+  margin-bottom: 24px;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   PROMISE BLOCK (Screen 5 — the trust contract)
+   ───────────────────────────────────────────────────────────
+   Gold-bordered block below pricing. Explains exactly what
+   happens at day 12/14 + the voluntary pay + 90-day archive.
+   This is the screen's emotional anchor.
+   ═══════════════════════════════════════════════════════════ */
+.promise-block {
+  max-width: 360px;
+  margin: 0 auto 28px auto;
+  background: rgba(201,168,76,0.04);
+  border: 1px solid rgba(201,168,76,0.3);
+  border-radius: 4px;
+  padding: 20px 22px;
+  text-align: left;
+}
+.promise-block-title {
+  font-family: 'Bebas Neue', cursive;
+  font-size: 18px;
+  letter-spacing: 1.5px;
+  color: #C9A84C;
+  margin-bottom: 12px;
+}
+.promise-block-line {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 8px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #D4C8B8;
+}
+.promise-block-line:last-child { margin-bottom: 0; }
+.promise-block-line .bullet {
+  flex-shrink: 0;
+  color: #C9A84C;
+  font-weight: 700;
+  width: 14px;
+}
+.promise-block-line strong { color: #F4F4F4; }
+
+/* ═══════════════════════════════════════════════════════════
    BOTTOM NAV (Back / Dots / Next)
    ═══════════════════════════════════════════════════════════ */
 .bnav {
@@ -1017,7 +1185,89 @@ h1 span {
 
 </div>
 
-<!-- INSERT SCREEN 5 (Pricing Preview) HERE — Round 5 -->
+<!-- ═══════════════════════════════════════════════════════════
+     SCREEN 5 — PRICING PREVIEW (Decision #8: display only)
+     ═══════════════════════════════════════════════════════════ -->
+<div class="screen" id="s5">
+
+  <div class="prog-wrap">
+    <div class="prog-track">
+      <div class="prog-fill" style="width: 62.5%"></div>
+    </div>
+    <div class="prog-label">
+      <span>Step 5 of 8</span>
+      <span>What It Costs</span>
+    </div>
+  </div>
+
+  <div class="screen-body">
+    <div class="badge">What It Costs</div>
+
+    <h1>
+      Straight up &mdash;
+      <span>here's what it costs.</span>
+    </h1>
+
+    <div class="gold-bar"></div>
+
+    <p class="sub">
+      Not today. Not for 14 days. But you should know before we start.
+    </p>
+
+    <!-- Pricing cards (selectable per Decision #8 v2 — Annual pre-selected) -->
+    <div class="price-stack">
+
+      <button type="button" class="price-card selected" id="plan_annual" onclick="selectPlan('annual')">
+        <div class="price-card-pill">Best Value</div>
+        <div class="price-card-check">✓</div>
+        <div class="price-card-name">MyGrind Annual</div>
+        <div class="price-card-amount">$99<span class="per"> / year per player</span></div>
+        <div class="price-card-equiv">~ $8.25/mo · save 17%</div>
+        <div class="price-card-tag">For families committed to the year</div>
+      </button>
+
+      <button type="button" class="price-card" id="plan_monthly" onclick="selectPlan('monthly')">
+        <div class="price-card-check">✓</div>
+        <div class="price-card-name">MyGrind Monthly</div>
+        <div class="price-card-amount">$9.99<span class="per"> / month per player</span></div>
+        <div class="price-card-equiv">Cancel anytime</div>
+        <div class="price-card-tag">Month to month, no commitment</div>
+      </button>
+
+    </div>
+
+    <div class="switch-hint">
+      Most parents pick annual &mdash; you can switch anytime
+    </div>
+
+    <!-- Promise block — the trust contract -->
+    <div class="promise-block">
+      <div class="promise-block-title">What happens at day 14?</div>
+      <div class="promise-block-line">
+        <span class="bullet">→</span>
+        <div>We'll text you. We'll email you. <strong>Twice</strong> &mdash; on day 12, and again on day 14.</div>
+      </div>
+      <div class="promise-block-line">
+        <span class="bullet">→</span>
+        <div>If you've seen the value, you pay <strong>from your dashboard</strong>, whenever you're ready.</div>
+      </div>
+      <div class="promise-block-line">
+        <span class="bullet">→</span>
+        <div>If not, you walk away. Your player's data stays safe for <strong>90 days</strong> in case you change your mind.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bottom nav — Next always enabled (Annual is pre-selected by default) -->
+  <div class="bnav">
+    <button class="back-btn" onclick="go(4)">&larr; Back</button>
+    <div class="dots" id="d5"></div>
+    <button class="next-btn" id="n5" onclick="goNext(5, 6)">Continue &rarr;</button>
+  </div>
+
+</div>
+
 <!-- INSERT SCREEN 6 (Add Your Player) HERE — Round 6 -->
 <!-- INSERT SCREEN 7 (Invite Sent / Setup Complete) HERE — Round 7 -->
 <!-- INSERT SCREEN 8 (Parent Dashboard) HERE — Round 8 -->
@@ -1053,6 +1303,8 @@ const state = {
   playerCount: null,        // 1, 2, or 3 (3 = "3 or more")
   // Screen 4 — Why MyGrind?
   goals: [],                // array of selected goal strings
+  // Screen 5 — Pricing Preview (Decision #8 v2 — preferred plan selection)
+  preferredPlan: 'annual',  // 'annual' | 'monthly' — Annual pre-selected by default
   // Screen 6 — Add Your Player (one entry per player)
   players: [],              // [{ firstName, relationship, phone, fallbackPin, sport }]
                             // sport defaults to familySport, parent can override per-kid
@@ -1098,7 +1350,8 @@ function onScreenActivated(n) {
   if (n === 2) restoreParentFields();
   if (n === 3) restoreFamilyFields();
   if (n === 4) restoreGoals();
-  // Future: if (n === 5) ... etc.
+  if (n === 5) restorePlanSelection();
+  // Future: if (n === 6) ... etc.
 }
 
 function goNext(from, to) {
@@ -1358,6 +1611,44 @@ function restoreGoals() {
   if (next) next.disabled = state.goals.length === 0;
 }
 
+/* ═══════════════════════════════════════════════════════════
+   SCREEN 5 — PRICING PREVIEW (preferred plan selection)
+   ───────────────────────────────────────────────────────────
+   Per Decision #8 v2 (April 27 PM): cards are tappable.
+   Annual is pre-selected by default. Parent can switch.
+   No payment, no commitment — just stored preference for later.
+   ═══════════════════════════════════════════════════════════ */
+
+function selectPlan(plan) {
+  state.preferredPlan = plan;
+  saveState();
+
+  // Visual: clear both, then add .selected to chosen
+  ['plan_annual', 'plan_monthly'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('selected');
+  });
+  const chosen = document.getElementById('plan_' + plan);
+  if (chosen) chosen.classList.add('selected');
+}
+
+function restorePlanSelection() {
+  // Defensive: if somehow state.preferredPlan is missing (older localStorage
+  // entry from before Decision #8 v2), default to 'annual'
+  if (state.preferredPlan !== 'monthly' && state.preferredPlan !== 'annual') {
+    state.preferredPlan = 'annual';
+    saveState();
+  }
+
+  // Apply the visual state
+  ['plan_annual', 'plan_monthly'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('selected');
+  });
+  const chosen = document.getElementById('plan_' + state.preferredPlan);
+  if (chosen) chosen.classList.add('selected');
+}
+
 /* ─── PROGRESS DOTS ─────────────────────────────────────────
    Renders dots for a given screen. Active screen = gold pill,
    completed screens = dim gold dots, future screens = dark dots.
@@ -1388,7 +1679,7 @@ window.addEventListener('DOMContentLoaded', () => {
   go(1);
 
   // Dev console hint
-  console.log('%c⚾ MyGrind Signup — Phase 2 (Round 4)', 'color: #C9A84C; font-weight: bold; font-size: 14px;');
+  console.log('%c⚾ MyGrind Signup — Phase 2 (Round 5.5)', 'color: #C9A84C; font-weight: bold; font-size: 14px;');
   console.log('%cState object available as window.mgState for debugging.', 'color: #888;');
   window.mgState = state;
 });
