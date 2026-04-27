@@ -19,6 +19,7 @@
      ROUND 3: Screen 3 (Your Family) — tap-card player count selector
      ROUND 3.5: Brand pivot — YBG tagline removed (Decision #10, Pattern 3)
      ROUND 3.7: Family sport added to Screen 3 (Decision #7 update)
+     ROUND 4: Screen 4 (Why MyGrind?) — multi-select goal toggles
      Future rounds will append <div class="screen"> blocks.
      ═══════════════════════════════════════════════════════════ -->
 
@@ -451,6 +452,93 @@ h1 span {
 }
 
 /* ═══════════════════════════════════════════════════════════
+   GOAL TOGGLES (Screen 4 — multi-select goal selection)
+   ───────────────────────────────────────────────────────────
+   Full-width buttons that support MULTI-select.
+   Visually similar to tap-cards but with a checkbox-style indicator
+   instead of a radio-style indicator, so users know multiple
+   selections are allowed.
+   ═══════════════════════════════════════════════════════════ */
+.multi-select-hint {
+  display: inline-block;
+  background: #231F1C;
+  border: 1px solid #3D3530;
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #888;
+  margin-bottom: 16px;
+}
+
+.goal-toggle {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  max-width: 360px;
+  margin: 0 auto 8px auto;
+  background: #181818;
+  border: 1px solid #272727;
+  border-radius: 4px;
+  padding: 14px 18px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+  color: inherit;
+  font-family: inherit;
+}
+.goal-toggle:hover {
+  border-color: #3A3024;
+  background: #1C1C1C;
+}
+.goal-toggle:active { transform: scale(0.99); }
+.goal-toggle.selected {
+  border-color: #C9A84C;
+  background: rgba(201,168,76,0.06);
+}
+.goal-toggle-emoji {
+  flex-shrink: 0;
+  font-size: 22px;
+  line-height: 1;
+  width: 32px;
+  text-align: center;
+}
+.goal-toggle-text {
+  flex: 1;
+  font-size: 14px;
+  line-height: 1.4;
+  color: #D4C8B8;
+}
+.goal-toggle.selected .goal-toggle-text {
+  color: #F4F4F4;
+}
+
+/* Checkbox-style indicator (square, not circle — to differentiate from
+   the single-select radio-style on tap-cards) */
+.goal-toggle-check {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  border: 1.5px solid #3A3024;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Bebas Neue', cursive;
+  font-size: 13px;
+  color: transparent;
+  transition: all 0.2s ease;
+}
+.goal-toggle.selected .goal-toggle-check {
+  background: #C9A84C;
+  border-color: #C9A84C;
+  color: #0A0A0A;
+}
+
+/* ═══════════════════════════════════════════════════════════
    BOTTOM NAV (Back / Dots / Next)
    ═══════════════════════════════════════════════════════════ */
 .bnav {
@@ -851,7 +939,84 @@ h1 span {
 
 </div>
 
-<!-- INSERT SCREEN 4 (Why MyGrind?) HERE — Round 4 -->
+<!-- ═══════════════════════════════════════════════════════════
+     SCREEN 4 — WHY MYGRIND? (multi-select goals)
+     ═══════════════════════════════════════════════════════════ -->
+<div class="screen" id="s4">
+
+  <div class="prog-wrap">
+    <div class="prog-track">
+      <div class="prog-fill" style="width: 50%"></div>
+    </div>
+    <div class="prog-label">
+      <span>Step 4 of 8</span>
+      <span>Your Why</span>
+    </div>
+  </div>
+
+  <div class="screen-body">
+    <div class="badge">Your Why</div>
+
+    <h1>
+      What brings you
+      <span>here?</span>
+    </h1>
+
+    <div class="gold-bar"></div>
+
+    <p class="sub">
+      Helps us shape your dashboard. Pick whatever fits — there's no wrong answer.
+    </p>
+
+    <div class="multi-select-hint">✓ Select all that apply</div>
+
+    <button type="button" class="goal-toggle" id="g_see" onclick="toggleGoal('see')">
+      <div class="goal-toggle-emoji">🎯</div>
+      <div class="goal-toggle-text">I want to see what my player is putting in</div>
+      <div class="goal-toggle-check">✓</div>
+    </button>
+
+    <button type="button" class="goal-toggle" id="g_habits" onclick="toggleGoal('habits')">
+      <div class="goal-toggle-emoji">📊</div>
+      <div class="goal-toggle-text">I want them building better daily habits</div>
+      <div class="goal-toggle-check">✓</div>
+    </button>
+
+    <button type="button" class="goal-toggle" id="g_recruit" onclick="toggleGoal('recruit')">
+      <div class="goal-toggle-emoji">🏆</div>
+      <div class="goal-toggle-text">They're trying to make a team or get recruited</div>
+      <div class="goal-toggle-check">✓</div>
+    </button>
+
+    <button type="button" class="goal-toggle" id="g_support" onclick="toggleGoal('support')">
+      <div class="goal-toggle-emoji">🧠</div>
+      <div class="goal-toggle-text">I want to support them, not pressure them</div>
+      <div class="goal-toggle-check">✓</div>
+    </button>
+
+    <button type="button" class="goal-toggle" id="g_accountable" onclick="toggleGoal('accountable')">
+      <div class="goal-toggle-emoji">⏰</div>
+      <div class="goal-toggle-text">I want them more accountable for their own work</div>
+      <div class="goal-toggle-check">✓</div>
+    </button>
+
+    <button type="button" class="goal-toggle" id="g_explore" onclick="toggleGoal('explore')">
+      <div class="goal-toggle-emoji">💡</div>
+      <div class="goal-toggle-text">I'm just exploring</div>
+      <div class="goal-toggle-check">✓</div>
+    </button>
+
+  </div>
+
+  <!-- Bottom nav -->
+  <div class="bnav">
+    <button class="back-btn" onclick="go(3)">&larr; Back</button>
+    <div class="dots" id="d4"></div>
+    <button class="next-btn" id="n4" onclick="goNext(4, 5)" disabled>Next &rarr;</button>
+  </div>
+
+</div>
+
 <!-- INSERT SCREEN 5 (Pricing Preview) HERE — Round 5 -->
 <!-- INSERT SCREEN 6 (Add Your Player) HERE — Round 6 -->
 <!-- INSERT SCREEN 7 (Invite Sent / Setup Complete) HERE — Round 7 -->
@@ -932,7 +1097,8 @@ function go(n) {
 function onScreenActivated(n) {
   if (n === 2) restoreParentFields();
   if (n === 3) restoreFamilyFields();
-  // Future: if (n === 4) restoreGoals(); etc.
+  if (n === 4) restoreGoals();
+  // Future: if (n === 5) ... etc.
 }
 
 function goNext(from, to) {
@@ -1141,6 +1307,57 @@ function restoreFamilyFields() {
   checkScreen3Ready();
 }
 
+/* ═══════════════════════════════════════════════════════════
+   SCREEN 4 — WHY MYGRIND? (multi-select goals)
+   ───────────────────────────────────────────────────────────
+   - User can select any combination of 6 goal options
+   - state.goals = array of selected goal IDs
+   - At least one selection required to enable Next
+   ═══════════════════════════════════════════════════════════ */
+
+const GOAL_IDS = ['see', 'habits', 'recruit', 'support', 'accountable', 'explore'];
+
+function toggleGoal(goalId) {
+  // Defensive: ensure state.goals is always an array (could be undefined
+  // on first run from a stale localStorage entry)
+  if (!Array.isArray(state.goals)) state.goals = [];
+
+  const idx = state.goals.indexOf(goalId);
+  if (idx === -1) {
+    state.goals.push(goalId);
+  } else {
+    state.goals.splice(idx, 1);
+  }
+  saveState();
+
+  // Visual: toggle .selected on the tapped button
+  const el = document.getElementById('g_' + goalId);
+  if (el) el.classList.toggle('selected', state.goals.includes(goalId));
+
+  // Next enabled only when at least one goal is selected
+  const next = document.getElementById('n4');
+  if (next) next.disabled = state.goals.length === 0;
+}
+
+function restoreGoals() {
+  // Defensive
+  if (!Array.isArray(state.goals)) state.goals = [];
+
+  // Clear all visual selections, then re-apply from state
+  GOAL_IDS.forEach(id => {
+    const el = document.getElementById('g_' + id);
+    if (el) el.classList.remove('selected');
+  });
+  state.goals.forEach(goalId => {
+    const el = document.getElementById('g_' + goalId);
+    if (el) el.classList.add('selected');
+  });
+
+  // Re-evaluate Next button
+  const next = document.getElementById('n4');
+  if (next) next.disabled = state.goals.length === 0;
+}
+
 /* ─── PROGRESS DOTS ─────────────────────────────────────────
    Renders dots for a given screen. Active screen = gold pill,
    completed screens = dim gold dots, future screens = dark dots.
@@ -1171,7 +1388,7 @@ window.addEventListener('DOMContentLoaded', () => {
   go(1);
 
   // Dev console hint
-  console.log('%c⚾ MyGrind Signup — Phase 2 (Round 3.7)', 'color: #C9A84C; font-weight: bold; font-size: 14px;');
+  console.log('%c⚾ MyGrind Signup — Phase 2 (Round 4)', 'color: #C9A84C; font-weight: bold; font-size: 14px;');
   console.log('%cState object available as window.mgState for debugging.', 'color: #888;');
   window.mgState = state;
 });
