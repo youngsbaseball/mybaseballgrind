@@ -1250,9 +1250,9 @@ select.field-input {
 
 .back-btn, .next-btn {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 700;
-  letter-spacing: 1.5px;
+  letter-spacing: 1.4px;
   text-transform: uppercase;
   border: none;
   cursor: pointer;
@@ -1263,12 +1263,16 @@ select.field-input {
   user-select: none;
 }
 
+/* Back button is intentionally secondary to Next, but per Coach Young
+   April 28: original 12px / #6B5E52 was too small and dim to read.
+   Bumped to 13px (matches Next) + lighter color so it's legible
+   without competing with Next's gold prominence. */
 .back-btn {
   background: transparent;
-  color: #6B5E52;
+  color: #8A7E70;
   min-width: 80px;
 }
-.back-btn:hover { color: #A89880; }
+.back-btn:hover { color: #C9A84C; }
 .back-btn:active { opacity: 0.7; }
 
 .next-btn {
