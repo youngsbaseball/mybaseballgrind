@@ -1161,38 +1161,10 @@ select.field-input {
   border-color: #C9A84C;
 }
 
-/* Voluntary pay button — gold, prominent, at bottom */
-.pay-now-btn {
-  display: block;
-  max-width: 360px;
-  margin: 24px auto 16px auto;
-  width: 100%;
-  background: #C9A84C;
-  color: #0A0A0A;
-  border: none;
-  border-radius: 3px;
-  padding: 14px 24px;
-  font-family: 'Bebas Neue', cursive;
-  font-size: 16px;
-  letter-spacing: 2px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  text-align: center;
-}
-.pay-now-btn:hover {
-  background: #D4B85A;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(201,168,76,0.25);
-}
-.pay-now-btn:active { transform: scale(0.99); }
-
-.pay-now-sub {
-  text-align: center;
-  font-size: 12px;
-  color: #6B5E52;
-  margin-bottom: 24px;
-  font-style: italic;
-}
+/* (April 27 PM): .pay-now-btn and .pay-now-sub CSS removed — the gold
+   "Pay & Continue Anytime" button these styled was retired from Screen 8
+   for trust reasons. Phase 5 will introduce a new pay surface elsewhere
+   (likely tied to day 12/14 reminders per Decision #9). */
 
 /* Dashboard footer — small links for share, settings, etc. */
 .dash-footer {
@@ -1999,13 +1971,12 @@ select.field-input {
     <!-- Player cards — populated dynamically by buildScreen8() -->
     <div id="dash_player_cards"></div>
 
-    <!-- Voluntary pay button -->
-    <button type="button" class="pay-now-btn" onclick="onPayNowClicked()">
-      Pay &amp; Continue Anytime
-    </button>
-    <p class="pay-now-sub">
-      No pressure. We'll remind you on day 12 if you'd rather wait.
-    </p>
+    <!-- NOTE (April 27 PM): Voluntary pay button removed per Coach Young.
+         Reasoning: Big gold "PAY" button on Day 1 dashboard contradicted the
+         "14 days free, no card required" promise from Screen 5. Cognitive
+         whiplash hurt trust. Day 12/14 reminders (Decision #9) handle the
+         pay nudge later. If we want to add an "early pay" option back, do it
+         as a small text link, not a primary CTA. -->
 
     <!-- Dashboard footer (placeholder links for future phases) -->
     <div class="dash-footer">
@@ -2987,12 +2958,11 @@ function onResendInvite(playerIndex) {
         '.\n\n(Twilio integration ships in Phase 3 — for now this is a placeholder.)');
 }
 
-// Pay Now button handler (placeholder — Phase 5 wires this to Stripe)
-function onPayNowClicked() {
-  alert('Pay & Continue would launch the Stripe checkout flow with your selected plan (' +
-        (state.preferredPlan || 'annual') + ').' +
-        '\n\n(Stripe integration ships in Phase 5 — for now this is a placeholder.)');
-}
+// (April 27 PM): onPayNowClicked() removed. The "Pay & Continue Anytime"
+// button it served has been removed from Screen 8 — it contradicted the
+// 14-day-free-trial promise. When Stripe gets wired in Phase 5, the new
+// pay flow will live elsewhere (likely on a "your trial expires" reminder
+// screen at day 12/14, per Decision #9).
 
 /* ─── PROGRESS DOTS ─────────────────────────────────────────
    Renders dots for a given screen. Active screen = gold pill,
