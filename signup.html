@@ -304,9 +304,9 @@ h1 span {
   display: none;
   margin-top: 8px;
   font-family: 'Barlow', sans-serif;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.45;
-  padding: 9px 12px;
+  padding: 10px 14px;
   border-radius: 3px;
   border: 1px solid transparent;
 }
@@ -351,16 +351,24 @@ h1 span {
   color: #F4F4F4;
 }
 
-/* Confirmation state — calm, low contrast. Reassures that we got the
-   address right without grabbing attention (no typo to fix). */
+/* Confirmation state — calm but present. Per Coach Young April 28: original
+   was too quiet, the message got lost. Bumped contrast + added a small
+   gold check icon so the eye lands on it without it feeling pushy. */
 .email-feedback.confirming {
-  background: transparent;
-  border-color: rgba(255,255,255,0.06);
-  color: #8A7E70;
+  background: rgba(201,168,76,0.05);
+  border-color: rgba(201,168,76,0.18);
+  color: #C8BBA8;
+}
+.email-feedback.confirming::before {
+  content: '✓';
+  display: inline-block;
+  margin-right: 8px;
+  color: #C9A84C;
+  font-weight: 700;
 }
 .email-feedback.confirming .ef-confirmed-email {
-  color: #C9A84C;
-  font-weight: 600;
+  color: #F4F4F4;
+  font-weight: 700;
 }
 
 /* Two-column row for first/last name */
@@ -2603,9 +2611,18 @@ function onParentInput() {
   // Updates the suggestion/confirmation pill below the email field.
   refreshEmailFeedback();
 
-  // Enable Next only if everything passes
+  // If a typo suggestion is currently showing, treat the email as not-yet-clean
+  // and block the Next button. Per Coach Young April 28: typos in known
+  // domains are high-confidence (the dictionary is intentionally narrow), so
+  // the false-positive risk is essentially zero. Better to make the parent
+  // either click "Use this" or fix the email manually before continuing
+  // than to let them sail past with a broken address that loses them the
+  // Day 12/14 reminders.
+  const hasActiveSuggestion = suggestEmailDomainFix(email.value) !== null;
+
+  // Enable Next only if everything passes AND there's no pending typo fix
   const next = document.getElementById('n2');
-  if (next) next.disabled = !(firstOk && lastOk && emailOk && phoneOk);
+  if (next) next.disabled = !(firstOk && lastOk && emailOk && phoneOk) || hasActiveSuggestion;
 }
 
 // Layer B+C smart email feedback (locked email defenses spec).
