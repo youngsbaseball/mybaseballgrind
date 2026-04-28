@@ -3,211 +3,409 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>MyGrind — Start Your Journey</title>
-<meta name="theme-color" content="#1E1A17318">
+<title>MyGrind — Welcome, Player</title>
+<meta name="theme-color" content="#181614">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@700&family=Barlow:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <style>
+/* ═══════════════════════════════════════════════════════════
+   MYGRIND 2.0 — PLAYER ONBOARDING (Phase 4)
+   ─────────────────────────────────────────────────────────
+   This file handles the kid-from-parent onboarding flow.
+   Per Decision #13 (April 27 PM): stripped of Stripe/Mailchimp/
+   Firebase/trial-state plumbing. Kids arrive here via parent-
+   generated SMS link (?name=Sofia) OR via parent device after
+   fallback signup (?name=Sofia&fallback=1).
+   ─────────────────────────────────────────────────────────
+   Visual language & 13-step content kept from MyGrind 1.0.
+   Phase 7 will build the real player dashboard; for now the
+   exit is a "You're all set" placeholder screen.
+   ═══════════════════════════════════════════════════════════ */
+
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 body { background: #181614; color: #F5F0EB; font-family: 'Barlow', Arial, sans-serif; font-size: 16px; min-height: 100vh; }
 .screen { display: none; flex-direction: column; min-height: 100vh; padding: 0 0 80px; }
 .screen.on { display: flex; }
 .screen-body { padding: 24px 24px 0; flex: 1; }
+
 .prog-wrap { padding: 14px 24px 0; background: #181614; position: sticky; top: 0; z-index: 10; }
 .prog-track { height: 3px; background: #2A2622; border-radius: 2px; overflow: hidden; }
 .prog-fill { height: 100%; background: #C9A84C; border-radius: 2px; transition: width 0.4s ease; }
 .prog-label { display: flex; justify-content: space-between; margin-top: 5px; padding-bottom: 10px; }
 .prog-step { font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #6B5E52; }
+
 .badge { font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: #C9A84C; margin-bottom: 5px; }
 h1 { font-family: 'Bebas Neue', Arial, sans-serif; font-size: 34px; letter-spacing: 1.5px; line-height: 1.1; color: #F5F0EB; margin-bottom: 8px; }
 h1 span { color: #C9A84C; }
 .sub { font-size: 15px; color: #A89880; line-height: 1.7; margin-bottom: 18px; }
 .gold-bar { width: 36px; height: 3px; background: #C9A84C; margin-bottom: 14px; }
+
+/* Option button (used on age, level, team, training-days screens) */
 .opt { display: block; width: 100%; background: #231F1C; border: 1px solid #3D3530; border-radius: 6px; padding: 14px 16px; font-family: 'Barlow', Arial, sans-serif; font-size: 16px; color: #D4C8BC; font-weight: 500; text-align: left; cursor: pointer; margin-bottom: 8px; transition: border-color 0.15s, background 0.15s, color 0.15s; -webkit-user-select: none; user-select: none; }
 .opt:active { border-color: #C9A84C; background: rgba(201,168,76,0.1); color: #C9A84C; }
 .opt.selected { border-color: #C9A84C; background: rgba(201,168,76,0.1); color: #C9A84C; }
 .opt.selected::after { content: ' ✓'; float: right; }
+
+/* Sport card (S1) */
 .sport-card { display: flex; align-items: center; gap: 16px; background: #231F1C; border: 2px solid #3D3530; border-radius: 10px; padding: 18px 20px; cursor: pointer; margin-bottom: 10px; transition: all 0.2s; -webkit-user-select: none; user-select: none; }
 .sport-card:active { border-color: #C9A84C; background: rgba(201,168,76,0.08); }
 .sport-emoji { font-size: 36px; line-height: 1; flex-shrink: 0; }
 .sport-name { font-family: 'Bebas Neue', Arial, sans-serif; font-size: 26px; letter-spacing: 1.5px; color: #F5F0EB; }
 .sport-desc { font-size: 14px; color: #A89880; margin-top: 2px; }
+
+/* Card containers (used on plan-preview screen) */
 .card { background: #231F1C; border: 1px solid #3D3530; border-radius: 8px; padding: 16px; margin-bottom: 12px; color: #D4C8BC; }
 .card-gold { background: linear-gradient(135deg,#1A1400,#0E0C00); border-color: #9A7A30; }
 .card-title { font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #C9A84C; margin-bottom: 10px; }
-.field-label { display: block; font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #A89880; margin-bottom: 6px; }
-input[type=email] { width: 100%; background: #231F1C; border: 1px solid #3D3530; border-radius: 4px; color: #F5F0EB; font-size: 17px; padding: 14px 14px; outline: none; margin-bottom: 6px; transition: border-color 0.2s; }
-input[type=email]:focus { border-color: #C9A84C; }
-.field-note { font-size: 14px; color: #6B5E52; margin-bottom: 14px; line-height: 1.5; }
-.stars { color: #FFD700; font-size: 14px; letter-spacing: 1px; }
-.review { background: #231F1C; border: 1px solid #3D3530; border-radius: 6px; padding: 12px 14px; margin-bottom: 8px; }
-.review-text { font-size: 15px; color: #D4C8BC; font-style: italic; line-height: 1.6; margin-bottom: 5px; }
-.review-name { font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #C9A84C; }
-.ph { background: rgba(201,168,76,0.08); border: 1px dashed #4A3A10; border-radius: 4px; padding: 6px 12px; font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: #5A4A20; text-align: center; margin-bottom: 8px; }
-.vs { display: flex; gap: 8px; margin-bottom: 12px; }
-.vs-col { flex: 1; border-radius: 6px; padding: 12px; }
-.vs-bad { background: rgba(192,57,43,0.08); border: 1px solid #4A1A1A; }
-.vs-good { background: rgba(39,174,96,0.08); border: 1px solid #1A4A1A; }
-.vs-title { font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
-.vs-line { font-size: 14px; color: #D4C8BC; margin-bottom: 5px; line-height: 1.6; }
-.plan { border: 1px solid #3D3530; border-radius: 8px; padding: 14px 16px; margin-bottom: 8px; cursor: pointer; transition: border-color 0.2s; overflow: hidden; }
-.plan.featured { border: 2px solid #C9A84C; }
-.plan-name { font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 17px; font-weight: 700; letter-spacing: 1px; color: #F5F0EB; }
-.plan-badge { display: inline-block; background: rgba(201,168,76,0.15); color: #C9A84C; font-size: 10px; font-weight: 700; letter-spacing: 1px; padding: 2px 8px; border-radius: 10px; margin-left: 6px; font-family: 'Barlow Condensed', Arial, sans-serif; text-transform: uppercase; }
-.plan-price { font-size: 14px; color: #6B5E52; margin-top: 3px; }
-.plan-amount { font-family: 'Bebas Neue', Arial, sans-serif; font-size: 26px; color: #C9A84C; float: right; margin-top: -22px; }
+
+/* Multi-select hint pill (above goals/struggles/coach-feedback screens) */
+.multi-hint { display: inline-block; background: #231F1C; border: 1px solid #3D3530; border-radius: 20px; padding: 4px 12px; font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: #555; margin-bottom: 12px; }
+
+/* Streak preview row (S11 plan preview) */
+.streak-row { display: flex; gap: 6px; justify-content: center; margin: 10px 0 8px; }
+.sday { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Barlow Condensed', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 1px; }
+.sday.done { background: #C9A84C; color: #080808; }
+.sday.today { background: rgba(201,168,76,0.15); border: 1.5px solid #C9A84C; color: #C9A84C; }
+.sday.empty { background: #231F1C; border: 1px solid #3D3530; color: #4B3E35; }
+
+.stat-row { display: flex; gap: 10px; margin-top: 10px; }
+.stat-mini { flex: 1; background: #231F1C; border: 1px solid #3D3530; border-radius: 6px; padding: 10px; text-align: center; }
+.stat-num { font-family: 'Bebas Neue', Arial, sans-serif; font-size: 22px; color: #C9A84C; line-height: 1; }
+.stat-lbl { font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: #6B5E52; margin-top: 4px; }
+
+/* Big primary CTA (used on welcome + final exit) */
 .cta { display: block; width: 100%; background: #C9A84C; color: #080808; border: none; border-radius: 6px; padding: 16px; font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 17px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; margin-top: 8px; transition: opacity 0.2s; -webkit-user-select: none; user-select: none; }
 .cta:active { opacity: 0.85; }
-.skip { display: block; text-align: center; font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 12px; letter-spacing: 1px; color: #4B3E35; margin-top: 12px; cursor: pointer; padding: 8px; }
-.skip:active { color: #A89880; }
+
+/* Bottom nav (Back / dots / Next) — fixed at bottom */
 .bnav { position: fixed; bottom: 0; left: 0; right: 0; background: #181614; border-top: 1px solid #2E2824; display: flex; align-items: center; justify-content: space-between; padding: 10px 24px; padding-bottom: max(10px, env(safe-area-inset-bottom)); z-index: 100; }
 .back-btn { font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 13px; letter-spacing: 1px; text-transform: uppercase; color: #6B5E52; background: none; border: none; cursor: pointer; padding: 8px 0; min-width: 60px; }
 .back-btn:active { color: #A89880; }
 .dots { display: flex; gap: 5px; align-items: center; }
 .dot { width: 6px; height: 6px; border-radius: 50%; background: #2A2622; transition: background 0.3s; }
 .dot.on { background: #C9A84C; }
-.next-btn { background: #C9A84C; color: #080808; border: none; border-radius: 4px; padding: 9px 20px; font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 13px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; min-width: 80px; -webkit-user-select: none; user-select: none; }
-.next-btn:active { opacity: 0.85; }
-.streak-row { display: flex; gap: 5px; margin-bottom: 14px; }
-.sday { flex: 1; height: 32px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 1px; }
-.sday.done { background: rgba(201,168,76,0.12); color: #C9A84C; border: 1px solid #9A7A30; }
-.sday.today { background: #C9A84C; color: #080808; }
-.sday.empty { background: #231F1C; color: #374151; }
-.stat-row { display: flex; gap: 6px; margin-bottom: 14px; }
-.stat-mini { flex: 1; background: #231F1C; border-radius: 4px; padding: 10px 6px; text-align: center; }
-.stat-num { font-family: 'Bebas Neue', Arial, sans-serif; font-size: 26px; color: #C9A84C; line-height: 1; }
-.stat-lbl { font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: #6B5E52; margin-top: 3px; }
-</style>
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-<script>
-const firebaseConfig = {
-  apiKey: "AIzaSyBEftxaT0v6gHYW1dz_THm-JbLQ4CaOI9c",
-  authDomain: "my-grind-b8486.firebaseapp.com",
-  projectId: "my-grind-b8486",
-  storageBucket: "my-grind-b8486.firebasestorage.app",
-  messagingSenderId: "627787811658",
-  appId: "1:627787811658:web:2558d568cd92822db90fb3"
-};
-if (typeof firebase !== 'undefined' && !firebase.apps.length) firebase.initializeApp(firebaseConfig);
-</script>
+.next-btn { background: #C9A84C; color: #080808; border: none; border-radius: 4px; padding: 9px 20px; font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 13px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; }
+.next-btn[disabled] { opacity: 0.3; cursor: not-allowed; }
 
-<!-- ═══════════════════════════════════════════════════════════
-     MOBILE READABILITY — Parent Phone Optimization (April 26, 2026)
-     Light +2px font bump on screens under 480px wide.
-     Designed to help parents on small phones read the onboarding flow.
-═══════════════════════════════════════════════════════════ -->
-<style>
-@media screen and (max-width: 480px) {
-  /* Bump small fonts +2px for parent phone readability */
-  [style*="font-size:8px"] { font-size: 10px !important; }
-  [style*="font-size: 8px"] { font-size: 10px !important; }
-  [style*="font-size:9px"] { font-size: 11px !important; }
-  [style*="font-size: 9px"] { font-size: 11px !important; }
-  [style*="font-size:10px"] { font-size: 12px !important; }
-  [style*="font-size: 10px"] { font-size: 12px !important; }
-  [style*="font-size:11px"] { font-size: 13px !important; }
-  [style*="font-size: 11px"] { font-size: 13px !important; }
-  [style*="font-size:12px"] { font-size: 14px !important; }
-  [style*="font-size: 12px"] { font-size: 14px !important; }
-  [style*="font-size:13px"] { font-size: 15px !important; }
-  [style*="font-size: 13px"] { font-size: 15px !important; }
-
-  /* More breathing room for body text */
-  body { line-height: 1.6 !important; }
-
-  /* Bump the static stylesheet rules too (size class definitions) */
-  body { font-size: 17px !important; }
-  .sub { font-size: 17px !important; }
-  .opt { font-size: 17px !important; }
-  .field-note { font-size: 15px !important; }
-  .vs-line { font-size: 15px !important; }
-  .review-text { font-size: 16px !important; }
-  .plan-name { font-size: 18px !important; }
-  .plan-price { font-size: 15px !important; }
-  .stat-lbl { font-size: 11px !important; }
+/* PIN input row (S0.5) */
+.pin-row { display: flex; gap: 10px; justify-content: center; margin: 22px 0 18px; }
+.pin-box {
+  width: 52px; height: 60px;
+  background: #231F1C;
+  border: 2px solid #3D3530;
+  border-radius: 8px;
+  font-family: 'Bebas Neue', Arial, sans-serif;
+  font-size: 32px;
+  text-align: center;
+  color: #C9A84C;
+  outline: none;
+  transition: border-color 0.15s;
 }
-</style>
+.pin-box:focus { border-color: #C9A84C; }
+.pin-box.filled { border-color: #9A7A30; }
+.pin-helper {
+  text-align: center;
+  font-size: 13px;
+  color: #6B5E52;
+  margin-bottom: 4px;
+  font-style: italic;
+}
+.pin-error {
+  display: none;
+  text-align: center;
+  font-size: 12px;
+  color: #E57373;
+  background: rgba(192,57,43,0.1);
+  border: 1px solid rgba(192,57,43,0.3);
+  border-radius: 3px;
+  padding: 8px 12px;
+  margin: 8px 0;
+}
+.pin-error.shown { display: block; }
 
+/* Promise card (S13 — Coach Young's promise) */
+.promise-card {
+  background: linear-gradient(135deg, #1A1400, #0E0C00);
+  border: 1px solid #9A7A30;
+  border-radius: 10px;
+  padding: 28px 22px;
+  text-align: center;
+  margin-bottom: 18px;
+}
+.promise-card .quote-mark {
+  font-family: 'Bebas Neue', Arial, sans-serif;
+  font-size: 60px;
+  color: #C9A84C;
+  line-height: 0.6;
+  margin-bottom: 6px;
+}
+.promise-card .quote-body {
+  font-size: 17px;
+  line-height: 1.6;
+  color: #E0DACB;
+  font-style: italic;
+  margin-bottom: 18px;
+}
+.promise-card .quote-attr {
+  font-family: 'Barlow Condensed', Arial, sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #C9A84C;
+}
+
+/* Final exit screen (S14 — placeholder dashboard) */
+.exit-card {
+  background: linear-gradient(135deg, rgba(201,168,76,0.08), rgba(201,168,76,0.02));
+  border: 1px solid #9A7A30;
+  border-radius: 10px;
+  padding: 24px 20px;
+  margin-bottom: 16px;
+  text-align: left;
+}
+.exit-card-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  font-size: 14px;
+  color: #D4C8BC;
+}
+.exit-card-row .check {
+  color: #C9A84C;
+  font-weight: 700;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.exit-coming-soon {
+  text-align: center;
+  margin: 18px 0;
+  padding: 14px;
+  background: rgba(201,168,76,0.04);
+  border: 1px dashed rgba(201,168,76,0.3);
+  border-radius: 6px;
+  font-size: 13px;
+  color: #A89880;
+  line-height: 1.6;
+  font-style: italic;
+}
+.exit-coming-soon strong { color: #C9A84C; font-style: normal; }
+
+/* Welcome screen — special styling for the parent-context greeting */
+.parent-context {
+  background: rgba(201,168,76,0.08);
+  border-left: 3px solid #C9A84C;
+  border-radius: 0 4px 4px 0;
+  padding: 14px 16px;
+  margin: 16px 0 22px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #D4C8BC;
+}
+.parent-context strong { color: #C9A84C; }
+</style>
 </head>
 <body>
 
-<!-- S0 — WELCOME -->
+<!-- ═══════════════════════════════════════════════════════════
+     S0 — WELCOME (parent-context, reads URL params)
+     ═══════════════════════════════════════════════════════════ -->
 <div class="screen on" id="s0">
-  <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:40px 24px;text-align:center;">
-    <div style="width:64px;height:64px;background:#C9A84C;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',Arial,sans-serif;font-size:22px;color:#080808;margin-bottom:18px;">YBG</div>
-    <div class="badge">MyGrind · Player Development Journal</div>
-    <h1 style="font-size:36px;margin-bottom:10px;">The grind you put<br>in writing <span>pays off</span></h1>
-    <p class="sub" style="max-width:300px;margin-bottom:24px;">Players who journal their training are 3× more likely to reach their goals. Built by Coach Young — 20+ years of player development.</p>
-    <div style="width:100%;max-width:340px;margin-bottom:24px;">
-      <div style="display:flex;align-items:center;gap:12px;background:#231F1C;border:1px solid #3D3530;border-radius:6px;padding:12px 14px;margin-bottom:8px;text-align:left;">
-        <span style="font-size:22px;">📓</span>
-        <div><div style="font-size:13px;font-weight:500;color:#F5F0EB;">Journal every session</div><div style="font-size:12px;color:#666;">Log what you did, what clicked, what to fix</div></div>
-      </div>
-      <div style="display:flex;align-items:center;gap:12px;background:#231F1C;border:1px solid #3D3530;border-radius:6px;padding:12px 14px;margin-bottom:8px;text-align:left;">
-        <span style="font-size:22px;">📊</span>
-        <div><div style="font-size:13px;font-weight:500;color:#F5F0EB;">Auto-track your stats</div><div style="font-size:12px;color:#666;">AVG, OBP, SLG, ERA — calculated automatically</div></div>
-      </div>
-      <div style="display:flex;align-items:center;gap:12px;background:#231F1C;border:1px solid #3D3530;border-radius:6px;padding:12px 14px;text-align:left;">
-        <span style="font-size:22px;">📅</span>
-        <div><div style="font-size:13px;font-weight:500;color:#F5F0EB;">12-month training plan</div><div style="font-size:12px;color:#666;">Coach-built drills matched to your position</div></div>
+  <div class="screen-body" style="padding-top:60px;">
+    <div class="badge" style="text-align:center;font-size:13px;">Welcome</div>
+    <h1 style="text-align:center;">
+      Hey <span id="welcome_name">Player</span>!
+    </h1>
+    <div class="gold-bar" style="margin: 14px auto 18px;"></div>
+
+    <p class="sub" style="text-align:center;" id="welcome_subhead">
+      Let's get your profile set up.
+    </p>
+
+    <!-- Parent-context message (set by JS based on URL params) -->
+    <div class="parent-context" id="parent_context">
+      Your account is ready to go.
+    </div>
+
+    <p class="sub" style="text-align:center;font-size:14px;">
+      A few quick questions and you're in.<br>
+      Takes about 3 minutes.
+    </p>
+
+    <button class="cta" onclick="startOnboarding()">⚾ &nbsp;Let's Go &rarr;</button>
+  </div>
+
+  <div class="bnav">
+    <div style="min-width:60px;"></div>
+    <div class="dots" id="d0"></div>
+    <div style="min-width:60px;"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     S0.5 — PIN SETUP (only shown when ?fallback=1 in URL)
+     ═══════════════════════════════════════════════════════════ -->
+<div class="screen" id="s05">
+  <div class="prog-wrap">
+    <div class="prog-track"><div class="prog-fill" style="width:5%"></div></div>
+    <div class="prog-label">
+      <span class="prog-step">PIN Setup</span>
+      <span class="prog-step">For This Device</span>
+    </div>
+  </div>
+
+  <div class="screen-body">
+    <div class="badge">Set Your PIN</div>
+    <h1>Pick a 4-digit PIN<br><span>just for you.</span></h1>
+    <div class="gold-bar"></div>
+
+    <p class="sub">
+      Since you're using your parent's phone, this PIN keeps your stuff yours. <strong style="color:#C9A84C;">Don't share it.</strong>
+    </p>
+
+    <div class="pin-helper">Enter 4 numbers — something easy for you to remember.</div>
+
+    <div class="pin-row">
+      <input type="tel" inputmode="numeric" maxlength="1" class="pin-box" id="pin1" oninput="onPinInput(1, this)">
+      <input type="tel" inputmode="numeric" maxlength="1" class="pin-box" id="pin2" oninput="onPinInput(2, this)">
+      <input type="tel" inputmode="numeric" maxlength="1" class="pin-box" id="pin3" oninput="onPinInput(3, this)">
+      <input type="tel" inputmode="numeric" maxlength="1" class="pin-box" id="pin4" oninput="onPinInput(4, this)">
+    </div>
+
+    <div class="pin-error" id="pinErr">Pick a different PIN — 0000 and 1234 are too easy to guess.</div>
+
+    <p class="sub" style="font-size:13px;color:#6B5E52;text-align:center;font-style:italic;">
+      You'll use this PIN to log in any time you open MyGrind on this phone.
+    </p>
+  </div>
+
+  <div class="bnav">
+    <button class="back-btn" onclick="go(0)">&larr; Back</button>
+    <div class="dots" id="d05"></div>
+    <button class="next-btn" id="n05" onclick="onPinNext()" disabled>Next &rarr;</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     S1 — SPORT SELECTION (kid picks own sport per Decision #7 v3)
+     ═══════════════════════════════════════════════════════════ -->
+<div class="screen" id="s1">
+  <div class="prog-wrap">
+    <div class="prog-track"><div class="prog-fill" style="width:9%"></div></div>
+    <div class="prog-label">
+      <span class="prog-step">Step 1 of 11</span>
+      <span class="prog-step" id="sportLabel1"></span>
+    </div>
+  </div>
+
+  <div class="screen-body">
+    <div class="badge">Your Sport</div>
+    <h1>What do you<br><span>play?</span></h1>
+    <div class="gold-bar"></div>
+    <p class="sub">Pick the sport you train for. This shapes everything that comes next.</p>
+
+    <div class="sport-card" onclick="setSport('baseball', this)">
+      <div class="sport-emoji">⚾</div>
+      <div>
+        <div class="sport-name">Baseball</div>
+        <div class="sport-desc">Travel ball, high school, college, or rec league</div>
       </div>
     </div>
-    <button class="cta" style="max-width:340px;" onclick="go(1)">Get Started →</button>
-    <div class="trial-badge" style="margin-top:14px;background:rgba(201,168,76,0.1);border:1px solid #9A7A30;border-radius:6px;padding:10px 20px;text-align:center;"><div style="font-family:'Bebas Neue',Arial,sans-serif;font-size:22px;color:#C9A84C;letter-spacing:2px;">14-DAY FREE TRIAL</div><div style="font-size:13px;color:#A89880;margin-top:2px;">No credit card required · Cancel anytime</div></div>
+    <div class="sport-card" onclick="setSport('softball', this)">
+      <div class="sport-emoji">🥎</div>
+      <div>
+        <div class="sport-name">Softball</div>
+        <div class="sport-desc">Fastpitch, travel ball, high school, or rec league</div>
+      </div>
+    </div>
+    <div class="sport-card" onclick="setSport('both', this)">
+      <div class="sport-emoji" style="font-size:26px;">⚾🥎</div>
+      <div>
+        <div class="sport-name">Both</div>
+        <div class="sport-desc">I play or train for both sports</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bnav">
+    <button class="back-btn" onclick="onBackFromS1()">&larr; Back</button>
+    <div class="dots" id="d1"></div>
+    <div style="min-width:60px;"></div>
   </div>
 </div>
 
-<!-- S1 — SPORT -->
-<div class="screen" id="s1">
-  <div class="prog-wrap"><div class="prog-track"><div class="prog-fill" style="width:7%"></div></div><div class="prog-label"><span class="prog-step">Step 1 of 13</span><span class="prog-step" id="sportLabel">MyGrind</span></div></div>
-  <div class="screen-body">
-    <div class="badge">About You</div>
-    <h1>What sport are you<br><span>training for?</span></h1>
-    <div class="gold-bar"></div>
-    <p class="sub">Your journal, drills, and positions are all built around your sport.</p>
-    <div class="sport-card" onclick="setSport('baseball',this)"><div class="sport-emoji">⚾</div><div><div class="sport-name">Baseball</div><div class="sport-desc">Travel ball, high school, college, or rec league</div></div></div>
-    <div class="sport-card" onclick="setSport('softball',this)"><div class="sport-emoji">🥎</div><div><div class="sport-name">Softball</div><div class="sport-desc">Fastpitch, travel ball, high school, or rec league</div></div></div>
-    <div class="sport-card" onclick="setSport('both',this)"><div class="sport-emoji" style="font-size:26px;">⚾🥎</div><div><div class="sport-name">Both</div><div class="sport-desc">I play or train for both sports</div></div></div>
-  </div>
-  <div class="bnav"><button class="back-btn" onclick="go(0)">← Back</button><div class="dots" id="d1"></div><div style="min-width:60px;"></div></div>
-</div>
-
-<!-- S2 — AGE -->
+<!-- ═══════════════════════════════════════════════════════════
+     S2 — AGE
+     ═══════════════════════════════════════════════════════════ -->
 <div class="screen" id="s2">
-  <div class="prog-wrap"><div class="prog-track"><div class="prog-fill" style="width:14%"></div></div><div class="prog-label"><span class="prog-step">Step 2 of 13</span><span class="prog-step" id="sportLabel2"></span></div></div>
+  <div class="prog-wrap">
+    <div class="prog-track"><div class="prog-fill" style="width:18%"></div></div>
+    <div class="prog-label">
+      <span class="prog-step">Step 2 of 11</span>
+      <span class="prog-step" id="sportLabel2"></span>
+    </div>
+  </div>
+
   <div class="screen-body">
     <div class="badge">About You</div>
-    <h1>How old are you?</h1>
+    <h1>How old<br><span>are you?</span></h1>
     <div class="gold-bar"></div>
     <p class="sub">Your training plan is matched to your age and development stage.</p>
     <button class="opt" onclick="pick(this,'age','13–14 · Middle School')">🎒 &nbsp;13–14 · Middle School</button>
     <button class="opt" onclick="pick(this,'age','15–16 · High School')">📚 &nbsp;15–16 · High School</button>
-    <button class="opt" onclick="pick(this,'age','17–18 · High School')">🎓 &nbsp;17–18 · High School Senior</button>
+    <button class="opt" onclick="pick(this,'age','17–18 · High School Senior')">🎓 &nbsp;17–18 · High School Senior</button>
     <button class="opt" onclick="pick(this,'age','College')">🏫 &nbsp;College Player</button>
-    <button class="opt" onclick="pick(this,'age','Coach / Parent')">👨‍👩‍👧 &nbsp;Coach or Parent setting this up</button>
+    <button class="opt" onclick="pick(this,'age','Younger')">⭐ &nbsp;Younger than 13 (with parent help)</button>
   </div>
-  <div class="bnav"><button class="back-btn" onclick="go(1)">← Back</button><div class="dots" id="d2"></div><button class="next-btn" id="n2" onclick="goNext(2,3)" disabled style="opacity:0.3;">Next →</button></div>
+
+  <div class="bnav">
+    <button class="back-btn" onclick="go(1)">&larr; Back</button>
+    <div class="dots" id="d2"></div>
+    <button class="next-btn" id="n2" onclick="goNext(2,3)" disabled>Next &rarr;</button>
+  </div>
 </div>
 
-<!-- S3 — POSITION -->
+<!-- ═══════════════════════════════════════════════════════════
+     S3 — POSITION (sport-aware grid built dynamically)
+     ═══════════════════════════════════════════════════════════ -->
 <div class="screen" id="s3">
-  <div class="prog-wrap"><div class="prog-track"><div class="prog-fill" style="width:21%"></div></div><div class="prog-label"><span class="prog-step">Step 3 of 13</span><span class="prog-step" id="sportLabel3"></span></div></div>
+  <div class="prog-wrap">
+    <div class="prog-track"><div class="prog-fill" style="width:27%"></div></div>
+    <div class="prog-label">
+      <span class="prog-step">Step 3 of 11</span>
+      <span class="prog-step" id="sportLabel3"></span>
+    </div>
+  </div>
+
   <div class="screen-body">
     <div class="badge">About You</div>
     <h1>What position<br><span>do you play?</span></h1>
     <div class="gold-bar"></div>
     <p class="sub">Select all that apply — many players cover multiple positions.</p>
-    <div style="display:inline-block;background:#231F1C;border:1px solid #3D3530;border-radius:20px;padding:4px 12px;font-family:'Barlow Condensed',Arial,sans-serif;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#555;margin-bottom:12px;">✓ Select all that apply</div>
+    <div class="multi-hint">✓ Select all that apply</div>
     <div id="posGrid"></div>
   </div>
-  <div class="bnav"><button class="back-btn" onclick="go(2)">← Back</button><div class="dots" id="d3"></div><button class="next-btn" id="n3" onclick="goNext(3,4)" disabled style="opacity:0.3;">Next →</button></div>
+
+  <div class="bnav">
+    <button class="back-btn" onclick="go(2)">&larr; Back</button>
+    <div class="dots" id="d3"></div>
+    <button class="next-btn" id="n3" onclick="goNext(3,4)" disabled>Next &rarr;</button>
+  </div>
 </div>
 
-<!-- S4 — LEVEL -->
+<!-- ═══════════════════════════════════════════════════════════
+     S4 — LEVEL
+     ═══════════════════════════════════════════════════════════ -->
 <div class="screen" id="s4">
-  <div class="prog-wrap"><div class="prog-track"><div class="prog-fill" style="width:28%"></div></div><div class="prog-label"><span class="prog-step">Step 4 of 13</span><span class="prog-step" id="sportLabel4"></span></div></div>
+  <div class="prog-wrap">
+    <div class="prog-track"><div class="prog-fill" style="width:36%"></div></div>
+    <div class="prog-label">
+      <span class="prog-step">Step 4 of 11</span>
+      <span class="prog-step" id="sportLabel4"></span>
+    </div>
+  </div>
+
   <div class="screen-body">
     <div class="badge">About You</div>
     <h1>What level do<br><span>you compete at?</span></h1>
@@ -219,12 +417,26 @@ if (typeof firebase !== 'undefined' && !firebase.apps.length) firebase.initializ
     <button class="opt" onclick="pick(this,'level','Travel Ball')">✈️ &nbsp;Travel Ball — Club / Select team</button>
     <button class="opt" onclick="pick(this,'level','College')">🎓 &nbsp;College — D1, D2, D3, or JUCO</button>
   </div>
-  <div class="bnav"><button class="back-btn" onclick="go(3)">← Back</button><div class="dots" id="d4"></div><button class="next-btn" id="n4" onclick="goNext(4,5)" disabled style="opacity:0.3;">Next →</button></div>
+
+  <div class="bnav">
+    <button class="back-btn" onclick="go(3)">&larr; Back</button>
+    <div class="dots" id="d4"></div>
+    <button class="next-btn" id="n4" onclick="goNext(4,5)" disabled>Next &rarr;</button>
+  </div>
 </div>
 
-<!-- S5 — TEAM -->
+<!-- ═══════════════════════════════════════════════════════════
+     S5 — TEAM STATUS
+     ═══════════════════════════════════════════════════════════ -->
 <div class="screen" id="s5">
-  <div class="prog-wrap"><div class="prog-track"><div class="prog-fill" style="width:35%"></div></div><div class="prog-label"><span class="prog-step">Step 5 of 13</span><span class="prog-step" id="sportLabel5"></span></div></div>
+  <div class="prog-wrap">
+    <div class="prog-track"><div class="prog-fill" style="width:45%"></div></div>
+    <div class="prog-label">
+      <span class="prog-step">Step 5 of 11</span>
+      <span class="prog-step" id="sportLabel5"></span>
+    </div>
+  </div>
+
   <div class="screen-body">
     <div class="badge">About You</div>
     <h1>Do you currently<br><span>play for a team?</span></h1>
@@ -235,18 +447,32 @@ if (typeof firebase !== 'undefined' && !firebase.apps.length) firebase.initializ
     <button class="opt" onclick="pick(this,'team','No — I am trying to make a team')">🎯 &nbsp;No — I am trying to make a team</button>
     <button class="opt" onclick="pick(this,'team','I train independently')">💪 &nbsp;I train independently</button>
   </div>
-  <div class="bnav"><button class="back-btn" onclick="go(4)">← Back</button><div class="dots" id="d5"></div><button class="next-btn" id="n5" onclick="goNext(5,6)" disabled style="opacity:0.3;">Next →</button></div>
+
+  <div class="bnav">
+    <button class="back-btn" onclick="go(4)">&larr; Back</button>
+    <div class="dots" id="d5"></div>
+    <button class="next-btn" id="n5" onclick="goNext(5,6)" disabled>Next &rarr;</button>
+  </div>
 </div>
 
-<!-- S6 — GOAL -->
+<!-- ═══════════════════════════════════════════════════════════
+     S6 — GOALS (multi-select)
+     ═══════════════════════════════════════════════════════════ -->
 <div class="screen" id="s6">
-  <div class="prog-wrap"><div class="prog-track"><div class="prog-fill" style="width:42%"></div></div><div class="prog-label"><span class="prog-step">Step 6 of 13</span><span class="prog-step" id="sportLabel6"></span></div></div>
+  <div class="prog-wrap">
+    <div class="prog-track"><div class="prog-fill" style="width:54%"></div></div>
+    <div class="prog-label">
+      <span class="prog-step">Step 6 of 11</span>
+      <span class="prog-step" id="sportLabel6"></span>
+    </div>
+  </div>
+
   <div class="screen-body">
     <div class="badge">Your Journey</div>
     <h1>What are you<br><span>working toward?</span></h1>
     <div class="gold-bar"></div>
     <p class="sub">Pick everything that applies — most players have more than one goal.</p>
-    <div style="display:inline-block;background:#231F1C;border:1px solid #3D3530;border-radius:20px;padding:4px 12px;font-family:'Barlow Condensed',Arial,sans-serif;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#555;margin-bottom:12px;">✓ Select all that apply</div>
+    <div class="multi-hint">✓ Select all that apply</div>
     <button class="opt" onclick="toggle(this,'goal','Make a travel team')">🏆 &nbsp;Make a travel / select team</button>
     <button class="opt" onclick="toggle(this,'goal','Improve specific skills')">📈 &nbsp;Improve specific skills</button>
     <button class="opt" onclick="toggle(this,'goal','Get recruited to college')">🎓 &nbsp;Get recruited to college</button>
@@ -255,18 +481,32 @@ if (typeof firebase !== 'undefined' && !firebase.apps.length) firebase.initializ
     <button class="opt" onclick="toggle(this,'goal','Build consistent habits')">🔥 &nbsp;Build consistent training habits</button>
     <button class="opt" onclick="toggle(this,'goal','Just love the game')">❤️ &nbsp;I just love the game</button>
   </div>
-  <div class="bnav"><button class="back-btn" onclick="go(5)">← Back</button><div class="dots" id="d6"></div><button class="next-btn" id="n6" onclick="goNext(6,7)" disabled style="opacity:0.3;">Next →</button></div>
+
+  <div class="bnav">
+    <button class="back-btn" onclick="go(5)">&larr; Back</button>
+    <div class="dots" id="d6"></div>
+    <button class="next-btn" id="n6" onclick="goNext(6,7)" disabled>Next &rarr;</button>
+  </div>
 </div>
 
-<!-- S7 — STRUGGLE -->
+<!-- ═══════════════════════════════════════════════════════════
+     S7 — STRUGGLES (multi-select)
+     ═══════════════════════════════════════════════════════════ -->
 <div class="screen" id="s7">
-  <div class="prog-wrap"><div class="prog-track"><div class="prog-fill" style="width:50%"></div></div><div class="prog-label"><span class="prog-step">Step 7 of 13</span><span class="prog-step" id="sportLabel7"></span></div></div>
+  <div class="prog-wrap">
+    <div class="prog-track"><div class="prog-fill" style="width:63%"></div></div>
+    <div class="prog-label">
+      <span class="prog-step">Step 7 of 11</span>
+      <span class="prog-step" id="sportLabel7"></span>
+    </div>
+  </div>
+
   <div class="screen-body">
     <div class="badge">Your Journey</div>
     <h1>Where do you<br><span>struggle most?</span></h1>
     <div class="gold-bar"></div>
     <p class="sub">Select all that apply — the journal is your private space, no judgment.</p>
-    <div style="display:inline-block;background:#231F1C;border:1px solid #3D3530;border-radius:20px;padding:4px 12px;font-family:'Barlow Condensed',Arial,sans-serif;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#555;margin-bottom:12px;">✓ Select all that apply</div>
+    <div class="multi-hint">✓ Select all that apply</div>
     <button class="opt" onclick="toggle(this,'struggle','Hitting — consistency and approach')">🏏 &nbsp;Hitting — consistency and approach</button>
     <button class="opt" onclick="toggle(this,'struggle','Pitching — command and confidence')">⚾ &nbsp;Pitching — command and confidence</button>
     <button class="opt" onclick="toggle(this,'struggle','Fielding — footwork and hands')">🧤 &nbsp;Fielding — footwork and hands</button>
@@ -274,18 +514,32 @@ if (typeof firebase !== 'undefined' && !firebase.apps.length) firebase.initializ
     <button class="opt" onclick="toggle(this,'struggle','Consistency — staying locked in daily')">🔄 &nbsp;Consistency — staying locked in daily</button>
     <button class="opt" onclick="toggle(this,'struggle','Speed and athleticism')">🏃 &nbsp;Speed and athleticism</button>
   </div>
-  <div class="bnav"><button class="back-btn" onclick="go(6)">← Back</button><div class="dots" id="d7"></div><button class="next-btn" id="n7" onclick="goNext(7,8)" disabled style="opacity:0.3;">Next →</button></div>
+
+  <div class="bnav">
+    <button class="back-btn" onclick="go(6)">&larr; Back</button>
+    <div class="dots" id="d7"></div>
+    <button class="next-btn" id="n7" onclick="goNext(7,8)" disabled>Next &rarr;</button>
+  </div>
 </div>
 
-<!-- S8 — COACH FEEDBACK -->
+<!-- ═══════════════════════════════════════════════════════════
+     S8 — COACH FEEDBACK (multi-select)
+     ═══════════════════════════════════════════════════════════ -->
 <div class="screen" id="s8">
-  <div class="prog-wrap"><div class="prog-track"><div class="prog-fill" style="width:57%"></div></div><div class="prog-label"><span class="prog-step">Step 8 of 13</span><span class="prog-step" id="sportLabel8"></span></div></div>
+  <div class="prog-wrap">
+    <div class="prog-track"><div class="prog-fill" style="width:72%"></div></div>
+    <div class="prog-label">
+      <span class="prog-step">Step 8 of 11</span>
+      <span class="prog-step" id="sportLabel8"></span>
+    </div>
+  </div>
+
   <div class="screen-body">
     <div class="badge">Your Journey</div>
     <h1>What has your coach<br><span>told you to work on?</span></h1>
     <div class="gold-bar"></div>
     <p class="sub">Select all that apply — we'll build these into your first journal goals.</p>
-    <div style="display:inline-block;background:#231F1C;border:1px solid #3D3530;border-radius:20px;padding:4px 12px;font-family:'Barlow Condensed',Arial,sans-serif;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#555;margin-bottom:12px;">✓ Select all that apply</div>
+    <div class="multi-hint">✓ Select all that apply</div>
     <button class="opt" onclick="toggle(this,'coachFeedback','My bat path and swing mechanics')">🏏 &nbsp;My bat path and swing mechanics</button>
     <button class="opt" onclick="toggle(this,'coachFeedback','My footwork and fielding range')">🧤 &nbsp;My footwork and fielding range</button>
     <button class="opt" onclick="toggle(this,'coachFeedback','My throwing mechanics or arm strength')">💪 &nbsp;My throwing mechanics or arm strength</button>
@@ -294,12 +548,26 @@ if (typeof firebase !== 'undefined' && !firebase.apps.length) firebase.initializ
     <button class="opt" onclick="toggle(this,'coachFeedback','My speed off the base or first step')">🏃 &nbsp;My speed off the base or first step</button>
     <button class="opt" onclick="toggle(this,'coachFeedback','Nothing specific yet')">❓ &nbsp;Nothing specific yet</button>
   </div>
-  <div class="bnav"><button class="back-btn" onclick="go(7)">← Back</button><div class="dots" id="d8"></div><button class="next-btn" id="n8" onclick="goNext(8,9)" disabled style="opacity:0.3;">Next →</button></div>
+
+  <div class="bnav">
+    <button class="back-btn" onclick="go(7)">&larr; Back</button>
+    <div class="dots" id="d8"></div>
+    <button class="next-btn" id="n8" onclick="goNext(8,9)" disabled>Next &rarr;</button>
+  </div>
 </div>
 
-<!-- S9 — TRAINING DAYS -->
+<!-- ═══════════════════════════════════════════════════════════
+     S9 — TRAINING DAYS
+     ═══════════════════════════════════════════════════════════ -->
 <div class="screen" id="s9">
-  <div class="prog-wrap"><div class="prog-track"><div class="prog-fill" style="width:64%"></div></div><div class="prog-label"><span class="prog-step">Step 9 of 13</span><span class="prog-step" id="sportLabel9"></span></div></div>
+  <div class="prog-wrap">
+    <div class="prog-track"><div class="prog-fill" style="width:81%"></div></div>
+    <div class="prog-label">
+      <span class="prog-step">Step 9 of 11</span>
+      <span class="prog-step" id="sportLabel9"></span>
+    </div>
+  </div>
+
   <div class="screen-body">
     <div class="badge">Your Routine</div>
     <h1>How many days per week<br><span>do you currently train?</span></h1>
@@ -311,37 +579,38 @@ if (typeof firebase !== 'undefined' && !firebase.apps.length) firebase.initializ
     <button class="opt" onclick="pick(this,'trainingDays','Every day — fully committed')">Every day &nbsp;— Fully committed to the grind</button>
     <button class="opt" onclick="pick(this,'trainingDays','Game days only right now')">Game days only &nbsp;— In-season focus right now</button>
   </div>
-  <div class="bnav"><button class="back-btn" onclick="go(8)">← Back</button><div class="dots" id="d9"></div><button class="next-btn" id="n9" onclick="goNext(9,10)" disabled style="opacity:0.3;">Next →</button></div>
-</div>
 
-<!-- S10 — EMAIL -->
-<div class="screen" id="s10">
-  <div class="prog-wrap"><div class="prog-track"><div class="prog-fill" style="width:71%"></div></div><div class="prog-label"><span class="prog-step">Step 10 of 13</span><span class="prog-step" id="sportLabel10"></span></div></div>
-  <div class="screen-body">
-    <div class="badge">Almost There</div>
-    <h1>Save your<br><span>personalized plan</span></h1>
-    <div class="gold-bar"></div>
-    <p class="sub">Enter your email and we'll save your plan, send your trial reminder, and keep you accountable.</p>
-    <label class="field-label">Your Email</label>
-    <input type="email" id="emailInput" placeholder="yourname@email.com" autocomplete="email" oninput="checkEmail()">
-    <div class="field-note">No spam — ever. Used only to save your plan and send trial reminders.</div>
-    <div id="emailErr" style="display:none;font-size:12px;color:#E57373;background:rgba(192,57,43,0.1);border:1px solid rgba(192,57,43,0.3);border-radius:3px;padding:8px 12px;margin-bottom:10px;">Please enter a valid email address.</div>
+  <div class="bnav">
+    <button class="back-btn" onclick="go(8)">&larr; Back</button>
+    <div class="dots" id="d9"></div>
+    <button class="next-btn" id="n9" onclick="goNext(9,11)" disabled>Next &rarr;</button>
   </div>
-  <div class="bnav"><button class="back-btn" onclick="go(9)">← Back</button><div class="dots" id="d10"></div><button class="next-btn" id="n10" onclick="emailNext()">Next →</button></div>
 </div>
 
-<!-- S11 — PLAN PREVIEW -->
+<!-- ═══════════════════════════════════════════════════════════
+     S11 — PLAN PREVIEW (personalized — buildPlan() runs on entry)
+     [S10 was email capture — REMOVED per Decision #13]
+     ═══════════════════════════════════════════════════════════ -->
 <div class="screen" id="s11">
-  <div class="prog-wrap"><div class="prog-track"><div class="prog-fill" style="width:78%"></div></div><div class="prog-label"><span class="prog-step">Step 11 of 13</span><span class="prog-step" id="sportLabel11"></span></div></div>
+  <div class="prog-wrap">
+    <div class="prog-track"><div class="prog-fill" style="width:90%"></div></div>
+    <div class="prog-label">
+      <span class="prog-step">Step 10 of 11</span>
+      <span class="prog-step" id="sportLabel11"></span>
+    </div>
+  </div>
+
   <div class="screen-body">
     <div class="badge">Your Plan</div>
     <h1>Your plan is<br><span>ready</span></h1>
     <div class="gold-bar"></div>
     <p class="sub" id="s11sub">Here's what MyGrind built based on your answers.</p>
+
     <div class="card card-gold" style="margin-bottom:12px;">
       <div class="card-title" id="planTitle">Your Personalized Plan</div>
       <div style="font-size:13px;color:#D4C8BC;line-height:2.1;" id="planItems">Loading...</div>
     </div>
+
     <div class="card" style="margin-bottom:12px;">
       <div class="card-title">Example Journal Entry</div>
       <div style="font-size:13px;color:#D4C8BC;line-height:1.8;">
@@ -350,271 +619,355 @@ if (typeof firebase !== 'undefined' && !firebase.apps.length) firebase.initializ
         <div style="padding:5px 0;">🟡 <strong style="color:#F5F0EB;">Fix:</strong> Stay back, shoulder level through contact</div>
       </div>
     </div>
-    <div class="streak-row"><div class="sday done">M</div><div class="sday done">T</div><div class="sday done">W</div><div class="sday done">T</div><div class="sday today">F</div><div class="sday empty">S</div><div class="sday empty">S</div></div>
+
+    <div class="streak-row">
+      <div class="sday done">M</div>
+      <div class="sday done">T</div>
+      <div class="sday done">W</div>
+      <div class="sday done">T</div>
+      <div class="sday today">F</div>
+      <div class="sday empty">S</div>
+      <div class="sday empty">S</div>
+    </div>
+
     <div class="stat-row">
       <div class="stat-mini"><div class="stat-num">14</div><div class="stat-lbl">Sessions</div></div>
       <div class="stat-mini"><div class="stat-num">87%</div><div class="stat-lbl">Plan Done</div></div>
       <div class="stat-mini"><div class="stat-num">21</div><div class="stat-lbl">Day Streak</div></div>
     </div>
   </div>
-  <div class="bnav"><button class="back-btn" onclick="go(10)">← Back</button><div class="dots" id="d11"></div><button class="next-btn" onclick="go(12)">Next →</button></div>
-</div>
 
-<!-- S12 — REVIEWS -->
-<div class="screen" id="s12">
-  <div class="prog-wrap"><div class="prog-track"><div class="prog-fill" style="width:85%"></div></div><div class="prog-label"><span class="prog-step">Step 12 of 13</span><span class="prog-step" id="sportLabel12"></span></div></div>
-  <div class="screen-body">
-    <div class="badge">What Players Are Saying</div>
-    <h1>Real results from<br><span>real players</span></h1>
-    <div class="gold-bar"></div>
-    <div class="card" style="margin-bottom:12px;">
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
-        <div style="font-family:'Bebas Neue',Arial,sans-serif;font-size:48px;color:#F5F0EB;line-height:1;">4.9</div>
-        <div><div class="stars">★★★★★</div><div style="font-size:11px;color:#444;letter-spacing:1px;font-family:'Barlow Condensed',Arial,sans-serif;text-transform:uppercase;margin-top:3px;" id="ratingCount">Early Access · Beta Ratings</div></div>
-      </div>
-      <div style="height:1px;background:#3D3530;margin-bottom:12px;"></div>
-      <div class="ph">⭐ Beta Player — Replace with real quote</div>
-      <div class="review"><div class="stars" style="margin-bottom:5px;">★★★★★</div><div class="review-text" id="r1">"This is exactly what I needed. I finally know what I'm working on every single day."</div><div class="review-name" id="r1n">Player Name · Age · Position · City</div></div>
-      <div class="ph">👨‍👩‍👧 Parent Review — Replace with real quote</div>
-      <div class="review"><div class="stars" style="margin-bottom:5px;">★★★★★</div><div class="review-text" id="r2">"My son has never been this consistent. The journal keeps him accountable without me having to push."</div><div class="review-name" id="r2n">Parent of [Player Name] · Age</div></div>
-      <div class="ph">⭐ Optional 3rd Review — Replace or remove</div>
-      <div class="review"><div class="stars" style="margin-bottom:5px;">★★★★★</div><div class="review-text" id="r3">"Seeing 30 days of entries stacked up — I had never trained this consistently in my life."</div><div class="review-name" id="r3n">Player Name · Age · Position</div></div>
-    </div>
-    <div style="background:rgba(201,168,76,0.06);border-left:3px solid #C9A84C;padding:12px 14px;border-radius:0 4px 4px 0;margin-bottom:16px;">
-      <div style="font-family:'Barlow Condensed',Arial,sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#C9A84C;margin-bottom:5px;">Coach Young — 20+ Years · Trained alongside Reggie Smith</div>
-      <div style="font-size:13px;color:#D4C8BC;font-style:italic;line-height:1.6;">"The players who keep records always outpace the ones who don't — no matter the talent level. That's not an opinion. That's 20 years of watching kids work."</div>
-    </div>
+  <div class="bnav">
+    <button class="back-btn" onclick="go(9)">&larr; Back</button>
+    <div class="dots" id="d11"></div>
+    <button class="next-btn" onclick="go(13)">Next &rarr;</button>
   </div>
-  <div class="bnav"><button class="back-btn" onclick="go(11)">← Back</button><div class="dots" id="d12"></div><button class="next-btn" onclick="go(13)">Next →</button></div>
 </div>
 
-<!-- S13 — VALUE (PARENT-FOCUSED) -->
+<!-- ═══════════════════════════════════════════════════════════
+     S13 — COACH YOUNG'S PROMISE (replaces old investment screen)
+     [S12 reviews REMOVED per Decision #13]
+     ═══════════════════════════════════════════════════════════ -->
 <div class="screen" id="s13">
-  <div class="prog-wrap"><div class="prog-track"><div class="prog-fill" style="width:92%"></div></div><div class="prog-label"><span class="prog-step">Step 13 of 13</span><span class="prog-step" id="sportLabel13"></span></div></div>
-  <div class="screen-body">
-    <div class="badge" style="font-size:13px;">The Investment</div>
-    <h1 style="font-size:32px;line-height:1.15;">One private lesson costs<br><span>$80&ndash;$150</span></h1>
-    <div class="gold-bar"></div>
-    <p class="sub" style="font-size:17px;line-height:1.6;color:#C5B59A;margin-bottom:20px;">MyGrind for an entire year supports their development every single day &mdash; for less than the cost of a single lesson.</p>
+  <div class="prog-wrap">
+    <div class="prog-track"><div class="prog-fill" style="width:95%"></div></div>
+    <div class="prog-label">
+      <span class="prog-step">Step 11 of 11</span>
+      <span class="prog-step" id="sportLabel13"></span>
+    </div>
+  </div>
 
-    <!-- BIG PRICE CARD -->
-    <div class="card card-gold" style="text-align:center;padding:28px 20px;margin-bottom:16px;">
-      <div style="font-family:'Barlow Condensed',Arial,sans-serif;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#C9A84C;margin-bottom:10px;">MyGrind Annual</div>
-      <div style="font-family:'Bebas Neue',Arial,sans-serif;font-size:72px;color:#F5EFE0;line-height:1;letter-spacing:1px;margin-bottom:6px;">$99<span style="font-size:28px;color:#A89880;">/year</span></div>
-      <div style="font-size:16px;color:#A89880;line-height:1.5;margin-top:8px;">That's <strong style="color:#F5EFE0;">$8.25 a month.</strong></div>
-      <div style="font-size:15px;color:#A89880;line-height:1.6;margin-top:6px;">Less than a single private lesson &mdash; and it supports them all year.</div>
+  <div class="screen-body">
+    <div class="badge" style="text-align:center;">A Promise</div>
+    <h1 style="text-align:center;">
+      Now it's<br><span>on you.</span>
+    </h1>
+    <div class="gold-bar" style="margin: 14px auto 18px;"></div>
+
+    <div class="promise-card">
+      <div class="quote-mark">&ldquo;</div>
+      <div class="quote-body">
+        Nobody can want it more than you do.<br><br>
+        The grind starts when you log your first session. Show up to your work, and your work will show up for you.
+      </div>
+      <div class="quote-attr">&mdash; MYGRIND</div>
     </div>
 
-    <!-- WHAT'S INCLUDED CARD -->
-    <div class="card" style="padding:20px;margin-bottom:14px;">
-      <div style="font-family:'Barlow Condensed',Arial,sans-serif;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#C9A84C;margin-bottom:14px;">What's Included</div>
-      <div style="font-size:16px;color:#E0DACB;line-height:2.2;">
-        <div><span style="color:#C9A84C;font-weight:700;font-size:18px;">&#10003;</span> &nbsp;Daily training journal</div>
-        <div><span style="color:#C9A84C;font-weight:700;font-size:18px;">&#10003;</span> &nbsp;Stats that auto-calculate</div>
-        <div><span style="color:#C9A84C;font-weight:700;font-size:18px;">&#10003;</span> &nbsp;12-month coach-built training plan</div>
-        <div><span style="color:#C9A84C;font-weight:700;font-size:18px;">&#10003;</span> &nbsp;Goal tracking parents can see</div>
-        <div><span style="color:#C9A84C;font-weight:700;font-size:18px;">&#10003;</span> &nbsp;Progress reports for coaches</div>
-        <div><span style="color:#C9A84C;font-weight:700;font-size:18px;">&#10003;</span> &nbsp;14-day free trial &mdash; no card required</div>
-        <div><span style="color:#C9A84C;font-weight:700;font-size:18px;">&#10003;</span> &nbsp;Cancel anytime &mdash; keep all the data</div>
+    <p class="sub" style="text-align:center;font-size:14px;color:#A89880;">
+      Every player who logs consistently &mdash; even just a few minutes a day &mdash; eventually outpaces the ones who don't.<br><br>
+      <strong style="color:#C9A84C;">That's the only secret.</strong>
+    </p>
+  </div>
+
+  <div class="bnav">
+    <button class="back-btn" onclick="go(11)">&larr; Back</button>
+    <div class="dots" id="d13"></div>
+    <button class="next-btn" onclick="go(14)">Let's Go &rarr;</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     S14 — FINAL EXIT (placeholder dashboard — Phase 7 will build real)
+     ═══════════════════════════════════════════════════════════ -->
+<div class="screen" id="s14">
+  <div class="prog-wrap">
+    <div class="prog-track"><div class="prog-fill" style="width:100%"></div></div>
+    <div class="prog-label">
+      <span class="prog-step">You're In</span>
+      <span class="prog-step" id="sportLabel14"></span>
+    </div>
+  </div>
+
+  <div class="screen-body">
+    <div class="badge" style="text-align:center;font-size:13px;">All Set</div>
+    <h1 style="text-align:center;">
+      You're all<br><span>set, <span id="exit_name">Player</span>.</span>
+    </h1>
+    <div class="gold-bar" style="margin: 14px auto 18px;"></div>
+
+    <p class="sub" style="text-align:center;">
+      Profile saved. Plan built. Ready to go.
+    </p>
+
+    <div class="exit-card">
+      <div class="exit-card-row"><span class="check">&#10003;</span> Sport &amp; position locked in</div>
+      <div class="exit-card-row"><span class="check">&#10003;</span> Goals set as your first journal entries</div>
+      <div class="exit-card-row"><span class="check">&#10003;</span> Coach feedback ready to track</div>
+      <div class="exit-card-row"><span class="check">&#10003;</span> Plan calibrated to your training schedule</div>
+      <div class="exit-card-row" id="exit_pin_row" style="display:none;">
+        <span class="check">&#10003;</span> PIN set — log in any time on this phone
       </div>
     </div>
 
-    <!-- TRUST FOOTER -->
-    <div style="text-align:center;font-size:14px;color:#7A6F60;line-height:1.6;padding:8px 12px;margin-bottom:8px;">
-      Transparent pricing. No hidden fees.<br>Built by a coach with 20+ years of player development experience.
+    <div class="exit-coming-soon">
+      <strong>Your dashboard is being prepared.</strong><br>
+      The full player dashboard (journal, streaks, stats, your training plan) is shipping soon.<br><br>
+      For now, your profile is saved on this device. Your parent will see updates from their dashboard.
     </div>
+
+    <button class="cta" onclick="onFinalExit()">Got It &mdash; I'll Be Back &rarr;</button>
   </div>
-  <div class="bnav"><button class="back-btn" onclick="go(12)">&larr; Back</button><div class="dots" id="d13"></div><button class="next-btn" onclick="go(14)">See Plans &rarr;</button></div>
-</div>
 
-<!-- S14 — PAYWALL (TRUE FREE TRIAL — No Card Required) -->
-<div class="screen" id="s14">
-  <div class="prog-wrap"><div class="prog-track"><div class="prog-fill" style="width:100%"></div></div><div class="prog-label"><span class="prog-step">Almost done!</span><span class="prog-step" id="sportLabel14"></span></div></div>
-  <div class="screen-body">
-
-    <!-- HERO — NO CARD REQUIRED -->
-    <div style="text-align:center;margin-bottom:20px;">
-      <div class="badge" style="text-align:center;font-size:13px;">Start Your Free Trial</div>
-      <h1 style="font-size:32px;line-height:1.1;">14 days free.<br><span>No card required.</span></h1>
-      <div style="display:inline-block;background:rgba(201,168,76,0.12);border:1px solid #9A7A30;color:#C9A84C;font-family:'Barlow Condensed',Arial,sans-serif;font-size:14px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:10px 20px;border-radius:6px;margin-top:14px;">✓ &nbsp;Just start using it. Decide later.</div>
-    </div>
-
-    <!-- PRIMARY CTA — START FREE -->
-    <button class="cta" id="trialCTA" onclick="startTrial()" style="font-size:18px;padding:18px;">⚾ &nbsp;Start My 14-Day Free Trial →</button>
-
-    <!-- TRUST FOOTER -->
-    <div style="text-align:center;font-size:14px;color:#A89880;line-height:1.7;margin:18px 0 24px;padding:0 8px;">
-      No credit card. No commitment.<br>We'll remind you near the end of your trial — and you can subscribe anytime if you love it.
-    </div>
-
-    <!-- DIVIDER -->
-    <div style="display:flex;align-items:center;gap:12px;margin:24px 0 18px;">
-      <div style="flex:1;height:1px;background:#3D3530;"></div>
-      <div style="font-family:'Barlow Condensed',Arial,sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#666;">Pricing After Trial</div>
-      <div style="flex:1;height:1px;background:#3D3530;"></div>
-    </div>
-
-    <!-- PLAN CARDS — INFORMATIONAL ONLY (No clicks needed yet) -->
-    <div class="plan featured" id="planAnnual" style="cursor:default;">
-      <div class="plan-amount">$8.25<span style="font-size:14px;color:#666;">/mo</span></div>
-      <div class="plan-name">MyGrind Annual <span class="plan-badge">Best Value</span></div>
-      <div class="plan-price">Billed $99/year — save 17%</div>
-    </div>
-    <div class="plan" id="planMonthly" style="cursor:default;">
-      <div class="plan-amount" style="color:#F5F0EB;">$9.99<span style="font-size:14px;color:#666;">/mo</span></div>
-      <div class="plan-name">MyGrind Monthly</div>
-      <div class="plan-price">Billed $9.99/mo · Cancel anytime</div>
-    </div>
-
-    <!-- REVIEW -->
-    <div style="display:flex;align-items:center;gap:10px;margin:14px 0 12px;background:#231F1C;border:1px solid #3D3530;border-radius:6px;padding:12px 14px;">
-      <div class="stars">★★★★★</div>
-      <div><div style="font-size:14px;color:#D4C8BC;font-style:italic;" id="pwReview">"Wish I had this when I started — keeps everything in one place."</div><div style="font-family:'Barlow Condensed',Arial,sans-serif;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:#C9A84C;margin-top:3px;" id="pwReviewName">Beta Player · SCV</div></div>
-    </div>
-
-    <!-- FOOTER -->
-    <div style="text-align:center;font-size:11px;color:#3D3530;margin-top:14px;padding-bottom:20px;">When you subscribe, secure checkout is via Stripe · coach@mygrindapp.com</div>
+  <div class="bnav">
+    <div style="min-width:60px;"></div>
+    <div class="dots" id="d14"></div>
+    <div style="min-width:60px;"></div>
   </div>
 </div>
 
 <script>
-var BB_URL = 'https://youngsbaseball.github.io/mybaseballgrind';
-var SB_URL = 'https://youngsbaseball.github.io/mybaseballgrind/softball.html';
-var STRIPE_ANNUAL  = 'https://buy.stripe.com/28EdRb5DQanXfpg0Mx4gg05';
-var STRIPE_MONTHLY = 'https://buy.stripe.com/4gM7sN2rE9jT5OG3YJ4gg06';
-var TOTAL_STEPS = 13;
+/* ═══════════════════════════════════════════════════════════
+   MYGRIND 2.0 — PLAYER ONBOARDING ENGINE (Phase 4)
+   ─────────────────────────────────────────────────────────
+   Per Decision #13: stripped of Stripe/Mailchimp/Firebase/
+   trial-state plumbing. Reads URL params (?name=Sofia&fallback=1)
+   to personalize for parent-invited kids.
+   ═══════════════════════════════════════════════════════════ */
 
-var d = { sport:'baseball', age:'', position:[], level:'', team:'', goal:[], struggle:[], coachFeedback:[], trainingDays:'', email:'', plan:'annual' };
+// Total content steps (used for dot count). Was 13 in MyGrind 1.0;
+// now 11 because S10 (email) and S12 (reviews) are removed.
+var TOTAL_STEPS = 11;
+
+// Player data accumulated through onboarding
+var d = {
+  name:          '',           // pre-filled from ?name=Sofia
+  fallback:      false,        // true if ?fallback=1 (kid using parent's phone)
+  pin:           '',           // 4-digit PIN if fallback
+  sport:         '',           // baseball / softball / both
+  age:           '',
+  position:      [],           // multi-select
+  level:         '',
+  team:          '',
+  goal:          [],           // multi-select
+  struggle:      [],           // multi-select
+  coachFeedback: [],           // multi-select
+  trainingDays:  ''
+};
+
+// Current screen — 0 = welcome, 0.5 = PIN setup (encoded as '05'),
+// 1-9 = content questions, 11 = plan preview, 13 = promise, 14 = exit
 var cur = 0;
 
-function subscribeToMailchimp(email, sport, goal) {
-  if (!email || !email.includes('@')) return;
-  var ACCOUNT='73280b4c02e9bc56c7e633892', LIST='a7d801599a', SERVER='us8', TAG='2216797';
-  var goalStr = Array.isArray(goal) ? goal.join(', ') : (goal||'');
-  var sportStr = sport || '';
-  var url = 'https://'+SERVER+'.list-manage.com/subscribe/post-json?u='+ACCOUNT+'&id='+LIST+'&EMAIL='+encodeURIComponent(email)+'&MERGE1='+encodeURIComponent(sportStr)+'&MERGE2='+encodeURIComponent(goalStr)+'&tags='+TAG+'&c=mcCallback_'+Date.now();
-  var cbName = 'mcCallback_'+Date.now();
-  window[cbName] = function(data) {
-    if (data && data.result === 'success') console.log('[MyGrind] Mailchimp:', email);
-    try { delete window[cbName]; } catch(e) {}
-  };
-  url = url.replace('mcCallback_'+Date.now().toString().slice(0,-1), cbName);
-  var script = document.createElement('script');
-  script.src = url;
-  script.onerror = function() { try { document.body.removeChild(script); } catch(e) {} };
-  document.body.appendChild(script);
-  setTimeout(function() { try { document.body.removeChild(script); } catch(e) {} }, 5000);
-}
-
-function fbSignUpOnboarding(email, password, sport, goal) {
-  if (!email || !password) return Promise.resolve(null);
-  if (typeof firebase === 'undefined') { console.warn('[Firebase] Not loaded'); return Promise.resolve(null); }
-  var name = sport ? sport.charAt(0).toUpperCase()+sport.slice(1)+' Player' : 'Player';
-  return firebase.auth().createUserWithEmailAndPassword(email, password)
-    .then(function(cred) {
-      var user = cred.user;
-      return user.updateProfile({ displayName: name }).then(function() {
-        return firebase.firestore().collection('users').doc(user.uid).set({
-          profile: { sport:sport, goal:Array.isArray(goal)?goal.join(', '):goal, email:email, name:name, createdAt:firebase.firestore.FieldValue.serverTimestamp() },
-          goals: Array.isArray(goal) ? goal.map(function(g,i){return {id:Date.now()+i,text:g,done:false};}) : [{id:Date.now(),text:goal,done:false}],
-          createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
-      });
-    })
-    .catch(function(e) {
-      if (e.code === 'auth/email-already-in-use') return firebase.auth().signInWithEmailAndPassword(email, password).catch(function(){return null;});
-      return null;
-    });
-}
-
-(function() {
+/* ─── URL PARAM PARSING ───────────────────────────────────
+   On load, read ?name=Sofia&fallback=1 from the URL and
+   personalize the welcome screen. signup.html's Screen 7
+   "Set Up Sofia Now →" button generates this URL when the
+   parent ticked the fallback checkbox for that kid.
+   ────────────────────────────────────────────────────────── */
+function parseUrlParams() {
   try {
-    var a = JSON.parse(localStorage.getItem('ybg_access')||'{}');
-    var sa = JSON.parse(localStorage.getItem('ybg_softball_access')||'{}');
-    if (a.paid===true) { window.location.href = BB_URL; return; }
-    if (sa.paid===true) { window.location.href = SB_URL; return; }
-    var isExpired = (a.trialExpired===true)||(sa.trialExpired===true);
-    if (isExpired) {
-      setTimeout(function() {
-        var h1=document.querySelector('#s0 h1'), sub=document.querySelector('#s0 .sub'), btn=document.querySelector('#s0 .cta'), badge=document.querySelector('#s0 .trial-badge');
-        if (h1) h1.innerHTML = "Welcome back. <span>Your grind isn't finished.</span>";
-        if (sub) sub.textContent = "Your 14-day trial ended — your progress is saved. Choose a plan and pick up right where you left off.";
-        if (btn) btn.textContent = "See My Plan Options →";
-        if (badge) badge.style.display = 'none';
-      }, 120);
-    }
-  } catch(e) {}
-})();
+    var params = new URLSearchParams(window.location.search);
+    var nameParam = params.get('name');
+    var fallbackParam = params.get('fallback');
+    if (nameParam) d.name = decodeURIComponent(nameParam).trim();
+    if (fallbackParam === '1' || fallbackParam === 'true') d.fallback = true;
+  } catch(e) {
+    // URLSearchParams not supported (very old browsers) — ignore
+  }
+}
 
+/* ─── WELCOME SCREEN PERSONALIZATION ─────────────────────
+   Sets the H1 and parent-context message based on URL params
+   ────────────────────────────────────────────────────────── */
+function personalizeWelcome() {
+  var nameSpan = document.getElementById('welcome_name');
+  var subSpan = document.getElementById('welcome_subhead');
+  var contextDiv = document.getElementById('parent_context');
+
+  if (nameSpan) nameSpan.textContent = d.name || 'Player';
+
+  if (d.fallback) {
+    if (subSpan) subSpan.textContent = "Your parent set you up on this phone. Let's finish your profile.";
+    if (contextDiv) contextDiv.innerHTML =
+      'Your parent already created your account. <strong>You\'re going to share this phone for now.</strong> ' +
+      'We\'ll help you set up a 4-digit PIN that\'s just yours, then walk through your training plan.';
+  } else {
+    if (d.name) {
+      if (subSpan) subSpan.textContent = "Your parent signed you up — let's finish your profile.";
+      if (contextDiv) contextDiv.innerHTML =
+        '<strong>Your account is ready.</strong> Just a few quick questions about your sport, your goals, ' +
+        'and what you\'re working on. Your answers shape your training plan.';
+    } else {
+      // No name in URL — generic landing (someone hit onboarding.html directly)
+      if (subSpan) subSpan.textContent = "Let's build your training profile.";
+      if (contextDiv) contextDiv.innerHTML =
+        'A few quick questions and you\'re in. Your answers shape your training plan.';
+    }
+  }
+}
+
+/* ─── NAVIGATION ENGINE ──────────────────────────────────
+   go(n) — show screen n, hide all others. Special-cases:
+     - String '05' = the PIN setup screen
+     - Calls buildPositions() when entering S3
+     - Calls buildPlan() when entering S11
+     - Updates dots, sport labels, and progress fill
+   ────────────────────────────────────────────────────────── */
 function go(n) {
-  document.getElementById('s'+cur).classList.remove('on');
+  // Hide current
+  var currentEl = document.getElementById('s' + (cur === '05' ? '05' : cur));
+  if (currentEl) currentEl.classList.remove('on');
+
+  // Show new
   cur = n;
-  document.getElementById('s'+cur).classList.add('on');
-  window.scrollTo(0,0);
+  var nextEl = document.getElementById('s' + (cur === '05' ? '05' : cur));
+  if (nextEl) nextEl.classList.add('on');
+  window.scrollTo(0, 0);
+
+  // Per-screen hooks
+  if (cur === 3)  buildPositions();
+  if (cur === 11) buildPlan();
+  if (cur === 14) prepFinalExit();
+
   updateSportLabels();
   buildDots(cur);
-  if (cur===3) buildPositions();
-  if (cur===11) buildPlan();
 }
+
 function goNext(from, to) { go(to); }
 
-function updateSportLabels() {
-  var label = d.sport==='softball' ? '🥎 Softball' : d.sport==='both' ? '⚾🥎 Both' : '⚾ Baseball';
-  var accent = d.sport==='softball' ? '#D4547A' : '#C9A84C';
-  for (var i=1; i<=14; i++) {
-    var el = document.getElementById('sportLabel'+(i>1?i:''));
-    if (el) el.textContent = label;
+/* ─── WELCOME → KICKOFF ─────────────────────────────────
+   "Let's Go" button click. Routes to PIN setup if fallback,
+   otherwise straight to S1 sport selection.
+   ────────────────────────────────────────────────────────── */
+function startOnboarding() {
+  if (d.fallback) {
+    go('05');
+    // Auto-focus first PIN box
+    setTimeout(function() {
+      var pin1 = document.getElementById('pin1');
+      if (pin1) pin1.focus();
+    }, 300);
+  } else {
+    go(1);
   }
-  document.querySelectorAll('.prog-fill').forEach(function(el){el.style.background=accent;});
-  document.querySelectorAll('.next-btn:not([disabled])').forEach(function(el){el.style.background=accent;});
-  document.querySelectorAll('.cta').forEach(function(el){el.style.background=accent;});
-  document.querySelectorAll('.gold-bar').forEach(function(el){el.style.background=accent;});
-  document.querySelectorAll('.badge').forEach(function(el){el.style.color=accent;});
-  document.querySelectorAll('.dot.on').forEach(function(el){el.style.background=accent;});
 }
 
-function buildDots(s) {
-  var accent = d.sport==='softball' ? '#D4547A' : '#C9A84C';
-  for (var i=1; i<=14; i++) {
-    var el = document.getElementById('d'+i);
-    if (!el) continue;
-    el.innerHTML = '';
-    for (var j=1; j<=TOTAL_STEPS; j++) {
-      var dot = document.createElement('div');
-      dot.className = 'dot'+(j<s?' on':'');
-      if (j<s) dot.style.background = accent;
-      el.appendChild(dot);
+// Back button on S1 — returns to welcome (or PIN setup if fallback)
+function onBackFromS1() {
+  if (d.fallback) go('05');
+  else go(0);
+}
+
+/* ─── PIN SETUP (S0.5) ──────────────────────────────────
+   4 input boxes, auto-advance focus on input, validate that
+   PIN is not 0000 / 1234 / similar.
+   ────────────────────────────────────────────────────────── */
+function onPinInput(idx, el) {
+  // Strip non-digits defensively
+  var v = (el.value || '').replace(/\D/g, '');
+  el.value = v;
+
+  // Filled state
+  if (v.length === 1) {
+    el.classList.add('filled');
+    // Auto-advance
+    if (idx < 4) {
+      var nextBox = document.getElementById('pin' + (idx + 1));
+      if (nextBox) nextBox.focus();
     }
+  } else {
+    el.classList.remove('filled');
   }
+
+  // Hide error if user is correcting
+  document.getElementById('pinErr').classList.remove('shown');
+
+  // Re-evaluate Next button
+  refreshPinNext();
 }
 
+function getPinValue() {
+  var p = '';
+  for (var i = 1; i <= 4; i++) {
+    var box = document.getElementById('pin' + i);
+    p += box ? (box.value || '') : '';
+  }
+  return p;
+}
+
+function refreshPinNext() {
+  var pin = getPinValue();
+  var btn = document.getElementById('n05');
+  if (btn) btn.disabled = pin.length !== 4;
+}
+
+function onPinNext() {
+  var pin = getPinValue();
+  // Reject obviously weak PINs
+  var weak = ['0000', '1234', '1111', '2222', '3333', '4444', '5555', '6666', '7777', '8888', '9999', '4321'];
+  if (weak.indexOf(pin) !== -1) {
+    document.getElementById('pinErr').classList.add('shown');
+    return;
+  }
+  d.pin = pin;
+  go(1);
+}
+
+/* ─── SPORT SELECTION (S1) ─────────────────────────────── */
 function setSport(s, el) {
   d.sport = s;
-  document.querySelectorAll('.sport-card').forEach(function(c){c.style.borderColor='#3D3530';c.style.background='#231F1C';});
-  var accent = s==='softball' ? '#D4547A' : '#C9A84C';
+
+  // Visual: clear all sport cards, then highlight chosen
+  document.querySelectorAll('.sport-card').forEach(function(c) {
+    c.style.borderColor = '#3D3530';
+    c.style.background = '#231F1C';
+  });
+  var accent = s === 'softball' ? '#D4547A' : '#C9A84C';
   el.style.borderColor = accent;
-  el.style.background = s==='softball' ? 'rgba(212,84,122,0.08)' : 'rgba(201,168,76,0.08)';
-  setTimeout(function(){go(2);}, 300);
+  el.style.background = s === 'softball' ? 'rgba(212,84,122,0.08)' : 'rgba(201,168,76,0.08)';
+
+  setTimeout(function() { go(2); }, 300);
 }
 
+/* ─── SINGLE-SELECT OPTION (pick) ──────────────────────── */
 function pick(el, key, val) {
   d[key] = val;
-  el.closest('.screen-body').querySelectorAll('.opt').forEach(function(b){b.classList.remove('selected');});
+  el.closest('.screen-body').querySelectorAll('.opt').forEach(function(b) {
+    b.classList.remove('selected');
+  });
   el.classList.add('selected');
   enableNext(el);
 }
 
+/* ─── MULTI-SELECT TOGGLE ─────────────────────────────── */
 function toggle(el, key, val) {
   if (!Array.isArray(d[key])) d[key] = [];
   var idx = d[key].indexOf(val);
+
   if (idx === -1) {
+    // Special case: "Nothing specific yet" is exclusive
     if (val === 'Nothing specific yet') {
       d[key] = [val];
-      el.closest('.screen-body').querySelectorAll('.opt').forEach(function(b){b.classList.remove('selected');});
+      el.closest('.screen-body').querySelectorAll('.opt').forEach(function(b) {
+        b.classList.remove('selected');
+      });
     } else {
+      // Adding a real option clears "Nothing specific yet" if it was checked
       var nIdx = d[key].indexOf('Nothing specific yet');
       if (nIdx !== -1) d[key].splice(nIdx, 1);
-      el.closest('.screen-body').querySelectorAll('.opt').forEach(function(b){if (b.textContent.includes('Nothing specific yet')) b.classList.remove('selected');});
+      el.closest('.screen-body').querySelectorAll('.opt').forEach(function(b) {
+        if (b.textContent.includes('Nothing specific yet')) b.classList.remove('selected');
+      });
       d[key].push(val);
     }
     el.classList.add('selected');
@@ -622,136 +975,252 @@ function toggle(el, key, val) {
     d[key].splice(idx, 1);
     el.classList.remove('selected');
   }
+
   if (d[key].length > 0) enableNext(el);
+  else disableNext(el);
 }
 
 function enableNext(el) {
-  var n = el.closest('.screen').id.replace('s','');
-  var btn = document.getElementById('n'+n);
+  var n = el.closest('.screen').id.replace('s', '');
+  var btn = document.getElementById('n' + n);
   if (btn) {
     btn.disabled = false;
-    btn.style.opacity = '1';
-    btn.style.background = d.sport==='softball' ? '#D4547A' : '#C9A84C';
+    var accent = d.sport === 'softball' ? '#D4547A' : '#C9A84C';
+    btn.style.background = accent;
   }
 }
 
+function disableNext(el) {
+  var n = el.closest('.screen').id.replace('s', '');
+  var btn = document.getElementById('n' + n);
+  if (btn) btn.disabled = true;
+}
+
+/* ─── SPORT-AWARE LABELS & ACCENT COLORS ────────────────
+   Updates sport label badge and shifts accent color from
+   gold (baseball) to pink (softball) across the UI.
+   ────────────────────────────────────────────────────────── */
+function updateSportLabels() {
+  var label = d.sport === 'softball' ? '🥎 Softball' :
+              d.sport === 'both'     ? '⚾🥎 Both' :
+              d.sport === 'baseball' ? '⚾ Baseball' : '';
+  var accent = d.sport === 'softball' ? '#D4547A' : '#C9A84C';
+
+  // Update each per-screen sport label
+  var screens = [1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 13, 14];
+  screens.forEach(function(i) {
+    var el = document.getElementById('sportLabel' + i);
+    if (el) el.textContent = label;
+  });
+
+  // Shift accent color (only matters once sport is picked)
+  if (d.sport) {
+    document.querySelectorAll('.prog-fill').forEach(function(el) { el.style.background = accent; });
+    document.querySelectorAll('.gold-bar').forEach(function(el) { el.style.background = accent; });
+    document.querySelectorAll('.badge').forEach(function(el) { el.style.color = accent; });
+    document.querySelectorAll('.next-btn:not([disabled])').forEach(function(el) { el.style.background = accent; });
+    document.querySelectorAll('.cta').forEach(function(el) { el.style.background = accent; });
+  }
+}
+
+/* ─── PROGRESS DOTS ─────────────────────────────────────
+   Renders TOTAL_STEPS dots, lighting up the ones for steps
+   that have been completed. Skips '05' (PIN) when counting
+   since that's not a content step.
+   ────────────────────────────────────────────────────────── */
+function buildDots(s) {
+  var accent = d.sport === 'softball' ? '#D4547A' : '#C9A84C';
+  // Map screen number -> step index for dot counting
+  // 0=welcome (no dot fill), 05=PIN (no dot fill)
+  // 1-9 = steps 1-9, 11 = step 10, 13 = step 11
+  var stepIdx = 0;
+  if (typeof s === 'number') {
+    if (s >= 1 && s <= 9) stepIdx = s;
+    else if (s === 11) stepIdx = 10;
+    else if (s === 13) stepIdx = 11;
+    else if (s === 14) stepIdx = 11; // exit screen — keep all dots filled
+  }
+
+  var dotContainerIds = ['d0', 'd05', 'd1', 'd2', 'd3', 'd4', 'd5', 'd6', 'd7', 'd8', 'd9', 'd11', 'd13', 'd14'];
+  dotContainerIds.forEach(function(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.innerHTML = '';
+    for (var j = 1; j <= TOTAL_STEPS; j++) {
+      var dot = document.createElement('div');
+      dot.className = 'dot' + (j < stepIdx ? ' on' : '');
+      if (j < stepIdx) dot.style.background = accent;
+      el.appendChild(dot);
+    }
+  });
+}
+
+/* ─── POSITION GRID (S3 — sport-aware) ────────────────── */
 function buildPositions() {
-  var bb = [{e:'⚾',l:'Pitcher'},{e:'🎯',l:'Catcher'},{e:'1️⃣',l:'First Base'},{e:'2️⃣',l:'Second Base'},{e:'3️⃣',l:'Third Base'},{e:'⚡',l:'Shortstop'},{e:'🏃',l:'Outfield'},{e:'🔄',l:'Utility / DH'},{e:'❓',l:'Not sure yet'}];
-  var sb = [{e:'🥎',l:'Pitcher'},{e:'🎯',l:'Catcher'},{e:'1️⃣',l:'First Base'},{e:'2️⃣',l:'Second Base'},{e:'3️⃣',l:'Third Base'},{e:'⚡',l:'Shortstop'},{e:'🏃',l:'Outfield'},{e:'🏃‍♀️',l:'Slapper'},{e:'🔄',l:'DP / Flex'},{e:'❓',l:'Not sure yet'}];
-  var positions = d.sport==='softball' ? sb : bb;
-  document.getElementById('posGrid').innerHTML = positions.map(function(p){return '<button class="opt" onclick="toggle(this,\'position\',\''+p.l+'\')">'+p.e+' &nbsp;'+p.l+'</button>';}).join('');
-}
-
-function checkEmail() {
-  var inp = document.getElementById('emailInput');
-  var val = inp ? inp.value.trim() : '';
-  document.getElementById('emailErr').style.display = 'none';
-  inp.style.borderColor = val ? '#C9A84C' : '#3D3530';
-}
-
-function emailNext() {
-  var inp = document.getElementById('emailInput');
-  var val = inp ? inp.value.trim().toLowerCase() : '';
-  if (val && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) {
-    document.getElementById('emailErr').style.display = 'block';
-    inp.style.borderColor = '#E57373';
-    return;
+  var bb = [
+    {e:'⚾',l:'Pitcher'}, {e:'🎯',l:'Catcher'},
+    {e:'1️⃣',l:'First Base'}, {e:'2️⃣',l:'Second Base'},
+    {e:'3️⃣',l:'Third Base'}, {e:'⚡',l:'Shortstop'},
+    {e:'🏃',l:'Outfield'}, {e:'🔄',l:'Utility / DH'},
+    {e:'❓',l:'Not sure yet'}
+  ];
+  var sb = [
+    {e:'🥎',l:'Pitcher'}, {e:'🎯',l:'Catcher'},
+    {e:'1️⃣',l:'First Base'}, {e:'2️⃣',l:'Second Base'},
+    {e:'3️⃣',l:'Third Base'}, {e:'⚡',l:'Shortstop'},
+    {e:'🏃',l:'Outfield'}, {e:'🏃‍♀️',l:'Slapper'},
+    {e:'🔄',l:'DP / Flex'}, {e:'❓',l:'Not sure yet'}
+  ];
+  var positions = d.sport === 'softball' ? sb : bb;
+  var grid = document.getElementById('posGrid');
+  if (grid) {
+    grid.innerHTML = positions.map(function(p) {
+      return '<button class="opt" onclick="toggle(this,\'position\',\'' + p.l + '\')">' +
+             p.e + '&nbsp; ' + p.l + '</button>';
+    }).join('');
   }
-  d.email = val;
-  go(11);
 }
 
+/* ─── PERSONALIZED PLAN PREVIEW (S11) ───────────────────
+   Builds the plan summary based on the kid's answers
+   ────────────────────────────────────────────────────────── */
 function buildPlan() {
-  var sportLabel = d.sport==='softball' ? 'Softball' : 'Baseball';
-  var t = document.getElementById('planTitle');
+  var sportLabel = d.sport === 'softball' ? 'Softball' : (d.sport === 'both' ? 'Two-Sport' : 'Baseball');
   var goalLabel = Array.isArray(d.goal) ? d.goal.join(' + ') : (d.goal || 'Your Goal');
-  if (t) t.textContent = sportLabel+' Player Plan — '+goalLabel;
+
+  var t = document.getElementById('planTitle');
+  if (t) t.textContent = sportLabel + ' Player Plan — ' + goalLabel;
+
   var sub = document.getElementById('s11sub');
-  if (sub) sub.textContent = 'Based on your answers — here\'s what MyGrind built for you, '+(d.age||'player')+'.';
-  var posLabel = Array.isArray(d.position) && d.position.length ? d.position.join(' / ') : (d.position||'your position');
-  var drills = d.sport==='softball' ? 'Fastpitch drills + circle change work — 3x/week' : 'Position drills for '+posLabel+' — 3x/week';
-  var coachArr = Array.isArray(d.coachFeedback) ? d.coachFeedback.filter(function(x){return x!=='Nothing specific yet';}) : [];
-  var coachLine = coachArr.length ? '✅ Coach focus: '+coachArr.slice(0,2).join(', ') : '✅ Goal milestone tracker';
+  if (sub) sub.textContent = 'Based on your answers — here\'s what MyGrind built for you, ' + (d.age || 'player') + '.';
+
+  var posLabel = Array.isArray(d.position) && d.position.length ? d.position.join(' / ') : (d.position || 'your position');
+  var drills = d.sport === 'softball' ? 'Fastpitch drills + circle change work — 3x/week' : 'Position drills for ' + posLabel + ' — 3x/week';
+
+  var coachArr = Array.isArray(d.coachFeedback) ?
+    d.coachFeedback.filter(function(x) { return x !== 'Nothing specific yet'; }) : [];
+  var coachLine = coachArr.length ?
+    '✅ Coach focus: ' + coachArr.slice(0, 2).join(', ') : '✅ Goal milestone tracker';
+
   var items = document.getElementById('planItems');
-  if (items) items.innerHTML = '<div>✅ Daily journal prompts for '+posLabel+'</div><div>✅ '+drills+'</div><div>✅ Weekly progress snapshot</div><div>✅ Goal: <em style="color:#C9A84C;">'+goalLabel+'</em></div><div>'+coachLine+'</div><div>✅ Shareable training report for coaches</div>';
+  if (items) {
+    items.innerHTML =
+      '<div>✅ Daily journal prompts for ' + posLabel + '</div>' +
+      '<div>✅ ' + drills + '</div>' +
+      '<div>✅ Weekly progress snapshot</div>' +
+      '<div>✅ Goal: <em style="color:#C9A84C;">' + goalLabel + '</em></div>' +
+      '<div>' + coachLine + '</div>' +
+      '<div>✅ Shareable training report for coaches</div>';
+  }
+
+  // Personalize the example drill based on the kid's biggest struggle
   var drill = document.getElementById('exDrill');
   if (drill) {
-    if (d.struggle && d.struggle.includes('Hitting')) drill.textContent = 'Tee work — inside pitch, 50 reps';
-    else if (d.struggle && d.struggle.includes('Pitching')) drill.textContent = 'Bullpen — location work, 30 pitches';
-    else if (d.struggle && d.struggle.includes('Fielding')) drill.textContent = 'Short hops — backhand drill, 20 reps';
-    else if (d.struggle && d.struggle.includes('Mental')) drill.textContent = 'Visualization — full at-bat routine, 5 min';
-    else drill.textContent = 'Tee work — inside pitch, 40 reps';
-  }
-  var cta = document.getElementById('trialCTA');
-  if (cta) {
-    var emoji = d.sport==='softball' ? '🥎' : '⚾';
-    var txt = emoji+'  Start My Free Trial →';
-    var goals = Array.isArray(d.goal) ? d.goal : [d.goal];
-    if (goals.includes('Make a travel team')) txt = emoji+'  Start Making the Team →';
-    if (goals.includes('Get recruited to college')) txt = emoji+'  Start My Recruiting Journey →';
-    if (goals.includes('Earn a starting spot')) txt = emoji+'  Start Earning My Spot →';
-    if (goals.includes('Build consistent habits')) txt = emoji+'  Start Building My Habit →';
-    cta.textContent = txt;
+    var struggleStr = (Array.isArray(d.struggle) ? d.struggle.join(' ') : (d.struggle || '')).toLowerCase();
+    if (struggleStr.indexOf('hitting') !== -1)        drill.textContent = 'Tee work — inside pitch, 50 reps';
+    else if (struggleStr.indexOf('pitching') !== -1)  drill.textContent = 'Bullpen — location work, 30 pitches';
+    else if (struggleStr.indexOf('fielding') !== -1)  drill.textContent = 'Short hops — backhand drill, 20 reps';
+    else if (struggleStr.indexOf('mental') !== -1)    drill.textContent = 'Visualization — full at-bat routine, 5 min';
+    else                                              drill.textContent = 'Tee work — inside pitch, 40 reps';
   }
 }
 
-function pickPlan(p) {
-  d.plan = p;
-  var accent = d.sport==='softball' ? '#D4547A' : '#C9A84C';
-  var ann = document.getElementById('planAnnual'), mon = document.getElementById('planMonthly');
-  if (p === 'annual') { if (ann) ann.style.border = '2px solid '+accent; if (mon) mon.style.border = '1px solid #3D3530'; }
-  else { if (mon) mon.style.border = '2px solid '+accent; if (ann) ann.style.border = '1px solid #3D3530'; }
+/* ─── FINAL EXIT (S14) ──────────────────────────────────
+   Personalizes the exit screen with kid's name and reveals
+   the PIN-confirmation row if fallback was used.
+   ────────────────────────────────────────────────────────── */
+function prepFinalExit() {
+  var nameSpan = document.getElementById('exit_name');
+  if (nameSpan) nameSpan.textContent = d.name || 'Player';
+
+  // Show the PIN confirmation row if fallback
+  if (d.fallback) {
+    var pinRow = document.getElementById('exit_pin_row');
+    if (pinRow) pinRow.style.display = '';
+  }
+
+  // Save profile to localStorage so Phase 7 dashboard can read it
+  saveProfile();
 }
 
-function startTrial() {
-  // TRUE FREE TRIAL — No card required upfront
-  // App will prompt for payment near end of 14-day trial
-  // Pricing tabs in app always available for early subscription
-  writeToApp();
-  launchApp();
-}
-
-function skipTrial() { writeToApp(); launchApp(); }
-function launchApp() { window.location.href = d.sport==='softball' ? SB_URL : BB_URL; }
-
-function writeToApp() {
-  var isSb = d.sport==='softball';
-  var fp = fingerprint(), now = Date.now();
-  var access = { email:d.email, fingerprint:fp, trialStart:now, paid:false, sport:d.sport, goal:d.goal, mode:'onboarding' };
-  var posStr = Array.isArray(d.position) ? d.position.join(', ') : d.position;
-  var profile = { sport:d.sport, age:d.age, position:posStr, level:d.level, team:d.team, bio:d.sport+' · '+d.age+' · Goal: '+(Array.isArray(d.goal)?d.goal.join(', '):d.goal), savedAt:new Date().toISOString() };
-  var state = { goals:[], entries:[], players:[] };
-  var goalArr = Array.isArray(d.goal) ? d.goal : (d.goal?[d.goal]:[]);
-  goalArr.forEach(function(g,i){ if (g) state.goals.push({id:now+i,text:g,cat:'mental',done:false}); });
-  var coachItems = Array.isArray(d.coachFeedback) ? d.coachFeedback : (d.coachFeedback?[d.coachFeedback]:[]);
-  coachItems.forEach(function(fb,i){ if (fb && fb!=='Nothing specific yet') state.goals.push({id:now+i+1,text:'Coach feedback: '+fb,cat:'mental',done:false}); });
+/* ─── PROFILE SAVE ──────────────────────────────────────
+   Per Decision #13: NO Firebase auth, NO Mailchimp, NO Stripe.
+   Just localStorage for now. Phase 5+ wires this to backend.
+   ────────────────────────────────────────────────────────── */
+function saveProfile() {
   try {
-    var ak = isSb?'ybg_softball_access':'ybg_access', pk = isSb?'ybg_softball_profile':'ybg_profile', sk = isSb?'ybg_softball_state':'ybg_state', ok = isSb?'ybg_softball_onboarded':'ybg_onboarded';
-    localStorage.setItem(ak, JSON.stringify(access));
-    localStorage.setItem(pk, JSON.stringify(profile));
-    localStorage.setItem(sk, JSON.stringify(state));
-    localStorage.setItem(ok, '1');
-    localStorage.setItem('ybg_onboarding_sport', d.sport);
-  } catch(e) {}
-  if (d.email) subscribeToMailchimp(d.email, d.sport, d.goal);
-  if (d.email) {
-    var autoPass = 'MG-'+fingerprint()+'-2026';
-    fbSignUpOnboarding(d.email, autoPass, d.sport, d.goal).then(function(r){if(r) console.log('[Firebase] Account created');}).catch(function(e){console.warn('[Firebase]', e);});
-    try { localStorage.setItem('ybg_fb_pass', autoPass); } catch(e) {}
+    var profile = {
+      name:          d.name,
+      sport:         d.sport,
+      age:           d.age,
+      position:      Array.isArray(d.position) ? d.position : [],
+      level:         d.level,
+      team:          d.team,
+      goal:          Array.isArray(d.goal) ? d.goal : [],
+      struggle:      Array.isArray(d.struggle) ? d.struggle : [],
+      coachFeedback: Array.isArray(d.coachFeedback) ? d.coachFeedback : [],
+      trainingDays:  d.trainingDays,
+      hasPin:        d.fallback && d.pin.length === 4,
+      // PIN itself is hashed — never store plain. For now we just store the
+      // length so the future auth flow knows it exists. Phase 5+ properly
+      // hashes and stores via backend.
+      onboardedAt:   new Date().toISOString(),
+      // Forward-compatible naming (Decision #12) — owner_user_id will be
+      // wired up in Phase 5 when backend auth lands
+      owner_user_id: null
+    };
+    localStorage.setItem('mg_player_profile', JSON.stringify(profile));
+  } catch(e) {
+    // localStorage may be unavailable in private browsing
+    console.warn('[MyGrind Onboarding] Could not save profile:', e);
   }
 }
 
-function fingerprint() {
-  try {
-    var raw = [navigator.userAgent, screen.width, screen.height, new Date().getTimezoneOffset()].join('|');
-    var h = 0;
-    for (var i=0; i<raw.length; i++) { h = ((h<<5)-h)+raw.charCodeAt(i); h |= 0; }
-    return Math.abs(h).toString(36);
-  } catch(e) { return 'x'; }
+/* ─── FINAL EXIT BUTTON ─────────────────────────────────
+   "Got It — I'll Be Back" button on S14. For now just
+   shows a confirmation alert. Phase 7 will route to the
+   real player dashboard.
+   ────────────────────────────────────────────────────────── */
+function onFinalExit() {
+  alert(
+    'Onboarding complete!\n\n' +
+    'Your profile is saved. The full player dashboard ships in Phase 7.\n\n' +
+    'For now, your parent can see your status from their dashboard.'
+  );
+  // In Phase 7: window.location.href = 'player-dashboard.html';
 }
 
-window.addEventListener('popstate', function(){ if (cur>0) { history.pushState(null,'',''); go(cur-1); } });
+/* ─── INITIALIZATION ────────────────────────────────────
+   On page load: parse URL params, personalize welcome, render dots.
+   ────────────────────────────────────────────────────────── */
+window.addEventListener('DOMContentLoaded', function() {
+  parseUrlParams();
+  personalizeWelcome();
+  buildDots(0);
+
+  // Dev console banner
+  console.log('%c⚾ MyGrind Onboarding — Phase 4 (Player flow, parent-invited)',
+              'color: #C9A84C; font-weight: bold; font-size: 14px;');
+  console.log('URL params: name=' + (d.name || 'none') + ', fallback=' + d.fallback);
+  console.log('State object available as window.mgPlayer for debugging.');
+  window.mgPlayer = d;
+});
+
+// Browser back-button support
+window.addEventListener('popstate', function() {
+  if (cur !== 0 && cur !== '0') {
+    history.pushState(null, '', '');
+    // Rough back behavior — go to previous logical screen
+    if (cur === 1) go(d.fallback ? '05' : 0);
+    else if (cur === '05') go(0);
+    else if (typeof cur === 'number' && cur > 1 && cur <= 9) go(cur - 1);
+    else if (cur === 11) go(9);
+    else if (cur === 13) go(11);
+    else if (cur === 14) go(13);
+  }
+});
 history.pushState(null, '', '');
 </script>
+
 </body>
 </html>
