@@ -1201,7 +1201,11 @@ select.field-input {
    for trust reasons. Phase 5 will introduce a new pay surface elsewhere
    (likely tied to day 12/14 reminders per Decision #9). */
 
-/* Dashboard footer — small links for share, settings, etc. */
+/* Dashboard footer — small links for share, settings, etc.
+   Per Coach Young April 27 PM: original 11px / #6B5E52 was too small and
+   too low contrast to read comfortably. Bumped to 13px and #8A7E70 to
+   make it actually legible without making it grab attention away from
+   the player card above. */
 .dash-footer {
   max-width: 360px;
   margin: 0 auto 0 auto;
@@ -1209,16 +1213,18 @@ select.field-input {
   border-top: 1px solid #1A1A1A;
   display: flex;
   justify-content: center;
-  gap: 20px;
+  gap: 22px;
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 11px;
-  letter-spacing: 1.2px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1px;
   text-transform: uppercase;
 }
 .dash-footer a {
-  color: #6B5E52;
+  color: #8A7E70;
   text-decoration: none;
   transition: color 0.2s ease;
+  padding: 4px 2px;
 }
 .dash-footer a:hover { color: #C9A84C; }
 
