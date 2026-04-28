@@ -295,6 +295,74 @@ h1 span {
 .field-input.invalid + .field-helper { display: none; }
 .field-input.invalid ~ .field-helper.error { display: block; }
 
+/* Layer B+C smart email feedback element (locked email defenses spec).
+   Lives below the email field. Three visual states:
+     - hidden: nothing to say
+     - .suggesting: typo detected, show "Did you mean X? [Use this]"
+     - .confirming: email is valid + clean, show "We'll send your trial reminders to X" */
+.email-feedback {
+  display: none;
+  margin-top: 8px;
+  font-family: 'Barlow', sans-serif;
+  font-size: 13px;
+  line-height: 1.45;
+  padding: 9px 12px;
+  border-radius: 3px;
+  border: 1px solid transparent;
+}
+.email-feedback.suggesting,
+.email-feedback.confirming {
+  display: block;
+}
+
+/* Suggestion state — gold-tinted to draw the eye, since correcting
+   a typo is the single most valuable defensive action a parent can take. */
+.email-feedback.suggesting {
+  background: rgba(201,168,76,0.10);
+  border-color: rgba(201,168,76,0.45);
+  color: #E8DCC4;
+}
+.email-feedback.suggesting .ef-prompt {
+  color: #C9A84C;
+  font-weight: 600;
+  margin-right: 4px;
+}
+.email-feedback.suggesting .ef-fix-btn {
+  display: inline;
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin-left: 6px;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: 600;
+  color: #C9A84C;
+  text-decoration: underline;
+  text-decoration-color: rgba(201,168,76,0.55);
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.email-feedback.suggesting .ef-fix-btn:hover {
+  color: #D4B85A;
+  text-decoration-color: #D4B85A;
+}
+.email-feedback.suggesting .ef-suggested {
+  font-weight: 700;
+  color: #F4F4F4;
+}
+
+/* Confirmation state — calm, low contrast. Reassures that we got the
+   address right without grabbing attention (no typo to fix). */
+.email-feedback.confirming {
+  background: transparent;
+  border-color: rgba(255,255,255,0.06);
+  color: #8A7E70;
+}
+.email-feedback.confirming .ef-confirmed-email {
+  color: #C9A84C;
+  font-weight: 600;
+}
+
 /* Two-column row for first/last name */
 .field-row-2 {
   display: grid;
@@ -1659,6 +1727,13 @@ select.field-input {
           oninput="onParentInput()">
         <div class="field-helper">For receipts and your weekly progress digest.</div>
         <div class="field-helper error">Please enter a valid email address.</div>
+
+        <!-- Layer B+C smart feedback element (locked email defenses spec).
+             Three states (managed by refreshEmailFeedback):
+               - Hidden: parent hasn't typed enough yet, or hasn't finished
+               - Suggestion: typo detected → "Did you mean mike@gmail.com?"
+               - Confirmation: email is valid + clean → "We'll send your trial reminders to mike@gmail.com" -->
+        <div class="email-feedback" id="email_feedback" aria-live="polite"></div>
       </div>
 
       <!-- Phone (with live formatting) -->
@@ -2325,6 +2400,70 @@ function isValidEmail(s) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test((s || '').trim());
 }
 
+// Layer B (locked email defenses spec): common-domain typo dictionary.
+// Maps known typo'd domains to their canonical form. When a parent's
+// email looks like a typo of a popular provider, we offer a one-tap fix
+// instead of letting them sail through with a broken address.
+//
+// Catches honest mistakes (Scenario 1 in the spec) — the most expensive
+// scenario because the parent never gets their Day 12/14 reminder and
+// quietly drops out of the funnel.
+//
+// Note: this dictionary is intentionally narrow. Listing every possible
+// typo creates false positives (e.g. ".con" is a real Italian TLD-ish
+// pattern in some emails). We only list typos of the top consumer
+// providers, where the cost of a false suggestion is low (parent just
+// ignores it) but the value of a correct suggestion is high.
+const EMAIL_DOMAIN_TYPOS = {
+  // gmail.com
+  'gmial.com': 'gmail.com',  'gmali.com': 'gmail.com',  'gmaill.com': 'gmail.com',
+  'gnail.com': 'gmail.com',  'gmail.co':  'gmail.com',  'gmail.cm':  'gmail.com',
+  'gmail.con': 'gmail.com',  'gmail.coom': 'gmail.com', 'gmail.om':  'gmail.com',
+  'gamil.com': 'gmail.com',  'gimail.com': 'gmail.com', 'gemail.com': 'gmail.com',
+  // yahoo.com
+  'yhoo.com':  'yahoo.com',  'yaho.com':  'yahoo.com',  'yahooo.com':'yahoo.com',
+  'yahoo.co':  'yahoo.com',  'yahoo.cm':  'yahoo.com',  'yahoo.con': 'yahoo.com',
+  'yaoo.com':  'yahoo.com',  'yahho.com': 'yahoo.com',
+  // hotmail.com
+  'hotmial.com': 'hotmail.com', 'hotmaill.com': 'hotmail.com',
+  'hotmail.co':  'hotmail.com', 'hotmail.cm':   'hotmail.com',
+  'hotmail.con': 'hotmail.com', 'hotmal.com':   'hotmail.com',
+  'homail.com':  'hotmail.com', 'hotmai.com':   'hotmail.com',
+  // outlook.com
+  'outlok.com':   'outlook.com', 'outloook.com': 'outlook.com',
+  'outlook.co':   'outlook.com', 'outlook.cm':   'outlook.com',
+  'outlook.con':  'outlook.com', 'outloo.com':   'outlook.com',
+  // icloud.com
+  'iclud.com':  'icloud.com', 'icloud.co': 'icloud.com',
+  'icloud.cm':  'icloud.com', 'icould.com': 'icloud.com',
+  'iclould.com':'icloud.com',
+  // aol.com
+  'aol.co':  'aol.com', 'aoll.com': 'aol.com',
+  'aol.con': 'aol.com', 'aol.cm':   'aol.com',
+};
+
+// Returns a corrected email string if the parent's typed email looks
+// like a typo of a known domain; returns null if no suggestion applies
+// (either the email is fine, or the typo isn't one we recognize).
+function suggestEmailDomainFix(rawEmail) {
+  const email = (rawEmail || '').trim().toLowerCase();
+  const at = email.lastIndexOf('@');
+  if (at < 1 || at === email.length - 1) return null;
+
+  const local  = email.substring(0, at);
+  const domain = email.substring(at + 1);
+
+  if (!domain) return null;
+
+  // Don't suggest if the domain is already a canonical known-good provider.
+  // (Avoids re-suggesting "gmail.com" when they already typed gmail.com.)
+  const canonical = EMAIL_DOMAIN_TYPOS[domain];
+  if (!canonical) return null;
+  if (canonical === domain) return null;
+
+  return local + '@' + canonical;
+}
+
 // ── Phone validation — Layer 1 of the locked phone defenses spec.
 // Returns true ONLY if the number is plausibly real:
 //   - exactly 10 digits after stripping formatting
@@ -2460,9 +2599,78 @@ function onParentInput() {
   validateField(email, emailOk);
   validateField(phone, phoneOk);
 
+  // Layer B+C smart email feedback (locked email defenses spec).
+  // Updates the suggestion/confirmation pill below the email field.
+  refreshEmailFeedback();
+
   // Enable Next only if everything passes
   const next = document.getElementById('n2');
   if (next) next.disabled = !(firstOk && lastOk && emailOk && phoneOk);
+}
+
+// Layer B+C smart email feedback (locked email defenses spec).
+// One element below the email field, three states:
+//   - hidden: empty / not enough typed yet / format-invalid (let the
+//     existing red error helper handle that case)
+//   - "suggesting": valid format BUT looks like a known typo of a popular
+//     domain → show "Did you mean mike@gmail.com? [Use this]"
+//   - "confirming": valid format + no typo detected → show calm
+//     reassurance: "We'll send your trial reminders to mike@gmail.com"
+function refreshEmailFeedback() {
+  const email = document.getElementById('p_email');
+  const fb    = document.getElementById('email_feedback');
+  if (!email || !fb) return;
+
+  const raw = email.value.trim();
+
+  // Hide entirely if empty or format-invalid (red error helper handles those)
+  if (raw.length === 0 || !isValidEmail(raw)) {
+    fb.className = 'email-feedback';
+    fb.innerHTML = '';
+    return;
+  }
+
+  // Format is valid → check for typo suggestion
+  const suggested = suggestEmailDomainFix(raw);
+  if (suggested) {
+    fb.className = 'email-feedback suggesting';
+    fb.innerHTML =
+      '<span class="ef-prompt">Did you mean</span>' +
+      '<span class="ef-suggested">' + escapeHtml(suggested) + '</span>?' +
+      '<button type="button" class="ef-fix-btn" onclick="onApplyEmailSuggestion(\'' +
+      escapeHtmlAttr(suggested) + '\')">Use this</button>';
+    return;
+  }
+
+  // Format valid + no typo → calm confirmation
+  fb.className = 'email-feedback confirming';
+  fb.innerHTML =
+    'We\'ll send your trial reminders to ' +
+    '<span class="ef-confirmed-email">' + escapeHtml(raw) + '</span>';
+}
+
+// "Use this" button handler in the suggestion state — applies the
+// corrected email to the input field, saves to state, refreshes UI.
+function onApplyEmailSuggestion(suggestedEmail) {
+  const email = document.getElementById('p_email');
+  if (!email) return;
+  email.value = suggestedEmail;
+  // Trigger the same input pipeline as if the parent typed it themselves
+  onParentInput();
+  // Quick visual confirmation — focus stays out of the way, but the
+  // confirmation pill will now appear below since the email is clean.
+  email.classList.remove('invalid');
+  email.classList.add('valid');
+}
+
+// Tiny attribute-safe escaper for use inside onclick string literals.
+function escapeHtmlAttr(s) {
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '\\&#039;');
 }
 
 // ── Restore saved values when Screen 2 becomes active (e.g. user hit Back)
