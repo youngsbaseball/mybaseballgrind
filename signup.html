@@ -714,38 +714,54 @@ h1 span {
 }
 
 /* "Already convinced? Pay now and skip the trial" link.
-   Per Coach Young April 27 PM: small, subtle option for the eager parent
-   who's already sold and doesn't want to wait 14 days. Visual weight is
-   intentionally light — discoverable for the eager, invisible for the
-   undecided. Not a button. Doesn't undercut Decision #2 (free trial).
+   Per Coach Young April 27 PM (refined April 28): two-line stacked layout
+   so the question and the action breathe instead of running together.
+   Question reads as setup. Action line is the actual click target. Visual
+   weight intentionally light — discoverable for the eager, invisible for
+   the undecided. Not a button. Doesn't undercut Decision #2 (free trial).
    Phase 5 will wire this to Stripe. */
 .skip-trial-link {
   display: block;
   text-align: center;
   max-width: 360px;
   margin: -8px auto 24px auto;
-  padding: 8px 12px;
+  padding: 10px 12px;
   background: transparent;
   border: none;
+  cursor: pointer;
+  color: #8A7E70;
+  transition: color 0.2s ease;
+  line-height: 1.45;
+}
+.skip-trial-link .skip-line-question {
+  display: block;
   font-family: 'Barlow', sans-serif;
   font-size: 13px;
   font-style: italic;
   color: #8A7E70;
-  cursor: pointer;
-  line-height: 1.4;
-  transition: color 0.2s ease;
+  margin-bottom: 4px;
 }
-.skip-trial-link:hover {
+.skip-trial-link .skip-line-action {
+  display: block;
+  font-family: 'Barlow', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
   color: #C9A84C;
 }
-.skip-trial-link .skip-link-arrow {
-  color: #C9A84C;
-  font-style: normal;
-  margin-left: 4px;
+.skip-trial-link:hover .skip-line-action {
+  color: #D4B85A;
+}
+.skip-trial-link:hover .skip-line-question {
+  color: #A89880;
 }
 .skip-trial-link u {
-  text-decoration-color: rgba(201,168,76,0.4);
+  text-decoration-color: rgba(201,168,76,0.5);
   text-underline-offset: 3px;
+}
+.skip-trial-link .skip-link-arrow {
+  font-style: normal;
+  margin-left: 6px;
+  display: inline-block;
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -1904,11 +1920,13 @@ select.field-input {
       Most parents pick annual &mdash; you can switch anytime
     </div>
 
-    <!-- Eager-parent skip-trial option (Coach Young April 27 PM).
-         Small, subtle link for the parent who's already convinced and
-         doesn't want to wait 14 days. Phase 5 wires to Stripe. -->
+    <!-- Eager-parent skip-trial option (Coach Young April 27 PM, refined April 28).
+         Small, subtle two-line stack for the parent who's already convinced and
+         doesn't want to wait 14 days. Question on top frames the moment;
+         action line below is the actual link. Phase 5 wires to Stripe. -->
     <button type="button" class="skip-trial-link" onclick="onSkipTrialClicked()">
-      Already convinced? <u>Pay now and skip the trial</u><span class="skip-link-arrow">&rarr;</span>
+      <span class="skip-line-question">Already convinced?</span>
+      <span class="skip-line-action"><u>Pay now and skip the trial</u><span class="skip-link-arrow">&rarr;</span></span>
     </button>
 
     <!-- Promise block — the trust contract -->
