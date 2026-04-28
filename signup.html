@@ -1354,6 +1354,138 @@ select.field-input {
   margin-top: 2px;
   font-weight: 400;
 }
+
+/* ═══════════════════════════════════════════════════════════
+   PHONE CONFIRMATION MODAL (Layer 2 phone defenses)
+   ───────────────────────────────────────────────────────────
+   Full-screen overlay. The parent sees the formatted number(s)
+   we're about to text and confirms or edits. Designed to make
+   the parent's brain pause and re-check — modal interrupt is
+   intentional friction in the right place.
+   ═══════════════════════════════════════════════════════════ */
+.phone-confirm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.82);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 20px;
+  -webkit-backdrop-filter: blur(4px);
+          backdrop-filter: blur(4px);
+}
+.phone-confirm-overlay.shown {
+  display: flex;
+}
+.phone-confirm-modal {
+  background: #181818;
+  border: 1px solid rgba(201,168,76,0.35);
+  border-radius: 4px;
+  max-width: 380px;
+  width: 100%;
+  padding: 28px 24px 22px 24px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+  text-align: center;
+}
+.phone-confirm-eyebrow {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  color: #C9A84C;
+  margin-bottom: 8px;
+}
+.phone-confirm-title {
+  font-family: 'Bebas Neue', cursive;
+  font-size: 28px;
+  letter-spacing: 1px;
+  color: #F4F4F4;
+  margin: 0 0 14px 0;
+  line-height: 1.1;
+}
+.phone-confirm-sub {
+  font-family: 'Barlow', sans-serif;
+  font-size: 14px;
+  color: #A89880;
+  margin: 0 0 16px 0;
+  line-height: 1.4;
+}
+.phone-confirm-list {
+  background: rgba(201,168,76,0.06);
+  border: 1px solid rgba(201,168,76,0.25);
+  border-radius: 3px;
+  padding: 14px 16px;
+  margin-bottom: 22px;
+  text-align: left;
+}
+.phone-confirm-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.phone-confirm-row:last-child { border-bottom: none; }
+.phone-confirm-row .pcr-name {
+  font-family: 'Barlow', sans-serif;
+  font-size: 14px;
+  color: #E8DCC4;
+  font-weight: 500;
+}
+.phone-confirm-row .pcr-phone {
+  font-family: 'Barlow', sans-serif;
+  font-size: 14px;
+  color: #F4F4F4;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+.phone-confirm-row .pcr-fallback {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #8A7E70;
+}
+.phone-confirm-buttons {
+  display: flex;
+  gap: 12px;
+}
+.phone-confirm-edit,
+.phone-confirm-send {
+  flex: 1;
+  padding: 13px 16px;
+  border-radius: 3px;
+  font-family: 'Bebas Neue', cursive;
+  font-size: 14px;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border: none;
+}
+.phone-confirm-edit {
+  background: transparent;
+  border: 1px solid #3A332A;
+  color: #A89880;
+}
+.phone-confirm-edit:hover {
+  border-color: #6B5E52;
+  color: #E8DCC4;
+}
+.phone-confirm-send {
+  background: #C9A84C;
+  color: #0A0A0A;
+}
+.phone-confirm-send:hover {
+  background: #D4B85A;
+  transform: translateY(-1px);
+}
+.phone-confirm-send:active { transform: scale(0.99); }
+
+@media (max-width: 400px) {
+  .phone-confirm-modal { padding: 22px 18px 18px 18px; }
+  .phone-confirm-title { font-size: 24px; }
+}
 </style>
 </head>
 <body>
@@ -1875,9 +2007,10 @@ select.field-input {
           autocomplete="off"
           inputmode="tel"
           maxlength="14"
-          oninput="onPhoneInput(this); onPlayerInput();">
+          oninput="onPhoneInput(this); onPlayerInput();"
+          onblur="onPlayerPhoneBlur()">
         <div class="field-helper">Where their invite text will go.</div>
-        <div class="field-helper error">Please enter a 10-digit US phone number.</div>
+        <div class="field-helper error" id="player_phone_error">Please enter a 10-digit US phone number.</div>
       </div>
 
       <!-- Fallback checkbox -->
@@ -2043,6 +2176,31 @@ select.field-input {
 
 </div><!-- /.app -->
 
+<!-- ═══════════════════════════════════════════════════════════
+     PHONE CONFIRMATION MODAL (Layer 2 of locked phone defenses)
+     ───────────────────────────────────────────────────────────
+     Fires before Screen 6 → Screen 7 transition on the LAST player.
+     Lists every phone number we're about to text and asks the parent
+     to re-confirm. Catches typos that passed Layer 1 format validation.
+     "Edit" closes the modal and returns to the matching player slot.
+     ═══════════════════════════════════════════════════════════ -->
+<div class="phone-confirm-overlay" id="phone_confirm_overlay" aria-hidden="true">
+  <div class="phone-confirm-modal" role="dialog" aria-modal="true" aria-labelledby="phone_confirm_title">
+    <div class="phone-confirm-eyebrow">One more check</div>
+    <h2 class="phone-confirm-title" id="phone_confirm_title">Confirm the number<span id="phone_confirm_plural"></span></h2>
+    <p class="phone-confirm-sub" id="phone_confirm_sub">
+      We'll text the invite link to:
+    </p>
+    <div class="phone-confirm-list" id="phone_confirm_list">
+      <!-- Populated by buildPhoneConfirmList() -->
+    </div>
+    <div class="phone-confirm-buttons">
+      <button type="button" class="phone-confirm-edit"   onclick="onPhoneConfirmEdit()">Edit</button>
+      <button type="button" class="phone-confirm-send"   onclick="onPhoneConfirmSend()">Yes, send</button>
+    </div>
+  </div>
+</div>
+
 <script>
 /* ═══════════════════════════════════════════════════════════
    MYGRIND 2.0 — PARENT SIGNUP NAVIGATION ENGINE
@@ -2145,10 +2303,54 @@ function isValidEmail(s) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test((s || '').trim());
 }
 
-// ── Phone — strip non-digits, require exactly 10
+// ── Phone validation — Layer 1 of the locked phone defenses spec.
+// Returns true ONLY if the number is plausibly real:
+//   - exactly 10 digits after stripping formatting
+//   - does NOT start with 0 or 1 (invalid US area codes)
+//   - is NOT in the 555-0100..555-0199 fictional reserved range
+//   - is NOT 123-456-7890 or other obvious fake patterns
+//   - is NOT all-same-digit (e.g. 5555555555)
+//   - is NOT sequential ascending or descending
 function isValidPhone(s) {
+  return getPhoneError(s) === null;
+}
+
+// Returns a specific error string if the phone is invalid, or null if valid.
+// Used to show targeted feedback to the parent rather than a generic error.
+function getPhoneError(s) {
   const digits = (s || '').replace(/\D/g, '');
-  return digits.length === 10;
+
+  if (digits.length === 0) return 'Please enter a phone number.';
+  if (digits.length < 10)  return 'A US phone number needs 10 digits.';
+  if (digits.length > 10)  return 'Too many digits — US numbers are 10 digits.';
+
+  const first = digits.charAt(0);
+  if (first === '0' || first === '1') {
+    return "That doesn't look like a real phone number — area codes don't start with 0 or 1.";
+  }
+
+  // 555-0100..555-0199 = fictional range reserved for TV/movies.
+  // (Some 555-XXXX numbers are real, but the 0100-0199 block is guaranteed fake.)
+  if (digits.substring(3, 6) === '555' && digits.substring(6, 8) === '01') {
+    return "That number is a placeholder — please enter a real phone number.";
+  }
+
+  // Classic fake: 123-456-7890
+  if (digits === '1234567890' || digits === '0123456789') {
+    return "That doesn't look like a real number — please double-check.";
+  }
+
+  // All same digit (5555555555, 0000000000, etc.)
+  if (/^(\d)\1{9}$/.test(digits)) {
+    return "That doesn't look like a real number — please double-check.";
+  }
+
+  // Strict sequential ascending or descending
+  if (digits === '0123456789' || digits === '9876543210') {
+    return "That doesn't look like a real number — please double-check.";
+  }
+
+  return null; // Valid
 }
 
 // ── Live phone formatter — turns "5551234567" into "(555) 123-4567"
@@ -2631,6 +2833,40 @@ function onPlayerInput() {
   refreshPlayerContinue();
 }
 
+// Layer 1 phone defenses (locked spec): when the parent tabs away from
+// the phone field, show a specific error message if the number is invalid.
+// Catches honest mistakes early — typos, fake patterns, area codes that
+// can't be real — without nagging on every keystroke.
+function onPlayerPhoneBlur() {
+  const phone = document.getElementById('player_phone');
+  const errEl = document.getElementById('player_phone_error');
+  if (!phone || !errEl) return;
+
+  // Skip validation if player is on fallback (parent device — no phone needed)
+  const idx = state.currentPlayerIndex || 0;
+  const player = ensurePlayerSlot(idx);
+  if (player.fallback) {
+    errEl.textContent = '';
+    return;
+  }
+
+  // Skip if field is empty — don't yell at parents who haven't typed yet
+  if (phone.value.trim().length === 0) {
+    errEl.textContent = '';
+    return;
+  }
+
+  // Show specific error message based on what's wrong
+  const errorMsg = getPhoneError(phone.value);
+  if (errorMsg) {
+    errEl.textContent = errorMsg;
+    phone.classList.remove('valid');
+    phone.classList.add('invalid');
+  } else {
+    errEl.textContent = '';
+  }
+}
+
 // Updates the Continue button label and disabled state based on current
 // player position (single vs. multi, last player vs. not, validation state).
 function refreshPlayerContinue() {
@@ -2669,9 +2905,107 @@ function onPlayerContinue() {
     loadPlayerSlot(); // reload form for next player
     window.scrollTo(0, 0);
   } else {
-    // All players captured — go to Screen 7
-    go(7);
+    // Last player — show the Layer 2 confirmation modal before sending.
+    // Modal lists every SMS-invited player so the parent re-checks the
+    // numbers as a batch. If there are no SMS recipients (all fallback),
+    // skip the modal and go straight to Screen 7.
+    const hasSmsRecipients = (state.players || []).some(p => p && !p.fallback && p.phone);
+    if (hasSmsRecipients) {
+      showPhoneConfirmModal();
+    } else {
+      go(7);
+    }
   }
+}
+
+// Layer 2 phone defenses (locked spec): show the confirmation modal
+// listing every SMS-invited player so the parent re-checks the numbers
+// before we send. Catches typos that passed Layer 1 format validation.
+function showPhoneConfirmModal() {
+  buildPhoneConfirmList();
+  const overlay = document.getElementById('phone_confirm_overlay');
+  if (!overlay) return;
+  overlay.classList.add('shown');
+  overlay.setAttribute('aria-hidden', 'false');
+}
+
+function hidePhoneConfirmModal() {
+  const overlay = document.getElementById('phone_confirm_overlay');
+  if (!overlay) return;
+  overlay.classList.remove('shown');
+  overlay.setAttribute('aria-hidden', 'true');
+}
+
+// Populate the modal's list with every player + their formatted number.
+// Fallback players (kid uses parent's device) get a "no text needed" tag
+// instead of a number — they're shown for completeness but not confirmed.
+function buildPhoneConfirmList() {
+  const listEl = document.getElementById('phone_confirm_list');
+  const titleSuffix = document.getElementById('phone_confirm_plural');
+  const subEl = document.getElementById('phone_confirm_sub');
+  if (!listEl) return;
+
+  const players = state.players || [];
+  const smsCount = players.filter(p => p && !p.fallback && p.phone).length;
+
+  // Title pluralization
+  if (titleSuffix) titleSuffix.textContent = (smsCount > 1) ? 's' : '';
+  if (subEl) {
+    subEl.textContent = (smsCount > 1)
+      ? "We'll text the invite links to:"
+      : "We'll text the invite link to:";
+  }
+
+  let html = '';
+  players.forEach((p, i) => {
+    if (!p) return;
+    const name = p.firstName || ('Player ' + (i + 1));
+    if (p.fallback) {
+      html += '<div class="phone-confirm-row">' +
+                '<span class="pcr-name">' + escapeHtml(name) + '</span>' +
+                '<span class="pcr-fallback">On your phone</span>' +
+              '</div>';
+    } else {
+      const formatted = p.phone || '—';
+      html += '<div class="phone-confirm-row">' +
+                '<span class="pcr-name">' + escapeHtml(name) + '</span>' +
+                '<span class="pcr-phone">' + escapeHtml(formatted) + '</span>' +
+              '</div>';
+    }
+  });
+  listEl.innerHTML = html;
+}
+
+// Tiny HTML-escaper for safety when injecting parent-typed values into the modal.
+function escapeHtml(s) {
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+// "Edit" button in the modal — close it and let the parent fix the number.
+// We jump back to the FIRST SMS-invited player so they can scroll through
+// and edit any of them (since the list shows everyone, this is the easiest
+// re-entry point).
+function onPhoneConfirmEdit() {
+  hidePhoneConfirmModal();
+  const players = state.players || [];
+  const firstSmsIdx = players.findIndex(p => p && !p.fallback);
+  if (firstSmsIdx >= 0) {
+    state.currentPlayerIndex = firstSmsIdx;
+    saveState();
+    loadPlayerSlot();
+    window.scrollTo(0, 0);
+  }
+}
+
+// "Yes, send" button in the modal — proceed to Screen 7 as normal.
+function onPhoneConfirmSend() {
+  hidePhoneConfirmModal();
+  go(7);
 }
 
 // Back: go back one player slot, OR back to Screen 5 if at first player
