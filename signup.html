@@ -351,24 +351,51 @@ h1 span {
   color: #F4F4F4;
 }
 
-/* Confirmation state — calm but present. Per Coach Young April 28: original
-   was too quiet, the message got lost. Bumped contrast + added a small
-   gold check icon so the eye lands on it without it feeling pushy. */
+/* Confirmation state — restructured April 28 (round 2) per Coach Young.
+   Original single-line was too easy to skim past. New structure: small
+   gold label on top ("Trial reminders will be sent to") + email rendered
+   as a real headline below. Parent's eye lands on the email itself,
+   which is the actual content that matters. Subtle slide-in animation
+   anchors peripheral attention when the pill first appears. */
 .email-feedback.confirming {
-  background: rgba(201,168,76,0.05);
-  border-color: rgba(201,168,76,0.18);
+  background: rgba(201,168,76,0.09);
+  border-color: rgba(201,168,76,0.35);
   color: #C8BBA8;
+  padding: 12px 14px 14px 14px;
+  position: relative;
+  animation: emailConfirmFadeIn 0.35s ease-out;
+}
+@keyframes emailConfirmFadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 .email-feedback.confirming::before {
   content: '✓';
   display: inline-block;
-  margin-right: 8px;
+  position: absolute;
+  top: 12px;
+  right: 14px;
   color: #C9A84C;
   font-weight: 700;
+  font-size: 16px;
+  line-height: 1;
+}
+.email-feedback.confirming .ef-confirm-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: #C9A84C;
+  margin-bottom: 4px;
 }
 .email-feedback.confirming .ef-confirmed-email {
-  color: #F4F4F4;
+  font-family: 'Barlow', sans-serif;
+  font-size: 16px;
   font-weight: 700;
+  color: #F4F4F4;
+  letter-spacing: 0.2px;
+  word-break: break-all;
 }
 
 /* Two-column row for first/last name */
@@ -2659,11 +2686,15 @@ function refreshEmailFeedback() {
     return;
   }
 
-  // Format valid + no typo → calm confirmation
+  // Format valid + no typo → confirmation state.
+  // Per Coach Young April 28 (round 2): restructured as small label on
+  // top + email-as-headline below. Original single-line layout kept
+  // letting the message get overlooked. Now the parent's eye lands on
+  // the email itself, big and prominent.
   fb.className = 'email-feedback confirming';
   fb.innerHTML =
-    'We\'ll send your trial reminders to ' +
-    '<span class="ef-confirmed-email">' + escapeHtml(raw) + '</span>';
+    '<div class="ef-confirm-label">Trial reminders will be sent to</div>' +
+    '<div class="ef-confirmed-email">' + escapeHtml(raw) + '</div>';
 }
 
 // "Use this" button handler in the suggestion state — applies the
