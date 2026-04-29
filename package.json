@@ -1,0 +1,13 @@
+{
+  "name": "mybaseballgrind",
+  "version": "1.0.0",
+  "private": true,
+  "description": "MyGrind 2.0 — Vercel serverless functions for SMS invite backend",
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "twilio": "^5.3.0"
+  }
+}
