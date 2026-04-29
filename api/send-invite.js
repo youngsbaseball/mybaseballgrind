@@ -136,9 +136,10 @@ export default async function handler(req, res) {
 
   // ─── Build SMS body ──────────────────────────────────────
   const smsBody = buildSmsBody({ parentName, playerName, sport });
-  // ─── DRY RUN path (no counter increment) ─────────────────
-  // We deliberately do NOT call recordSend() here — testing
-  // shouldn't burn a real user's quota.
+ // ─── DRY RUN path ────────────────────────────────────────
+  // recordSend() already fired above (Option C architecture).
+  // DRY_RUN responses count against rate limits — that's
+  // intentional, so testing simulates real protection behavior.
   if (DRY_RUN) {
     console.log('[send-invite DRY_RUN] Would send SMS:', {
       to: e164Phone,
