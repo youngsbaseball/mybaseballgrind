@@ -1,16 +1,12 @@
-// ═══════════════════════════════════════════════════════════
-// MyGrind 2.0 — /api/send-invite (Phase 3c — RATE LIMITED)
-// ───────────────────────────────────────────────────────────
-// Sends real SMS via Twilio with abuse protection.
-//
 // Phase 3c additions:
 //   - Per-IP rate limit (3/hr, 10/day) checked before Twilio
 //   - Per-phone rate limit (2/24h) checked before Twilio
 //   - Generic 429 response on rate limit (no info leak)
-//   - Counter increment ONLY on successful send
+//   - Counter increment on attempt (after rate limit checks pass,
+//     before Twilio) — see Option C decision in the inline comment
 //
-// DRY_RUN sends DO NOT increment counters — testing the
-// preview path shouldn't burn a real user's daily quota.
+// DRY_RUN sends DO increment counters in this version. Trade-off
+// accepted: protection works even when Twilio is misbehaving.
 //
 // Locked spec: Notion "🛠️ Phase 3 — Twilio SMS Backend Architecture"
 // ═══════════════════════════════════════════════════════════
