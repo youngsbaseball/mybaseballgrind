@@ -41,11 +41,13 @@ function buildSmsBody({ parentName, playerName, sport }) {
   const onboardingUrl =
     `https://mygrindapp.com/onboarding.html?name=${encodeURIComponent(playerName)}`;
 
+  // GSM-7 only (no em-dashes, no smart quotes) to fit single SMS segment.
+  // Twilio trial accounts cap at 1 segment; even on paid accounts, single
+  // segment costs ~4x less. April 29 — Coach Young decision.
   return (
-    `Hey ${playerName}, ${parentName} just signed you up for MyGrind ` +
-    `— the training journal for ${sportLabel} players who put in the work.\n\n` +
-    `Tap to set up your profile (3 min): ${onboardingUrl}\n\n` +
-    `— MyGrind`
+    `Hey ${playerName}, ${parentName} signed you up for MyGrind - ` +
+    `the training journal for ${sportLabel} players who put in work.\n\n` +
+    `Set up your profile (3 min): ${onboardingUrl}`
   );
 }
 
