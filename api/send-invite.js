@@ -130,9 +130,16 @@ export default async function handler(req, res) {
     });
   }
 
+  // ─── Record attempt for rate limiting (Phase 3c, Option C) ─
+  // Increment counters NOW, before Twilio. Reasons:
+  //   1. Protects against bursts even when Twilio is misbehaving
+  //   2. Counters reflect "attempted sends" not "successful sends"
+  //   3. Trade-off: a legit user whose Twilio fails burns one
+  //      attempt — acceptable cost for stronger protection
+  await recordSend(clientIp, e164Phone);
+
   // ─── Build SMS body ──────────────────────────────────────
   const smsBody = buildSmsBody({ parentName, playerName, sport });
-
   // ─── DRY RUN path (no counter increment) ─────────────────
   // We deliberately do NOT call recordSend() here — testing
   // shouldn't burn a real user's quota.
@@ -176,10 +183,8 @@ export default async function handler(req, res) {
       to:   e164Phone,
     });
 
-    // ─── Record send for rate limiting ──────────────────────
-    // Only after Twilio accepts the send. If Twilio errored,
-    // we don't burn the user's quota for our failure.
-    await recordSend(clientIp, e164Phone);
+    // ─── recordSend() already fired before Twilio (Option C) ─
+    // Counter increment happens before this block. No double-count here.
 
     console.log('[send-invite] SMS sent:', {
       smsSid: message.sid,
