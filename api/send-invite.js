@@ -1,38 +1,28 @@
 // ═══════════════════════════════════════════════════════════
-// MyGrind 2.0 — /api/send-invite (Phase 3b — TWILIO WIRED)
+// MyGrind 2.0 — /api/send-invite (Phase 3c — RATE LIMITED)
 // ───────────────────────────────────────────────────────────
-// Sends real SMS via Twilio. Per Coach Young April 28 evening
-// decision: starts in DRY_RUN=true mode. Set DRY_RUN=false (or
-// set env var SMS_DRY_RUN=false) when ready to send real SMS.
+// Sends real SMS via Twilio with abuse protection.
 //
-// ⚠️ Phase 3b state:
-//    - Twilio SDK wired
-//    - DRY RUN mode active by default (logs the SMS, does NOT send)
-//    - Real SMS send path also exists, gated by env var
-//    - No rate limiting yet (Phase 3c)
-//    - No Twilio Lookup pre-check yet (Phase 3d)
+// Phase 3c additions:
+//   - Per-IP rate limit (3/hr, 10/day) checked before Twilio
+//   - Per-phone rate limit (2/24h) checked before Twilio
+//   - Generic 429 response on rate limit (no info leak)
+//   - Counter increment ONLY on successful send
+//
+// DRY_RUN sends DO NOT increment counters — testing the
+// preview path shouldn't burn a real user's daily quota.
 //
 // Locked spec: Notion "🛠️ Phase 3 — Twilio SMS Backend Architecture"
 // ═══════════════════════════════════════════════════════════
 
 import twilio from 'twilio';
+import { checkIpLimit, checkPhoneLimit, recordSend } from '../lib/rate-limit.js';
 
 // ─── Config flags ─────────────────────────────────────────
-// DRY_RUN: when true, the endpoint builds and logs the SMS
-// body but does NOT actually call Twilio. Used for safe
-// verification of copy + request handling before paying for
-// real sends.
-//
-// Set Vercel env var SMS_DRY_RUN=false to flip to real sends.
-// Default is DRY RUN if env var is not set or is anything
-// other than the literal string "false".
 const DRY_RUN = process.env.SMS_DRY_RUN !== 'false';
 
 // ─── SMS body builder ─────────────────────────────────────
-// MYGRIND voice (per Decision #10 evolution — Coach Young
-// absent from product surface). Sport-aware language.
 function buildSmsBody({ parentName, playerName, sport }) {
-  // Sport label that fits the SMS sentence naturally
   const sportLabel =
     sport === 'softball' ? 'softball' :
     sport === 'both'     ? 'baseball/softball' :
@@ -42,8 +32,6 @@ function buildSmsBody({ parentName, playerName, sport }) {
     `https://mygrindapp.com/onboarding.html?name=${encodeURIComponent(playerName)}`;
 
   // GSM-7 only (no em-dashes, no smart quotes) to fit single SMS segment.
-  // Twilio trial accounts cap at 1 segment; even on paid accounts, single
-  // segment costs ~4x less. April 29 — Coach Young decision.
   return (
     `Hey ${playerName}, ${parentName} signed you up for MyGrind - ` +
     `the training journal for ${sportLabel} players who put in work.\n\n` +
@@ -52,14 +40,24 @@ function buildSmsBody({ parentName, playerName, sport }) {
 }
 
 // ─── E.164 phone normalization ────────────────────────────
-// Twilio requires E.164 format (+15551234567). Parents type
-// formatted numbers like "(555) 123-4567" — we normalize.
 function toE164(phone) {
   if (!phone || typeof phone !== 'string') return null;
   const digits = phone.replace(/\D/g, '');
   if (digits.length === 10) return `+1${digits}`;
   if (digits.length === 11 && digits.startsWith('1')) return `+${digits}`;
-  return null; // anything else is invalid for US
+  return null;
+}
+
+// ─── Extract real client IP ───────────────────────────────
+// Vercel sets x-forwarded-for and x-real-ip headers. The first
+// IP in x-forwarded-for is the actual client. Fall back to
+// x-real-ip if not available.
+function getClientIp(req) {
+  const forwarded = req.headers['x-forwarded-for'];
+  if (forwarded) {
+    return forwarded.split(',')[0].trim();
+  }
+  return req.headers['x-real-ip'] || null;
 }
 
 export default async function handler(req, res) {
@@ -107,10 +105,37 @@ export default async function handler(req, res) {
     });
   }
 
+  // ─── Rate limit checks (Phase 3c) ────────────────────────
+  // Two checks before we do anything expensive (Twilio costs
+  // ~$0.008/send). Generic error on rate limit per locked spec.
+  const clientIp = getClientIp(req);
+
+  const ipCheck = await checkIpLimit(clientIp);
+  if (!ipCheck.ok) {
+    console.warn('[send-invite] IP rate limited:', { ip: clientIp ? '[redacted]' : 'none', reason: ipCheck.reason, signupSessionId });
+    return res.status(429).json({
+      success: false,
+      error: 'Too many requests, try again later',
+      code: 'RATE_LIMITED',
+    });
+  }
+
+  const phoneCheck = await checkPhoneLimit(e164Phone);
+  if (!phoneCheck.ok) {
+    console.warn('[send-invite] Phone rate limited:', { reason: phoneCheck.reason, signupSessionId });
+    return res.status(429).json({
+      success: false,
+      error: 'Too many requests, try again later',
+      code: 'RATE_LIMITED',
+    });
+  }
+
   // ─── Build SMS body ──────────────────────────────────────
   const smsBody = buildSmsBody({ parentName, playerName, sport });
 
-  // ─── DRY RUN path ────────────────────────────────────────
+  // ─── DRY RUN path (no counter increment) ─────────────────
+  // We deliberately do NOT call recordSend() here — testing
+  // shouldn't burn a real user's quota.
   if (DRY_RUN) {
     console.log('[send-invite DRY_RUN] Would send SMS:', {
       to: e164Phone,
@@ -123,13 +148,13 @@ export default async function handler(req, res) {
       success: true,
       smsSid: 'DRY-RUN-NO-MESSAGE-SENT',
       sentAt: new Date().toISOString(),
-      phase: '3b-dry-run',
+      phase: '3c-dry-run',
       dryRun: true,
       previewBody: smsBody,
     });
   }
 
-  // ─── REAL SEND path (only when SMS_DRY_RUN=false) ───────
+  // ─── REAL SEND path ──────────────────────────────────────
   try {
     const accountSid = process.env.TWILIO_ACCOUNT_SID;
     const authToken  = process.env.TWILIO_AUTH_TOKEN;
@@ -151,9 +176,13 @@ export default async function handler(req, res) {
       to:   e164Phone,
     });
 
+    // ─── Record send for rate limiting ──────────────────────
+    // Only after Twilio accepts the send. If Twilio errored,
+    // we don't burn the user's quota for our failure.
+    await recordSend(clientIp, e164Phone);
+
     console.log('[send-invite] SMS sent:', {
       smsSid: message.sid,
-      to: e164Phone,
       signupSessionId,
     });
 
@@ -161,11 +190,10 @@ export default async function handler(req, res) {
       success: true,
       smsSid: message.sid,
       sentAt: new Date().toISOString(),
-      phase: '3b-live',
+      phase: '3c-live',
     });
 
   } catch (err) {
-    // Twilio errors have a `code` and `message` field
     console.error('[send-invite] Twilio error:', {
       code: err.code,
       message: err.message,
@@ -173,7 +201,6 @@ export default async function handler(req, res) {
       signupSessionId,
     });
 
-    // Generic error to client (locked spec — don't reveal which defense triggered)
     return res.status(500).json({
       success: false,
       error: 'Could not send invite',
