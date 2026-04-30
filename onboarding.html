@@ -1218,13 +1218,65 @@ function saveProfile() {
    real player dashboard.
    ────────────────────────────────────────────────────────── */
 function onFinalExit() {
-  alert(
-    'Onboarding complete!\n\n' +
-    'Your profile is saved. The full player dashboard ships in Phase 7.\n\n' +
-    'For now, your parent can see your status from their dashboard.'
-  );
+  // Stage 2 (Player Dashboard) is in development. Until it ships, show a
+  // styled holding screen that matches onboarding's visual language instead
+  // of a jarring JS alert at the highest-engagement moment of the flow.
+  showFinalHoldingScreen();
   // In Phase 7: window.location.href = 'player-dashboard.html';
 }
+
+function showFinalHoldingScreen() {
+  // Build a full-screen overlay using the same palette + typography as
+  // onboarding screens. Self-contained — no external CSS dependencies
+  // beyond what's already loaded for the rest of the file.
+  // Note: persistent MY GRIND wordmark at top of every screen (added in
+  // Drift Fix #5) handles brand identity, so the quote block here doesn't
+  // need its own attribution — would be redundant.
+  var overlay = document.createElement('div');
+  overlay.style.cssText =
+    'position:fixed;inset:0;background:#181614;z-index:9999;' +
+    'display:flex;flex-direction:column;align-items:center;justify-content:center;' +
+    'padding:32px 24px;text-align:center;animation:fadeIn 0.4s ease;';
+
+  var accent = d.sport === 'softball' ? '#D4547A' : '#C9A84C';
+  var sportEmoji = d.sport === 'softball' ? '🥎' : (d.sport === 'both' ? '⚾🥎' : '⚾');
+  var playerName = d.name || 'Player';
+
+  overlay.innerHTML =
+    '<div style="font-size:48px;margin-bottom:18px;line-height:1;">' + sportEmoji + '</div>' +
+    '<div style="font-family:\'Barlow Condensed\',Arial,sans-serif;font-size:12px;font-weight:700;' +
+        'letter-spacing:2.5px;text-transform:uppercase;color:' + accent + ';margin-bottom:10px;">' +
+        'You\'re In' +
+    '</div>' +
+    '<h1 style="font-family:\'Bebas Neue\',Arial,sans-serif;font-size:34px;letter-spacing:1.5px;' +
+        'line-height:1.1;color:#F5F0EB;margin-bottom:8px;">' +
+        'See you tomorrow,<br><span style="color:' + accent + ';">' + escapeForHtml(playerName) + '.</span>' +
+    '</h1>' +
+    '<div style="width:36px;height:3px;background:' + accent + ';margin:14px auto 22px;"></div>' +
+    '<p style="font-size:15px;color:#A89880;line-height:1.7;max-width:340px;margin-bottom:24px;">' +
+        'Your profile is saved. Your training plan is ready.<br><br>' +
+        '<strong style="color:#C9A84C;">The full dashboard is coming soon.</strong> ' +
+        'For now, your parent can see your progress from their side.' +
+    '</p>' +
+    '<div style="background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.3);' +
+        'border-radius:8px;padding:18px 22px;max-width:340px;color:#D4C8BC;font-size:14px;' +
+        'line-height:1.6;font-style:italic;">' +
+        '"Show up to your work, and your work will show up for you."' +
+    '</div>';
+
+  document.body.appendChild(overlay);
+}
+
+// Helper to safely escape player name in case it contains HTML-significant chars
+function escapeForHtml(s) {
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+═══════════════════════════════════════════════════
 
 /* ─── INITIALIZATION ────────────────────────────────────
    On page load: parse URL params, personalize welcome, render dots.
