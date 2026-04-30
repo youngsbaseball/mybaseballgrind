@@ -191,6 +191,30 @@ h1 span { color: #C9A84C; }
   font-style: italic;
 }
 .exit-coming-soon strong { color: #C9A84C; font-style: normal; }
+* ═══════════════════════════════════════════════════════════
+   LOGO MARK (top of every screen — matches signup.html)
+   ─────────────────────────────────────────────────────────
+   Persistent wordmark sitting above all screens. Same pattern,
+   font, color, spacing as signup.html so the parent → player
+   handoff feels like one continuous product.
+   ═══════════════════════════════════════════════════════════ */
+.logo-mark {
+  text-align: center;
+  padding: 24px 24px 0 24px;
+  font-family: 'Bebas Neue', cursive;
+  font-size: 20px;
+  letter-spacing: 4px;
+  color: #C9A84C;
+}
+.logo-mark .sm {
+  display: block;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 9px;
+  letter-spacing: 2.5px;
+  color: #555;
+  margin-top: 2px;
+  font-weight: 400;
+}
 
 /* Welcome screen — special styling for the parent-context greeting */
 .parent-context {
@@ -209,9 +233,21 @@ h1 span { color: #C9A84C; }
 <body>
 
 <!-- ═══════════════════════════════════════════════════════════
+     LOGO MARK
+     Persistent wordmark across all onboarding screens.
+     Mirrors signup.html structure (Decision #10, Pattern 3).
+     April 30 — added so parent → player handoff feels continuous.
+     ═══════════════════════════════════════════════════════════ -->
+<div class="logo-mark">
+  MY GRIND
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
      S0 — WELCOME (parent-context, reads URL params)
      ═══════════════════════════════════════════════════════════ -->
 <div class="screen on" id="s0">
+
+═══════════════════════════════════════════════════
   <div class="screen-body" style="padding-top:60px;">
     <div class="badge" style="text-align:center;font-size:13px;">Welcome</div>
     <h1 style="text-align:center;">
