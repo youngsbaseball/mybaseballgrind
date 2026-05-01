@@ -27,10 +27,10 @@ function buildSmsBody({ parentName, playerName, sport }) {
   const onboardingUrl =
     `https://mygrindapp.com/onboarding.html?name=${encodeURIComponent(playerName)}`;
 
-  // GSM-7 only (no em-dashes, no smart quotes) to fit single SMS segment.
+  // GSM-7 only (no em-dashes, no smart quotes) so each segment is 153 chars, not 67.
   return (
     `Hey ${playerName}, ${parentName} signed you up for MyGrind - ` +
-    `the training journal for ${sportLabel} players who put in work.\n\n` +
+    `the ${sportLabel} journal for tracking your stats, games, and growth.\n\n` +
     `Set up your profile (3 min): ${onboardingUrl}`
   );
 }
