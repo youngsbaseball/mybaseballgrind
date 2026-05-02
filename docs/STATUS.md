@@ -38,7 +38,7 @@
 - **Phase 3d (Twilio Lookup pre-check)** — COMPLETE (2026-05-02). `lib/lookup.js` runs Twilio Lookup v2 between E.164 normalization and rate-limit checks; rejects landlines, VoIP, and invalid numbers with friendly messages before any send budget is burned. Fail-open on Lookup outage.
 - **Phase 4 — Player Onboarding** — `onboarding.html` shipped (per Decision #13: stripped of Stripe/Mailchimp/Firebase, just localStorage)
 - **Phase 5 — Stripe wiring** — pending; pricing UI shipped, real checkout not wired
-- **Phase 6 — Share + Settings buttons on signup dashboard** — pending (currently throw `alert('coming in Phase 6')`)
+- **Phase 6 — Share + Settings buttons on signup dashboard** — COMPLETE (2026-05-02). Real modals replace the placeholder alerts. Share modal has copy-link + Web Share API + pre-written caption. Settings modal shows read-only account summary (name, email, phone, plan, players) + a support-email link for changes (self-serve editing lands when Phase 5 backend account management ships).
 - **Phase 7 — Player dashboard** — pending; onboarding S14 currently shows a holding-screen overlay
 - **Business Plan** — 14/14 sections COMPLETE
 - **16 Locked Decisions** — source of truth in Notion
@@ -107,7 +107,7 @@
 - ⚠️ Softball image showing where a baseball should — needs screenshot to identify
 - ⚠️ Duplicate `escapeHtml()` function in `signup.html` (defined at lines 3264 + 3417) — second wins, both nearly identical. Maintenance trap.
 - ⚠️ SMS preview in `signup.html` (line ~3344) shows `mygrind.app/start/abc123` — fake URL with placeholder token. Real Twilio send (when 3b unblocks) will generate a different link, but the preview is misleading to parents.
-- ⚠️ Share + Settings buttons on signup dashboard (Screen 8) throw `alert('coming in Phase 6')` — visible to live users.
+<!-- Share + Settings buttons fixed 2026-05-02 (Phase 6 shipped) — alerts replaced with real modals. -->
 
 ---
 

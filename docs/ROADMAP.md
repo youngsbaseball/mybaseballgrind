@@ -9,7 +9,7 @@
 ### P0 — Polish leftover from the audit
 1. **Fix duplicate `escapeHtml()` in `signup.html`** — defined at lines 3264 + 3417. Consolidate to one definition. ~5 min.
 2. **Fix the SMS preview URL in `signup.html`** — `buildSmsForPlayer()` (line ~3344) hardcodes `mygrind.app/start/abc123`. Should use `mygrindapp.com/onboarding.html?name=...` so the preview matches what Twilio will actually send when Phase 3b unblocks. ~10 min.
-3. **Decide on Phase 6 placeholder buttons** — Share + Settings on signup Screen 8 throw `alert('coming in Phase 6')`. Either hide them, mark "Coming soon" inline, or wire to something real. ~10 min.
+<!-- Phase 6 placeholder buttons fixed 2026-05-02 — Share + Settings now open real modals. -->
 
 ### P1 — Real-user walks (per CLAUDE.md verification protocol)
 4. **Walk every screen of `signup.html` on phone width** — confirm progress dots, validation, back-nav, and SMS preview all behave end-to-end after recent edits.
@@ -28,8 +28,10 @@ The signup flow's `selectPlan()`, `onSkipTrialClicked()`, and Screen 8 "Pay & Co
 ### P3 — Phase 5 (Stripe wiring on signup)
 The signup flow's `selectPlan()`, `onSkipTrialClicked()`, and Screen 8 "Pay & Continue" hooks all currently `alert()` instead of launching Stripe checkout. Replace with real `buy.stripe.com` URLs (already used in `softball.html`).
 
-### P4 — Phase 6 (Real Share + Settings buttons on signup dashboard)
-Wire the two placeholder buttons on signup Screen 8 to functional surfaces. Likely targets: Share = onboarding link copier; Settings = email-update form.
+<!-- P4 — Phase 6 SHIPPED 2026-05-02. See "Recently Shipped" below. -->
+
+### P4 — Phase 5 follow-up: full account-edit Settings
+Once Phase 5 wires Stripe + backend account management, upgrade the Settings modal from read-only to support inline email/phone updates and a billing-portal link. Currently the modal points users at coach@mygrindapp.com for changes.
 
 ### P5 — Phase 7 (Player dashboard)
 `onboarding.html` S14 currently shows a holding-screen overlay. Phase 7 is the real player dashboard — likely a stripped-down `softball.html` for the kid side or a new `player-dashboard.html`.
@@ -71,6 +73,7 @@ If beta users aren't logging entries daily:
 *Move shipped items here from "This Week" so you have a record of progress.*
 
 ### 2026-05-02
+- ✅ **Phase 6 — Real Share + Settings modals on signup dashboard** — replaced the two `alert('coming in Phase 6')` placeholders on Screen 8 with proper modals reusing the existing `.phone-confirm-overlay` shell. Share modal has a copy-link button (Clipboard API + execCommand fallback), a Web Share API "Share…" button shown only on supporting browsers, and a pre-written share caption. Settings modal shows read-only account summary (name, email, phone, plan, players) populated from `state.parent` + `state.preferredPlan` + `state.playerCount`, plus a `mailto:coach@mygrindapp.com` link for change requests until Phase 5 wires backend editing.
 - ✅ **Phase 3d — Twilio Lookup pre-check** — new `lib/lookup.js` module + integration in `api/send-invite.js`. Calls Twilio Lookup v2 with `line_type_intelligence` between E.164 normalization and rate-limit checks. Rejects invalid numbers, landlines, and VoIP with friendly user-facing messages before burning rate-limit budget or paid SMS sends. Fail-open on Lookup outage. `SKIP_LOOKUP=true` env override for dev. Cost ~$0.005/lookup, bounded by upstream rate limits.
 - ✅ **Pre-launch waitlist landing page** at `mygrindapp.com` — brand-styled `index.html` with Mailchimp form (audience `73280b4c02e9bc56c7e633892`, tag `2216797`). Replaced the old redirect shell that bounced visitors to signup.html.
 - ✅ **Mailchimp JSONP integration** — replaced optimistic iframe submit with real `subscribe/post-json` call so users see actual success/error messages instead of silent failures.

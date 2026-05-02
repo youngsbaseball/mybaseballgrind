@@ -1609,6 +1609,119 @@ select.field-input {
   .phone-confirm-modal { padding: 22px 18px 18px 18px; }
   .phone-confirm-title { font-size: 24px; }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   PHASE 6 — SHARE + SETTINGS MODALS
+   ───────────────────────────────────────────────────────────
+   Reuse the .phone-confirm-overlay / .phone-confirm-modal
+   shell so Share/Settings share the same visual language as
+   the phone-confirm step. Adds a few helper classes for the
+   share input, share buttons, settings rows, and close button.
+   ═══════════════════════════════════════════════════════════ */
+.modal-close-btn {
+  margin-top: 14px;
+  background: transparent;
+  border: 1px solid #3A332A;
+  color: #A89880;
+  padding: 11px 16px;
+  border-radius: 3px;
+  font-family: 'Bebas Neue', cursive;
+  font-size: 13px;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+  width: 100%;
+  transition: all 0.15s ease;
+}
+.modal-close-btn:hover { border-color: #6B5E52; color: #E8DCC4; }
+
+.share-link-row {
+  display: flex;
+  gap: 6px;
+  margin: 14px 0 12px 0;
+}
+.share-link-input {
+  flex: 1;
+  background: rgba(201,168,76,0.06);
+  border: 1px solid rgba(201,168,76,0.25);
+  border-radius: 3px;
+  padding: 10px 12px;
+  font-family: 'Barlow', sans-serif;
+  font-size: 13px;
+  color: #F4F4F4;
+  text-align: left;
+  min-width: 0;
+}
+.share-link-input:focus { outline: none; border-color: #C9A84C; }
+.share-actions { display: flex; gap: 10px; }
+.share-action-btn {
+  flex: 1;
+  padding: 12px 14px;
+  border-radius: 3px;
+  font-family: 'Bebas Neue', cursive;
+  font-size: 13px;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+  border: none;
+  transition: all 0.15s ease;
+}
+.share-action-btn.primary { background: #C9A84C; color: #0A0A0A; }
+.share-action-btn.primary:hover { background: #D4B85A; }
+.share-action-btn.secondary {
+  background: transparent;
+  border: 1px solid #3A332A;
+  color: #E8DCC4;
+}
+.share-action-btn.secondary:hover { border-color: #6B5E52; }
+.share-toast {
+  margin-top: 10px;
+  font-family: 'Barlow', sans-serif;
+  font-size: 12px;
+  color: #58D68D;
+  display: none;
+}
+.share-toast.shown { display: block; }
+
+.settings-row-list {
+  background: rgba(201,168,76,0.06);
+  border: 1px solid rgba(201,168,76,0.25);
+  border-radius: 3px;
+  padding: 14px 16px;
+  margin-bottom: 14px;
+  text-align: left;
+}
+.settings-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 7px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  gap: 12px;
+}
+.settings-row:last-child { border-bottom: none; }
+.settings-row-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #8A7E70;
+  flex-shrink: 0;
+}
+.settings-row-value {
+  font-family: 'Barlow', sans-serif;
+  font-size: 14px;
+  color: #F4F4F4;
+  text-align: right;
+  word-break: break-all;
+}
+.settings-support-line {
+  font-family: 'Barlow', sans-serif;
+  font-size: 13px;
+  color: #A89880;
+  line-height: 1.5;
+  margin: 12px 0;
+}
+.settings-support-line a { color: #C9A84C; text-decoration: none; }
+.settings-support-line a:hover { text-decoration: underline; }
 </style>
 </head>
 <body>
@@ -2297,10 +2410,10 @@ select.field-input {
          pay nudge later. If we want to add an "early pay" option back, do it
          as a small text link, not a primary CTA. -->
 
-    <!-- Dashboard footer (placeholder links for future phases) -->
+    <!-- Dashboard footer — opens Phase 6 Share / Settings modals -->
     <div class="dash-footer">
-      <a href="#" onclick="event.preventDefault(); alert('Share feature coming in Phase 6.');">Share MyGrind</a>
-      <a href="#" onclick="event.preventDefault(); alert('Settings coming in Phase 6.');">Settings</a>
+      <a href="#" onclick="event.preventDefault(); openShareModal();">Share MyGrind</a>
+      <a href="#" onclick="event.preventDefault(); openSettingsModal();">Settings</a>
     </div>
 
   </div>
@@ -2336,6 +2449,70 @@ select.field-input {
       <button type="button" class="phone-confirm-edit"   onclick="onPhoneConfirmEdit()">Edit</button>
       <button type="button" class="phone-confirm-send"   onclick="onPhoneConfirmSend()">Yes, send</button>
     </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     PHASE 6 — SHARE MODAL
+     Triggered from the Screen 8 dashboard footer.
+     ═══════════════════════════════════════════════════════════ -->
+<div class="phone-confirm-overlay" id="share_modal_overlay" aria-hidden="true">
+  <div class="phone-confirm-modal" role="dialog" aria-modal="true" aria-labelledby="share_modal_title">
+    <div class="phone-confirm-eyebrow">Refer a family</div>
+    <h2 class="phone-confirm-title" id="share_modal_title">Share MyGrind</h2>
+    <p class="phone-confirm-sub">
+      Know another baseball or softball family? Send them the signup link.
+    </p>
+    <div class="share-link-row">
+      <input type="text" class="share-link-input" id="share_link_input" readonly value="https://mygrindapp.com/signup.html">
+    </div>
+    <div class="share-actions">
+      <button type="button" class="share-action-btn primary" onclick="onCopyShareLink()" id="share_copy_btn">Copy Link</button>
+      <button type="button" class="share-action-btn secondary" onclick="onNativeShare()" id="share_native_btn" style="display:none;">Share…</button>
+    </div>
+    <div class="share-toast" id="share_toast">✓ Link copied to clipboard</div>
+    <button type="button" class="modal-close-btn" onclick="closeShareModal()">Close</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     PHASE 6 — SETTINGS MODAL
+     Read-only account summary + support contact. Editable fields
+     land when Phase 5 (Stripe + backend account management) ships.
+     ═══════════════════════════════════════════════════════════ -->
+<div class="phone-confirm-overlay" id="settings_modal_overlay" aria-hidden="true">
+  <div class="phone-confirm-modal" role="dialog" aria-modal="true" aria-labelledby="settings_modal_title">
+    <div class="phone-confirm-eyebrow">Account</div>
+    <h2 class="phone-confirm-title" id="settings_modal_title">Your details</h2>
+    <div class="settings-row-list">
+      <div class="settings-row">
+        <span class="settings-row-label">Name</span>
+        <span class="settings-row-value" id="set_name">—</span>
+      </div>
+      <div class="settings-row">
+        <span class="settings-row-label">Email</span>
+        <span class="settings-row-value" id="set_email">—</span>
+      </div>
+      <div class="settings-row">
+        <span class="settings-row-label">Phone</span>
+        <span class="settings-row-value" id="set_phone">—</span>
+      </div>
+      <div class="settings-row">
+        <span class="settings-row-label">Plan</span>
+        <span class="settings-row-value" id="set_plan">—</span>
+      </div>
+      <div class="settings-row">
+        <span class="settings-row-label">Players</span>
+        <span class="settings-row-value" id="set_players">—</span>
+      </div>
+    </div>
+    <p class="settings-support-line">
+      Need to update something? Email <a href="mailto:coach@mygrindapp.com?subject=Update%20My%20Account">coach@mygrindapp.com</a> and we'll get it changed for you.
+    </p>
+    <p class="settings-support-line" style="font-size:12px;color:#6B5E52;">
+      Self-serve account editing &amp; billing land in a future update.
+    </p>
+    <button type="button" class="modal-close-btn" onclick="closeSettingsModal()">Close</button>
   </div>
 </div>
 
@@ -3670,6 +3847,149 @@ function renderDots(currentScreen) {
     }
   }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   PHASE 6 — SHARE + SETTINGS MODAL HANDLERS
+   ───────────────────────────────────────────────────────────
+   Triggered from the Screen 8 dashboard footer. Both modals
+   reuse the .phone-confirm-overlay shell so the visual
+   language is consistent with the existing phone-confirm step.
+   ═══════════════════════════════════════════════════════════ */
+
+const SHARE_URL  = 'https://mygrindapp.com/signup.html';
+const SHARE_TEXT = "Found a journal app for serious baseball + softball families. Practice, games, stats, goals — all in one place.";
+
+function openShareModal() {
+  const overlay = document.getElementById('share_modal_overlay');
+  if (!overlay) return;
+  overlay.classList.add('shown');
+  overlay.setAttribute('aria-hidden', 'false');
+
+  // Show the native Share button only if the browser actually supports it.
+  // navigator.share works on iOS Safari and most modern Chrome — falls back
+  // to Copy Link otherwise.
+  const nativeBtn = document.getElementById('share_native_btn');
+  if (nativeBtn && typeof navigator.share === 'function') {
+    nativeBtn.style.display = '';
+  } else if (nativeBtn) {
+    nativeBtn.style.display = 'none';
+  }
+
+  // Reset toast state on each open
+  const toast = document.getElementById('share_toast');
+  if (toast) toast.classList.remove('shown');
+}
+
+function closeShareModal() {
+  const overlay = document.getElementById('share_modal_overlay');
+  if (!overlay) return;
+  overlay.classList.remove('shown');
+  overlay.setAttribute('aria-hidden', 'true');
+}
+
+function onCopyShareLink() {
+  const input = document.getElementById('share_link_input');
+  const toast = document.getElementById('share_toast');
+  const url   = (input && input.value) || SHARE_URL;
+
+  // Prefer the modern Clipboard API; fall back to the old execCommand
+  // path for older Safari that doesn't expose navigator.clipboard over
+  // non-secure contexts (rare in production but harmless to keep).
+  function showToast() {
+    if (!toast) return;
+    toast.textContent = '✓ Link copied to clipboard';
+    toast.classList.add('shown');
+    clearTimeout(toast._timer);
+    toast._timer = setTimeout(() => toast.classList.remove('shown'), 3000);
+  }
+  function showFail() {
+    if (!toast) return;
+    toast.textContent = '⚠️ Could not copy — long-press the link to copy manually.';
+    toast.classList.add('shown');
+  }
+
+  if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+    navigator.clipboard.writeText(url).then(showToast).catch(function() {
+      try {
+        if (input) { input.select(); document.execCommand('copy'); showToast(); }
+        else { showFail(); }
+      } catch(_) { showFail(); }
+    });
+  } else if (input) {
+    try { input.select(); document.execCommand('copy'); showToast(); }
+    catch(_) { showFail(); }
+  } else {
+    showFail();
+  }
+}
+
+function onNativeShare() {
+  if (typeof navigator.share !== 'function') return;
+  navigator.share({
+    title: 'MyGrind',
+    text:  SHARE_TEXT,
+    url:   SHARE_URL,
+  }).catch(function(err) {
+    // AbortError = user cancelled — silent. Anything else, fall back to copy.
+    if (err && err.name === 'AbortError') return;
+    onCopyShareLink();
+  });
+}
+
+function openSettingsModal() {
+  const overlay = document.getElementById('settings_modal_overlay');
+  if (!overlay) return;
+  populateSettings();
+  overlay.classList.add('shown');
+  overlay.setAttribute('aria-hidden', 'false');
+}
+
+function closeSettingsModal() {
+  const overlay = document.getElementById('settings_modal_overlay');
+  if (!overlay) return;
+  overlay.classList.remove('shown');
+  overlay.setAttribute('aria-hidden', 'true');
+}
+
+function populateSettings() {
+  const p     = (state && state.parent) || {};
+  const first = (p.firstName || '').trim();
+  const last  = (p.lastName  || '').trim();
+  const fullName = (first + ' ' + last).trim() || '—';
+
+  const setText = (id, val) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = val || '—';
+  };
+
+  setText('set_name',  fullName);
+  setText('set_email', p.email || '—');
+  setText('set_phone', p.phone || '—');
+
+  const plan = state && state.preferredPlan;
+  if (plan === 'monthly')      setText('set_plan', 'Monthly · $9.99/mo per player');
+  else if (plan === 'annual')  setText('set_plan', 'Annual · $99/yr per player');
+  else                         setText('set_plan', '—');
+
+  const count = state && state.playerCount;
+  if (count === 1)      setText('set_players', '1 player');
+  else if (count === 2) setText('set_players', '2 players');
+  else if (count === 3) setText('set_players', '3 or more players');
+  else                  setText('set_players', '—');
+}
+
+// Click outside the modal card to close. Lighter touch than ESC handling
+// for now — keeps the keyboard story for a later accessibility pass.
+['share_modal_overlay', 'settings_modal_overlay'].forEach(function(id) {
+  const overlay = document.getElementById(id);
+  if (!overlay) return;
+  overlay.addEventListener('click', function(e) {
+    if (e.target === overlay) {
+      if (id === 'share_modal_overlay')    closeShareModal();
+      if (id === 'settings_modal_overlay') closeSettingsModal();
+    }
+  });
+});
 
 /* ─── INIT ───────────────────────────────────────────────── */
 window.addEventListener('DOMContentLoaded', () => {
