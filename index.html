@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
 <title>MyGrind — A Daily Accountability Journal for Serious Players</title>
 <meta name="description" content="MyGrind is a daily accountability journal — built for serious players and the parents walking the road with them. Join the early list.">
 <meta name="theme-color" content="#0A0A0A">
@@ -102,6 +102,7 @@
     position: relative; z-index: 1;
     min-height: 100vh;
     display: flex; flex-direction: column; align-items: center;
+    justify-content: safe center;
     padding: 32px 24px 24px;
   }
 
@@ -487,17 +488,37 @@
 
   /* ── RESPONSIVE ── */
   @media (max-width: 600px) {
-    main { padding: 24px 18px 16px; }
-    .logo-wrap { margin-bottom: 28px; }
-    .logo-wrap img { width: 380px; }
-    .form-section { margin-top: 40px; max-width: 320px; }
-    .form-card { padding: 16px; }
-    .form-row input[type="email"] { padding: 12px 14px; font-size: 15px; }
-    .form-row button { padding: 12px 18px; }
+    main { padding: 14px 18px 16px; }
+    .eyebrow { margin-top: 8px; margin-bottom: 14px; }
+    .logo-wrap { margin-top: 0; margin-bottom: 16px; }
+    .logo-wrap img { width: 220px; max-width: 60vw; }
+    .form-section { margin-top: 28px; max-width: 280px; }
+    .form-card { padding: 12px 14px; }
+    .form-pre { margin-bottom: 10px; font-size: 13px; }
+    .form-row { gap: 6px; }
+    .form-row input[type="email"] { padding: 6px 12px; font-size: 14px; line-height: 1.2; height: 34px; }
+    .form-row button { padding: 6px 16px; font-size: 13px; letter-spacing: 1.5px; line-height: 1.2; height: 34px; }
+    .form-trust { margin-top: 10px; font-size: 11px; }
     .form-row { flex-direction: column; }
     .form-row button { width: 100%; }
     .eyebrow { letter-spacing: 4px; margin-top: 12px; margin-bottom: 20px; }
     .eyebrow::before, .eyebrow::after { width: 18px; }
+  }
+
+  /* Landscape phones + short browser windows — width may be > 600px but
+     vertical room is tight, so shrink the logo / hero so it doesn't
+     dominate the viewport. */
+  @media (max-height: 500px) {
+    main { padding: 12px 24px 16px; }
+    .eyebrow { margin-top: 4px; margin-bottom: 10px; }
+    .logo-wrap { margin-top: 0; margin-bottom: 10px; }
+    .logo-wrap img { width: 180px; max-width: 36vh; }
+    .hero h1 { font-size: clamp(28px, 4.5vh, 48px); }
+    .accent-underline { margin: 12px auto 0; }
+    .subhead { margin-top: 14px; font-size: 14px; }
+    .sport-chip { margin-top: 14px; }
+    .form-section { margin-top: 18px; }
+    footer { padding: 28px 16px 12px; }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -792,6 +813,18 @@
       script.src = url;
       document.head.appendChild(script);
     });
+
+    // iOS Safari preserves zoom level across rotation, leaving the page
+    // appearing larger than the viewport until you pinch out. Re-asserting
+    // the viewport meta tag forces Safari to re-fit on each rotation.
+    function resetViewport() {
+      var meta = document.querySelector('meta[name=viewport]');
+      if (!meta) return;
+      var content = meta.getAttribute('content');
+      meta.setAttribute('content', content + ', maximum-scale=1');
+      setTimeout(function () { meta.setAttribute('content', content); }, 300);
+    }
+    window.addEventListener('orientationchange', resetViewport);
 
   }());
 </script>
