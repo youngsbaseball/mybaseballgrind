@@ -4,28 +4,49 @@
 
 ---
 
-## 🌐 The App
+## 🌐 Where Things Live
 
-- **Live URL**: https://youngsbaseball.github.io/mybaseballgrind/
+| Surface | URL | Hosting | File |
+|---|---|---|---|
+| Pre-launch waitlist landing | https://mygrindapp.com | Vercel | `index.html` |
+| Parent signup flow (8 screens) | https://mygrindapp.com/signup.html | Vercel | `signup.html` |
+| Player onboarding | https://mygrindapp.com/onboarding.html | Vercel | `onboarding.html` |
+| The journal app (live for beta) | https://mygrindapp.com/softball.html | Vercel | `softball.html` |
+| Legacy app URL (still referenced inside `softball.html`) | https://youngsbaseball.github.io/mybaseballgrind/ | GitHub Pages | served via `mg-config.js` runtime override |
+| SMS backend | `/api/send-invite` | Vercel serverless | `api/send-invite.js` |
+| Static legal | mygrindapp.com/privacy.html, /terms.html | Vercel | `privacy.html`, `terms.html` |
+
 - **Repo**: https://github.com/youngsbaseball/mybaseballgrind
-- **Hosted on**: GitHub Pages (free)
-- **Domain (parked, not connected)**: mygrindbaseball.com
-- **Cloud backend**: Firebase (`my-grind-b8486`) — Spark plan (free)
-- **Tech**: Single-file HTML PWA (~600KB), localStorage + Firestore for sync
-- **Active beta users**: ~7
+- **Domain (live)**: mygrindapp.com (Vercel) — apex redirects to www
+- **Cloud backend**: Firebase (`my-grind-b8486`) — Spark plan (free) — used for cloud sync of profile/entries/goals from `softball.html`
+- **Mailchimp waitlist**: audience `73280b4c02e9bc56c7e633892`, tag `2216797` (subscribe form on `index.html` posts via JSONP to us8.list-manage.com)
+- **Tech**: Hand-authored HTML files (CSS + vanilla JS inlined, no build step, no framework), Vercel serverless backend (Node ≥18, ESM), Redis-backed rate limiter
 
 ## 🛠️ Tech Decisions
 
-- **One file**: everything is in `index.html` (~10K lines). Easy to deploy, hard to navigate. Keep it for now — refactor only if it becomes blocking.
-- **No build step**: edits land directly. Pro: zero infra. Con: no linting, no tests automatically.
-- **Service worker cache version**: bump it (`ybg-mygrind-vN`) every time you ship a meaningful update so users get fresh content.
+- **No build step** — edits land directly. Pro: zero infra. Con: no linting, no automatic tests.
+- **Single-file SPAs by design** — each HTML file is self-contained. State passes between files via `localStorage` and URL query params (`?name=Sofia&fallback=1`).
+- **Service worker cache version** in `softball.html` — bump `ybg-mygrind-vN` every time you ship a meaningful update so users get fresh content.
+- **`localStorage` is source of truth client-side** in `softball.html` (no auth/session backend yet for the journal app itself; signup flow's `api/send-invite.js` is the only serverless function so far).
 
----
+## 🧱 Phase Status (Notion is authoritative — see "MyGrind Worldwide Launch HQ")
 
-## ✅ Features Shipped
+- **Phase 2 — Parent Signup Flow** — front-end complete (8 screens in `signup.html`). No backend wiring yet.
+- **Phase 3a (Skeleton + Auth)** — COMPLETE
+- **Phase 3b (Twilio SDK + Live Send)** — code complete, BLOCKED on toll-free verification pending
+- **Phase 3c (Rate Limiting)** — COMPLETE + VERIFIED (Redis-backed, hashed IP/phone, fail-open)
+- **Phase 3d (Twilio Lookup pre-check)** — NEXT (after 3b unblocks)
+- **Phase 4 — Player Onboarding** — `onboarding.html` shipped (per Decision #13: stripped of Stripe/Mailchimp/Firebase, just localStorage)
+- **Phase 5 — Stripe wiring** — pending; pricing UI shipped, real checkout not wired
+- **Phase 6 — Share + Settings buttons on signup dashboard** — pending (currently throw `alert('coming in Phase 6')`)
+- **Phase 7 — Player dashboard** — pending; onboarding S14 currently shows a holding-screen overlay
+- **Business Plan** — 14/14 sections COMPLETE
+- **16 Locked Decisions** — source of truth in Notion
 
-### Core (working)
-- [x] Daily Journal — log games, practices, reflections
+## ✅ Features Shipped (`softball.html` — the journal app)
+
+### Core
+- [x] Daily Journal — log games, practices, reflections, instructor sessions
 - [x] Game stats with auto-calculated AVG / OBP / SLG / ERA
 - [x] Practice rep counter (swings, ground balls, throws, pitches)
 - [x] My Stats season totals (auto-populated from journal)
@@ -37,30 +58,27 @@
 - [x] Streak tracking + milestone celebrations
 - [x] Daily inspirational quote on Dashboard
 - [x] Coach/Parent comment logging on entries
-- [x] Instructor Session log (private instruction tracking)
-- [x] Instructor as standalone entry type (focused form)
 - [x] Daily affirmation banner (60 affirmations, rotates by day-of-year)
 - [x] PWA install prompt + offline support
-- [x] Backup & Restore (download/upload JSON file)
+- [x] **Backup & Restore** — JSON export/import of all `ybg_*` data in Settings tab (re-shipped 2026-05-02)
+- [x] **Backup nudge** — non-blocking banner appears when user has 3+ entries and no backup in 7+ days (re-shipped 2026-05-02)
 
-### Cloud Sync (working)
+### Cloud Sync (Firebase)
 - [x] Sign in with Google (Firebase Auth)
 - [x] Manual "Save to Cloud" / "Restore from Cloud" buttons
 - [x] Cross-device data recovery
 - [x] Per-user privacy via Firestore rules
 
-### Sport Theming (working)
-- [x] Sport picker on trial signup (Baseball / Softball)
-- [x] Auto-applies softball theme on signup
-- [x] Deep DOM swap: ⚾↔🥎 + Baseball↔Softball everywhere
-- [x] Pink color palette for softball mode
-- [x] 20 softball-specific quotes (Jennie Finch, Cat Osterman, etc.)
-- [x] Universal "NO GRADES · NO GAME" banner (works for both sports)
+### Sport Theming
+- [x] Sport picker on trial signup (Baseball / Softball / Both)
+- [x] Pink palette + softball quotes for softball mode
+- [x] 20 softball-specific quotes
+- [x] Universal "NO GRADES · NO GAME" banner (sport-neutral)
 
-### Trial / Subscription (working)
+### Trial / Subscription
 - [x] 7-day free trial (auto-starts on signup)
 - [x] Email-based access
-- [x] Stripe integration
+- [x] Stripe integration (live `buy.stripe.com` URLs hardcoded in `softball.html`)
 - [x] Team Coach plan ($29.99/yr) and Team Sponsor plan ($300/yr) options
 
 ### Tabs (in order)
@@ -73,28 +91,33 @@
 7. 👥 Team
 8. 👤 My Profile
 9. 📲 Share
-10. ⚙️ Settings
+10. ⚙️ Settings (now includes Backup & Restore)
+
+### Active beta users
+- ~7 (per last count — verify in Firebase Auth dashboard if you need a fresh number)
 
 ---
 
 ## 🐛 Known Issues / Followups
 
-*Add discovered bugs to docs/ROADMAP.md. This list is for STABLE issues we've decided to defer.*
+*Add discovered bugs to `docs/ROADMAP.md`. This list is for STABLE issues we've decided to defer.*
 
-- ⚠️ The 3 safety fixes from earlier sessions got ROLLED BACK during a debugging episode and need to be re-added carefully:
-  1. Silent data wipe prevention in `saveState()` catch block (currently still wipes entries on quota error)
-  2. Backup reminder nudge (auto-prompts users to back up after 3+ entries with no backup)
-  3. Disable broken GameChanger screenshot button (currently calls a broken Anthropic API path)
+- ⚠️ **Two-host situation** — `mygrindapp.com` is the primary, `youngsbaseball.github.io/mybaseballgrind/` is legacy. `softball.html` still has hardcoded github.io URLs that `mg-config.js` overrides at runtime. When changing URLs, grep both.
 - ⚠️ "Hover" issue on Daily Journal top dropdown reported — needs clarification (no specifics yet)
 - ⚠️ Softball image showing where a baseball should — needs screenshot to identify
+- ⚠️ Duplicate `escapeHtml()` function in `signup.html` (defined at lines 3264 + 3417) — second wins, both nearly identical. Maintenance trap.
+- ⚠️ SMS preview in `signup.html` (line ~3344) shows `mygrind.app/start/abc123` — fake URL with placeholder token. Real Twilio send (when 3b unblocks) will generate a different link, but the preview is misleading to parents.
+- ⚠️ Share + Settings buttons on signup dashboard (Screen 8) throw `alert('coming in Phase 6')` — visible to live users.
 
 ---
 
 ## 📈 Metrics to Track (when you're ready)
 
-- Number of active users (Firebase Auth dashboard)
+- Number of waitlist signups (Mailchimp dashboard, audience `73280b4c02e9bc56c7e633892`)
+- UTM source breakdown (which channel converted best)
+- Number of active app users (Firebase Auth dashboard)
 - Number of daily journal entries created (Firestore queries)
-- Cloud-backup adoption % (users with `data.ybg_state` populated)
+- Backup adoption % (count of `ybg_last_backup` keys via cloud-sync if/when we wire that)
 - Trial → paid conversion rate (Stripe dashboard)
 
 No analytics service is wired up yet. Add Plausible or Posthog when you have time.

@@ -1,41 +1,47 @@
 # 🛣️ My Grind — Roadmap
 
-*Re-prioritize this file at the start of every week. Move shipped items to STATUS.md.*
+*Re-prioritize this file at the start of every week. Move shipped items to the bottom and into STATUS.md.*
 
 ---
 
 ## 🔥 This Week (pick 1 per session)
 
-### P0 — Stability & Safety (do these FIRST)
-1. **Re-add data-wipe safety fix** — `saveState()` catch block. Without this, users hitting localStorage quota silently lose all entries. ~10 min.
-2. **Re-add backup nudge** — auto-prompt to back up after 3+ entries / 7+ days. ~15 min.
-3. **Disable broken GameChanger screenshot button** — runtime patch via DOM. ~5 min.
+### P0 — Polish leftover from the audit
+1. **Fix duplicate `escapeHtml()` in `signup.html`** — defined at lines 3264 + 3417. Consolidate to one definition. ~5 min.
+2. **Fix the SMS preview URL in `signup.html`** — `buildSmsForPlayer()` (line ~3344) hardcodes `mygrind.app/start/abc123`. Should use `mygrindapp.com/onboarding.html?name=...` so the preview matches what Twilio will actually send when Phase 3b unblocks. ~10 min.
+3. **Decide on Phase 6 placeholder buttons** — Share + Settings on signup Screen 8 throw `alert('coming in Phase 6')`. Either hide them, mark "Coming soon" inline, or wire to something real. ~10 min.
 
-### P1 — Polish (after P0)
-4. **Investigate "hover" issue** — user reported can't hover at top of something. Need screenshot. Then fix. ~15 min.
-5. **Investigate "softball image where baseball should be"** — need screenshot. ~15 min.
-6. **Title fallback for Instructor entries** — currently saves as "Entry" if title is hidden. Should auto-fill from instructor name + focus. ~10 min.
+### P1 — Real-user walks (per CLAUDE.md verification protocol)
+4. **Walk every screen of `signup.html` on phone width** — confirm progress dots, validation, back-nav, and SMS preview all behave end-to-end after recent edits.
+5. **Walk every screen of `onboarding.html` on phone width** — verify the CSS-corruption fix from 2026-05-02 actually restored sticky progress bar + min-height layout. Especially S0 → S05 (PIN) → S1 → S14 path.
+6. **Investigate "hover" issue** — user reported can't hover at top of something on Daily Journal. Need screenshot. Then fix. ~15 min.
+7. **Investigate "softball image where baseball should be"** — need screenshot. ~15 min.
+8. **Title fallback for Instructor entries** — currently saves as "Entry" if title is hidden. Should auto-fill from instructor name + focus. ~10 min.
 
 ---
 
 ## 📅 Next 2 Weeks
 
-### P2 — Real-time Cloud Sync (Phase B v3)
-Third attempt at auto-sync. The first two attempts caused full UI breakage. **Do this only after P0 + P1 done AND you have a clear test plan.**
+### P2 — Phase 3d (Twilio Lookup pre-check)
+Validate phone number is mobile + reachable BEFORE incrementing rate-limit counters and BEFORE attempting to send. Already designed; locked spec in Notion ("🛠️ Phase 3 — Twilio SMS Backend Architecture"). **Blocked by Phase 3b** (toll-free verification still pending).
 
-Key lesson from past attempts: don't add a full-screen overlay that can become unclickable. Use a non-blocking pattern.
+### P3 — Phase 5 (Stripe wiring on signup)
+The signup flow's `selectPlan()`, `onSkipTrialClicked()`, and Screen 8 "Pay & Continue" hooks all currently `alert()` instead of launching Stripe checkout. Replace with real `buy.stripe.com` URLs (already used in `softball.html`).
 
-### P3 — Discoverability ("Why isn't anyone using this?")
-If beta users aren't logging entries daily, fix the onramp:
+### P4 — Phase 6 (Real Share + Settings buttons on signup dashboard)
+Wire the two placeholder buttons on signup Screen 8 to functional surfaces. Likely targets: Share = onboarding link copier; Settings = email-update form.
+
+### P5 — Phase 7 (Player dashboard)
+`onboarding.html` S14 currently shows a holding-screen overlay. Phase 7 is the real player dashboard — likely a stripped-down `softball.html` for the kid side or a new `player-dashboard.html`.
+
+### P6 — Real-time Cloud Sync (Phase B v3)
+Third attempt at auto-sync. The first two attempts caused full UI breakage in `softball.html`. **Do this only after P1 done AND with a clear test plan.** Key lesson: don't add a full-screen overlay that can become unclickable. Use a non-blocking pattern.
+
+### P7 — Discoverability ("Why isn't anyone using this?")
+If beta users aren't logging entries daily:
 - First-run tour (3 quick screens explaining the app)
 - Simpler dashboard for new users ("start here" card)
 - Clearer call-to-action on the trial signup
-
-### P4 — Marketing Site
-The app at `youngsbaseball.github.io/mybaseballgrind` is the APP, but you need a SEPARATE marketing landing page that explains what My Grind is and gets people to try it. Consider:
-- A simple one-pager at `mygrindbaseball.com` (your Namecheap domain)
-- Hosted free on Netlify or Vercel
-- Just a hero, 3 features, testimonials, signup CTA
 
 ---
 
@@ -45,7 +51,7 @@ The app at `youngsbaseball.github.io/mybaseballgrind` is the APP, but you need a
 - Multi-player accounts (one parent buys, multiple kids use)
 - Coach dashboard — see all players' progress in one view
 - Photo/video attachments (currently disabled, needs cloud storage)
-- GameChanger import (currently broken — needs a backend proxy for the API call)
+- GameChanger import via backend proxy (Option 1 currently disabled — Anthropic API blocked by browser CORS, needs server-side endpoint)
 - MaxPreps integration (waiting on API access)
 - Affirmation push notifications via SMS (Twilio integration)
 - Internationalization (Spanish version for the Latino baseball community)
@@ -56,7 +62,7 @@ The app at `youngsbaseball.github.io/mybaseballgrind` is the APP, but you need a
 
 *When a beta user reports something, jot it here with date and source.*
 
-- (none yet — start logging when reports come in)
+- (none new yet — start logging when reports come in)
 
 ---
 
@@ -64,6 +70,21 @@ The app at `youngsbaseball.github.io/mybaseballgrind` is the APP, but you need a
 
 *Move shipped items here from "This Week" so you have a record of progress.*
 
+### 2026-05-02
+- ✅ **Pre-launch waitlist landing page** at `mygrindapp.com` — brand-styled `index.html` with Mailchimp form (audience `73280b4c02e9bc56c7e633892`, tag `2216797`). Replaced the old redirect shell that bounced visitors to signup.html.
+- ✅ **Mailchimp JSONP integration** — replaced optimistic iframe submit with real `subscribe/post-json` call so users see actual success/error messages instead of silent failures.
+- ✅ **Mobile sizing fixes for landing** — compact email input (34px tall), narrower form card on portrait, landscape media query, vertical centering with `safe center`, iOS Safari rotation-zoom fix via `maximum-scale=1`.
+- ✅ **Disabled Mailchimp reCAPTCHA on the form** so JSONP path doesn't bounce real users into a challenge that can't render.
+- ✅ **Critical CSS corruption fix in `onboarding.html`** — `.screen`, `.screen.on`, `.screen-body`, `.prog-wrap` rules had nested braces and orphan property remnants from a prior find/replace incident. Restored intended layout.
+- ✅ **`saveState()` data-wipe killed** in `softball.html` — the catch block was silently writing `entries: []` on quota errors. Now leaves previous save intact and surfaces a one-time alert pointing to backup.
+- ✅ **GameChanger Option 1 disabled** — the screenshot reader called Anthropic API directly from the browser (CORS-blocked, no key). Replaced with "Coming Soon" notice pointing to Option 2 (manual entry).
+- ✅ **Backup & Restore feature re-shipped** in `softball.html` Settings tab — JSON download/upload of all `ybg_*` keys (auth/session keys denylisted). Includes "last backup: X days ago" display.
+- ✅ **Backup nudge re-shipped** — non-blocking gold banner appears on app load when user has 3+ entries AND no backup in 7+ days. Dismissable for the session.
+- ✅ **Brand system doc** at `docs/BRAND_SYSTEM.md` documenting design tokens for future MyGrind web surfaces.
+- ✅ **`media/` folder** added for launch graphics + social assets.
+- ✅ **STATUS.md + ROADMAP.md rewritten** to reflect current architecture (signup/onboarding/softball/landing) instead of the old single-file index.html state.
+
+### Earlier (rolled into this list when I clean up)
 - ✅ Tab reorder (daily-use features up front)
 - ✅ Instructor Session log in Daily Journal
 - ✅ Daily affirmation banner (60 affirmations rotating)

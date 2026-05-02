@@ -3166,6 +3166,30 @@ main { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important;
       </div>
     </div>
 
+    <!-- ── BACKUP & RESTORE ── -->
+    <div class="card" style="margin-bottom:16px; border-color:var(--gold-dark);">
+      <div class="card-title">💾 Backup &amp; Restore</div>
+      <div style="font-family:'Barlow'; font-size:14px; color:var(--light); line-height:1.7; margin-bottom:14px;">
+        Your data lives on this device. <strong style="color:var(--gold);">Download a backup file</strong> to keep it safe. If you switch phones or clear your browser, you can restore everything from that file.
+      </div>
+
+      <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px;">
+        <button onclick="downloadBackup()" style="flex:1; min-width:140px; background:var(--gold); color:#080808; font-family:'Barlow Condensed'; font-size:13px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; padding:13px 12px; border:none; border-radius:2px; cursor:pointer;">
+          ⬇️ &nbsp;Download Backup
+        </button>
+        <button onclick="document.getElementById('restore-file-input').click()" style="flex:1; min-width:140px; background:var(--card2); color:var(--light); font-family:'Barlow Condensed'; font-size:13px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; padding:13px 12px; border:1px solid var(--border); border-radius:2px; cursor:pointer;">
+          ⬆️ &nbsp;Restore from File
+        </button>
+        <input type="file" id="restore-file-input" accept="application/json,.json" style="display:none;" onchange="onRestoreFilePicked(event)">
+      </div>
+
+      <div id="backup-last-display" style="font-family:'Barlow'; font-size:12px; color:var(--grey); text-align:center; line-height:1.6;">
+        No backup yet
+      </div>
+
+      <div id="backup-status" style="display:none; margin-top:10px; padding:10px 12px; border-radius:2px; font-family:'Barlow'; font-size:13px; line-height:1.5;"></div>
+    </div>
+
     <!-- ── ACCOUNT ── -->
     <div class="card" style="margin-bottom:16px;">
       <div class="card-title">👤 Account</div>
@@ -3275,6 +3299,203 @@ function saveState() {
     } catch(e2) {}
     return false;
   }
+}
+
+// ─── BACKUP & RESTORE ────────────────────────────────────
+// Exports all user data (every ybg_* localStorage key except auth/session
+// keys) as a single JSON file the user can save to Files / Drive / iCloud
+// and import back later. Also tracks ybg_last_backup so the nudge knows
+// when to stop pestering them.
+const BACKUP_KEY_DENYLIST = [
+  'ybg_creator', 'ybg_pin_unlocked', 'ybg_qr_scan',
+  'ybg_multi_gift_pending', 'ybg_last_backup', 'ybg_backup_nudge_dismissed'
+];
+
+function collectBackupPayload() {
+  const data = {};
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (!key || !key.startsWith('ybg_')) continue;
+    if (BACKUP_KEY_DENYLIST.indexOf(key) !== -1) continue;
+    const raw = localStorage.getItem(key);
+    if (raw == null) continue;
+    try { data[key] = JSON.parse(raw); }
+    catch(e) { data[key] = raw; }
+  }
+  return {
+    schema:      'mygrind-backup',
+    version:     1,
+    appVersion:  '2026.1',
+    exportedAt:  new Date().toISOString(),
+    data:        data
+  };
+}
+
+function downloadBackup() {
+  try {
+    const payload = collectBackupPayload();
+    const json    = JSON.stringify(payload, null, 2);
+    const blob    = new Blob([json], { type: 'application/json' });
+    const url     = URL.createObjectURL(blob);
+    const stamp   = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+    const a       = document.createElement('a');
+    a.href        = url;
+    a.download    = 'mygrind-backup-' + stamp + '.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function() { URL.revokeObjectURL(url); }, 1000);
+
+    try { localStorage.setItem('ybg_last_backup', new Date().toISOString()); } catch(e) {}
+    showBackupStatus('✅ Backup downloaded — keep that file safe.', 'ok');
+    updateLastBackupDisplay();
+    hideBackupNudge();
+  } catch(e) {
+    console.warn('[YBG] downloadBackup failed:', e);
+    showBackupStatus('⚠️ Could not create backup. Try again, or email coach@mygrindapp.com.', 'err');
+  }
+}
+
+function onRestoreFilePicked(event) {
+  const file = event.target && event.target.files && event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    let payload;
+    try { payload = JSON.parse(e.target.result); }
+    catch(_) {
+      showBackupStatus('⚠️ That file is not a valid backup (could not read JSON).', 'err');
+      event.target.value = '';
+      return;
+    }
+    restoreBackup(payload);
+    event.target.value = '';
+  };
+  reader.onerror = function() {
+    showBackupStatus('⚠️ Could not read that file. Try again.', 'err');
+    event.target.value = '';
+  };
+  reader.readAsText(file);
+}
+
+function restoreBackup(payload) {
+  if (!payload || payload.schema !== 'mygrind-backup' || !payload.data || typeof payload.data !== 'object') {
+    showBackupStatus('⚠️ That file does not look like a MyGrind backup. Make sure you picked the right .json file.', 'err');
+    return;
+  }
+  const exportedAt = payload.exportedAt ? (' from ' + payload.exportedAt.slice(0, 10)) : '';
+  const ok = confirm(
+    'Restoring will REPLACE your current data on this device with the backup' + exportedAt + '.\n\n' +
+    'Anything you have logged since the backup will be overwritten. The page will reload after restore.\n\n' +
+    'Continue?'
+  );
+  if (!ok) return;
+
+  let restored = 0;
+  try {
+    Object.keys(payload.data).forEach(function(key) {
+      if (!key.startsWith('ybg_')) return;
+      if (BACKUP_KEY_DENYLIST.indexOf(key) !== -1) return;
+      const val = payload.data[key];
+      const raw = (typeof val === 'string') ? val : JSON.stringify(val);
+      try { localStorage.setItem(key, raw); restored++; } catch(_) {}
+    });
+    try { localStorage.setItem('ybg_last_backup', new Date().toISOString()); } catch(e) {}
+    showBackupStatus('✅ Restored ' + restored + ' data sections — reloading…', 'ok');
+    setTimeout(function() { window.location.reload(); }, 900);
+  } catch(e) {
+    console.warn('[YBG] restoreBackup failed:', e);
+    showBackupStatus('⚠️ Restore failed partway through. Some data may be inconsistent — restore again or contact support.', 'err');
+  }
+}
+
+function showBackupStatus(msg, kind) {
+  const el = document.getElementById('backup-status');
+  if (!el) return;
+  const ok = kind === 'ok';
+  el.style.cssText =
+    'display:block; margin-top:10px; padding:10px 12px; border-radius:2px;' +
+    'font-family:Barlow,sans-serif; font-size:13px; line-height:1.5;' +
+    'background:' + (ok ? 'rgba(39,174,96,0.08)' : 'rgba(192,57,43,0.08)') + ';' +
+    'border:1px solid ' + (ok ? '#27AE60' : '#C0392B') + ';' +
+    'color:' + (ok ? '#58D68D' : '#E57373') + ';';
+  el.textContent = msg;
+  clearTimeout(el._timer);
+  el._timer = setTimeout(function() { el.style.display = 'none'; }, 6000);
+}
+
+function updateLastBackupDisplay() {
+  const el = document.getElementById('backup-last-display');
+  if (!el) return;
+  const last = localStorage.getItem('ybg_last_backup');
+  if (!last) { el.textContent = 'No backup yet'; return; }
+  try {
+    const d = new Date(last);
+    const days = Math.floor((Date.now() - d.getTime()) / (1000 * 60 * 60 * 24));
+    const dateStr = d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+    if (days === 0)      el.textContent = 'Last backup: today (' + dateStr + ')';
+    else if (days === 1) el.textContent = 'Last backup: yesterday (' + dateStr + ')';
+    else                 el.textContent = 'Last backup: ' + days + ' days ago (' + dateStr + ')';
+  } catch(e) { el.textContent = 'Last backup: ' + last; }
+}
+
+// ─── BACKUP NUDGE ────────────────────────────────────────
+// Non-blocking banner shown on the Dashboard if the user has 3+ entries
+// AND no backup in the last 7 days. Dismissable for the session.
+function checkBackupNudge() {
+  try {
+    if (sessionStorage.getItem('ybg_backup_nudge_dismissed') === '1') return;
+    const entryCount = (state && Array.isArray(state.entries)) ? state.entries.length : 0;
+    if (entryCount < 3) return;
+
+    const last = localStorage.getItem('ybg_last_backup');
+    let daysSince = Infinity;
+    if (last) {
+      const t = new Date(last).getTime();
+      if (!isNaN(t)) daysSince = (Date.now() - t) / (1000 * 60 * 60 * 24);
+    }
+    if (daysSince < 7) return;
+
+    showBackupNudge(entryCount, daysSince);
+  } catch(e) { /* never let the nudge break the app */ }
+}
+
+function showBackupNudge(entryCount, daysSince) {
+  if (document.getElementById('backup-nudge-banner')) return;
+  const ageStr = (daysSince === Infinity)
+    ? 'never backed up'
+    : 'last backup ' + Math.floor(daysSince) + ' days ago';
+
+  const banner = document.createElement('div');
+  banner.id = 'backup-nudge-banner';
+  banner.style.cssText =
+    'position:fixed; left:8px; right:8px; bottom:80px; z-index:9000;' +
+    'background:#1A1400; border:1px solid #9A7A30; border-radius:6px;' +
+    'padding:14px 16px; box-shadow:0 12px 40px rgba(0,0,0,0.5);' +
+    'font-family:Barlow,sans-serif; color:#F5F0EB; max-width:480px;' +
+    'margin:0 auto; display:flex; align-items:center; gap:12px; flex-wrap:wrap;';
+  banner.innerHTML =
+    '<div style="flex:1; min-width:200px;">' +
+      '<div style="font-family:\'Barlow Condensed\',sans-serif; font-size:11px; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:#C9A84C; margin-bottom:4px;">⚠️ Back Up Your Journal</div>' +
+      '<div style="font-size:13px; line-height:1.5; color:#D4C8BC;">' +
+        entryCount + ' entries logged · ' + ageStr + '. If you clear your browser or switch phones, you\'ll lose everything.' +
+      '</div>' +
+    '</div>' +
+    '<div style="display:flex; gap:6px;">' +
+      '<button onclick="downloadBackup()" style="background:#C9A84C; color:#080808; border:none; border-radius:3px; padding:9px 14px; font-family:\'Barlow Condensed\',sans-serif; font-size:12px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; cursor:pointer;">Back Up Now</button>' +
+      '<button onclick="dismissBackupNudge()" style="background:transparent; color:#A89880; border:1px solid #3D3530; border-radius:3px; padding:9px 12px; font-family:\'Barlow Condensed\',sans-serif; font-size:12px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; cursor:pointer;">Later</button>' +
+    '</div>';
+  document.body.appendChild(banner);
+}
+
+function hideBackupNudge() {
+  const el = document.getElementById('backup-nudge-banner');
+  if (el && el.parentNode) el.parentNode.removeChild(el);
+}
+
+function dismissBackupNudge() {
+  try { sessionStorage.setItem('ybg_backup_nudge_dismissed', '1'); } catch(e) {}
+  hideBackupNudge();
 }
 
 // Initialize state — load from storage or use defaults
@@ -4412,7 +4633,7 @@ function showPanel(id) {
   // Refresh subscription card when My Profile opens
   if (id === 'players') { updateSubscriptionCard(); updateSettingsAccountInfo(); }
   // Refresh settings when settings tab opens
-  if (id === 'settings') { updateSettingsAccountInfo(); loadSettings(); }
+  if (id === 'settings') { updateSettingsAccountInfo(); loadSettings(); updateLastBackupDisplay(); }
   // Generate QR when share tab opens
   if (id === 'share') { setTimeout(initQR, 100); }
   // Scroll back to top on tab switch
@@ -6871,6 +7092,9 @@ function importGCStatsFromStats() {
 
 loadSettings();
 initNotifications();
+// Show the backup nudge banner if user has 3+ entries and no recent backup.
+// Delayed so it appears after the dashboard renders, not during boot.
+setTimeout(checkBackupNudge, 1500);
 
 // ═══════════════════════════════════════════════════════
 // GLOBAL ERROR HANDLER — catch any uncaught issues silently
