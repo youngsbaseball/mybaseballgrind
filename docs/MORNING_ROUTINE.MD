@@ -1,14 +1,4 @@
-# 🌅 Morning Routine — My Grind
 
-This is your daily kickoff playbook. Spend 10 minutes here every morning before opening the app or writing code.
-
----
-
-## ⚡ Session-Start Prompt (copy/paste this to start every Claude session)
-
-Copy and paste this exact block at the start of every conversation with Claude:
-
-```
 Good morning. I'm continuing work on My Grind (the baseball/softball journal app).
 
 Please do these steps in order before suggesting any code changes:
