@@ -2910,30 +2910,15 @@ main { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important;
     <div class="card" style="margin-bottom:16px; border-color:#2471A3;">
       <div class="card-title" style="color:#5DADE2;">📊 Import from GameChanger</div>
 
-      <!-- Option 1: Screenshot OCR -->
-      <div style="background:rgba(93,173,226,0.06); border:1px solid #2471A3; border-radius:3px; padding:16px; margin-bottom:12px;">
-        <div style="font-family:'Barlow Condensed'; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#5DADE2; margin-bottom:8px;">📸 Option 1 — Screenshot Import (Auto)</div>
-        <div style="font-family:'Barlow'; font-size:15px; color:var(--light); line-height:1.7; margin-bottom:14px;">
-          Take a screenshot of your GameChanger box score. The app reads it automatically and fills your stats in — no typing required.
-        </div>
-
-        <div id="gc-drop-zone-stats" onclick="document.getElementById('gc-screenshot-input-stats').click()" style="border:2px dashed #2471A3; border-radius:4px; padding:24px 16px; text-align:center; cursor:pointer; background:rgba(93,173,226,0.04); margin-bottom:10px;" onmouseover="this.style.borderColor='#5DADE2'; this.style.background='rgba(93,173,226,0.08)'" onmouseout="this.style.borderColor='#2471A3'; this.style.background='rgba(93,173,226,0.04)'">
-          <div style="font-size:28px; margin-bottom:6px;">📱</div>
-          <div style="font-family:'Barlow Condensed'; font-size:13px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#5DADE2; margin-bottom:3px;">Upload Box Score Screenshot</div>
-          <div style="font-family:'Barlow'; font-size:14px; color:var(--grey);">Tap to select your GameChanger screenshot</div>
-          <input type="file" id="gc-screenshot-input-stats" accept="image/*" style="display:none;" onchange="processGCScreenshotStats(event)">
-        </div>
-
-        <div id="gc-preview-stats" style="display:none; margin-bottom:10px;">
-          <img id="gc-preview-img-stats" style="width:100%; border-radius:4px; border:1px solid var(--border); max-height:200px; object-fit:contain;">
-        </div>
-        <div id="gc-status-stats" style="display:none; padding:12px 14px; border-radius:2px; font-family:'Barlow'; font-size:13px; line-height:1.6; margin-bottom:10px;"></div>
-        <div id="gc-stats-grid-stats" style="display:none; margin-bottom:10px;">
-          <div style="font-family:'Barlow Condensed'; font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--grey); margin-bottom:8px;">Stats Found</div>
-          <div id="gc-grid-inner-stats" style="display:grid; grid-template-columns:repeat(4,1fr); gap:4px;"></div>
-          <button onclick="importGCStatsFromStats()" style="width:100%; margin-top:12px; background:#5DADE2; color:#080808; font-family:'Barlow Condensed'; font-size:14px; font-weight:800; letter-spacing:2px; text-transform:uppercase; padding:13px; border:none; border-radius:2px; cursor:pointer;">
-            ⚾ Import These Stats
-          </button>
+      <!-- Option 1: Screenshot OCR — TEMPORARILY DISABLED
+           The screenshot reader called the Anthropic API directly from the
+           browser, which is blocked by CORS and has no API key. Coming back
+           in a future phase via a backend proxy. For now, route users to
+           Option 2 (manual entry) so they don't hit a dead end. -->
+      <div style="background:rgba(93,173,226,0.04); border:1px dashed #2471A3; border-radius:3px; padding:16px; margin-bottom:12px; opacity:0.75;">
+        <div style="font-family:'Barlow Condensed'; font-size:11px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#5DADE2; margin-bottom:8px;">📸 Option 1 — Screenshot Import (Coming Soon)</div>
+        <div style="font-family:'Barlow'; font-size:14px; color:var(--light); line-height:1.7;">
+          Auto-import from a GameChanger screenshot is being upgraded. For now, please use <strong style="color:#5DADE2;">Option 2 — Copy &amp; Paste</strong> below.
         </div>
       </div>
 
@@ -3277,12 +3262,16 @@ function saveState() {
     localStorage.setItem('ybg_softball_state', JSON.stringify(toSave));
     return true;
   } catch(e) {
+    // Save failed (likely quota exceeded). DO NOT write a fallback with
+    // entries: [] — that silently wipes the user's journal. The previous
+    // successful save in localStorage stays intact. Surface the failure
+    // to the user once per session so they can back up + free space.
     console.warn('[YBG] saveState failed:', e);
-    // If quota exceeded, try without entries (keep goals at minimum)
     try {
-      localStorage.setItem('ybg_softball_state', JSON.stringify({
-        entries: [], players: state.players || [], goals: state.goals || [], gpa: state.gpa || { current: null, target: null }
-      }));
+      if (typeof window !== 'undefined' && !window.__mgQuotaWarned) {
+        window.__mgQuotaWarned = true;
+        alert('⚠️ Could not save your latest changes — device storage is full. Tap Settings → Backup to download your data, then free up some space and try again.');
+      }
     } catch(e2) {}
     return false;
   }
