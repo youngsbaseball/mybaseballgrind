@@ -35,7 +35,7 @@
 - **Phase 3a (Skeleton + Auth)** — COMPLETE
 - **Phase 3b (Twilio SDK + Live Send)** — code complete, BLOCKED on toll-free verification pending
 - **Phase 3c (Rate Limiting)** — COMPLETE + VERIFIED (Redis-backed, hashed IP/phone, fail-open)
-- **Phase 3d (Twilio Lookup pre-check)** — NEXT (after 3b unblocks)
+- **Phase 3d (Twilio Lookup pre-check)** — COMPLETE (2026-05-02). `lib/lookup.js` runs Twilio Lookup v2 between E.164 normalization and rate-limit checks; rejects landlines, VoIP, and invalid numbers with friendly messages before any send budget is burned. Fail-open on Lookup outage.
 - **Phase 4 — Player Onboarding** — `onboarding.html` shipped (per Decision #13: stripped of Stripe/Mailchimp/Firebase, just localStorage)
 - **Phase 5 — Stripe wiring** — pending; pricing UI shipped, real checkout not wired
 - **Phase 6 — Share + Settings buttons on signup dashboard** — pending (currently throw `alert('coming in Phase 6')`)

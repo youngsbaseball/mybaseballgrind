@@ -5,6 +5,13 @@
 //   - Counter increment on attempt (after rate limit checks pass,
 //     before Twilio) — see Option C decision in the inline comment
 //
+// Phase 3d additions (2026-05-02):
+//   - Twilio Lookup v2 pre-check between E.164 normalize and rate
+//     limit checks. Catches landlines / VoIP / invalid numbers
+//     BEFORE we burn rate-limit budget or attempt a paid SMS send.
+//   - Friendly user-facing error messages per rejection reason.
+//   - Fail-open on Lookup outage (signups keep working).
+//
 // DRY_RUN sends DO increment counters in this version. Trade-off
 // accepted: protection works even when Twilio is misbehaving.
 //
@@ -13,6 +20,7 @@
 
 import twilio from 'twilio';
 import { checkIpLimit, checkPhoneLimit, recordSend } from '../lib/rate-limit.js';
+import { lookupPhone } from '../lib/lookup.js';
 
 // ─── Config flags ─────────────────────────────────────────
 const DRY_RUN = process.env.SMS_DRY_RUN !== 'false';
@@ -98,6 +106,21 @@ export default async function handler(req, res) {
     return res.status(400).json({
       success: false,
       error: 'Invalid phone number',
+    });
+  }
+
+  // ─── Twilio Lookup pre-check (Phase 3d) ──────────────────
+  // Verify number is real and mobile-textable BEFORE we burn
+  // rate-limit budget or attempt a paid send. Fail-open on
+  // Twilio Lookup outage so signups keep flowing.
+  const lookup = await lookupPhone(e164Phone);
+  if (!lookup.ok) {
+    console.warn('[send-invite] Lookup rejected number:', { reason: lookup.reason, signupSessionId });
+    return res.status(400).json({
+      success: false,
+      error: lookup.message || 'That phone number cannot receive text invites.',
+      code: 'INVALID_PHONE_LINE',
+      reason: lookup.reason,
     });
   }
 

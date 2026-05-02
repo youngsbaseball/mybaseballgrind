@@ -22,8 +22,8 @@
 
 ## 📅 Next 2 Weeks
 
-### P2 — Phase 3d (Twilio Lookup pre-check)
-Validate phone number is mobile + reachable BEFORE incrementing rate-limit counters and BEFORE attempting to send. Already designed; locked spec in Notion ("🛠️ Phase 3 — Twilio SMS Backend Architecture"). **Blocked by Phase 3b** (toll-free verification still pending).
+### P2 — Phase 5 (Stripe wiring on signup)
+The signup flow's `selectPlan()`, `onSkipTrialClicked()`, and Screen 8 "Pay & Continue" hooks all currently `alert()` instead of launching Stripe checkout. Replace with real `buy.stripe.com` URLs (already used in `softball.html`). Highest revenue-unlock lever.
 
 ### P3 — Phase 5 (Stripe wiring on signup)
 The signup flow's `selectPlan()`, `onSkipTrialClicked()`, and Screen 8 "Pay & Continue" hooks all currently `alert()` instead of launching Stripe checkout. Replace with real `buy.stripe.com` URLs (already used in `softball.html`).
@@ -71,6 +71,7 @@ If beta users aren't logging entries daily:
 *Move shipped items here from "This Week" so you have a record of progress.*
 
 ### 2026-05-02
+- ✅ **Phase 3d — Twilio Lookup pre-check** — new `lib/lookup.js` module + integration in `api/send-invite.js`. Calls Twilio Lookup v2 with `line_type_intelligence` between E.164 normalization and rate-limit checks. Rejects invalid numbers, landlines, and VoIP with friendly user-facing messages before burning rate-limit budget or paid SMS sends. Fail-open on Lookup outage. `SKIP_LOOKUP=true` env override for dev. Cost ~$0.005/lookup, bounded by upstream rate limits.
 - ✅ **Pre-launch waitlist landing page** at `mygrindapp.com` — brand-styled `index.html` with Mailchimp form (audience `73280b4c02e9bc56c7e633892`, tag `2216797`). Replaced the old redirect shell that bounced visitors to signup.html.
 - ✅ **Mailchimp JSONP integration** — replaced optimistic iframe submit with real `subscribe/post-json` call so users see actual success/error messages instead of silent failures.
 - ✅ **Mobile sizing fixes for landing** — compact email input (34px tall), narrower form card on portrait, landscape media query, vertical centering with `safe center`, iOS Safari rotation-zoom fix via `maximum-scale=1`.

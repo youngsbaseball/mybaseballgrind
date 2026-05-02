@@ -33,7 +33,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Phase 3a** (Skeleton + Auth) — COMPLETE
 - **Phase 3b** (Twilio SDK + Live Send) — code complete, BLOCKED on toll-free verification pending
 - **Phase 3c** (Rate Limiting) — COMPLETE + VERIFIED
-- **Phase 3d** (Twilio Lookup pre-check) — NEXT
+- **Phase 3d** (Twilio Lookup pre-check) — COMPLETE (2026-05-02). `lib/lookup.js` rejects landlines / VoIP / invalid numbers before rate-limit counters fire.
 - **Business Plan** — 14/14 sections COMPLETE
 - **Locked Decisions** — 16 LOCKED (source of truth in Notion)
 
