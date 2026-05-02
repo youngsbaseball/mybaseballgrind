@@ -12,8 +12,14 @@
   'use strict';
 
   // ── URLS ─────────────────────────────────────────────────────────
+  // APP_URL = legacy github.io copy of the journal app (kept for fallback)
+  // ONBOARD_URL = parent signup funnel on the production domain.
+  // 2026-05-02: was 'https://mygrindapp.com' but that's now the waitlist
+  // landing — sharing the app from there dumped friends on a "be first
+  // to know" page instead of letting them actually start. Pointing at
+  // /signup.html so warm referrals enter the real funnel.
   var APP_URL     = 'https://youngsbaseball.github.io/mybaseballgrind';
-  var ONBOARD_URL = 'https://mygrindapp.com';
+  var ONBOARD_URL = 'https://mygrindapp.com/signup.html';
 
   // Override the global constants the app uses for QR + sharing
   // New users → onboarding.html (journals story + paywall)

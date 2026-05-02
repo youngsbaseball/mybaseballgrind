@@ -3341,7 +3341,10 @@ function buildSmsForPlayer(playerName) {
     sportPhrase = 'the baseball/softball training app';
   }
 
-  return 'Hey ' + (playerName || 'there') + ', ' + parentFirst + ' just signed you up for MyGrind — ' + sportPhrase + ' I\'ve been talking about. Tap to start your profile (5 min): mygrind.app/start/abc123';
+  // URL matches what api/send-invite.js actually sends — kid lands directly
+  // in onboarding.html with their name pre-filled (Decision #13 flow).
+  var inviteUrl = 'https://mygrindapp.com/onboarding.html?name=' + encodeURIComponent(playerName || '');
+  return 'Hey ' + (playerName || 'there') + ', ' + parentFirst + ' just signed you up for MyGrind — ' + sportPhrase + ' I\'ve been talking about. Tap to start your profile (5 min): ' + inviteUrl;
 }
 
 // Returns names of any fallback (no-phone) players, formatted for copy
