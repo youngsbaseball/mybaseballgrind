@@ -39,6 +39,7 @@
 - **Phase 4 — Player Onboarding** — `onboarding.html` shipped (per Decision #13: stripped of Stripe/Mailchimp/Firebase, just localStorage)
 - **Phase 5 — Stripe wiring** — pending; pricing UI shipped, real checkout not wired
 - **Phase 6 — Share + Settings buttons on signup dashboard** — COMPLETE (2026-05-02). Real modals replace the placeholder alerts. Share modal has copy-link + Web Share API + pre-written caption. Settings modal shows read-only account summary (name, email, phone, plan, players) + a support-email link for changes (self-serve editing lands when Phase 5 backend account management ships).
+- **Family pricing tier** — COMPLETE (2026-05-02). $149/yr · $14.99/mo flat for 2-3 players in one household, alongside the existing Single tier ($99/yr · $9.99/mo per player). Anti-abuse stack: hard cap at 3 slots, slot-lock at first SMS-send, per-plan phone uniqueness, single-parent invite path (already in place). Stripe wiring deferred to Phase 5; for now the skip-trial path surfaces the Family plan in the placeholder alert.
 - **Phase 7 — Player dashboard** — pending; onboarding S14 currently shows a holding-screen overlay
 - **Business Plan** — 14/14 sections COMPLETE
 - **16 Locked Decisions** — source of truth in Notion

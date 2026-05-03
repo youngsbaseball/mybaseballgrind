@@ -39,9 +39,20 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Pricing (locked)
 
+**Single plan** (1 player):
 - $9.99/month per player
 - $99/year per player (annual is pre-selected as recommended per **Decision #8 v2**)
+
+**Family plan** (2-3 players, locked 2026-05-02):
+- $14.99/month flat for the household
+- $149/year flat for the household
+- Hard-capped at 3 player slots
+- Slot-lock: once invites send (Screen 7 entry), player slots can no longer be swapped without contacting `coach@mygrindapp.com`
+- Phone uniqueness within a plan: no two players can share the same real phone (fallback / parent-device flag exempted)
+
+Both plans:
 - 14-day free trial, no card required
+- Annual pre-selected by default (Decision #8 v2)
 
 ## Brand voice
 

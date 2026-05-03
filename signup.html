@@ -1994,7 +1994,7 @@ select.field-input {
     </button>
 
     <p class="footnote">
-      <strong>$99/year or $9.99/mo per player</strong> after your free trial. Each player gets their own private journal and progress.
+      <strong>Single $99/yr</strong> for 1 player. <strong>Family $149/yr</strong> covers 2 or 3 players in your household. Each player gets their own private journal and progress.
     </p>
 
   </div>
@@ -2124,23 +2124,25 @@ select.field-input {
     <!-- Pricing cards (selectable per Decision #8 v2 — Annual pre-selected) -->
     <div class="price-stack">
 
+      <!-- Card content is rendered dynamically by renderPricingCards() based
+           on state.playerCount: Single tier for 1 player, Family tier for 2-3. -->
       <button type="button" class="price-card selected" id="plan_annual" onclick="selectPlan('annual')">
         <div class="price-card-pill">Best Value</div>
         <div class="price-card-check">✓</div>
-        <div class="price-card-name">MyGrind Annual</div>
-        <div class="price-card-amount">$99<span class="per"> / year per player</span></div>
-        <div class="price-card-total" id="annual_total"></div>
-        <div class="price-card-equiv">~ $8.25/mo · save 17%</div>
-        <div class="price-card-tag">For families committed to the year</div>
+        <div class="price-card-name"   id="pc_annual_name">MyGrind Annual</div>
+        <div class="price-card-amount" id="pc_annual_amount">$99<span class="per"> / year per player</span></div>
+        <div class="price-card-total"  id="annual_total"></div>
+        <div class="price-card-equiv"  id="pc_annual_equiv">~ $8.25/mo · save 17%</div>
+        <div class="price-card-tag"    id="pc_annual_tag">For families committed to the year</div>
       </button>
 
       <button type="button" class="price-card" id="plan_monthly" onclick="selectPlan('monthly')">
         <div class="price-card-check">✓</div>
-        <div class="price-card-name">MyGrind Monthly</div>
-        <div class="price-card-amount">$9.99<span class="per"> / month per player</span></div>
-        <div class="price-card-total" id="monthly_total"></div>
-        <div class="price-card-equiv">Cancel anytime</div>
-        <div class="price-card-tag">Month to month, no commitment</div>
+        <div class="price-card-name"   id="pc_monthly_name">MyGrind Monthly</div>
+        <div class="price-card-amount" id="pc_monthly_amount">$9.99<span class="per"> / month per player</span></div>
+        <div class="price-card-total"  id="monthly_total"></div>
+        <div class="price-card-equiv"  id="pc_monthly_equiv">Cancel anytime</div>
+        <div class="price-card-tag"    id="pc_monthly_tag">Month to month, no commitment</div>
       </button>
 
     </div>
@@ -2507,7 +2509,10 @@ select.field-input {
       </div>
     </div>
     <p class="settings-support-line">
-      Need to update something? Email <a href="mailto:coach@mygrindapp.com?subject=Update%20My%20Account">coach@mygrindapp.com</a> and we'll get it changed for you.
+      Need to update your name, email, or phone? Email <a href="mailto:coach@mygrindapp.com?subject=Update%20My%20Account">coach@mygrindapp.com</a> and we'll get it changed for you.
+    </p>
+    <p class="settings-support-line">
+      Need to <strong>swap a player on your plan</strong>? Email <a href="mailto:coach@mygrindapp.com?subject=Swap%20a%20player%20on%20my%20plan">coach@mygrindapp.com</a> — player slots are locked once invites go out so households can't be silently rotated.
     </p>
     <p class="settings-support-line" style="font-size:12px;color:#6B5E52;">
       Self-serve account editing &amp; billing land in a future update.
@@ -2551,6 +2556,11 @@ const state = {
   players: [],              // [{ firstName, relationship, phone, fallback, sport }]
                             // sport defaults to familySport, parent can override per-kid
   currentPlayerIndex: 0,    // Which player slot we're currently filling (0-indexed)
+  // Family-plan slot lock (set when SMS would fire / Screen 7 entry).
+  // Once set, navigating back to Screen 6 shows a read-only locked view —
+  // editing requires emailing coach@mygrindapp.com so player slots can't
+  // be cycled/swapped to abuse the household pricing tier.
+  playersLockedAt: null,    // null | ISO timestamp string
   // Internal — not user-facing
   currentScreen: 1,
   startedAt: null
@@ -3090,45 +3100,80 @@ function restorePlanSelection() {
   updateMultiPlayerTotals();
 }
 
-/* Updates the "Total: $XYZ for N players" lines on Screen 5's pricing cards.
-   Hidden when player count = 1 (per-player rate already equals total).
-   Shown for 2 and 3+ players with calculated totals. */
-function updateMultiPlayerTotals() {
-  const annualTotalEl  = document.getElementById('annual_total');
-  const monthlyTotalEl = document.getElementById('monthly_total');
-  if (!annualTotalEl || !monthlyTotalEl) return;
+/* Renders Screen 5 pricing cards for either the Single tier (1 player) or
+   the Family tier (2-3 players). Pricing decision (locked 2026-05-02):
 
+     Single (1 player):  $99/yr     · $9.99/mo
+     Family (2-3 kids):  $149/yr    · $14.99/mo  flat for the whole household
+
+   Family is hard-capped at 3 player slots (per Screen 3) — the price is
+   flat regardless of whether the household has 2 or 3, so multi-kid
+   families always get a meaningful discount vs paying per-player.
+
+   Renamed from updateMultiPlayerTotals() — it now does both the
+   tier-content swap AND the savings/total line below. */
+function renderPricingCards() {
   const count = state.playerCount || 1;
+  const isFamily = count >= 2;
 
-  // Single player: hide both totals (per-player is the total)
-  if (count <= 1) {
-    annualTotalEl.classList.remove('shown');
-    monthlyTotalEl.classList.remove('shown');
-    return;
+  const set = (id, html) => {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = html;
+  };
+
+  if (isFamily) {
+    // Family tier — flat household pricing
+    set('pc_annual_name',   'MyGrind Family Annual');
+    set('pc_annual_amount', '$149<span class="per"> / year &middot; up to 3 players</span>');
+    set('pc_annual_equiv',  '~ $12.42/mo &middot; save up to $148/yr');
+    set('pc_annual_tag',    'For 2-3 players in your household');
+
+    set('pc_monthly_name',   'MyGrind Family Monthly');
+    set('pc_monthly_amount', '$14.99<span class="per"> / month &middot; up to 3 players</span>');
+    set('pc_monthly_equiv',  'Cancel anytime');
+    set('pc_monthly_tag',    'Month to month for the whole household');
+
+    // "You\'ll save" line below each card — concrete dollars saved vs Single
+    const savedYr  = (count * 99) - 149;
+    const savedMo  = ((count * 9.99) - 14.99).toFixed(2);
+    set('annual_total',
+      '<span class="you-pay">You Save</span>' +
+      '<span class="total-amount">$' + savedYr + '</span>' +
+      '<span class="total-context">/ year vs ' + count + ' single plans</span>'
+    );
+    set('monthly_total',
+      '<span class="you-pay">You Save</span>' +
+      '<span class="total-amount">$' + savedMo + '</span>' +
+      '<span class="total-context">/ month vs ' + count + ' single plans</span>'
+    );
+    const annualTotalEl  = document.getElementById('annual_total');
+    const monthlyTotalEl = document.getElementById('monthly_total');
+    if (annualTotalEl)  annualTotalEl.classList.add('shown');
+    if (monthlyTotalEl) monthlyTotalEl.classList.add('shown');
+
+  } else {
+    // Single tier — per-player pricing, no totals shown (1 × rate = total)
+    set('pc_annual_name',   'MyGrind Annual');
+    set('pc_annual_amount', '$99<span class="per"> / year per player</span>');
+    set('pc_annual_equiv',  '~ $8.25/mo &middot; save 17%');
+    set('pc_annual_tag',    'For families committed to the year');
+
+    set('pc_monthly_name',   'MyGrind Monthly');
+    set('pc_monthly_amount', '$9.99<span class="per"> / month per player</span>');
+    set('pc_monthly_equiv',  'Cancel anytime');
+    set('pc_monthly_tag',    'Month to month, no commitment');
+
+    set('annual_total',  '');
+    set('monthly_total', '');
+    const annualTotalEl  = document.getElementById('annual_total');
+    const monthlyTotalEl = document.getElementById('monthly_total');
+    if (annualTotalEl)  annualTotalEl.classList.remove('shown');
+    if (monthlyTotalEl) monthlyTotalEl.classList.remove('shown');
   }
-
-  // Multi-player: compute totals and show
-  // Note: state.playerCount value of 3 represents "3 or more" per Screen 3.
-  // We display "3 players" in the preview; actual billing happens later
-  // (Phase 5+ Stripe checkout) where parent confirms exact count.
-  const annualTotal  = (count * 99).toFixed(0);   // $99/yr per player
-  const monthlyTotal = (count * 9.99).toFixed(2); // $9.99/mo per player
-
-  // Structured HTML so the label / amount / context get distinct typography.
-  // (Per Coach Young April 27 — fine-print version was getting skimmed past.)
-  annualTotalEl.innerHTML =
-    '<span class="you-pay">You\'ll Pay</span>' +
-    '<span class="total-amount">$' + annualTotal + '</span>' +
-    '<span class="total-context">/ year for ' + count + ' players</span>';
-
-  monthlyTotalEl.innerHTML =
-    '<span class="you-pay">You\'ll Pay</span>' +
-    '<span class="total-amount">$' + monthlyTotal + '</span>' +
-    '<span class="total-context">/ month for ' + count + ' players</span>';
-
-  annualTotalEl.classList.add('shown');
-  monthlyTotalEl.classList.add('shown');
 }
+
+// Backwards-compat alias — keeps any callers from older sessions working.
+function updateMultiPlayerTotals() { renderPricingCards(); }
 
 /* ═══════════════════════════════════════════════════════════
    SCREEN 6 — ADD YOUR PLAYER (multi-player loop, fallback branch)
@@ -3195,11 +3240,66 @@ function loadPlayerSlot() {
   // Apply fallback state
   applyFallbackVisuals(player.fallback === true);
 
+  // If players are slot-locked (already past Screen 7 = invites sent),
+  // make every field read-only and surface a banner explaining how to swap.
+  applySlotLockUI(!!state.playersLockedAt);
+
   // Update name preview
   updatePlayerNameDisplay();
 
   // Update Continue button label and enabled state
   refreshPlayerContinue();
+}
+
+// Disable / enable Screen 6 inputs based on the slot-lock state. Once a
+// parent has confirmed and "sent" invites (Screen 7 entry), the slots are
+// locked — they can navigate back and view, but not edit. Replacing a
+// player requires emailing support so the household pricing tier can't be
+// silently rotated through unrelated kids.
+function applySlotLockUI(locked) {
+  const first  = document.getElementById('player_first');
+  const rel    = document.getElementById('player_rel');
+  const phone  = document.getElementById('player_phone');
+  const fbRow  = document.getElementById('fallback_row');
+  const banner = document.getElementById('slot_lock_banner');
+
+  // Lazily create the banner the first time we need it. Keeping the markup
+  // out of the static HTML so legacy state without playersLockedAt never
+  // sees stray UI on a normal pass through the flow.
+  function ensureBanner() {
+    if (banner) return banner;
+    const slot = document.getElementById('s6_slot');
+    const host = slot && slot.parentNode;
+    if (!host) return null;
+    const el = document.createElement('div');
+    el.id = 'slot_lock_banner';
+    el.style.cssText =
+      'background:rgba(201,168,76,0.08);border:1px solid #9A7A30;border-radius:3px;' +
+      'padding:12px 14px;margin:14px 0 0;font-family:Barlow,sans-serif;font-size:13px;' +
+      'color:#E8DCC4;line-height:1.5;display:none;';
+    el.innerHTML =
+      '<strong style="color:#C9A84C;">🔒 Player slots locked.</strong> ' +
+      'Your invites already went out. To swap a player, email ' +
+      '<a href="mailto:coach@mygrindapp.com?subject=Swap%20a%20player%20on%20my%20plan" ' +
+      'style="color:#C9A84C;">coach@mygrindapp.com</a> and we\'ll handle it for you.';
+    host.appendChild(el);
+    return el;
+  }
+
+  if (locked) {
+    if (first) first.setAttribute('readonly', 'readonly');
+    if (rel)   rel.setAttribute('disabled', 'disabled');
+    if (phone) phone.setAttribute('readonly', 'readonly');
+    if (fbRow) fbRow.style.pointerEvents = 'none';
+    const b = ensureBanner();
+    if (b) b.style.display = 'block';
+  } else {
+    if (first) first.removeAttribute('readonly');
+    if (rel)   rel.removeAttribute('disabled');
+    if (phone) phone.removeAttribute('readonly');
+    if (fbRow) fbRow.style.pointerEvents = '';
+    if (banner) banner.style.display = 'none';
+  }
 }
 
 function applyFallbackVisuals(isFallback) {
@@ -3257,6 +3357,25 @@ function updatePlayerNameDisplay() {
 
 // Validates the current player's fields and saves to state.
 // Called on every keystroke / select change.
+// Returns true if this phone (digits-only normalized) is already used by
+// ANOTHER player slot in the same Family plan (excluding fallback slots,
+// since fallback shares the parent device by design). Anti-abuse defense:
+// blocks "fake siblings" with the same phone number being added just to
+// fill Family slots they don't actually belong in.
+function phoneClashesWithOtherSlot(phoneStr, currentIdx) {
+  const target = (phoneStr || '').replace(/\D/g, '');
+  if (!target || target.length < 10) return false;
+  const players = state.players || [];
+  for (let i = 0; i < players.length; i++) {
+    if (i === currentIdx) continue;
+    const other = players[i];
+    if (!other || other.fallback) continue;
+    const otherDigits = (other.phone || '').replace(/\D/g, '');
+    if (otherDigits && otherDigits === target) return true;
+  }
+  return false;
+}
+
 function onPlayerInput() {
   const idx = state.currentPlayerIndex || 0;
   const player = ensurePlayerSlot(idx);
@@ -3275,7 +3394,20 @@ function onPlayerInput() {
   // Validate each field
   const firstOk = first.value.trim().length >= 1;
   const relOk   = rel.value.length > 0;
-  const phoneOk = player.fallback ? true : isValidPhone(phone.value);
+  const phoneFormatOk = player.fallback ? true : isValidPhone(phone.value);
+  const phoneUnique   = player.fallback ? true : !phoneClashesWithOtherSlot(phone.value, idx);
+  const phoneOk = phoneFormatOk && phoneUnique;
+
+  // Surface duplicate-phone error inline (Family-plan anti-abuse).
+  // Format errors use the existing onPlayerPhoneBlur handler — this only
+  // fires when the format is otherwise valid but it duplicates another slot.
+  const errEl = document.getElementById('player_phone_error');
+  if (errEl && !player.fallback && phoneFormatOk && !phoneUnique) {
+    errEl.textContent = "That number is already used by another player in this plan. Each player needs their own number (or use the 'doesn't have their own phone' option).";
+  } else if (errEl && phoneFormatOk) {
+    // Clear our duplicate message — leave format errors to onPlayerPhoneBlur
+    if (errEl.textContent.indexOf('already used') !== -1) errEl.textContent = '';
+  }
 
   // Apply visual states
   validateField(first, firstOk);
@@ -3340,13 +3472,20 @@ function refreshPlayerContinue() {
 
   const firstOk = (player.firstName || '').length >= 1;
   const relOk   = (player.relationship || '').length > 0;
-  const phoneOk = player.fallback ? true : isValidPhone(player.phone || '');
+  const phoneFormatOk = player.fallback ? true : isValidPhone(player.phone || '');
+  const phoneUnique   = player.fallback ? true : !phoneClashesWithOtherSlot(player.phone || '', idx);
+  const phoneOk = phoneFormatOk && phoneUnique;
 
+  // Once players are locked, the Continue button just navigates forward —
+  // it's effectively a "next" through the locked view rather than a save.
   next.disabled = !(firstOk && relOk && phoneOk);
 
   // Button label changes based on whether this is the last player
   const isLast = (idx + 1 >= total);
-  if (isLast) {
+  if (state.playersLockedAt) {
+    next.innerHTML = isLast ? 'Back to Dashboard &rarr;' : 'Continue &rarr;';
+    next.disabled = false;
+  } else if (isLast) {
     next.innerHTML = 'Send All Invites &rarr;';
   } else {
     next.innerHTML = 'Continue &rarr;';
@@ -3466,6 +3605,14 @@ function onPhoneConfirmEdit() {
 // "Yes, send" button in the modal — proceed to Screen 7 as normal.
 function onPhoneConfirmSend() {
   hidePhoneConfirmModal();
+  // Slot-lock fires the moment "send" is confirmed. From here on, navigating
+  // back to Screen 6 shows a read-only view — players cannot be silently
+  // swapped out without contacting support. Anti-abuse defense for the
+  // Family pricing tier (locked 2026-05-02).
+  if (!state.playersLockedAt) {
+    state.playersLockedAt = new Date().toISOString();
+    saveState();
+  }
   go(7);
 }
 
@@ -3811,9 +3958,21 @@ function onResendInvite(playerIndex) {
 // pricing cards above (annual default per Decision #8 v2).
 // Phase 5 will replace this alert with the real Stripe checkout flow.
 function onSkipTrialClicked() {
-  const plan = state.preferredPlan || 'annual';
-  const planLabel = plan === 'monthly' ? 'Monthly ($9.99/mo per player)' : 'Annual ($99/yr per player)';
-  const count = state.playerCount || 1;
+  const plan     = state.preferredPlan || 'annual';
+  const count    = state.playerCount   || 1;
+  const isFamily = count >= 2;
+
+  let planLabel;
+  if (isFamily) {
+    planLabel = plan === 'monthly'
+      ? 'Family Monthly ($14.99/mo · up to 3 players)'
+      : 'Family Annual ($149/yr · up to 3 players)';
+  } else {
+    planLabel = plan === 'monthly'
+      ? 'Monthly ($9.99/mo per player)'
+      : 'Annual ($99/yr per player)';
+  }
+
   alert(
     'Skip the trial — pay now and start immediately.\n\n' +
     'Your selected plan: ' + planLabel + '\n' +
@@ -3966,15 +4125,23 @@ function populateSettings() {
   setText('set_email', p.email || '—');
   setText('set_phone', p.phone || '—');
 
-  const plan = state && state.preferredPlan;
-  if (plan === 'monthly')      setText('set_plan', 'Monthly · $9.99/mo per player');
-  else if (plan === 'annual')  setText('set_plan', 'Annual · $99/yr per player');
-  else                         setText('set_plan', '—');
+  const plan     = state && state.preferredPlan;
+  const count    = (state && state.playerCount) || 0;
+  const isFamily = count >= 2;
 
-  const count = state && state.playerCount;
+  if (isFamily) {
+    if (plan === 'monthly')     setText('set_plan', 'Family Monthly · $14.99/mo · up to 3 players');
+    else if (plan === 'annual') setText('set_plan', 'Family Annual · $149/yr · up to 3 players');
+    else                        setText('set_plan', '—');
+  } else {
+    if (plan === 'monthly')     setText('set_plan', 'Monthly · $9.99/mo per player');
+    else if (plan === 'annual') setText('set_plan', 'Annual · $99/yr per player');
+    else                        setText('set_plan', '—');
+  }
+
   if (count === 1)      setText('set_players', '1 player');
   else if (count === 2) setText('set_players', '2 players');
-  else if (count === 3) setText('set_players', '3 or more players');
+  else if (count === 3) setText('set_players', '3 players (max for Family plan)');
   else                  setText('set_players', '—');
 }
 
