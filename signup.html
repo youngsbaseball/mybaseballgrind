@@ -1,10 +1,12 @@
-f<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>MyGrind — Sign Up Your Player</title>
 <meta name="description" content="Set up your player on MyGrind. 14 days free. No credit card. Cancel anytime.">
+<meta name="robots" content="noindex,nofollow">
+<link rel="canonical" href="https://mygrindapp.com/signup.html">
 
 <!-- ═══════════════════════════════════════════════════════════
      MYGRIND 2.0 — PARENT SIGNUP FLOW
@@ -3576,8 +3578,9 @@ function buildPhoneConfirmList() {
   listEl.innerHTML = html;
 }
 
-// Tiny HTML-escaper for safety when injecting parent-typed values into the modal.
+// HTML escaper for any user-typed value injected into modals or SMS preview.
 function escapeHtml(s) {
+  if (s === null || s === undefined) return '';
   return String(s)
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
@@ -3738,17 +3741,6 @@ function renderPlayerStatusCard(player, index) {
       '</div>'
     );
   }
-}
-
-// Defensive HTML escape for the SMS preview text
-function escapeHtml(s) {
-  if (!s) return '';
-  return s
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;');
 }
 
 function buildScreen7() {

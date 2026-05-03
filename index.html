@@ -14,6 +14,8 @@
 <meta property="og:site_name" content="MyGrind">
 <meta property="og:image" content="https://mygrindapp.com/assets/logo-web.png">
 
+<link rel="canonical" href="https://mygrindapp.com/">
+
 <link rel="icon" type="image/png" href="assets/favicon.png">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 
@@ -552,9 +554,9 @@
 
   <section class="hero">
     <h1>
-      <span class="line l1"><span class="text"></span><span class="cursor c1"></span></span>
-      <span class="line l2"><span class="text"></span><span class="cursor c2"></span></span>
-      <span class="line l3 gold"><span class="text"></span><span class="cursor c3"></span></span>
+      <span class="line l1"><span class="text">The Player&#39;s Journey.</span><span class="cursor c1"></span></span>
+      <span class="line l2"><span class="text">The Parent&#39;s Journey.</span><span class="cursor c2"></span></span>
+      <span class="line l3 gold"><span class="text">One Journal.</span><span class="cursor c3"></span></span>
     </h1>
     <div class="accent-underline" id="underline"></div>
     <div class="sport-chip" id="chip">Baseball &middot; Softball</div>
@@ -683,6 +685,9 @@
       document.getElementById('chip').classList.add('show');
       afterTypewriter();
     } else {
+      // H1 ships with hardcoded text (for SEO + no-JS readers). Clear it
+      // before the typewriter starts so JS-enabled users see the animation.
+      lines.forEach(function (l) { l.textEl.textContent = ''; });
       setTimeout(function () { typeLine(0); }, startDelay);
     }
 

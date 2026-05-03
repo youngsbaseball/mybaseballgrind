@@ -1,0 +1,12 @@
+# MyGrind — robots.txt
+# Pre-launch landing + legal pages are public.
+# Signup flow, player onboarding, and the journal app are noindex'd.
+# API endpoints are off-limits to crawlers.
+
+User-agent: *
+Disallow: /signup.html
+Disallow: /onboarding.html
+Disallow: /softball.html
+Disallow: /api/
+
+Sitemap: https://mygrindapp.com/sitemap.xml
