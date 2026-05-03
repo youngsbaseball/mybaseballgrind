@@ -9,4 +9,4 @@ Disallow: /onboarding.html
 Disallow: /softball.html
 Disallow: /api/
 
-Sitemap: https://mygrindapp.com/sitemap.xml
+Sitemap: https://www.mygrindapp.com/sitemap.xml
