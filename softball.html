@@ -1529,6 +1529,9 @@ function dismissIosBanner() {
   <button onclick="mgTab('team',null);closeMoreMenu()" style="display:flex;align-items:center;gap:14px;width:100%;padding:14px 20px;background:transparent;border:none;color:#D4C8BC;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;text-align:left;" onmouseover="this.style.background='rgba(212,84,122,0.06)'" onmouseout="this.style.background='transparent'">
     <span style="font-size:20px;width:28px;text-align:center;">👥</span> My Team
   </button>
+  <button onclick="mgTab('coach-feedback',null);closeMoreMenu()" style="display:flex;align-items:center;gap:14px;width:100%;padding:14px 20px;background:transparent;border:none;color:#D4C8BC;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;text-align:left;" onmouseover="this.style.background='rgba(212,84,122,0.06)'" onmouseout="this.style.background='transparent'">
+    <span style="font-size:20px;width:28px;text-align:center;">💬</span> Coach Feedback
+  </button>
   <button onclick="mgTab('share',null);closeMoreMenu()" style="display:flex;align-items:center;gap:14px;width:100%;padding:14px 20px;background:transparent;border:none;color:#D4C8BC;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;text-align:left;" onmouseover="this.style.background='rgba(212,84,122,0.06)'" onmouseout="this.style.background='transparent'">
     <span style="font-size:20px;width:28px;text-align:center;">📲</span> Share
   </button>
@@ -1545,6 +1548,28 @@ function dismissIosBanner() {
 /* Push main content up so bottom nav doesn't cover it */
 main { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important; }
 #social-share-footer { margin-bottom: calc(62px + env(safe-area-inset-bottom, 0px)); }
+
+/* Coach Feedback chip buttons */
+.cf-chip {
+  background: #231F1C;
+  border: 1px solid #3D3530;
+  color: var(--light);
+  font-family: 'Barlow', sans-serif;
+  font-size: 13px;
+  padding: 11px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+  text-align: left;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.cf-chip:hover { border-color: var(--gold-dark); }
+.cf-chip.selected {
+  background: rgba(var(--accent-rgb), 0.12);
+  border-color: var(--gold);
+  color: var(--gold);
+}
 </style>
 
 <main>
@@ -2790,6 +2815,73 @@ main { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important;
     </div>
 
   </div><!-- END panel-team -->
+
+  <!-- ══════════════════════════════════════════ COACH FEEDBACK ══ -->
+  <div class="panel" id="panel-coach-feedback">
+    <div class="section-header">
+      <div class="section-title">COACH <span>FEEDBACK</span></div>
+      <div class="section-sub">Send a structured note to your coach or instructor</div>
+      <div class="gold-line"></div>
+    </div>
+
+    <div class="card" style="margin-bottom:14px;">
+      <div class="card-title" style="margin-bottom:14px;">Ask Your Coach</div>
+
+      <div style="margin-bottom:16px;">
+        <label style="display:block;font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:6px;">Send to</label>
+        <input id="cf-coach-name" type="text" placeholder="Coach name (e.g., Coach Young)" autocomplete="off"
+          style="width:100%;background:#231F1C;border:1px solid #3D3530;color:var(--white);padding:12px;border-radius:4px;font-family:'Barlow',sans-serif;font-size:15px;margin-bottom:8px;box-sizing:border-box;"
+          oninput="cfSaveContact()">
+        <input id="cf-coach-email" type="email" placeholder="Coach email" autocomplete="off"
+          style="width:100%;background:#231F1C;border:1px solid #3D3530;color:var(--white);padding:12px;border-radius:4px;font-family:'Barlow',sans-serif;font-size:15px;box-sizing:border-box;"
+          oninput="cfSaveContact()">
+        <div style="font-family:'Barlow',sans-serif;font-size:11px;color:var(--grey);margin-top:6px;">We save this so you don't retype it next time.</div>
+      </div>
+
+      <div style="margin-bottom:16px;">
+        <label style="display:block;font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:8px;">Focus area</label>
+        <div id="cf-focus-row" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+          <button type="button" class="cf-chip" data-cf-focus="Hitting" onclick="cfPickFocus(this)">⚾ Hitting</button>
+          <button type="button" class="cf-chip" data-cf-focus="Pitching" onclick="cfPickFocus(this)">🎯 Pitching</button>
+          <button type="button" class="cf-chip" data-cf-focus="Fielding" onclick="cfPickFocus(this)">🧤 Fielding</button>
+          <button type="button" class="cf-chip" data-cf-focus="Mental Game" onclick="cfPickFocus(this)">🧠 Mental Game</button>
+          <button type="button" class="cf-chip" data-cf-focus="Mechanics" onclick="cfPickFocus(this)">⚙️ Mechanics</button>
+          <button type="button" class="cf-chip" data-cf-focus="Plate Discipline" onclick="cfPickFocus(this)">📐 Plate Discipline</button>
+          <button type="button" class="cf-chip" data-cf-focus="Other" onclick="cfPickFocus(this)" style="grid-column:1/-1;">💭 Other</button>
+        </div>
+      </div>
+
+      <div style="margin-bottom:16px;">
+        <label style="display:block;font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:8px;">Situation</label>
+        <div id="cf-situation-row" style="display:grid;grid-template-columns:1fr;gap:6px;">
+          <button type="button" class="cf-chip" data-cf-sit="Recent struggle" onclick="cfPickSituation(this)">😣 Recent struggle</button>
+          <button type="button" class="cf-chip" data-cf-sit="Pre-game prep" onclick="cfPickSituation(this)">⚾ Pre-game prep</button>
+          <button type="button" class="cf-chip" data-cf-sit="In a slump" onclick="cfPickSituation(this)">📉 In a slump</button>
+          <button type="button" class="cf-chip" data-cf-sit="Question about a drill" onclick="cfPickSituation(this)">📚 Question about a drill</button>
+          <button type="button" class="cf-chip" data-cf-sit="General feedback" onclick="cfPickSituation(this)">💬 General feedback</button>
+        </div>
+      </div>
+
+      <div style="margin-bottom:16px;">
+        <label style="display:block;font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin-bottom:6px;">Your note <span id="cf-note-count" style="color:var(--grey);font-weight:400;">(0/280)</span></label>
+        <textarea id="cf-note" rows="4" maxlength="280" placeholder="Hit 0-for-4 last night, pulling everything. What should I work on this week?"
+          style="width:100%;background:#231F1C;border:1px solid #3D3530;color:var(--white);padding:12px;border-radius:4px;font-family:'Barlow',sans-serif;font-size:15px;line-height:1.5;resize:vertical;box-sizing:border-box;"
+          oninput="cfUpdateNoteCount()"></textarea>
+      </div>
+
+      <button type="button" class="btn btn-gold" id="cf-submit" onclick="cfSubmit()" style="width:100%;">Send to Coach</button>
+
+      <div id="cf-error" style="color:var(--red);font-family:'Barlow',sans-serif;font-size:13px;margin-top:10px;display:none;"></div>
+      <div id="cf-toast" style="background:rgba(39,174,96,0.12);border:1px solid var(--green);color:#7CDFA0;padding:10px 12px;border-radius:4px;font-family:'Barlow',sans-serif;font-size:13px;margin-top:12px;display:none;"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Recent Requests</div>
+      <div id="cf-history" style="margin-top:12px;">
+        <div style="color:var(--grey);font-family:'Barlow',sans-serif;font-size:13px;text-align:center;padding:18px 0;">No requests yet — your sent feedback shows up here.</div>
+      </div>
+    </div>
+  </div><!-- END panel-coach-feedback -->
 
   <div class="panel" id="panel-stats">
     <div class="section-header">
@@ -9815,5 +9907,166 @@ window.addEventListener('load', function() {
 });
 </script>
 <script src="mg-config.js"></script>
+<script>
+// ══ COACH FEEDBACK (Phase 7a) ═════════════════════════════════════
+// Player picks focus + situation + writes a 280-char note, hits Send.
+// V1: opens email client via mailto: with structured body. Logs every
+// send to localStorage 'mg_coach_feedback_outbox' so the player has a
+// history. When Phase 7b ships the in-app coach inbox, swap the mailto
+// for an API call — same UI, same outbox shape.
+function cfEsc(s) {
+  if (s == null) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+}
+function cfLoadContact() {
+  try {
+    var saved = JSON.parse(localStorage.getItem('mg_coach_contact') || '{}');
+    var n = document.getElementById('cf-coach-name');
+    var e = document.getElementById('cf-coach-email');
+    if (n && saved.name)  n.value = saved.name;
+    if (e && saved.email) e.value = saved.email;
+  } catch (err) {}
+  cfRenderHistory();
+  cfUpdateNoteCount();
+}
+function cfSaveContact() {
+  var name  = (document.getElementById('cf-coach-name')  || {}).value || '';
+  var email = (document.getElementById('cf-coach-email') || {}).value || '';
+  try {
+    localStorage.setItem('mg_coach_contact',
+      JSON.stringify({ name: name.trim(), email: email.trim() }));
+  } catch (err) {}
+}
+function cfPickFocus(btn) {
+  document.querySelectorAll('#cf-focus-row .cf-chip').forEach(function(b) { b.classList.remove('selected'); });
+  btn.classList.add('selected');
+}
+function cfPickSituation(btn) {
+  document.querySelectorAll('#cf-situation-row .cf-chip').forEach(function(b) { b.classList.remove('selected'); });
+  btn.classList.add('selected');
+}
+function cfUpdateNoteCount() {
+  var note = document.getElementById('cf-note');
+  var counter = document.getElementById('cf-note-count');
+  if (note && counter) counter.textContent = '(' + note.value.length + '/280)';
+}
+function cfShowError(msg) {
+  var err = document.getElementById('cf-error');
+  if (!err) return;
+  err.textContent = msg;
+  err.style.display = 'block';
+}
+function cfClearError() {
+  var err = document.getElementById('cf-error');
+  if (err) err.style.display = 'none';
+}
+function cfSubmit() {
+  cfClearError();
+  var coachName  = (document.getElementById('cf-coach-name').value  || '').trim();
+  var coachEmail = (document.getElementById('cf-coach-email').value || '').trim();
+  var focusEl = document.querySelector('#cf-focus-row .cf-chip.selected');
+  var sitEl   = document.querySelector('#cf-situation-row .cf-chip.selected');
+  var focus     = focusEl ? focusEl.getAttribute('data-cf-focus') : '';
+  var situation = sitEl   ? sitEl.getAttribute('data-cf-sit')     : '';
+  var note      = (document.getElementById('cf-note').value || '').trim();
+
+  if (!coachName)                              return cfShowError('Add the coach name first.');
+  if (!coachEmail || !/.+@.+\..+/.test(coachEmail)) return cfShowError('Add a valid coach email.');
+  if (!focus)                                  return cfShowError('Pick a focus area.');
+  if (!situation)                              return cfShowError('Pick a situation.');
+  if (!note)                                   return cfShowError('Add a short note about what you need feedback on.');
+
+  // Pull player profile for sender info
+  var playerName = 'Player';
+  try {
+    var profile = JSON.parse(localStorage.getItem('ybg_softball_profile') || '{}');
+    playerName = (profile.name || profile.firstName || 'Player').trim();
+  } catch (err) {}
+
+  // Build email
+  var subject = '[MyGrind] ' + playerName + ' — ' + focus + ' (' + situation + ')';
+  var body =
+    'Hi ' + coachName + ',\n\n' +
+    'Quick feedback request from MyGrind.\n\n' +
+    'Player: ' + playerName + '\n' +
+    'Focus area: ' + focus + '\n' +
+    'Situation: ' + situation + '\n\n' +
+    'My note:\n' + note + '\n\n' +
+    '—\n' +
+    'Sent via MyGrind (mygrindapp.com)\n' +
+    'Reply to this email to respond. ' + playerName + ' will see your reply on their next dashboard refresh once the in-app inbox ships.';
+
+  // Log to outbox BEFORE opening client (so the history records the attempt)
+  var outbox = [];
+  try { outbox = JSON.parse(localStorage.getItem('mg_coach_feedback_outbox') || '[]'); } catch (err) {}
+  outbox.unshift({
+    id: 'cf-' + Date.now(),
+    sentAt: new Date().toISOString(),
+    coachName: coachName, coachEmail: coachEmail,
+    focus: focus, situation: situation, note: note,
+    playerName: playerName, status: 'sent'
+  });
+  outbox = outbox.slice(0, 20);
+  try { localStorage.setItem('mg_coach_feedback_outbox', JSON.stringify(outbox)); } catch (err) {}
+
+  // Open email client
+  var mailtoUrl = 'mailto:' + encodeURIComponent(coachEmail) +
+    '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+  window.location.href = mailtoUrl;
+
+  // Reset form (keep coach contact saved)
+  document.getElementById('cf-note').value = '';
+  document.querySelectorAll('#cf-focus-row .cf-chip, #cf-situation-row .cf-chip').forEach(function(b) {
+    b.classList.remove('selected');
+  });
+  cfUpdateNoteCount();
+
+  // Toast
+  var toast = document.getElementById('cf-toast');
+  if (toast) {
+    toast.textContent = '✓ Email opened — tap Send in your mail app to deliver to ' + coachName + '.';
+    toast.style.display = 'block';
+    setTimeout(function() { toast.style.display = 'none'; }, 6000);
+  }
+
+  cfRenderHistory();
+}
+function cfRenderHistory() {
+  var hist = document.getElementById('cf-history');
+  if (!hist) return;
+  var outbox = [];
+  try { outbox = JSON.parse(localStorage.getItem('mg_coach_feedback_outbox') || '[]'); } catch (err) {}
+  if (outbox.length === 0) {
+    hist.innerHTML = '<div style="color:var(--grey);font-family:Barlow,sans-serif;font-size:13px;text-align:center;padding:18px 0;">No requests yet — your sent feedback shows up here.</div>';
+    return;
+  }
+  var html = '';
+  outbox.forEach(function(item) {
+    var dt = new Date(item.sentAt);
+    var when = dt.toLocaleDateString() + ' · ' + dt.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+    html += '<div style="background:#231F1C;border:1px solid #3D3530;border-radius:4px;padding:12px;margin-bottom:8px;">' +
+      '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;gap:8px;">' +
+        '<div style="font-family:\'Barlow Condensed\',sans-serif;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);">' +
+          cfEsc(item.focus) + ' · ' + cfEsc(item.situation) +
+        '</div>' +
+        '<div style="font-family:Barlow,sans-serif;font-size:10px;color:var(--grey);white-space:nowrap;">' + cfEsc(when) + '</div>' +
+      '</div>' +
+      '<div style="font-family:Barlow,sans-serif;font-size:14px;color:var(--light);line-height:1.5;margin-bottom:8px;">' + cfEsc(item.note) + '</div>' +
+      '<div style="font-family:Barlow,sans-serif;font-size:11px;color:var(--grey);">→ Sent to ' + cfEsc(item.coachName) + '</div>' +
+    '</div>';
+  });
+  hist.innerHTML = html;
+}
+// Hook into the existing showPanel so we refresh contact + history when the tab opens
+(function() {
+  var orig = window.showPanel;
+  if (typeof orig !== 'function') return;
+  window.showPanel = function(id) {
+    orig.apply(this, arguments);
+    if (id === 'coach-feedback') cfLoadContact();
+  };
+})();
+</script>
 </body>
 </html>
