@@ -9,6 +9,26 @@
 <link rel="canonical" href="https://www.mygrindapp.com/onboarding.html">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@700&family=Barlow:wght@400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+
+<script>
+  // Sport detection runs synchronously before paint so the palette resolves
+  // immediately. Order: ?sport= URL param → mg_sport localStorage → 'baseball'.
+  (function() {
+    try {
+      var url   = new URLSearchParams(window.location.search).get('sport');
+      var saved = localStorage.getItem('mg_sport');
+      var valid = { baseball: 1, softball: 1, both: 1 };
+      var sport = valid[url] ? url : (valid[saved] ? saved : 'baseball');
+      localStorage.setItem('mg_sport', sport);
+      document.documentElement.setAttribute('data-sport', sport);
+      var meta = document.querySelector('meta[name="theme-color"]');
+      if (meta) meta.setAttribute('content', sport === 'softball' ? '#D4547A' : '#C9A84C');
+    } catch (e) {
+      document.documentElement.setAttribute('data-sport', 'baseball');
+    }
+  })();
+</script>
+
 <style>
 /* ═══════════════════════════════════════════════════════════
    MYGRIND 2.0 — PLAYER ONBOARDING (Phase 4)
@@ -24,6 +44,17 @@
    exit is a "You're all set" placeholder screen.
    ═══════════════════════════════════════════════════════════ */
 
+:root {
+  /* Sport-aware accent: gold = baseball/both default. softball overrides below. */
+  --gold: #C9A84C;
+  --accent-rgb: 201, 168, 76;
+}
+
+[data-sport="softball"] {
+  --gold: #D4547A;
+  --accent-rgb: 212, 84, 122;
+}
+
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 body { background: #181614; color: #F5F0EB; font-family: 'Barlow', Arial, sans-serif; font-size: 16px; min-height: 100vh; }
 .screen { display: none; flex-direction: column; min-height: 100vh; padding: 0 0 80px; max-width: 480px; margin: 0 auto; }
@@ -32,25 +63,25 @@ body { background: #181614; color: #F5F0EB; font-family: 'Barlow', Arial, sans-s
 
 .prog-wrap { padding: 14px 24px 0; background: #181614; position: sticky; top: 0; z-index: 10; max-width: 480px; margin: 0 auto; }
 .prog-track { height: 3px; background: #2A2622; border-radius: 2px; overflow: hidden; }
-.prog-fill { height: 100%; background: #C9A84C; border-radius: 2px; transition: width 0.4s ease; }
+.prog-fill { height: 100%; background: var(--gold); border-radius: 2px; transition: width 0.4s ease; }
 .prog-label { display: flex; justify-content: space-between; margin-top: 5px; padding-bottom: 10px; }
 .prog-step { font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #6B5E52; }
 
-.badge { font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: #C9A84C; margin-bottom: 5px; }
+.badge { font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 5px; }
 h1 { font-family: 'Bebas Neue', Arial, sans-serif; font-size: 34px; letter-spacing: 1.5px; line-height: 1.1; color: #F5F0EB; margin-bottom: 8px; }
-h1 span { color: #C9A84C; }
+h1 span { color: var(--gold); }
 .sub { font-size: 15px; color: #A89880; line-height: 1.7; margin-bottom: 18px; }
-.gold-bar { width: 36px; height: 3px; background: #C9A84C; margin-bottom: 14px; }
+.gold-bar { width: 36px; height: 3px; background: var(--gold); margin-bottom: 14px; }
 
 /* Option button (used on age, level, team, training-days screens) */
 .opt { display: block; width: 100%; background: #231F1C; border: 1px solid #3D3530; border-radius: 6px; padding: 14px 16px; font-family: 'Barlow', Arial, sans-serif; font-size: 16px; color: #D4C8BC; font-weight: 500; text-align: left; cursor: pointer; margin-bottom: 8px; transition: border-color 0.15s, background 0.15s, color 0.15s; -webkit-user-select: none; user-select: none; }
-.opt:active { border-color: #C9A84C; background: rgba(201,168,76,0.1); color: #C9A84C; }
-.opt.selected { border-color: #C9A84C; background: rgba(201,168,76,0.1); color: #C9A84C; }
+.opt:active { border-color: var(--gold); background: rgba(var(--accent-rgb),0.1); color: var(--gold); }
+.opt.selected { border-color: var(--gold); background: rgba(var(--accent-rgb),0.1); color: var(--gold); }
 .opt.selected::after { content: ' ✓'; float: right; }
 
 /* Sport card (S1) */
 .sport-card { display: flex; align-items: center; gap: 16px; background: #231F1C; border: 2px solid #3D3530; border-radius: 10px; padding: 18px 20px; cursor: pointer; margin-bottom: 10px; transition: all 0.2s; -webkit-user-select: none; user-select: none; }
-.sport-card:active { border-color: #C9A84C; background: rgba(201,168,76,0.08); }
+.sport-card:active { border-color: var(--gold); background: rgba(var(--accent-rgb),0.08); }
 .sport-emoji { font-size: 36px; line-height: 1; flex-shrink: 0; }
 .sport-name { font-family: 'Bebas Neue', Arial, sans-serif; font-size: 26px; letter-spacing: 1.5px; color: #F5F0EB; }
 .sport-desc { font-size: 14px; color: #A89880; margin-top: 2px; }
@@ -58,7 +89,7 @@ h1 span { color: #C9A84C; }
 /* Card containers (used on plan-preview screen) */
 .card { background: #231F1C; border: 1px solid #3D3530; border-radius: 8px; padding: 16px; margin-bottom: 12px; color: #D4C8BC; }
 .card-gold { background: linear-gradient(135deg,#1A1400,#0E0C00); border-color: #9A7A30; }
-.card-title { font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #C9A84C; margin-bottom: 10px; }
+.card-title { font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
 
 /* Multi-select hint pill (above goals/struggles/coach-feedback screens) */
 .multi-hint { display: inline-block; background: #231F1C; border: 1px solid #3D3530; border-radius: 20px; padding: 4px 12px; font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: #555; margin-bottom: 12px; }
@@ -66,17 +97,17 @@ h1 span { color: #C9A84C; }
 /* Streak preview row (S11 plan preview) */
 .streak-row { display: flex; gap: 6px; justify-content: center; margin: 10px 0 8px; }
 .sday { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Barlow Condensed', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 1px; }
-.sday.done { background: #C9A84C; color: #080808; }
-.sday.today { background: rgba(201,168,76,0.15); border: 1.5px solid #C9A84C; color: #C9A84C; }
+.sday.done { background: var(--gold); color: #080808; }
+.sday.today { background: rgba(var(--accent-rgb),0.15); border: 1.5px solid var(--gold); color: var(--gold); }
 .sday.empty { background: #231F1C; border: 1px solid #3D3530; color: #4B3E35; }
 
 .stat-row { display: flex; gap: 10px; margin-top: 10px; }
 .stat-mini { flex: 1; background: #231F1C; border: 1px solid #3D3530; border-radius: 6px; padding: 10px; text-align: center; }
-.stat-num { font-family: 'Bebas Neue', Arial, sans-serif; font-size: 22px; color: #C9A84C; line-height: 1; }
+.stat-num { font-family: 'Bebas Neue', Arial, sans-serif; font-size: 22px; color: var(--gold); line-height: 1; }
 .stat-lbl { font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: #6B5E52; margin-top: 4px; }
 
 /* Big primary CTA (used on welcome + final exit) */
-.cta { display: block; width: 100%; background: #C9A84C; color: #080808; border: none; border-radius: 6px; padding: 16px; font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 17px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; margin-top: 8px; transition: opacity 0.2s; -webkit-user-select: none; user-select: none; }
+.cta { display: block; width: 100%; background: var(--gold); color: #080808; border: none; border-radius: 6px; padding: 16px; font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 17px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; margin-top: 8px; transition: opacity 0.2s; -webkit-user-select: none; user-select: none; }
 .cta:active { opacity: 0.85; }
 
 /* Bottom nav (Back / dots / Next) — fixed at bottom */
@@ -85,8 +116,8 @@ h1 span { color: #C9A84C; }
 .back-btn:active { color: #A89880; }
 .dots { display: flex; gap: 5px; align-items: center; }
 .dot { width: 6px; height: 6px; border-radius: 50%; background: #2A2622; transition: background 0.3s; }
-.dot.on { background: #C9A84C; }
-.next-btn { background: #C9A84C; color: #080808; border: none; border-radius: 4px; padding: 9px 20px; font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 13px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; }
+.dot.on { background: var(--gold); }
+.next-btn { background: var(--gold); color: #080808; border: none; border-radius: 4px; padding: 9px 20px; font-family: 'Barlow Condensed', Arial, sans-serif; font-size: 13px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; }
 .next-btn[disabled] { opacity: 0.3; cursor: not-allowed; }
 
 /* PIN input row (S0.5) */
@@ -99,11 +130,11 @@ h1 span { color: #C9A84C; }
   font-family: 'Bebas Neue', Arial, sans-serif;
   font-size: 32px;
   text-align: center;
-  color: #C9A84C;
+  color: var(--gold);
   outline: none;
   transition: border-color 0.15s;
 }
-.pin-box:focus { border-color: #C9A84C; }
+.pin-box:focus { border-color: var(--gold); }
 .pin-box.filled { border-color: #9A7A30; }
 .pin-helper {
   text-align: center;
@@ -137,7 +168,7 @@ h1 span { color: #C9A84C; }
 .promise-card .quote-mark {
   font-family: 'Bebas Neue', Arial, sans-serif;
   font-size: 60px;
-  color: #C9A84C;
+  color: var(--gold);
   line-height: 0.6;
   margin-bottom: 6px;
 }
@@ -154,12 +185,12 @@ h1 span { color: #C9A84C; }
   font-weight: 700;
   letter-spacing: 2px;
   text-transform: uppercase;
-  color: #C9A84C;
+  color: var(--gold);
 }
 
 /* Final exit screen (S14 — placeholder dashboard) */
 .exit-card {
-  background: linear-gradient(135deg, rgba(201,168,76,0.08), rgba(201,168,76,0.02));
+  background: linear-gradient(135deg, rgba(var(--accent-rgb),0.08), rgba(var(--accent-rgb),0.02));
   border: 1px solid #9A7A30;
   border-radius: 10px;
   padding: 24px 20px;
@@ -175,7 +206,7 @@ h1 span { color: #C9A84C; }
   color: #D4C8BC;
 }
 .exit-card-row .check {
-  color: #C9A84C;
+  color: var(--gold);
   font-weight: 700;
   font-size: 18px;
   flex-shrink: 0;
@@ -184,15 +215,15 @@ h1 span { color: #C9A84C; }
   text-align: center;
   margin: 18px 0;
   padding: 14px;
-  background: rgba(201,168,76,0.04);
-  border: 1px dashed rgba(201,168,76,0.3);
+  background: rgba(var(--accent-rgb),0.04);
+  border: 1px dashed rgba(var(--accent-rgb),0.3);
   border-radius: 6px;
   font-size: 13px;
   color: #A89880;
   line-height: 1.6;
   font-style: italic;
 }
-.exit-coming-soon strong { color: #C9A84C; font-style: normal; }
+.exit-coming-soon strong { color: var(--gold); font-style: normal; }
 
 /* ═══════════════════════════════════════════════════════════
    LOGO MARK (top of every screen — matches signup.html)
@@ -207,7 +238,7 @@ h1 span { color: #C9A84C; }
   font-family: 'Bebas Neue', cursive;
   font-size: 20px;
   letter-spacing: 4px;
-  color: #C9A84C;
+  color: var(--gold);
 }
 .logo-mark .sm {
   display: block;
@@ -221,8 +252,8 @@ h1 span { color: #C9A84C; }
 
 /* Welcome screen — special styling for the parent-context greeting */
 .parent-context {
-  background: rgba(201,168,76,0.08);
-  border-left: 3px solid #C9A84C;
+  background: rgba(var(--accent-rgb),0.08);
+  border-left: 3px solid var(--gold);
   border-radius: 0 4px 4px 0;
   padding: 14px 16px;
   margin: 16px 0 22px;
@@ -230,7 +261,7 @@ h1 span { color: #C9A84C; }
   line-height: 1.5;
   color: #D4C8BC;
 }
-.parent-context strong { color: #C9A84C; }
+.parent-context strong { color: var(--gold); }
 </style>
 </head>
 <body>
@@ -299,7 +330,7 @@ h1 span { color: #C9A84C; }
     <div class="gold-bar"></div>
 
     <p class="sub">
-      Since you're using your parent's phone, this PIN keeps your stuff yours. <strong style="color:#C9A84C;">Don't share it.</strong>
+      Since you're using your parent's phone, this PIN keeps your stuff yours. <strong style="color:var(--gold);">Don't share it.</strong>
     </p>
 
     <div class="pin-helper">Enter 4 numbers — something easy for you to remember.</div>
@@ -713,7 +744,7 @@ h1 span { color: #C9A84C; }
 
     <p class="sub" style="text-align:center;font-size:14px;color:#A89880;">
       Every player who logs consistently &mdash; even just a few minutes a day &mdash; eventually outpaces the ones who don't.<br><br>
-      <strong style="color:#C9A84C;">That's the only secret.</strong>
+      <strong style="color:var(--gold);">That's the only secret.</strong>
     </p>
   </div>
 
@@ -815,10 +846,17 @@ var cur = 0;
 function parseUrlParams() {
   try {
     var params = new URLSearchParams(window.location.search);
-    var nameParam = params.get('name');
+    var nameParam     = params.get('name');
     var fallbackParam = params.get('fallback');
+    var sportParam    = params.get('sport');
     if (nameParam) d.name = decodeURIComponent(nameParam).trim();
     if (fallbackParam === '1' || fallbackParam === 'true') d.fallback = true;
+    // Parent already picked sport during signup — pre-fill so the kid skips
+    // the sport-selection screen and the rest of the flow uses the right copy.
+    // 'both' = a single multi-sport athlete (plays baseball AND softball).
+    if (sportParam === 'baseball' || sportParam === 'softball' || sportParam === 'both') {
+      d.sport = sportParam;
+    }
   } catch(e) {
     // URLSearchParams not supported (very old browsers) — ignore
   }
@@ -887,6 +925,12 @@ function goNext(from, to) { go(to); }
    "Let's Go" button click. Routes to PIN setup if fallback,
    otherwise straight to S1 sport selection.
    ────────────────────────────────────────────────────────── */
+// First step of the actual flow. Skip the sport-pick screen (S1) when
+// the parent already set sport during signup (URL ?sport=baseball|softball).
+function firstFlowScreen() {
+  return (d.sport === 'baseball' || d.sport === 'softball' || d.sport === 'both') ? 2 : 1;
+}
+
 function startOnboarding() {
   if (d.fallback) {
     go('05');
@@ -896,7 +940,7 @@ function startOnboarding() {
       if (pin1) pin1.focus();
     }, 300);
   } else {
-    go(1);
+    go(firstFlowScreen());
   }
 }
 
@@ -958,21 +1002,29 @@ function onPinNext() {
     return;
   }
   d.pin = pin;
-  go(1);
+  go(firstFlowScreen());
 }
 
 /* ─── SPORT SELECTION (S1) ─────────────────────────────── */
 function setSport(s, el) {
   d.sport = s;
 
+  // Propagate to the palette system so the rest of the page (and softball.html
+  // when the kid eventually lands there) renders in the right colors.
+  try {
+    document.documentElement.setAttribute('data-sport', s);
+    localStorage.setItem('mg_sport', s);
+    var meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', s === 'softball' ? '#D4547A' : '#C9A84C');
+  } catch(e) {}
+
   // Visual: clear all sport cards, then highlight chosen
   document.querySelectorAll('.sport-card').forEach(function(c) {
     c.style.borderColor = '#3D3530';
     c.style.background = '#231F1C';
   });
-  var accent = s === 'softball' ? '#D4547A' : '#C9A84C';
-  el.style.borderColor = accent;
-  el.style.background = s === 'softball' ? 'rgba(212,84,122,0.08)' : 'rgba(201,168,76,0.08)';
+  el.style.borderColor = 'var(--gold)';
+  el.style.background  = 'rgba(var(--accent-rgb), 0.08)';
 
   setTimeout(function() { go(2); }, 300);
 }
@@ -1023,7 +1075,7 @@ function enableNext(el) {
   var btn = document.getElementById('n' + n);
   if (btn) {
     btn.disabled = false;
-    var accent = d.sport === 'softball' ? '#D4547A' : '#C9A84C';
+    var accent = d.sport === 'softball' ? '#D4547A' : 'var(--gold)';
     btn.style.background = accent;
   }
 }
@@ -1042,7 +1094,7 @@ function updateSportLabels() {
   var label = d.sport === 'softball' ? '🥎 Softball' :
               d.sport === 'both'     ? '⚾🥎 Both' :
               d.sport === 'baseball' ? '⚾ Baseball' : '';
-  var accent = d.sport === 'softball' ? '#D4547A' : '#C9A84C';
+  var accent = d.sport === 'softball' ? '#D4547A' : 'var(--gold)';
 
   // Update each per-screen sport label
   var screens = [1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 13, 14];
@@ -1067,7 +1119,7 @@ function updateSportLabels() {
    since that's not a content step.
    ────────────────────────────────────────────────────────── */
 function buildDots(s) {
-  var accent = d.sport === 'softball' ? '#D4547A' : '#C9A84C';
+  var accent = d.sport === 'softball' ? '#D4547A' : 'var(--gold)';
   // Map screen number -> step index for dot counting
   // 0=welcome (no dot fill), 05=PIN (no dot fill)
   // 1-9 = steps 1-9, 11 = step 10, 13 = step 11
@@ -1146,7 +1198,7 @@ function buildPlan() {
       '<div>✅ Daily journal prompts for ' + posLabel + '</div>' +
       '<div>✅ ' + drills + '</div>' +
       '<div>✅ Weekly progress snapshot</div>' +
-      '<div>✅ Goal: <em style="color:#C9A84C;">' + goalLabel + '</em></div>' +
+      '<div>✅ Goal: <em style="color:var(--gold);">' + goalLabel + '</em></div>' +
       '<div>' + coachLine + '</div>' +
       '<div>✅ Shareable training report for coaches</div>';
   }
@@ -1240,7 +1292,7 @@ function showFinalHoldingScreen() {
     'display:flex;flex-direction:column;align-items:center;justify-content:center;' +
     'padding:32px 24px;text-align:center;animation:fadeIn 0.4s ease;';
 
-  var accent = d.sport === 'softball' ? '#D4547A' : '#C9A84C';
+  var accent = d.sport === 'softball' ? '#D4547A' : 'var(--gold)';
   var sportEmoji = d.sport === 'softball' ? '🥎' : (d.sport === 'both' ? '⚾🥎' : '⚾');
   var playerName = d.name || 'Player';
 
@@ -1257,10 +1309,10 @@ function showFinalHoldingScreen() {
     '<div style="width:36px;height:3px;background:' + accent + ';margin:14px auto 22px;"></div>' +
     '<p style="font-size:15px;color:#A89880;line-height:1.7;max-width:340px;margin-bottom:24px;">' +
         'Your profile is saved. Your training plan is ready.<br><br>' +
-        '<strong style="color:#C9A84C;">The full dashboard is coming soon.</strong> ' +
+        '<strong style="color:var(--gold);">The full dashboard is coming soon.</strong> ' +
         'For now, your parent can see your progress from their side.' +
     '</p>' +
-    '<div style="background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.3);' +
+    '<div style="background:rgba(var(--accent-rgb),0.08);border:1px solid rgba(var(--accent-rgb),0.3);' +
         'border-radius:8px;padding:18px 22px;max-width:340px;color:#D4C8BC;font-size:14px;' +
         'line-height:1.6;font-style:italic;">' +
         '"Show up to your work, and your work will show up for you."' +
@@ -1290,7 +1342,7 @@ window.addEventListener('DOMContentLoaded', function() {
 
   // Dev console banner
   console.log('%c⚾ MyGrind Onboarding — Phase 4 (Player flow, parent-invited)',
-              'color: #C9A84C; font-weight: bold; font-size: 14px;');
+              'color: var(--gold); font-weight: bold; font-size: 14px;');
   console.log('URL params: name=' + (d.name || 'none') + ', fallback=' + d.fallback);
   console.log('State object available as window.mgPlayer for debugging.');
   window.mgPlayer = d;

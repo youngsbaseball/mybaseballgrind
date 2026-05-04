@@ -33,7 +33,9 @@ function buildSmsBody({ parentName, playerName, sport }) {
                            'baseball';
 
   const onboardingUrl =
-    `https://mygrindapp.com/onboarding.html?name=${encodeURIComponent(playerName)}`;
+    `https://mygrindapp.com/onboarding.html` +
+    `?name=${encodeURIComponent(playerName)}` +
+    `&sport=${encodeURIComponent(sport)}`;
 
   // GSM-7 only (no em-dashes, no smart quotes) so each segment is 153 chars, not 67.
   return (

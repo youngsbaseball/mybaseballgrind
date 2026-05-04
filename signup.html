@@ -2251,6 +2251,28 @@ select.field-input {
         </select>
       </div>
 
+      <!-- Per-player sport. Shown when familySport === 'both' (the family-level
+           question is essentially "is anyone multi-sport or mixed?"). Each
+           player can be Baseball, Softball, or Both (a single multi-sport kid). -->
+      <div class="field-block" id="player_sport_block" style="display:none;">
+        <label class="field-label">What does <span id="player_sport_name_display">your player</span> play?<span class="req">*</span></label>
+        <div class="sport-grid">
+          <button type="button" class="sport-tile" id="psport_baseball" onclick="selectPlayerSport('baseball')">
+            <div class="sport-tile-icon">⚾</div>
+            <div class="sport-tile-name">Baseball</div>
+          </button>
+          <button type="button" class="sport-tile" id="psport_softball" onclick="selectPlayerSport('softball')">
+            <div class="sport-tile-icon">🥎</div>
+            <div class="sport-tile-name">Softball</div>
+          </button>
+          <button type="button" class="sport-tile" id="psport_both" onclick="selectPlayerSport('both')">
+            <div class="sport-tile-icon">⚾🥎</div>
+            <div class="sport-tile-name">Both</div>
+          </button>
+        </div>
+        <div class="field-helper">Pick "Both" if this player plays baseball <em>and</em> softball.</div>
+      </div>
+
       <!-- Player phone (hidden when fallback is checked) -->
       <div class="field-block" id="player_phone_block">
         <label class="field-label" for="player_phone">Player's Phone Number<span class="req">*</span></label>
@@ -2967,6 +2989,16 @@ function selectFamilySport(sport) {
 
 function selectPlayerCount(count) {
   state.playerCount = count;
+  // If the user reduced the count, drop the extra slots so Screen 7 doesn't
+  // render stale invites from a previous pass through the flow. Don't trim
+  // once invites went out (playersLockedAt) — that lock controls Family-plan
+  // abuse and would be defeated by silently rotating slots.
+  if (!state.playersLockedAt && Array.isArray(state.players) && state.players.length > count) {
+    state.players = state.players.slice(0, count);
+  }
+  if (typeof state.currentPlayerIndex === 'number' && state.currentPlayerIndex >= count) {
+    state.currentPlayerIndex = Math.max(0, count - 1);
+  }
   saveState();
 
   // Visual: clear all player count cards, then select the chosen one
@@ -3201,8 +3233,10 @@ function ensurePlayerSlot(idx) {
       firstName: '',
       relationship: '',
       phone: '',
-      fallback: false
-      // sport intentionally NOT set here — kid picks own sport in onboarding (Decision #7 v3)
+      fallback: false,
+      sport: ''   // 'baseball' | 'softball' — picked by parent on Screen 6.
+                  // For non-'both' families this auto-derives from familySport;
+                  // for 'both' families, parent picks per-kid via sport tiles.
     };
   }
   return state.players[idx];
@@ -3238,6 +3272,29 @@ function loadPlayerSlot() {
   if (first) first.classList.remove('valid', 'invalid');
   if (rel)   rel.classList.remove('valid', 'invalid');
   if (phone) phone.classList.remove('valid', 'invalid');
+
+  // Per-player sport: visible only when family picked 'both'.
+  // Otherwise auto-derive from familySport so the invite carries the right sport.
+  const sportBlock = document.getElementById('player_sport_block');
+  if (sportBlock) {
+    if (state.familySport === 'both') {
+      sportBlock.style.display = '';
+      ['psport_baseball', 'psport_softball', 'psport_both'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.remove('selected');
+      });
+      if (player.sport === 'baseball' || player.sport === 'softball' || player.sport === 'both') {
+        const chosen = document.getElementById('psport_' + player.sport);
+        if (chosen) chosen.classList.add('selected');
+      }
+    } else {
+      sportBlock.style.display = 'none';
+      if (state.familySport === 'baseball' || state.familySport === 'softball') {
+        player.sport = state.familySport;
+        saveState();
+      }
+    }
+  }
 
   // Apply fallback state
   applyFallbackVisuals(player.fallback === true);
@@ -3347,14 +3404,34 @@ function toggleFallback() {
 // Falls back to "your player." when name is empty.
 function updatePlayerNameDisplay() {
   const span = document.getElementById('player_name_display');
-  if (!span) return;
   const first = document.getElementById('player_first');
   const typed = first ? first.value.trim() : '';
-  if (typed.length > 0) {
-    span.textContent = typed + '.';
-  } else {
-    span.textContent = 'your player.';
+  if (span) {
+    span.textContent = typed.length > 0 ? typed + '.' : 'your player.';
   }
+  // Mirror in the per-player sport question (no period)
+  const sportSpan = document.getElementById('player_sport_name_display');
+  if (sportSpan) {
+    sportSpan.textContent = typed.length > 0 ? typed : 'your player';
+  }
+}
+
+// Per-player sport selection — only invoked when familySport === 'both'.
+// Stores choice on the player slot and updates tile visual state.
+function selectPlayerSport(sport) {
+  const idx = state.currentPlayerIndex || 0;
+  const player = ensurePlayerSlot(idx);
+  player.sport = sport;
+  saveState();
+
+  ['psport_baseball', 'psport_softball', 'psport_both'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('selected');
+  });
+  const chosen = document.getElementById('psport_' + sport);
+  if (chosen) chosen.classList.add('selected');
+
+  refreshPlayerContinue();
 }
 
 // Validates the current player's fields and saves to state.
@@ -3477,10 +3554,13 @@ function refreshPlayerContinue() {
   const phoneFormatOk = player.fallback ? true : isValidPhone(player.phone || '');
   const phoneUnique   = player.fallback ? true : !phoneClashesWithOtherSlot(player.phone || '', idx);
   const phoneOk = phoneFormatOk && phoneUnique;
+  const sportOk = state.familySport === 'both'
+    ? (player.sport === 'baseball' || player.sport === 'softball' || player.sport === 'both')
+    : true;
 
   // Once players are locked, the Continue button just navigates forward —
   // it's effectively a "next" through the locked view rather than a save.
-  next.disabled = !(firstOk && relOk && phoneOk);
+  next.disabled = !(firstOk && relOk && phoneOk && sportOk);
 
   // Button label changes based on whether this is the last player
   const isLast = (idx + 1 >= total);
@@ -3547,7 +3627,11 @@ function buildPhoneConfirmList() {
   const subEl = document.getElementById('phone_confirm_sub');
   if (!listEl) return;
 
-  const players = state.players || [];
+  // Render-time slice: only display the first playerCount entries so stale
+  // slots from a prior pass through the flow don't leak into the modal.
+  // Doesn't mutate state — preserves the playersLockedAt invariant.
+  const total = state.playerCount || 1;
+  const players = (state.players || []).slice(0, total);
   const smsCount = players.filter(p => p && !p.fallback && p.phone).length;
 
   // Title pluralization
@@ -3652,32 +3736,38 @@ function restorePlayerScreen() {
    ═══════════════════════════════════════════════════════════ */
 
 // Returns the SMS copy that would be sent to a player.
-// Sport-aware per Decision #7 v3:
-//  - 'baseball' or 'softball': sport-specific phrasing
-//  - 'both' (mixed-sport family): generic "baseball/softball"
-function buildSmsForPlayer(playerName) {
+// Sport-aware: prefers per-player sport (parent picks per-kid for 'both' families),
+// falls back to familySport when no per-player choice was made.
+function buildSmsForPlayer(player) {
+  const playerName  = (player && player.firstName) ? player.firstName : '';
   const parentFirst = (state.parent && state.parent.firstName) ? state.parent.firstName : 'your parent';
-  const familySport = state.familySport || 'both';
+  const sport       = (player && player.sport) || state.familySport || 'both';
 
   let sportPhrase;
-  if (familySport === 'baseball') {
+  if (sport === 'baseball') {
     sportPhrase = 'the baseball training app';
-  } else if (familySport === 'softball') {
+  } else if (sport === 'softball') {
     sportPhrase = 'the softball training app';
   } else {
     sportPhrase = 'the baseball/softball training app';
   }
 
-  // URL matches what api/send-invite.js actually sends — kid lands directly
-  // in onboarding.html with their name pre-filled (Decision #13 flow).
-  var inviteUrl = 'https://mygrindapp.com/onboarding.html?name=' + encodeURIComponent(playerName || '');
+  // URL carries name + sport so onboarding.html and softball.html render
+  // the right palette + copy for this specific kid (must match api/send-invite.js).
+  var inviteUrl = 'https://mygrindapp.com/onboarding.html'
+    + '?name='  + encodeURIComponent(playerName)
+    + '&sport=' + encodeURIComponent(sport);
   return 'Hey ' + (playerName || 'there') + ', ' + parentFirst + ' just signed you up for MyGrind — ' + sportPhrase + ' I\'ve been talking about. Tap to start your profile (5 min): ' + inviteUrl;
 }
 
 // Returns names of any fallback (no-phone) players, formatted for copy
 function getFallbackPlayerNames() {
   if (!Array.isArray(state.players)) return [];
+  // Slice to playerCount so stale slots from a prior pass don't leak into
+  // setup callouts or the post-Screen-7 routing.
+  const total = state.playerCount || 1;
   return state.players
+    .slice(0, total)
     .filter(p => p && p.fallback === true)
     .map(p => (p.firstName || 'your player').trim());
 }
@@ -3702,8 +3792,11 @@ function formatPhoneForDisplay(raw) {
 // Build the per-player status card HTML
 function renderPlayerStatusCard(player, index) {
   const name = (player.firstName || 'Your player').trim();
-  // Generic sport icon at this stage — kid hasn't picked yet (Decision #7 v3)
-  const sportIcon = '⚾🥎';
+  // Per-player sport icon (parent picks per-kid for 'both' families; otherwise
+  // it auto-derives from familySport on Screen 6).
+  const sportIcon = player.sport === 'baseball' ? '⚾'
+                  : player.sport === 'softball' ? '🥎'
+                  : '⚾🥎';
 
   if (player.fallback) {
     // Fallback (no phone) — hand the phone to set up
@@ -3721,7 +3814,7 @@ function renderPlayerStatusCard(player, index) {
     );
   } else {
     // SMS-invited — show preview bubble
-    const smsText = buildSmsForPlayer(name);
+    const smsText = buildSmsForPlayer(player);
     const phoneDisplay = formatPhoneForDisplay(player.phone);
     return (
       '<div class="status-card">' +
@@ -3751,17 +3844,21 @@ function buildScreen7() {
     parentNameSpan.textContent = pn ? pn + '.' : 'Coach.';
   }
 
-  // Build the status cards from state.players
+  // Render-time slice: only show the first playerCount entries so stale
+  // slots from a prior pass through the flow don't leak into Screen 7.
+  // Doesn't mutate state — preserves the playersLockedAt invariant.
+  const total = state.playerCount || 1;
+  const visible = (state.players || []).slice(0, total);
+
+  // Build the status cards
   const container = document.getElementById('status_cards');
   if (container) {
     container.innerHTML = '';
-    if (Array.isArray(state.players)) {
-      state.players.forEach((p, i) => {
-        if (p && (p.firstName || '').length > 0) {
-          container.innerHTML += renderPlayerStatusCard(p, i);
-        }
-      });
-    }
+    visible.forEach((p, i) => {
+      if (p && (p.firstName || '').length > 0) {
+        container.innerHTML += renderPlayerStatusCard(p, i);
+      }
+    });
   }
 
   // Setup-required callout — only shown if any fallback kids
@@ -3943,35 +4040,46 @@ function onResendInvite(playerIndex) {
         '.\n\n(Twilio integration ships in Phase 3 — for now this is a placeholder.)');
 }
 
+// Stripe Payment Links (LIVE mode). One link per (Single|Family) × (Annual|Monthly).
+// Each link is pre-configured in Stripe with the right product, price, and
+// success/cancel URLs. The MYGRIND6 promotion code is auto-accepted on all 4.
+const STRIPE_PAYMENT_LINKS = {
+  single_annual:  'https://buy.stripe.com/28EdRb5DQanXfpg0Mx4gg05',
+  single_monthly: 'https://buy.stripe.com/4gM7sN2rE9jT5OG3YJ4gg06',
+  family_annual:  'https://buy.stripe.com/bJeeVf4zM1Rr6SK0Mx4gg07',
+  family_monthly: 'https://buy.stripe.com/8x26oJeam1Rr2Cu7aV4gg08'
+};
+
 // Skip-trial / pay-now handler for the eager parent on Screen 5.
 // Per Coach Young April 27 PM: parent picks this when they're already
 // convinced and want to start their subscription immediately rather than
 // waiting through the 14-day trial. Honors their selected plan from the
 // pricing cards above (annual default per Decision #8 v2).
-// Phase 5 will replace this alert with the real Stripe checkout flow.
 function onSkipTrialClicked() {
   const plan     = state.preferredPlan || 'annual';
   const count    = state.playerCount   || 1;
   const isFamily = count >= 2;
+  const tier     = isFamily ? 'family' : 'single';
+  const baseUrl  = STRIPE_PAYMENT_LINKS[tier + '_' + plan];
 
-  let planLabel;
-  if (isFamily) {
-    planLabel = plan === 'monthly'
-      ? 'Family Monthly ($14.99/mo · up to 3 players)'
-      : 'Family Annual ($149/yr · up to 3 players)';
-  } else {
-    planLabel = plan === 'monthly'
-      ? 'Monthly ($9.99/mo per player)'
-      : 'Annual ($99/yr per player)';
+  if (!baseUrl) {
+    alert('We could not load checkout right now. Please refresh and try again.');
+    return;
   }
 
-  alert(
-    'Skip the trial — pay now and start immediately.\n\n' +
-    'Your selected plan: ' + planLabel + '\n' +
-    'Players: ' + count + '\n\n' +
-    'This would launch Stripe checkout immediately and start your subscription today instead of waiting 14 days.\n\n' +
-    '(Stripe integration ships in Phase 5 — for now this is a placeholder.)'
-  );
+  // Persist progress before leaving the page so the parent doesn't lose
+  // their work if they cancel out of Stripe and come back.
+  saveState();
+
+  // Pre-fill the email so the parent doesn't retype it. Stripe also stores
+  // this on the customer object, which the webhook uses to match the
+  // subscription back to this signup record.
+  const email = (state.parent && state.parent.email) ? state.parent.email.trim() : '';
+  const url   = email
+    ? baseUrl + '?prefilled_email=' + encodeURIComponent(email)
+    : baseUrl;
+
+  window.location.href = url;
 }
 
 // Historical note (April 27 PM): onPayNowClicked() was removed. The big
@@ -4152,6 +4260,21 @@ function populateSettings() {
 
 /* ─── INIT ───────────────────────────────────────────────── */
 window.addEventListener('DOMContentLoaded', () => {
+  // ?reset=1 wipes signup state and the sport choice so testing starts clean.
+  // Use http://.../signup.html?reset=1 — the param is stripped from the URL
+  // after wipe so refreshing doesn't re-clear unexpectedly.
+  try {
+    var qs = new URLSearchParams(window.location.search);
+    if (qs.get('reset') === '1') {
+      localStorage.removeItem('mg_signup_state');
+      localStorage.removeItem('mg_sport');
+      localStorage.removeItem('ybg_creator');
+      qs.delete('reset');
+      var clean = window.location.pathname + (qs.toString() ? '?' + qs.toString() : '');
+      window.history.replaceState(null, '', clean);
+    }
+  } catch (e) { /* old browser — fall through */ }
+
   loadState();
   if (!state.startedAt) {
     state.startedAt = new Date().toISOString();

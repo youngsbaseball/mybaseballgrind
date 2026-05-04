@@ -53,11 +53,33 @@
 
 <!-- ── FONTS ── -->
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+
+<script>
+  // Sport detection runs synchronously in <head> so the palette resolves
+  // before the first paint. Order: ?sport= URL param → mg_sport localStorage → 'baseball'.
+  (function() {
+    try {
+      var url   = new URLSearchParams(window.location.search).get('sport');
+      var saved = localStorage.getItem('mg_sport');
+      var valid = { baseball: 1, softball: 1, both: 1 };
+      var sport = valid[url] ? url : (valid[saved] ? saved : 'baseball');
+      localStorage.setItem('mg_sport', sport);
+      document.documentElement.setAttribute('data-sport', sport);
+      var meta = document.querySelector('meta[name="theme-color"]');
+      if (meta) meta.setAttribute('content', sport === 'softball' ? '#D4547A' : '#C9A84C');
+    } catch (e) {
+      document.documentElement.setAttribute('data-sport', 'baseball');
+    }
+  })();
+</script>
+
 <style>
   :root {
-    --gold: #D4547A;
-    --gold-light: #E87FA0;
-    --gold-dark: #A03060;
+    /* Sport-aware accent: gold = baseball/both default. softball overrides below. */
+    --gold: #C9A84C;
+    --gold-light: #E0BC60;
+    --gold-dark: #8F7A36;
+    --accent-rgb: 201, 168, 76;
     --black: #181614;
     --dark: #1E1A17;
     --card: #231F1C;
@@ -68,6 +90,13 @@
     --white: #F5F0EB;
     --red: #C0392B;
     --green: #27AE60;
+  }
+
+  [data-sport="softball"] {
+    --gold: #D4547A;
+    --gold-light: #E87FA0;
+    --gold-dark: #A03060;
+    --accent-rgb: 212, 84, 122;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -99,8 +128,8 @@
       45deg,
       transparent,
       transparent 30px,
-      rgba(212,84,122,0.03) 30px,
-      rgba(212,84,122,0.03) 31px
+      rgba(var(--accent-rgb), 0.03) 30px,
+      rgba(var(--accent-rgb), 0.03) 31px
     );
     pointer-events: none;
     z-index: 0;
@@ -845,14 +874,14 @@ function dismissIosBanner() {
 
 <!-- ── LOADING SPLASH ── -->
 <div id="ybg-splash" style="position:fixed; inset:0; z-index:99999; background:#161210; display:flex; flex-direction:column; align-items:center; justify-content:center; transition:opacity 0.5s ease;">
-  <div style="width:88px; height:88px; background:#D4547A; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'Bebas Neue',sans-serif; font-size:32px; font-weight:900; color:#161210; letter-spacing:2px; box-shadow:0 0 0 4px #161210, 0 0 0 5px #D4547A; animation:ybgPulse 1.2s ease-in-out infinite;">YBG</div>
-  <div style="font-family:'Bebas Neue',sans-serif; font-size:28px; letter-spacing:6px; color:#F4F4F4; margin-top:22px;">MY <span style="color:#D4547A;">GRIND</span></div>
+  <div style="width:88px; height:88px; background:var(--gold); border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'Bebas Neue',sans-serif; font-size:32px; font-weight:900; color:#161210; letter-spacing:2px; box-shadow:0 0 0 4px #161210, 0 0 0 5px var(--gold); animation:ybgPulse 1.2s ease-in-out infinite;">MG</div>
+  <div style="font-family:'Bebas Neue',sans-serif; font-size:28px; letter-spacing:6px; color:#F4F4F4; margin-top:22px;">MY <span style="color:var(--gold);">GRIND</span></div>
   <div style="font-family:'Barlow Condensed',sans-serif; font-size:11px; letter-spacing:3px; color:#666; margin-top:4px; text-transform:uppercase;">Softball Journal</div>
 </div>
 <style>
   @keyframes ybgPulse {
-    0%, 100% { transform:scale(1); box-shadow:0 0 0 4px #161210, 0 0 0 5px #D4547A, 0 0 0 5px rgba(212,84,122,0); }
-    50%      { transform:scale(1.05); box-shadow:0 0 0 4px #161210, 0 0 0 5px #D4547A, 0 0 30px 8px rgba(212,84,122,0.4); }
+    0%, 100% { transform:scale(1); box-shadow:0 0 0 4px #161210, 0 0 0 5px var(--gold), 0 0 0 5px rgba(var(--accent-rgb), 0); }
+    50%      { transform:scale(1.05); box-shadow:0 0 0 4px #161210, 0 0 0 5px var(--gold), 0 0 30px 8px rgba(var(--accent-rgb), 0.4); }
   }
 </style>
 
@@ -951,7 +980,7 @@ function dismissIosBanner() {
 
 <header>
   <div class="logo">
-    <div class="logo-badge">YBG</div>
+    <div class="logo-badge">MG</div>
     <div class="logo-text">MY <span>GRIND</span></div>
   </div>
   <div class="header-date" id="headerDate"></div>
@@ -1002,16 +1031,16 @@ function dismissIosBanner() {
 
     <div id="tc-preview" style="margin-bottom:16px; padding:20px; text-align:center; background:#222630; border-radius:6px; border:1px solid #2A2A2A; position:relative; overflow:hidden;">
       <div id="tc-preview-strip" style="position:absolute; top:0; left:0; right:0; height:4px; background:#D4547A;"></div>
-      <div id="tc-preview-logo" style="width:64px; height:64px; border-radius:50%; margin:0 auto 10px; display:flex; align-items:center; justify-content:center; font-family:'Bebas Neue'; font-size:22px; font-weight:900; background:#D4547A; color:#161210; box-shadow:0 0 0 2px #161210, 0 0 0 4px #D4547A;">YBG</div>
+      <div id="tc-preview-logo" style="width:64px; height:64px; border-radius:50%; margin:0 auto 10px; display:flex; align-items:center; justify-content:center; font-family:'Bebas Neue'; font-size:22px; font-weight:900; background:#D4547A; color:#161210; box-shadow:0 0 0 2px #161210, 0 0 0 4px #D4547A;">MG</div>
       <div id="tc-preview-name" style="font-family:'Bebas Neue'; font-size:22px; letter-spacing:2px; color:#F4F4F4;">TEAM NAME</div>
       <div id="tc-preview-loc" style="font-family:'Barlow Condensed'; font-size:11px; letter-spacing:2px; color:#A89880; text-transform:uppercase; margin-top:2px;">City · State</div>
     </div>
 
     <label style="display:block; font-family:'Barlow Condensed'; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:#AAA; margin-bottom:6px;">Team Name *</label>
-    <input type="text" id="tc-name" maxlength="40" placeholder="e.g. YBG Travel 14U" oninput="updateTeamPreview()" style="width:100%; background:#231F1C; border:1px solid #2A2A2A; color:#F4F4F4; padding:11px 14px; border-radius:4px; font-family:'Barlow'; font-size:14px; margin-bottom:14px; box-sizing:border-box;">
+    <input type="text" id="tc-name" maxlength="40" placeholder="e.g. Lions Travel 14U" oninput="updateTeamPreview()" style="width:100%; background:#231F1C; border:1px solid #2A2A2A; color:#F4F4F4; padding:11px 14px; border-radius:4px; font-family:'Barlow'; font-size:14px; margin-bottom:14px; box-sizing:border-box;">
 
     <label style="display:block; font-family:'Barlow Condensed'; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:#AAA; margin-bottom:6px;">Logo Letters (2-4 chars) *</label>
-    <input type="text" id="tc-abbr" maxlength="4" placeholder="YBG" oninput="this.value=this.value.toUpperCase(); updateTeamPreview()" style="width:100%; background:#231F1C; border:1px solid #2A2A2A; color:#F4F4F4; padding:11px 14px; border-radius:4px; font-family:'Barlow'; font-size:14px; margin-bottom:14px; box-sizing:border-box; text-transform:uppercase; letter-spacing:2px;">
+    <input type="text" id="tc-abbr" maxlength="4" placeholder="ABC" oninput="this.value=this.value.toUpperCase(); updateTeamPreview()" style="width:100%; background:#231F1C; border:1px solid #2A2A2A; color:#F4F4F4; padding:11px 14px; border-radius:4px; font-family:'Barlow'; font-size:14px; margin-bottom:14px; box-sizing:border-box; text-transform:uppercase; letter-spacing:2px;">
 
     <div style="display:grid; grid-template-columns:2fr 1fr; gap:10px; margin-bottom:14px;">
       <div>
@@ -1045,7 +1074,7 @@ function dismissIosBanner() {
     <div style="margin-bottom:16px;">
       <div style="font-family:'Barlow'; font-size:11px; color:#A89880; margin-bottom:6px;">Or pick a preset:</div>
       <div style="display:flex; gap:6px; flex-wrap:wrap;">
-        <button onclick="setTeamPreset('#D4547A','#161210')" title="YBG Gold/Black" style="width:36px; height:24px; background:linear-gradient(90deg,#D4547A 50%, #161210 50%); border:1px solid #444; border-radius:3px; cursor:pointer;"></button>
+        <button onclick="setTeamPreset('#D4547A','#161210')" title="Gold/Black" style="width:36px; height:24px; background:linear-gradient(90deg,#D4547A 50%, #161210 50%); border:1px solid #444; border-radius:3px; cursor:pointer;"></button>
         <button onclick="setTeamPreset('#CE1126','#FFFFFF')" title="Red/White" style="width:36px; height:24px; background:linear-gradient(90deg,#CE1126 50%, #FFFFFF 50%); border:1px solid #444; border-radius:3px; cursor:pointer;"></button>
         <button onclick="setTeamPreset('#0D47A1','#FFFFFF')" title="Blue/White" style="width:36px; height:24px; background:linear-gradient(90deg,#0D47A1 50%, #FFFFFF 50%); border:1px solid #444; border-radius:3px; cursor:pointer;"></button>
         <button onclick="setTeamPreset('#1B5E20','#FFD700')" title="Green/Gold" style="width:36px; height:24px; background:linear-gradient(90deg,#1B5E20 50%, #FFD700 50%); border:1px solid #444; border-radius:3px; cursor:pointer;"></button>
@@ -1076,7 +1105,7 @@ function dismissIosBanner() {
 <div id="team-join-overlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.93); z-index:1001; align-items:center; justify-content:center; padding:16px; backdrop-filter:blur(12px);">
   <div style="background:#161210; border:2px solid #D4547A; border-radius:6px; max-width:420px; width:100%; padding:24px 20px;">
     <div style="text-align:center; margin-bottom:16px;">
-      <div id="tj-logo" style="width:72px; height:72px; border-radius:50%; margin:0 auto 12px; display:flex; align-items:center; justify-content:center; font-family:'Bebas Neue'; font-size:24px; font-weight:900;">YBG</div>
+      <div id="tj-logo" style="width:72px; height:72px; border-radius:50%; margin:0 auto 12px; display:flex; align-items:center; justify-content:center; font-family:'Bebas Neue'; font-size:24px; font-weight:900;">MG</div>
       <div id="tj-name" style="font-family:'Bebas Neue'; font-size:24px; letter-spacing:2px; color:#F4F4F4;">TEAM NAME</div>
       <div id="tj-loc" style="font-family:'Barlow Condensed'; font-size:11px; letter-spacing:2px; color:#A89880; text-transform:uppercase; margin-top:2px;"></div>
       <div id="tj-coach" style="font-family:'Barlow'; font-size:13px; color:#D4547A; margin-top:10px;"></div>
@@ -1204,7 +1233,7 @@ function dismissIosBanner() {
 
     <!-- HEADER -->
     <div style="background:linear-gradient(135deg,#1A0012,#140008); border-bottom:1px solid #2A0018; padding:24px 28px; text-align:center;">
-      <div style="width:56px; height:56px; background:#D4547A; clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%); display:flex; align-items:center; justify-content:center; font-family:'Bebas Neue',cursive; font-size:22px; color:#080808; margin:0 auto 12px;">YBG</div>
+      <div style="width:56px; height:56px; background:#D4547A; clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%); display:flex; align-items:center; justify-content:center; font-family:'Bebas Neue',cursive; font-size:22px; color:#080808; margin:0 auto 12px;">MG</div>
       <div style="font-family:'Bebas Neue',cursive; font-size:34px; letter-spacing:3px; color:#F4F4F4; line-height:1;">MY <span style="color:#D4547A;">GRIND</span></div>
       <div style="font-family:'Barlow Condensed',sans-serif; font-size:11px; letter-spacing:3px; text-transform:uppercase; color:#555; margin-top:4px;">2026 Annual Softball Journal</div>
     </div>
@@ -2490,9 +2519,9 @@ main { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important;
         <div id="team-color-strip-top" style="position:absolute; top:0; left:0; right:0; height:5px;"></div>
 
         <!-- Logo circle -->
-        <div id="team-logo-circle" style="width:90px; height:90px; border-radius:50%; margin:0 auto 14px; display:flex; align-items:center; justify-content:center; font-family:'Bebas Neue'; font-size:32px; font-weight:900; box-shadow:0 0 0 3px #161210, 0 0 0 5px var(--gold);">YBG</div>
+        <div id="team-logo-circle" style="width:90px; height:90px; border-radius:50%; margin:0 auto 14px; display:flex; align-items:center; justify-content:center; font-family:'Bebas Neue'; font-size:32px; font-weight:900; box-shadow:0 0 0 3px #161210, 0 0 0 5px var(--gold);">MG</div>
 
-        <div id="team-name-display" style="font-family:'Bebas Neue',cursive; font-size:30px; letter-spacing:2px; line-height:1; margin-bottom:6px;">YBG TRAVEL</div>
+        <div id="team-name-display" style="font-family:'Bebas Neue',cursive; font-size:30px; letter-spacing:2px; line-height:1; margin-bottom:6px;">YOUR TEAM</div>
         <div id="team-location-display" style="font-family:'Barlow Condensed'; font-size:12px; letter-spacing:2px; color:var(--grey); text-transform:uppercase; margin-bottom:14px;">— · —</div>
 
         <div style="display:inline-block; background:var(--card2); padding:6px 14px; border-radius:20px; font-family:'Barlow Condensed'; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--gold); border:1px solid var(--gold-dark);">
@@ -2539,7 +2568,7 @@ main { padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)) !important;
       <!-- Coach's team hero -->
       <div class="card" style="margin-bottom:16px; text-align:center; padding:28px 20px; position:relative; overflow:hidden;">
         <div id="coach-color-strip-top" style="position:absolute; top:0; left:0; right:0; height:5px;"></div>
-        <div id="coach-team-logo" style="width:90px; height:90px; border-radius:50%; margin:0 auto 14px; display:flex; align-items:center; justify-content:center; font-family:'Bebas Neue'; font-size:32px; font-weight:900; box-shadow:0 0 0 3px #161210, 0 0 0 5px var(--gold);">YBG</div>
+        <div id="coach-team-logo" style="width:90px; height:90px; border-radius:50%; margin:0 auto 14px; display:flex; align-items:center; justify-content:center; font-family:'Bebas Neue'; font-size:32px; font-weight:900; box-shadow:0 0 0 3px #161210, 0 0 0 5px var(--gold);">MG</div>
         <div id="coach-team-name" style="font-family:'Bebas Neue',cursive; font-size:30px; letter-spacing:2px; line-height:1; margin-bottom:6px;">YOUR TEAM</div>
         <div id="coach-team-location" style="font-family:'Barlow Condensed'; font-size:12px; letter-spacing:2px; color:var(--grey); text-transform:uppercase; margin-bottom:14px;">— · —</div>
         <div style="display:inline-block; background:var(--card2); padding:6px 14px; border-radius:20px; font-family:'Barlow Condensed'; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--gold); border:1px solid var(--gold-dark);">
@@ -8375,7 +8404,7 @@ function updateTeamPreview() {
     logo.style.background = primary;
     logo.style.color      = accent;
     logo.style.boxShadow  = '0 0 0 2px #161210, 0 0 0 4px ' + primary;
-    logo.textContent      = abbr || 'YBG';
+    logo.textContent      = abbr || 'MG';
 
     document.getElementById('tc-preview-strip').style.background = primary;
     document.getElementById('tc-primary-hex').textContent = primary.toUpperCase();
@@ -9263,8 +9292,8 @@ setTimeout(function() {
 <div id="qotd-overlay" style="display:none;position:fixed;inset:0;z-index:9990;background:rgba(14,11,9,0.96);backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:24px;">
   <div style="max-width:400px;width:100%;text-align:center;">
 
-    <!-- YBG badge -->
-    <div style="width:56px;height:56px;background:#D4547A;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',cursive;font-size:20px;color:#080808;margin:0 auto 20px;">YBG</div>
+    <!-- MG badge -->
+    <div style="width:56px;height:56px;background:#D4547A;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',cursive;font-size:20px;color:#080808;margin:0 auto 20px;">MG</div>
 
     <!-- Label -->
     <div style="font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#D4547A;margin-bottom:16px;">Today's Grind</div>
