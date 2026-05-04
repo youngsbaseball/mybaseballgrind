@@ -2560,10 +2560,10 @@ select.field-input {
       </div>
     </div>
     <p class="settings-support-line">
-      Need to update your name, email, or phone? Email <a href="mailto:coach@mygrindapp.com?subject=Update%20My%20Account">coach@mygrindapp.com</a> and we'll get it changed for you.
+      Need to update your name, email, or phone? Email <a href="mailto:support@mygrindapp.com?subject=Update%20My%20Account">support@mygrindapp.com</a> and we'll get it changed for you.
     </p>
     <p class="settings-support-line">
-      Need to <strong>swap a player on your plan</strong>? Email <a href="mailto:coach@mygrindapp.com?subject=Swap%20a%20player%20on%20my%20plan">coach@mygrindapp.com</a> — player slots are locked once invites go out so households can't be silently rotated.
+      Need to <strong>swap a player on your plan</strong>? Email <a href="mailto:support@mygrindapp.com?subject=Swap%20a%20player%20on%20my%20plan">support@mygrindapp.com</a> — player slots are locked once invites go out so households can't be silently rotated.
     </p>
     <p class="settings-support-line" style="font-size:12px;color:#6B5E52;">
       Self-serve account editing &amp; billing land in a future update.
@@ -2609,7 +2609,7 @@ const state = {
   currentPlayerIndex: 0,    // Which player slot we're currently filling (0-indexed)
   // Family-plan slot lock (set when SMS would fire / Screen 7 entry).
   // Once set, navigating back to Screen 6 shows a read-only locked view —
-  // editing requires emailing coach@mygrindapp.com so player slots can't
+  // editing requires emailing support@mygrindapp.com so player slots can't
   // be cycled/swapped to abuse the household pricing tier.
   playersLockedAt: null,    // null | ISO timestamp string
   // Internal — not user-facing
@@ -3366,8 +3366,8 @@ function applySlotLockUI(locked) {
     el.innerHTML =
       '<strong style="color:#C9A84C;">🔒 Player slots locked.</strong> ' +
       'Your invites already went out. To swap a player, email ' +
-      '<a href="mailto:coach@mygrindapp.com?subject=Swap%20a%20player%20on%20my%20plan" ' +
-      'style="color:#C9A84C;">coach@mygrindapp.com</a> and we\'ll handle it for you.';
+      '<a href="mailto:support@mygrindapp.com?subject=Swap%20a%20player%20on%20my%20plan" ' +
+      'style="color:#C9A84C;">support@mygrindapp.com</a> and we\'ll handle it for you.';
     host.appendChild(el);
     return el;
   }
