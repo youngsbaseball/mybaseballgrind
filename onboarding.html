@@ -39,7 +39,23 @@
 <script>
   // Sport detection runs synchronously before paint so the palette resolves
   // immediately. Order: ?sport= URL param → mg_sport localStorage → 'baseball'.
+  // Also swaps ⚾ → 🥎 across visible text when sport=softball, preserving
+  // "⚾🥎" both-sport combos.
   (function() {
+    function applyBallEmoji(s) {
+      if (s !== 'softball') return;
+      var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null);
+      var node;
+      while (node = walker.nextNode()) {
+        if (node.nodeValue.indexOf('⚾') !== -1) {
+          var v = node.nodeValue;
+          v = v.replace(/⚾🥎/g, '');
+          v = v.replace(/⚾/g, '🥎');
+          v = v.replace(//g, '⚾🥎');
+          node.nodeValue = v;
+        }
+      }
+    }
     try {
       var url   = new URLSearchParams(window.location.search).get('sport');
       var saved = localStorage.getItem('mg_sport');
@@ -49,6 +65,11 @@
       document.documentElement.setAttribute('data-sport', sport);
       var meta = document.querySelector('meta[name="theme-color"]');
       if (meta) meta.setAttribute('content', sport === 'softball' ? '#D4547A' : '#C9A84C');
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() { applyBallEmoji(sport); });
+      } else {
+        applyBallEmoji(sport);
+      }
     } catch (e) {
       document.documentElement.setAttribute('data-sport', 'baseball');
     }
