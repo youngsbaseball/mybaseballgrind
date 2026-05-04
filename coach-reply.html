@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>MyGrind — Coach Reply</title>
+<meta name="description" content="Respond to a player's MyGrind feedback request.">
+<meta name="theme-color" content="#C9A84C">
+<meta name="robots" content="noindex,nofollow">
+<link rel="canonical" href="https://www.mygrindapp.com/coach-reply.html">
+<link rel="icon" type="image/png" href="https://www.mygrindapp.com/assets/favicon.png">
+<link rel="apple-touch-icon" href="https://www.mygrindapp.com/assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@700&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --gold: #C9A84C;
+  --gold-light: #E8C96A;
+  --gold-dark: #9A7A30;
+  --accent-rgb: 201, 168, 76;
+  --bg: #050505;
+  --card: #141414;
+  --card2: #1F1A14;
+  --border: #2A2622;
+  --grey: #8A8278;
+  --light: #D4C8BC;
+  --white: #F5EFE0;
+  --red: #C0392B;
+  --green: #27AE60;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+body {
+  background: var(--bg);
+  color: var(--white);
+  font-family: 'Barlow', Arial, sans-serif;
+  min-height: 100vh;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+header {
+  text-align: center;
+  padding: 28px 24px 18px;
+  border-bottom: 1px solid var(--border);
+}
+header img { height: 44px; width: auto; }
+header .label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-top: 10px;
+}
+main { max-width: 560px; margin: 0 auto; padding: 24px; }
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 20px;
+  margin-bottom: 14px;
+}
+.card-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 12px;
+}
+h1 {
+  font-family: 'Bebas Neue', Arial, sans-serif;
+  font-size: 30px;
+  letter-spacing: 1.5px;
+  line-height: 1.1;
+  color: var(--white);
+}
+h1 span { color: var(--gold); }
+
+.kv { display: grid; grid-template-columns: 100px 1fr; gap: 6px 12px; margin-top: 10px; }
+.kv-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--grey);
+}
+.kv-val { font-size: 14px; color: var(--light); }
+
+.note-box {
+  background: var(--card2);
+  border-left: 3px solid var(--gold);
+  border-radius: 0 4px 4px 0;
+  padding: 12px 14px;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--white);
+  margin-top: 14px;
+}
+
+.chip-grid { display: grid; grid-template-columns: 1fr; gap: 6px; }
+.chip {
+  background: var(--card2);
+  border: 1px solid var(--border);
+  color: var(--light);
+  font-family: 'Barlow', sans-serif;
+  font-size: 14px;
+  padding: 12px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+  text-align: left;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.chip:hover { border-color: var(--gold-dark); }
+.chip.selected {
+  background: rgba(var(--accent-rgb), 0.12);
+  border-color: var(--gold);
+  color: var(--gold);
+}
+.chip-detail {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--white);
+  width: 100%;
+  margin-top: 6px;
+  padding: 10px 12px;
+  border-radius: 3px;
+  font-family: 'Barlow', sans-serif;
+  font-size: 14px;
+  display: none;
+}
+.chip.selected + .chip-detail { display: block; }
+
+textarea#comment {
+  width: 100%;
+  background: var(--card2);
+  border: 1px solid var(--border);
+  color: var(--white);
+  padding: 12px;
+  border-radius: 4px;
+  font-family: 'Barlow', sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+  resize: vertical;
+  box-sizing: border-box;
+}
+.field-label {
+  display: block;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 8px;
+}
+.field-helper { font-family: 'Barlow', sans-serif; font-size: 12px; color: var(--grey); margin-top: 6px; }
+
+button.btn-gold {
+  background: var(--gold);
+  color: #080808;
+  border: none;
+  border-radius: 4px;
+  padding: 14px 18px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  width: 100%;
+  transition: opacity 0.2s;
+}
+button.btn-gold:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.toast-error {
+  background: rgba(192, 57, 43, 0.12);
+  border: 1px solid var(--red);
+  color: #FF8A80;
+  padding: 10px 12px;
+  border-radius: 4px;
+  font-size: 13px;
+  margin-top: 12px;
+  display: none;
+}
+.toast-success {
+  background: rgba(39, 174, 96, 0.12);
+  border: 1px solid var(--green);
+  color: #7CDFA0;
+  padding: 14px 14px;
+  border-radius: 4px;
+  font-size: 14px;
+  margin-top: 12px;
+  display: none;
+}
+
+.loading-state, .error-state, .done-state { text-align: center; padding: 60px 20px; color: var(--grey); }
+.error-state h2 { color: var(--red); font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 1.5px; margin-bottom: 12px; }
+.done-state h2 { color: var(--gold); font-family: 'Bebas Neue', sans-serif; font-size: 32px; letter-spacing: 2px; margin-bottom: 12px; }
+.done-state p { color: var(--light); font-size: 15px; line-height: 1.5; }
+</style>
+</head>
+<body>
+
+<header>
+  <img src="https://www.mygrindapp.com/assets/logo.png" alt="MyGrind">
+  <div class="label">Coach Reply</div>
+</header>
+
+<main>
+  <div id="state-loading" class="loading-state">
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:13px;letter-spacing:1.5px;text-transform:uppercase;color:var(--grey);">Loading the request…</div>
+  </div>
+
+  <div id="state-error" class="error-state" style="display:none;">
+    <h2 id="error-title">Something went wrong</h2>
+    <p id="error-msg" style="color:var(--light);font-size:14px;line-height:1.5;">The link may have expired or already been used.</p>
+  </div>
+
+  <div id="state-form" style="display:none;">
+    <div class="card">
+      <div class="card-title">Player Request</div>
+      <h1 id="player-h1">From <span id="player-name">—</span></h1>
+      <div class="kv">
+        <div class="kv-label">Focus</div><div class="kv-val" id="kv-focus">—</div>
+        <div class="kv-label">Situation</div><div class="kv-val" id="kv-situation">—</div>
+        <div class="kv-label">Sport</div><div class="kv-val" id="kv-sport">—</div>
+      </div>
+      <div class="note-box" id="note-box">—</div>
+      <div class="field-helper" style="margin-top:10px;" id="when-line">—</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Your Response</div>
+      <p style="font-size:14px;color:var(--light);line-height:1.5;margin-bottom:14px;">Pick one or more of these (optional details on each), then add a short note. Your response goes to <span id="player-name-2" style="color:var(--gold);font-weight:600;">the player</span> and counts toward their parent's weekly review.</p>
+
+      <label class="field-label">Quick options</label>
+      <div class="chip-grid" id="chip-grid">
+        <button class="chip" data-key="drill" data-default="Work on tee work — 30 reps daily">🎯 Drill recommendation</button>
+        <input class="chip-detail" data-for="drill" placeholder="Drill specifics (3 sessions, 30 reps, etc.)">
+
+        <button class="chip" data-key="watch">📹 Watch this</button>
+        <input class="chip-detail" data-for="watch" placeholder="Paste a video link (YouTube, etc.)">
+
+        <button class="chip" data-key="mindset" data-default="Stay through the ball, trust your prep">🧠 Mindset note</button>
+        <input class="chip-detail" data-for="mindset" placeholder="One mental cue (optional)">
+
+        <button class="chip" data-key="mechanics" data-default="Adjust your timing — slower load, quicker hands">🔧 Mechanical fix</button>
+        <input class="chip-detail" data-for="mechanics" placeholder="What to adjust (optional)">
+
+        <button class="chip" data-key="talk" data-default="Bring this up at our next session">🗣️ Let's talk in person</button>
+        <input class="chip-detail" data-for="talk" placeholder="When to discuss (optional)">
+
+        <button class="chip" data-key="rest" data-default="Take a day. Rest, come back fresh">⏸️ Take a day</button>
+
+        <button class="chip" data-key="journal" data-default="Log what you ate, slept, and felt before this game">📓 Journal prompt</button>
+        <input class="chip-detail" data-for="journal" placeholder="What to log (optional)">
+      </div>
+
+      <div style="margin-top:16px;">
+        <label class="field-label">Add a quick note <span id="note-count" style="color:var(--grey);font-weight:400;">(0/280)</span></label>
+        <textarea id="comment" rows="3" maxlength="280" placeholder="Two or three sentences in your own voice. Goes to the player + counts toward parent's weekly review."></textarea>
+      </div>
+
+      <div style="margin-top:16px;">
+        <label class="field-label">Sign off as</label>
+        <input id="coach-display" type="text" placeholder="Coach Young" style="width:100%;background:var(--card2);border:1px solid var(--border);color:var(--white);padding:11px 12px;border-radius:4px;font-family:Barlow,sans-serif;font-size:15px;box-sizing:border-box;">
+      </div>
+
+      <button class="btn-gold" id="submit-btn" onclick="submitResponse()" style="margin-top:18px;">Send Response</button>
+      <div class="toast-error" id="err-toast"></div>
+    </div>
+  </div>
+
+  <div id="state-done" class="done-state" style="display:none;">
+    <h2>Sent.</h2>
+    <p id="done-line">Your response went out to <span id="done-player">the player</span>. They'll see it on their MyGrind dashboard, and it will appear on their parent's weekly review.</p>
+    <p style="margin-top:24px;font-size:13px;color:var(--grey);">Want to use MyGrind with your own students? <a href="https://www.mygrindapp.com" style="color:var(--gold);text-decoration:none;border-bottom:1px solid var(--gold-dark);">mygrindapp.com</a></p>
+  </div>
+</main>
+
+<script>
+(function() {
+  var params = new URLSearchParams(window.location.search);
+  var REQ_ID = params.get('req') || '';
+  var TOKEN  = params.get('t')   || '';
+  var record = null;
+
+  function $(id) { return document.getElementById(id); }
+  function show(stateId) {
+    ['state-loading','state-error','state-form','state-done'].forEach(function(s) {
+      var el = $(s); if (el) el.style.display = (s === stateId) ? '' : 'none';
+    });
+  }
+
+  if (!REQ_ID || !TOKEN) {
+    show('state-error');
+    $('error-title').textContent = 'Invalid link';
+    $('error-msg').textContent = 'This link is missing a request ID or token. Ask the player to send a new request.';
+    return;
+  }
+
+  // Load the request
+  fetch('/api/feedback-get?req=' + encodeURIComponent(REQ_ID) + '&t=' + encodeURIComponent(TOKEN))
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (!data.ok) {
+        show('state-error');
+        if (data.error === 'not_found')      $('error-title').textContent = 'Link expired';
+        else if (data.error === 'bad_token') $('error-title').textContent = 'Invalid link';
+        else                                 $('error-title').textContent = 'Could not load';
+        return;
+      }
+      record = data.record;
+      hydrate(record);
+      show('state-form');
+    })
+    .catch(function(e) {
+      show('state-error');
+      $('error-title').textContent = 'Network error';
+      $('error-msg').textContent = 'Could not reach MyGrind. Check your connection and try again.';
+    });
+
+  function hydrate(rec) {
+    var name = rec.player.name || 'Player';
+    $('player-name').textContent = name;
+    $('player-name-2').textContent = name;
+    $('kv-focus').textContent = rec.focus || '—';
+    $('kv-situation').textContent = rec.situation || '—';
+    $('kv-sport').textContent = rec.sport === 'softball' ? 'Softball'
+                              : rec.sport === 'both'     ? 'Baseball/Softball'
+                              :                            'Baseball';
+    $('note-box').textContent = rec.note || '';
+    var dt = new Date(rec.createdAt);
+    $('when-line').textContent = 'Sent ' + dt.toLocaleString();
+    if (rec.coach && rec.coach.name) $('coach-display').value = rec.coach.name;
+
+    // Already responded? Lock the form.
+    if (rec.status === 'responded') {
+      $('err-toast').textContent = 'This request was already responded to on ' +
+        new Date(rec.response.respondedAt).toLocaleString() + '. You can not change a sent response.';
+      $('err-toast').style.display = 'block';
+      $('submit-btn').disabled = true;
+    }
+  }
+
+  // Chip toggle behavior
+  document.querySelectorAll('#chip-grid .chip').forEach(function(b) {
+    b.addEventListener('click', function() {
+      b.classList.toggle('selected');
+    });
+  });
+
+  // Comment counter
+  $('comment').addEventListener('input', function() {
+    $('note-count').textContent = '(' + this.value.length + '/280)';
+  });
+
+  function gatherChips() {
+    var out = [];
+    document.querySelectorAll('#chip-grid .chip.selected').forEach(function(b) {
+      var key   = b.getAttribute('data-key');
+      var label = b.textContent.trim();
+      var detailEl = document.querySelector('.chip-detail[data-for="' + key + '"]');
+      var detail = '';
+      if (detailEl) detail = (detailEl.value || '').trim();
+      if (!detail && b.getAttribute('data-default')) detail = b.getAttribute('data-default');
+      out.push({ key: key, label: label, detail: detail });
+    });
+    return out;
+  }
+
+  window.submitResponse = function() {
+    $('err-toast').style.display = 'none';
+    var chips   = gatherChips();
+    var comment = ($('comment').value || '').trim();
+    var coachDisplayName = ($('coach-display').value || '').trim();
+    if (chips.length === 0 && !comment) {
+      $('err-toast').textContent = 'Pick at least one quick option or write a note before sending.';
+      $('err-toast').style.display = 'block';
+      return;
+    }
+    $('submit-btn').disabled = true;
+    $('submit-btn').textContent = 'Sending…';
+
+    fetch('/api/feedback-respond', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ id: REQ_ID, token: TOKEN, chips: chips, comment: comment, coachDisplayName: coachDisplayName })
+    })
+    .then(function(r) { return r.json().then(function(j) { return { status: r.status, body: j }; }); })
+    .then(function(out) {
+      if (!out.body.ok) {
+        $('submit-btn').disabled = false;
+        $('submit-btn').textContent = 'Send Response';
+        var msg = out.body.error === 'already_responded' ? 'Already responded.'
+                : out.body.error === 'bad_token' ? 'Link is no longer valid.'
+                : out.body.error === 'not_found' ? 'Request expired.'
+                : 'Could not send. Try again.';
+        $('err-toast').textContent = msg;
+        $('err-toast').style.display = 'block';
+        return;
+      }
+      $('done-player').textContent = (record && record.player.name) || 'the player';
+      show('state-done');
+    })
+    .catch(function() {
+      $('submit-btn').disabled = false;
+      $('submit-btn').textContent = 'Send Response';
+      $('err-toast').textContent = 'Network error. Check your connection and try again.';
+      $('err-toast').style.display = 'block';
+    });
+  };
+})();
+</script>
+</body>
+</html>

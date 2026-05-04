@@ -2456,6 +2456,17 @@ select.field-input {
     <!-- Player cards — populated dynamically by buildScreen8() -->
     <div id="dash_player_cards"></div>
 
+    <!-- ── THIS WEEK'S COACHING (Phase 7b V1) — surfaces only when there is recent coach feedback ── -->
+    <div id="weekly-review-card" class="status-card" style="margin-top:18px; display:none; border:1px solid var(--gold-dark);">
+      <div class="status-card-head">
+        <span class="status-card-icon">📋</span>
+        <div class="status-card-name">This Week's Coaching</div>
+        <span class="status-pill" id="weekly-review-pill">0 replies</span>
+      </div>
+      <div id="weekly-review-meta" style="font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--grey);margin:8px 0 14px;">Last 7 days</div>
+      <div id="weekly-review-body"></div>
+    </div>
+
     <!-- NOTE (April 27 PM): Voluntary pay button removed per Coach Young.
          Reasoning: Big gold "PAY" button on Day 1 dashboard contradicted the
          "14 days free, no card required" promise from Screen 5. Cognitive
@@ -4058,6 +4069,82 @@ function buildScreen8() {
   if (trialText) {
     trialText.textContent = '14 days remaining · pay anytime from here';
   }
+
+  // Weekly review — fetch the parent's coach feedback for the last 7 days
+  loadWeeklyReview();
+}
+
+// Phase 7b V1 — Pulls all coach responses tied to this parent's email
+// from the past 7 days, renders them in the "This Week's Coaching" card.
+// Card stays hidden if there are no responses yet.
+function loadWeeklyReview() {
+  const card = document.getElementById('weekly-review-card');
+  if (!card) return;
+  const parentEmail = ((state.parent && state.parent.email) || '').trim();
+  if (!parentEmail) { card.style.display = 'none'; return; }
+
+  fetch('/api/feedback-list?parent=' + encodeURIComponent(parentEmail) + '&days=7')
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (!data.ok || !Array.isArray(data.items)) { card.style.display = 'none'; return; }
+      const responded = data.items.filter(function(i) { return i.status === 'responded' && i.response; });
+      renderWeeklyReview(responded);
+    })
+    .catch(function() { /* silent — card stays hidden */ });
+}
+
+function renderWeeklyReview(items) {
+  const card = document.getElementById('weekly-review-card');
+  const body = document.getElementById('weekly-review-body');
+  const pill = document.getElementById('weekly-review-pill');
+  if (!card || !body) return;
+  if (!items || items.length === 0) { card.style.display = 'none'; return; }
+
+  card.style.display = '';
+  if (pill) pill.textContent = items.length + (items.length === 1 ? ' reply' : ' replies');
+
+  // Group by player name
+  const byPlayer = {};
+  items.forEach(function(i) {
+    const key = (i.player && i.player.name) || 'Player';
+    if (!byPlayer[key]) byPlayer[key] = [];
+    byPlayer[key].push(i);
+  });
+
+  let html = '';
+  Object.keys(byPlayer).forEach(function(playerName) {
+    html += '<div style="margin-bottom:14px;">' +
+      '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:18px;letter-spacing:1.5px;color:var(--gold);margin-bottom:8px;">' + escapeHtml(playerName) + '</div>';
+    byPlayer[playerName].forEach(function(item) {
+      const r = item.response;
+      const dt = new Date(r.respondedAt);
+      const when = dt.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
+      html += '<div style="background:#1F0018;border:1px solid var(--border);border-radius:4px;padding:12px 14px;margin-bottom:8px;">' +
+        '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:6px;">' +
+          '<div style="font-family:\'Barlow Condensed\',sans-serif;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);">' +
+            escapeHtml(item.focus || '') + ' · ' + escapeHtml(item.situation || '') +
+          '</div>' +
+          '<div style="font-family:Barlow,sans-serif;font-size:11px;color:var(--grey);white-space:nowrap;">' + escapeHtml(when) + '</div>' +
+        '</div>' +
+        '<div style="font-family:Barlow,sans-serif;font-size:12px;color:var(--grey);margin-bottom:8px;">From ' + escapeHtml(r.coachDisplayName || 'Coach') + '</div>';
+      if (r.chips && r.chips.length) {
+        html += '<div style="display:grid;grid-template-columns:1fr;gap:5px;margin-bottom:' + (r.comment ? '10px' : '0') + ';">';
+        r.chips.forEach(function(c) {
+          html += '<div style="font-family:Barlow,sans-serif;font-size:13px;color:var(--white);line-height:1.4;">'
+                +   '<span style="color:var(--gold);font-weight:600;">' + escapeHtml(c.label || '') + '</span>'
+                + (c.detail ? ' — ' + escapeHtml(c.detail) : '')
+                + '</div>';
+        });
+        html += '</div>';
+      }
+      if (r.comment) {
+        html += '<div style="font-family:Barlow,sans-serif;font-size:13px;color:var(--white);line-height:1.5;font-style:italic;">"' + escapeHtml(r.comment) + '"</div>';
+      }
+      html += '</div>';
+    });
+    html += '</div>';
+  });
+  body.innerHTML = html;
 }
 
 // Resend invite button handler (placeholder — Phase 3 wires this to Twilio)
