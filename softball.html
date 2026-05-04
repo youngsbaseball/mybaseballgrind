@@ -124,6 +124,22 @@
         nodes[i].textContent = renderTemplate(nodes[i].getAttribute('data-mg-text'), s);
       }
     }
+    // Sport-aware emoji: when softball, swap baseball ⚾ → 🥎 across visible
+    // text nodes, but preserve "⚾🥎" both-sport combos.
+    function applyBallEmoji(s) {
+      if (s !== 'softball') return;
+      var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null);
+      var node;
+      while (node = walker.nextNode()) {
+        if (node.nodeValue.indexOf('\u26BE') !== -1) {
+          var v = node.nodeValue;
+          v = v.replace(/\u26BE\uD83E\uDD4E/g, '\u0001');
+          v = v.replace(/\u26BE/g, '\uD83E\uDD4E');
+          v = v.replace(/\u0001/g, '\u26BE\uD83E\uDD4E');
+          node.nodeValue = v;
+        }
+      }
+    }
     try {
       var url   = new URLSearchParams(window.location.search).get('sport');
       var saved = localStorage.getItem('mg_sport');
@@ -141,9 +157,10 @@
       // Body text needs to wait for DOM to parse. attribute-only system —
       // any element with [data-mg-text] gets its template rendered.
       if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', function() { applyBodyText(sport); });
+        document.addEventListener('DOMContentLoaded', function() { applyBodyText(sport); applyBallEmoji(sport); });
       } else {
         applyBodyText(sport);
+        applyBallEmoji(sport);
       }
     } catch (e) {
       document.documentElement.setAttribute('data-sport', 'baseball');
@@ -952,8 +969,8 @@ function dismissIosBanner() {
 
 <!-- ── LOADING SPLASH ── -->
 <div id="ybg-splash" style="position:fixed; inset:0; z-index:99999; background:#161210; display:flex; flex-direction:column; align-items:center; justify-content:center; transition:opacity 0.5s ease;">
-  <img data-mg-img="mark" alt="MyGrind" style="width:120px; height:120px; animation:ybgPulse 1.2s ease-in-out infinite;">
-  <img data-mg-img="logo" alt="MyGrind" style="height:56px; width:auto; max-width:80vw; margin-top:28px;">
+  <img data-mg-img="mark" alt="MyGrind" style="width:140px; height:140px; animation:ybgPulse 1.2s ease-in-out infinite;">
+  <img data-mg-img="logo" alt="MyGrind" style="height:72px; width:auto; max-width:80vw; margin-top:28px;">
   <div data-mg-text="{Sport} Journal" style="font-family:'Barlow Condensed',sans-serif; font-size:11px; letter-spacing:3px; color:#666; margin-top:6px; text-transform:uppercase;">Baseball Journal</div>
 </div>
 <style>
