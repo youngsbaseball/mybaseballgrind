@@ -3788,7 +3788,10 @@ const STRIPE_ANNUAL_URL  = 'https://buy.stripe.com/4gM5kFgiu53D1yq8eZ4gg04';
 const STRIPE_TEAM_SPONSOR_URL = 'https://buy.stripe.com/8x2eVf6HU0Nndh83YJ4gg02';
 const TEAM_SPONSOR_SEATS = 15;
 const TEAM_REMOVAL_GRACE_DAYS = 7;
-const CREATOR_PIN        = 'YBG2026';
+// CREATOR_PIN removed 2026-05-04 — was a hardcoded backdoor visible in
+// page source, anyone could view-source and self-grant creator access.
+// Legit creator mode now goes only through CREATOR_EMAILS (above) when
+// the user signs in with a recognized email.
 
 // ── CREATOR EMAILS — always full access ─────────────
 const CREATOR_EMAILS = [
@@ -3955,29 +3958,10 @@ function showPaidToast() {
   if (t) { t.style.display = 'flex'; setTimeout(() => { t.style.display = 'none'; }, 4000); }
 }
 
-// ── CREATOR UNLOCK ───────────────────────────────────
+// CREATOR UNLOCK removed 2026-05-04 — see CREATOR_PIN comment above.
+// Function kept as a no-op so any stray onclick references don't throw.
 function unlockCreator() {
-  const pin = prompt('Creator PIN:');
-  if (!pin) return;
-  if (pin.trim() === CREATOR_PIN) {
-    try {
-      localStorage.setItem('ybg_creator', 'true');
-      localStorage.setItem('ybg_pin_unlocked', 'true');
-      sessionStorage.setItem('ybg_creator', 'true');
-    } catch(e) {}
-    hideOverlay();
-    removeBanner();
-    const t = document.getElementById('paid-toast');
-    if (t) {
-      const divs = t.querySelectorAll('div > div');
-      if (divs[0]) divs[0].textContent = '🔑 CREATOR ACCESS UNLOCKED';
-      if (divs[1]) divs[1].textContent = 'Welcome back, Creator.';
-      t.style.display = 'flex';
-      setTimeout(() => { t.style.display = 'none'; }, 4000);
-    }
-  } else {
-    alert('Incorrect PIN.');
-  }
+  return;
 }
 
 // ── REGISTRATION MODE ────────────────────────────────

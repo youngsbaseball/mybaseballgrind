@@ -66,9 +66,21 @@ function getClientIp(req) {
   return req.headers['x-real-ip'] || null;
 }
 
+// Allowlist for CORS — only mygrindapp.com origins can call this endpoint.
+// A malicious site embedding our API would still hit rate limits, but the
+// allowlist prevents wasting any rate-limit budget on third-party callers.
+const ALLOWED_ORIGINS = new Set([
+  'https://www.mygrindapp.com',
+  'https://mygrindapp.com',
+]);
+
 export default async function handler(req, res) {
   // ─── CORS headers ────────────────────────────────────────
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  const origin = req.headers.origin;
+  if (origin && ALLOWED_ORIGINS.has(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader('Vary', 'Origin');
+  }
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
