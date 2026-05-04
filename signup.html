@@ -4022,10 +4022,15 @@ function buildScreen8() {
     parentNameSpan.textContent = pn ? pn + '.' : 'Coach.';
   }
 
+  // Render-time slice: only show the first playerCount entries so stale
+  // slots from a prior pass through the flow don't leak into the dashboard.
+  const total = state.playerCount || 1;
+  const visible = Array.isArray(state.players) ? state.players.slice(0, total) : [];
+
   // Personalize subhead based on player count
   const sub = document.getElementById('s8_subhead');
   if (sub) {
-    const players = Array.isArray(state.players) ? state.players.filter(p => p && p.firstName) : [];
+    const players = visible.filter(p => p && p.firstName);
     if (players.length === 0) {
       sub.textContent = 'Your dashboard is ready. Once your player gets started, their progress shows here.';
     } else if (players.length === 1) {
@@ -4040,13 +4045,11 @@ function buildScreen8() {
   const container = document.getElementById('dash_player_cards');
   if (container) {
     container.innerHTML = '';
-    if (Array.isArray(state.players)) {
-      state.players.forEach((p, i) => {
-        if (p && (p.firstName || '').length > 0) {
-          container.innerHTML += renderDashPlayerCard(p, i);
-        }
-      });
-    }
+    visible.forEach((p, i) => {
+      if (p && (p.firstName || '').length > 0) {
+        container.innerHTML += renderDashPlayerCard(p, i);
+      }
+    });
   }
 
   // Trial countdown — for now hardcoded to 14 since the trial just started
