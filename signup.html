@@ -2474,10 +2474,16 @@ select.field-input {
          pay nudge later. If we want to add an "early pay" option back, do it
          as a small text link, not a primary CTA. -->
 
-    <!-- Dashboard footer — opens Phase 6 Share / Settings modals -->
+    <!-- Subscription status pill — populated by loadSubscriptionStatus(); hidden until status loads -->
+    <div id="sub-status-card" style="display:none; background:rgba(201,168,76,0.06); border:1px solid var(--gold-dark); border-radius:4px; padding:14px 16px; margin-top:18px; font-family:'Barlow',sans-serif; font-size:13px; line-height:1.5; color:var(--light);">
+      <div id="sub-status-line"></div>
+    </div>
+
+    <!-- Dashboard footer — opens Phase 6 Share / Settings modals + small early-pay link (per April 27 note: small text link, NOT a primary CTA) -->
     <div class="dash-footer">
       <a href="#" onclick="event.preventDefault(); openShareModal();">Share MyGrind</a>
       <a href="#" onclick="event.preventDefault(); openSettingsModal();">Settings</a>
+      <a href="#" id="dash-pay-link" onclick="event.preventDefault(); onDashboardPayClicked();">Pay early →</a>
     </div>
 
   </div>
@@ -4072,6 +4078,90 @@ function buildScreen8() {
 
   // Weekly review — fetch the parent's coach feedback for the last 7 days
   loadWeeklyReview();
+
+  // Subscription status — gate the trial countdown / pay link UI based on
+  // what Stripe webhooks have synced into our store. If parent is paid,
+  // hide trial countdown + swap "Pay early" link for "Manage Subscription".
+  loadSubscriptionStatus();
+}
+
+// Phase 5 Step 3 — small "pay early" handler on Screen 8 dashboard.
+// Mirrors onSkipTrialClicked() (Phase 5 Step 1 / Screen 5) but triggered
+// from the post-signup dashboard for parents who decide mid-trial they
+// are ready to subscribe. Per April 27 note this is a small text link,
+// NOT a primary CTA — the trial promise stands.
+function onDashboardPayClicked() {
+  const plan     = state.preferredPlan || 'annual';
+  const count    = state.playerCount   || 1;
+  const isFamily = count >= 2;
+  const tier     = isFamily ? 'family' : 'single';
+  const baseUrl  = STRIPE_PAYMENT_LINKS[tier + '_' + plan];
+  if (!baseUrl) {
+    alert('We could not load checkout right now. Please refresh and try again.');
+    return;
+  }
+  saveState();
+  const email = (state.parent && state.parent.email) ? state.parent.email.trim() : '';
+  const url   = email ? baseUrl + '?prefilled_email=' + encodeURIComponent(email) : baseUrl;
+  window.location.href = url;
+}
+
+// Phase 5 Step 4 — query /api/get-subscription with the parent's email
+// to decide whether to show trial countdown vs subscription-active state.
+// Called on Screen 8 entry. Falls silent if email unknown or API offline.
+function loadSubscriptionStatus() {
+  const email = ((state.parent && state.parent.email) || '').trim();
+  if (!email) return;
+
+  fetch('/api/get-subscription?email=' + encodeURIComponent(email))
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (!data.ok) return;
+      renderSubscriptionStatus(data.isPaid, data.subscription);
+    })
+    .catch(function() { /* silent — keep default trial UI */ });
+}
+
+function renderSubscriptionStatus(isPaid, sub) {
+  const statusCard = document.getElementById('sub-status-card');
+  const statusLine = document.getElementById('sub-status-line');
+  const trialText  = document.getElementById('trial_days_text');
+  const payLink    = document.getElementById('dash-pay-link');
+  if (!isPaid) return; // default trial UI is fine
+
+  // Paid: show subscription card, hide trial countdown text, swap pay link
+  if (statusCard) statusCard.style.display = '';
+  if (statusLine && sub) {
+    const planLabels = {
+      single_monthly:  'Single Monthly ($9.99/mo)',
+      single_annual:   'Single Annual ($99/yr)',
+      family_monthly:  'Family Monthly ($14.99/mo)',
+      family_annual:   'Family Annual ($149/yr)',
+      team_coach:      'Team Coach ($29.99/yr)',
+      team_sponsor:    'Team Sponsor ($300)',
+    };
+    const planLabel = planLabels[sub.plan] || sub.plan || 'Active plan';
+    let line = '<strong style="color:var(--gold);">✓ Subscription active</strong> — ' + planLabel;
+    if (sub.cancelAtPeriodEnd && sub.currentPeriodEnd) {
+      const dt = new Date(sub.currentPeriodEnd * 1000);
+      line += '<br><span style="color:var(--grey);font-size:12px;">Canceling ' + dt.toLocaleDateString() + '</span>';
+    } else if (sub.currentPeriodEnd) {
+      const dt = new Date(sub.currentPeriodEnd * 1000);
+      line += '<br><span style="color:var(--grey);font-size:12px;">Renews ' + dt.toLocaleDateString() + '</span>';
+    }
+    if (sub.status === 'past_due') {
+      line += '<br><span style="color:#FF8A80;font-size:12px;">⚠ Payment past due — update your card to keep access.</span>';
+    }
+    statusLine.innerHTML = line;
+  }
+  if (trialText) trialText.textContent = '';
+  if (payLink) {
+    payLink.textContent = 'Manage subscription →';
+    payLink.onclick = function(e) {
+      e.preventDefault();
+      window.location.href = 'mailto:support@mygrindapp.com?subject=Manage%20My%20Subscription';
+    };
+  }
 }
 
 // Phase 7b V1 — Pulls all coach responses tied to this parent's email

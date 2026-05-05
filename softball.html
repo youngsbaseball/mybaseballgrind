@@ -3948,6 +3948,39 @@ function getDeviceFingerprint() {
 function getAccessState() { return retrieve('access') || {}; }
 function saveAccessState(s) { store('access', s); }
 
+// Phase 5 Step 4 — sync paid/trial state from the server. Stripe webhooks
+// keep the canonical record; we cache the answer in localStorage so the app
+// keeps working offline and validateSession() can read state.paid synchronously.
+// Runs async on app start; updates UI silently if the server promotes the
+// user from trial → paid (or demotes back to no-paid on cancellation).
+async function syncSubscriptionFromServer() {
+  try {
+    const acc = getAccessState();
+    const email = (acc.email || '').trim();
+    if (!email) return;
+    const r = await fetch('/api/get-subscription?email=' + encodeURIComponent(email));
+    if (!r.ok) return;
+    const data = await r.json();
+    if (!data.ok) return;
+    const serverPaid = !!data.isPaid;
+    const localPaid  = !!acc.paid;
+    if (serverPaid === localPaid) return; // nothing to update
+    saveAccessState(Object.assign({}, acc, {
+      paid: serverPaid,
+      plan: data.subscription && data.subscription.plan,
+      subStatus: data.subscription && data.subscription.status,
+      subSyncedAt: new Date().toISOString(),
+    }));
+    if (serverPaid) {
+      // Just promoted — clear any "trial expiring" banners/overlays
+      try { removeBanner(); } catch (e) {}
+      try { hideOverlay(); } catch (e) {}
+    }
+  } catch (e) {
+    // Silent fail — keep using cached state. Stripe is source of truth on next reload.
+  }
+}
+
 // ── VALIDATE ─────────────────────────────────────────
 function validateSession() {
   if (isCreator()) return 'creator';
@@ -3996,6 +4029,11 @@ function checkAccess() {
   }
 
   const status = validateSession();
+
+  // Async sync from server — updates state.paid silently if Stripe webhooks
+  // saw a subscription change since last load. Don't block on this.
+  syncSubscriptionFromServer();
+
   if (status === 'creator')      { removeBanner(); return; }
   if (status === 'paid')         { removeBanner(); return; }
   if (status === 'trial')        { showTrialBanner(); return; }
