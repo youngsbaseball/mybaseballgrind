@@ -1,6 +1,6 @@
 # 📊 My Grind — Current Status
 
-*Last updated: 2026-05-04. Update this file at the end of every coding session.*
+*Last updated: 2026-05-05. Update this file at the end of every coding session.*
 
 ---
 
@@ -37,10 +37,12 @@
 - **Phase 3c (Rate Limiting)** — COMPLETE + VERIFIED (Redis-backed, hashed IP/phone, fail-open)
 - **Phase 3d (Twilio Lookup pre-check)** — COMPLETE (2026-05-02). `lib/lookup.js` runs Twilio Lookup v2 between E.164 normalization and rate-limit checks; rejects landlines, VoIP, and invalid numbers with friendly messages before any send budget is burned. Fail-open on Lookup outage.
 - **Phase 4 — Player Onboarding** — `onboarding.html` shipped (per Decision #13: stripped of Stripe/Mailchimp/Firebase, just localStorage)
-- **Phase 5 — Stripe wiring** — pending; pricing UI shipped, real checkout not wired
+- **Phase 5 — Stripe wiring** — COMPLETE (2026-05-05). Step 1 (skip-trial Stripe redirect) shipped 2026-05-03. Steps 2-4 shipped 2026-05-05: webhook (`api/stripe-webhook.js`) verifies signatures and updates Redis subscription store on subscription events; Pay button on signup.html Screen 8 redirects to live Payment Links; softball.html syncs paid status from `/api/get-subscription` on every load. Stripe webhook destination "fascinating-oasis" live in Workbench listening to 5 events. Real subscriptions now flip `isPaid` automatically.
 - **Phase 6 — Share + Settings buttons on signup dashboard** — COMPLETE (2026-05-02). Real modals replace the placeholder alerts. Share modal has copy-link + Web Share API + pre-written caption. Settings modal shows read-only account summary (name, email, phone, plan, players) + a support-email link for changes (self-serve editing lands when Phase 5 backend account management ships).
-- **Family pricing tier** — COMPLETE (2026-05-02). $149/yr · $14.99/mo flat for 2-3 players in one household, alongside the existing Single tier ($99/yr · $9.99/mo per player). Anti-abuse stack: hard cap at 3 slots, slot-lock at first SMS-send, per-plan phone uniqueness, single-parent invite path (already in place). Stripe wiring deferred to Phase 5; for now the skip-trial path surfaces the Family plan in the placeholder alert.
+- **Family pricing tier** — COMPLETE (2026-05-02). $149/yr · $14.99/mo flat for 2-3 players in one household, alongside the existing Single tier ($99/yr · $9.99/mo per player). Anti-abuse stack: hard cap at 3 slots, slot-lock at first SMS-send, per-plan phone uniqueness, single-parent invite path (already in place).
 - **Phase 7 — Player dashboard** — pending; onboarding S14 currently shows a holding-screen overlay
+- **Phase 7b V1 — Coach feedback loop** — COMPLETE (2026-05-04). End-to-end: player → SMS magic link → coach-reply.html → SMS player + parent dashboard card. Redis-backed `lib/feedback-store.js`, 4 API endpoints, 32-hex token auth, 90-day TTL. SMS via Twilio (DRY_RUN until TFV approves).
+- **Phase 7b V1.5 — Parent weekly email digest** — COMPLETE in TEST MODE (2026-05-05). Vercel cron `/api/cron/weekly-digest` fires Mondays at 14:00 UTC (~7am PDT), scans Redis for active parent emails, sends warm-dark branded HTML digest via Resend. All emails redirected to youngsbaseball@gmail.com via `WEEKLY_DIGEST_TEST_EMAIL` env until `mygrindapp.com` is verified in Resend (DNS migration deferred). Sender: `onboarding@resend.dev`.
 - **Business Plan** — 14/14 sections COMPLETE
 - **16 Locked Decisions** — source of truth in Notion
 

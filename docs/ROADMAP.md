@@ -22,16 +22,14 @@
 
 ## 📅 Next 2 Weeks
 
-### P2 — Phase 5 (Stripe wiring on signup)
-The signup flow's `selectPlan()`, `onSkipTrialClicked()`, and Screen 8 "Pay & Continue" hooks all currently `alert()` instead of launching Stripe checkout. Replace with real `buy.stripe.com` URLs (already used in `softball.html`). Highest revenue-unlock lever.
+<!-- Phase 5 SHIPPED 2026-05-05. See "Recently Shipped" below. -->
+<!-- Phase 6 SHIPPED 2026-05-02. See "Recently Shipped" below. -->
 
-### P3 — Phase 5 (Stripe wiring on signup)
-The signup flow's `selectPlan()`, `onSkipTrialClicked()`, and Screen 8 "Pay & Continue" hooks all currently `alert()` instead of launching Stripe checkout. Replace with real `buy.stripe.com` URLs (already used in `softball.html`).
+### P2 — Phase 5 follow-up: full account-edit Settings
+Phase 5 backend is now in place. Upgrade the Settings modal from read-only to support inline email/phone updates and a Stripe billing-portal link. Currently the modal points users at support@mygrindapp.com for changes.
 
-<!-- P4 — Phase 6 SHIPPED 2026-05-02. See "Recently Shipped" below. -->
-
-### P4 — Phase 5 follow-up: full account-edit Settings
-Once Phase 5 wires Stripe + backend account management, upgrade the Settings modal from read-only to support inline email/phone updates and a billing-portal link. Currently the modal points users at coach@mygrindapp.com for changes.
+### P3 — DNS migration so the digest can email real parents
+Move nameservers from Namecheap Web Hosting DNS to Cloudflare → verify `mygrindapp.com` in Resend → set `RESEND_FROM=MyGrind <notifications@mygrindapp.com>` in Vercel → delete `WEEKLY_DIGEST_TEST_EMAIL`. ~1 hr active + 24-48hr propagation. Risk: must capture all current records (A → 216.198.79.1, MX → jellyfish.systems for support@, root SPF) before changing nameservers, or website + support@ email goes down.
 
 ### P5 — Phase 7 (Player dashboard)
 `onboarding.html` S14 currently shows a holding-screen overlay. Phase 7 is the real player dashboard — likely a stripped-down `softball.html` for the kid side or a new `player-dashboard.html`.
@@ -71,6 +69,13 @@ If beta users aren't logging entries daily:
 ## ✅ Recently Shipped (last 7 days)
 
 *Move shipped items here from "This Week" so you have a record of progress.*
+
+### 2026-05-05
+- ✅ **Phase 5 Steps 2-4 — Stripe webhook + dashboard pay + subscription sync.** New `api/stripe-webhook.js` (signature-verified, handles 5 event types), new `api/get-subscription.js`, new `lib/subscription-store.js` (Redis CRUD by email, idempotent on `lastEventId`). Dashboard "Pay early" link added to signup.html Screen 8. softball.html now syncs paid status from server on every app load. Webhook destination "fascinating-oasis" live in Stripe Workbench. Commit `bbe6cbf`.
+- ✅ **Phase 7b V1.5 — parent weekly email digest** shipped end-to-end and verified by real Gmail delivery. New `lib/email-digest.js` (warm-dark branded HTML, groups by player), new `api/cron/weekly-digest.js` (Vercel cron, SCANs Redis for active parents, sends via Resend, auth via `Bearer ${CRON_SECRET}`), new `vercel.json` (Monday 14:00 UTC schedule). Test mode: all emails redirected to youngsbaseball@gmail.com via `WEEKLY_DIGEST_TEST_EMAIL` env until `mygrindapp.com` is verified in Resend. Sender: `onboarding@resend.dev`. Commits `8881d38`, `bd03455` (chip rendering fix for `{key,label,detail}` objects).
+- ✅ **mygrind-visuals skill** added at `~/.claude/skills/mygrind-visuals/SKILL.md`. Orchestrates Higgsfield image + video generation with MyGrind brand guardrails (Warm Dark palette, parent-first voice, banned-words list, model decision tree, prompt template). Auto-fires on any MyGrind visual request.
+- ✅ **MyGrind logos uploaded to Higgsfield** — 4 variants (master 5692×3200, web 920×517, mark 902×907, app icon 179×180). Media IDs saved to memory `higgsfield_mygrind_media.md` and wired into the skill so generations default to the right logo for context.
+- ✅ **Launch creative generated** — 2× kling3_0 Reels (player finishing BP → opens MyGrind on phone, with voiceover and ambient sound), 2× nano_banana_2 photorealistic IG posts (14-yo boy journaling in dugout at golden hour). Job IDs visible in Higgsfield generations panel.
 
 ### 2026-05-04
 - ✅ **Phase 7b V1 — end-to-end coach feedback loop** shipped + verified against production. Player → SMS magic link → coach taps → coach-reply.html → coach picks chips + comment → SMS player + parent weekly review card on dashboard. NEW: `lib/feedback-store.js` (Redis-backed CRUD), 4 API endpoints (`feedback-request`, `feedback-get`, `feedback-respond`, `feedback-list`), `coach-reply.html`. Updates: softball.html "💬 New from Coach" dashboard card, signup.html Screen 8 "📋 This Week's Coaching" parent card. Token-gated writes (32-hex secret), 90-day TTL. SMS via Twilio (DRY_RUN until TFV approves). Commit `c00d3a9`.
