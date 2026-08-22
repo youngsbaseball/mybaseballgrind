@@ -1,0 +1,74 @@
+MyGrind Daily Social — Saturday 2026-08-22
+Theme: Belief shift / one measurable (August "One number, two weeks")
+Lead audience: BASEBALL (day 234 % 3 = 0)
+Format: Real-app-screen card pair (builder #3 build_social_appscreen_card.py)
++ a Reel script for Coach's phone shot on REAL footage.
+Screen: STATS (#stats), Training Volume card showing 490 reps this week.
+Captured Saturday August 22 2026 via the shoot-light-dashboard rig, real
+date on screen. Rotation: 8/12 dashboard, 8/13 journal, 8/22 stats.
+Pair axis: sport toggle in the app header (BASEBALL gold / SOFTBALL berry).
+HISTORY: this concept was first built by the 8/20 7:08 run, which stalled on
+a permission prompt before posting. Those cards had the subline clipped
+behind the phone on 4x5 and 9x16 and a two-line eyebrow. Rebuilt 8/22 from
+fresh captures with a shorter eyebrow + subline; originals not committed.
+NO-AI NOTE: real screen, zero generated pixels, "Made with AI" stays OFF.
+
+Export sizes: 4x5 FEED 1080x1350 (FB + IG feed) / 9x16 STORY 1080x1920
+(FB + IG Story) / 1x1 SQUARE 1080x1080 (X) / 2x3 PIN 1000x1500 (Pinterest).
+
+POSTING OUTCOME 2026-08-22
+- (record here when posted)
+
+=== META CAPTION (FB page + IG @mygrindapp, scheduled 7:30 PM) ===
+
+Most players in August are chasing everything. New team, new coach, new season, fix the swing, fix the arm, fix the first step.
+
+Here is what I tell every family. Pick one number. Chase it for two weeks.
+
+Front toss. Long toss distance. Clean transfers at short. It does not matter which one, it matters that it is one.
+
+Then log the same number every session and let your player watch it move. Nothing builds belief faster than a kid seeing their own line climb.
+
+That is the real Stats screen above. Every rep your player logs in the Journal lands there on its own.
+
+Two weeks. One number. Start tonight.
+
+Coach
+
+#travelballparent #youthbaseballparent #highschoolbaseball #softballparents #travelsoftball #fallball #playerdevelopment #journal #accountability
+
+=== X POST (@MyGrindapp, posted now, real card so Made with AI stays OFF) ===
+
+August has too many things to fix. Pick one number. Chase it two weeks.
+
+Front toss, long toss, clean transfers. Log the same number every session and let your player watch it move.
+
+https://www.mygrindapp.com/?utm_source=x&utm_medium=social&utm_campaign=daily
+
+#journal #accountability
+
+=== PINTEREST (2x3 PIN 1000x1500, board: Player Development) ===
+
+Title: Pick One Number. Chase It Two Weeks.
+Description: The fastest way to build belief in a young baseball or softball player: one measurable number, tracked every session for two weeks. Front toss, long toss, clean transfers. MyGrind logs the reps and shows the line climbing.
+Link: https://www.mygrindapp.com/?utm_source=pinterest&utm_medium=social&utm_campaign=daily
+
+=== REEL / TIKTOK SCRIPT (Coach's phone, real footage, 9:16 1080x1920) ===
+
+HOOK (0.0 to 1.5s, talking straight to camera, cage or field behind you)
+"Your player does not need to fix ten things this month. They need one number."
+
+BODY (1.5 to 9s)
+"Every August I watch kids chase everything at once. New team, new coach,
+swing, arm, footwork. Two weeks later nothing moved because nothing got
+measured."
+
+"So pick one. Front toss count. Long toss distance. Clean transfers in a
+row. Chase that one number for two weeks."
+
+TURN (9 to 13s, hold the phone up with the Stats screen on it)
+"Log it every session. The app keeps the count. Your player watches the
+line climb."
+
+CTA CLOSE (13 to 16s)
+"Two weeks. One number. That is how belief gets built. Start tonight."
