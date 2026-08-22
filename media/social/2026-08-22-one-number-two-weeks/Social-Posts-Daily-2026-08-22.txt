@@ -17,7 +17,23 @@ Export sizes: 4x5 FEED 1080x1350 (FB + IG feed) / 9x16 STORY 1080x1920
 (FB + IG Story) / 1x1 SQUARE 1080x1080 (X) / 2x3 PIN 1000x1500 (Pinterest).
 
 POSTING OUTCOME 2026-08-22
-- (record here when posted)
+- META (FB page + IG @mygrindapp): SCHEDULED 7:30 PM from an interactive
+  session at ~12:45 PM. Business Suite composer, "Post to" showed both
+  destinations, 4x5 BASEBALL feed card attached via the native picker
+  (1080 x 1350 confirmed), full caption typed, both time rows zoom-verified
+  07:30 PM Aug 22, Share to Facebook story ON (fires at 7:30 PM with the
+  post), Public, Boost OFF ("Maybe later" on the upsell). Planner column
+  for Sat 22 shows a 7:30 PM Facebook entry AND a 7:30 PM Instagram entry.
+  Picker notes: the AX tree collapsed twice mid-flow (once on a window-by-
+  name reference, once on "Invalid index"); a single Chrome `activate`
+  recovered it both times. The Go-to-folder nested sheet accepted the path
+  but the Return keystrokes only landed after the recovery, so verify the
+  nested sheet count before and after pressing Return.
+- X @MyGrindapp: NOT POSTED in this session. Text + link block above is
+  ready; attach the 1x1 SQUARE natively if the Media button cooperates,
+  otherwise text + link (OG card renders).
+- Pinterest, @youngsbaseball IG, TikTok: Coach's hand, card in Drive.
+- Deploy: d9ca456 READY on Vercel, card URL returns 200.
 
 === META CAPTION (FB page + IG @mygrindapp, scheduled 7:30 PM) ===
 
