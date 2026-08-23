@@ -29,9 +29,16 @@ POSTING OUTCOME 2026-08-22
   recovered it both times. The Go-to-folder nested sheet accepted the path
   but the Return keystrokes only landed after the recovery, so verify the
   nested sheet count before and after pressing Return.
-- X @MyGrindapp: NOT POSTED in this session. Text + link block above is
-  ready; attach the 1x1 SQUARE natively if the Media button cooperates,
-  otherwise text + link (OG card renders).
+- X @MyGrindapp: POSTED LIVE ~1:05 PM, text + link.
+  https://x.com/MyGrindapp/status/2091401850897719735
+  One native-attach attempt: Media button click returned NO SHEET with AX
+  healthy (the known X regression), so the text + link fallback went out.
+  The branded OG card rendered on the timeline. No media attached, so
+  "Made with AI" stayed OFF. Gotchas this run: the first Post click landed
+  while the link card was still loading and did nothing (button shifted
+  ~20px as the card expanded); the second Post click worked and X then
+  redirected to a Premium upsell page (/i/premium_sign_up), dismissed with
+  its close X, nothing purchased.
 - Pinterest, @youngsbaseball IG, TikTok: Coach's hand, card in Drive.
 - Deploy: d9ca456 READY on Vercel, card URL returns 200.
 
