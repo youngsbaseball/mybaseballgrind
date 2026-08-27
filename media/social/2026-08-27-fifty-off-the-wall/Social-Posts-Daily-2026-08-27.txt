@@ -1,0 +1,57 @@
+MyGrind Daily Social — Thursday 2026-08-27
+Theme: Drill / training tip (Thursday) — wall ball, fifty clean catches
+Lead audience: GIRLS WHO PLAY BASEBALL (day 239 % 3 = 2)
+Format: Real-app-screen card pair (builder #3 build_social_appscreen_card.py)
+Screen: JOURNAL (#journal), Start Today logging choices, real date on screen.
+Captured Thursday August 27 2026 via the shoot-light-dashboard rig, headless
+Chrome 540x720 @2x. Rotation: 8/12 dashboard, 8/13 journal, 8/22 stats,
+8/27 journal (start-choices view, different from the 8/13 entry view).
+Pair axis: sport toggle in the app header (BASEBALL gold / SOFTBALL berry).
+Girls-who-play-baseball lead lives in the caption (named plainly, not
+tokenized); the card itself is the real app screen.
+NO-AI NOTE: real screen, zero generated pixels, "Made with AI" stays OFF.
+
+Export sizes: 4x5 FEED 1080x1350 (FB + IG feed) / 9x16 STORY 1080x1920
+(FB + IG Story) / 1x1 SQUARE 1080x1080 (X) / 2x3 PIN 1000x1500 (Pinterest).
+
+RUN NOTE: the 7:08 scheduled run fired but stalled on the DEFAULT-mode
+permission prompt (the registry-wipe recovery week). This post was built and
+posted manually from the morning session after Coach ran the auto-mode
+paste. POSTING OUTCOME appended below after the flow completes.
+
+=== META CAPTION (FB page + IG @mygrindapp, schedule 7:30 PM) ===
+
+Here is a ten minute drill that has built more infielders than any machine I own. A wall, a glove, fifty clean catches. Backhand, forehand, short hop. Count them out loud.
+
+I coach girls who play baseball, and I tell their families the same thing I tell everyone: the wall does not care who is throwing. Fifty clean is fifty clean.
+
+The rep counts twice when it gets written down. That is the real Journal screen above. Practice, game, or workout, your player logs it in one line and the streak takes care of itself.
+
+Tonight, one line.
+
+Coach
+
+#girlswhoplaybaseball #girlsbaseball #baseballforall #youthbaseballparent #baseballparents #playerdevelopment #travelballlife #journal #accountability
+
+=== X CAPTION (@MyGrindapp, post now) ===
+
+Ten minutes, a wall, a glove. Fifty clean catches. Backhand, forehand, short hop.
+
+The wall does not care who is throwing. Fifty clean is fifty clean.
+
+Then one line in the journal.
+
+https://www.mygrindapp.com/?utm_source=x&utm_medium=social&utm_campaign=daily
+
+#journal #accountability
+
+=== ALT TEXT ===
+
+Cream MyGrind card, headline Fifty Off The Wall, above the real MyGrind Journal screen showing the Start Today logging choices.
+
+=== GROWTH ACTIONS (today) ===
+
+- Reply to ALL comments and DMs on every channel.
+- Leave 5 genuine comments on bigger youth baseball/softball accounts.
+- Capture 1 photo or clip for the content bank.
+- Coach's hand: @youngsbaseball IG + TikTok from the phone (cards in Drive), Pinterest 2x3 pin.
