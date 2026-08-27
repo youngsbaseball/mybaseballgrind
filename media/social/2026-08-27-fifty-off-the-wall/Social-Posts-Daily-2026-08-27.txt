@@ -55,3 +55,24 @@ Cream MyGrind card, headline Fifty Off The Wall, above the real MyGrind Journal 
 - Leave 5 genuine comments on bigger youth baseball/softball accounts.
 - Capture 1 photo or clip for the content bank.
 - Coach's hand: @youngsbaseball IG + TikTok from the phone (cards in Drive), Pinterest 2x3 pin.
+
+POSTING OUTCOME 2026-08-27
+- META (FB page + IG @mygrindapp): SCHEDULED 7:30 PM from the morning
+  session ~9:55 AM. Composer showed both destinations, 4x5 BASEBALL feed
+  card attached via the native picker (1080 x 1350 confirmed), full caption
+  typed, both time rows verified 07:30 PM Aug 27 (zoom), Share to Facebook
+  story ON (fires 7:30 PM with the post), Public, Boost OFF ("Maybe later"
+  on the upsell). Planner column for Thu 27 shows a 7:30 PM Facebook entry
+  AND a 7:30 PM Instagram entry with the card thumbnail.
+  AX notes: tree opened dead (bare AXMenuBar, 2 windows); one activate
+  recovered it. Picker + Go-to-folder flow worked first try.
+- X @MyGrindapp: POSTED LIVE ~10:00 AM, text + link.
+  https://x.com/MyGrindapp/status/2092986218497941897
+  One native-attach attempt: Media button click returned NO SHEET with AX
+  healthy (the known 8/7 regression), so the text + link fallback went out.
+  The branded OG card rendered in the composer preview AND on the timeline.
+  No media attached, "Made with AI" OFF.
+- Pinterest, @youngsbaseball IG, TikTok: Coach's hand, cards in Drive.
+- Unread IG comment noted in Business Suite inbox: artmonstermicah
+  "SOULLESS AI SHEEP" (3w old, the known AI-callout wave; standing rule =
+  hide, never reply).
